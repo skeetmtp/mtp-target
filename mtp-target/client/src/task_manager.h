@@ -66,4 +66,9 @@ private:
 	friend struct displayTasksClass;
 };
 
+
+bool pauseTaskManager(bool waitAck=true);
+bool isTaskManagerPaused();
+void resumeTaskManager();
+
 #endif

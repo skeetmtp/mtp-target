@@ -24,6 +24,7 @@
 
 #include "stdpch.h"
 
+#include "main.h"
 #include "time_task.h"
 #include "mtp_target.h"
 #include "entity_manager.h"
@@ -106,20 +107,91 @@ void CEntityManager::update()
 void CEntityManager::add(uint8 eid, const std::string &name, sint32 totalScore, CRGBA &color, bool spectator)
 {
 	nlassert(!exist(eid));
-
-	entities()[eid]->init (CEntity::Player, name, totalScore, color, "pingoo", spectator);
-	nlinfo("CEntityManager::add(%d,%s)",eid,name.c_str());
+	uint tid = getThreadId();
+	nlassert(tid==TaskManagerThreadId || tid==NetworkThreadId);
+	
+	CEntityInitData entityToAdd(eid,name,totalScore,color,spectator);
+	if(tid==TaskManagerThreadId)
+		ClientToAddTaskManagerThread.push_back(entityToAdd);
+	else
+		ClientToAddNetworkThread.push_back(entityToAdd);
 }
 
 void CEntityManager::remove(uint8 eid)
 {
 	nlassert(exist(eid));
-	
-	if(CMtpTarget::instance().controler().Camera.getFollowedEntity() == eid)
-		CMtpTarget::instance().controler().Camera.setFollowedEntity(255);
-
-	entities()[eid]->reset();
+	uint tid = getThreadId();
+	nlassert(tid==TaskManagerThreadId || tid==NetworkThreadId);
+	if(tid==TaskManagerThreadId)
+		ClientToRemoveTaskManagerThread.push_back(eid);
+	else
+		ClientToRemoveNetworkThread.push_back(eid);
 }
+
+void CEntityManager::_add(std::list<CEntityInitData> &addList)
+{
+	list<CEntityInitData>::iterator it2;
+	for(it2=addList.begin(); it2!=addList.end();it2++)
+	{
+		CEntityInitData e = *it2;
+		nlassert(!exist(e.eid));
+		entities()[e.eid]->init(CEntity::Player, e.name, e.totalScore, e.color, "pingoo", e.spectator);
+		nlinfo("CEntityManager::add(%d,%s)",e.eid,e.name.c_str());
+	}
+	addList.clear();	
+}
+
+void CEntityManager::_remove(std::list<uint8> &removeList)
+{
+	list<uint8>::iterator it1;
+	for(it1=removeList.begin(); it1!=removeList.end();it1++)
+	{
+		uint8 eid = *it1;
+		if(eid == 255)
+			nlwarning("Can't remove client because eid 255 is not valid");
+		
+		nlassert(exist(eid));
+		if(CMtpTarget::instance().controler().Camera.getFollowedEntity() == eid)
+			CMtpTarget::instance().controler().Camera.setFollowedEntity(255);
+		
+		entities()[eid]->reset();
+	}
+	removeList.clear();
+
+}
+
+
+void CEntityManager::flushAddRemoveList()
+{
+	uint tid = getThreadId();
+	nlassert(tid==TaskManagerThreadId || tid==NetworkThreadId);
+	
+	if(tid==TaskManagerThreadId)
+	{
+		if(ClientToAddTaskManagerThread.size()==0 && ClientToRemoveTaskManagerThread.size()==0)
+			return;
+		bool paused = pauseAllThread();
+		if(!paused)
+			return;
+		_add(ClientToAddTaskManagerThread);
+		_remove(ClientToRemoveTaskManagerThread);
+		resumeAllThread();
+	}
+	else
+	{
+		if(ClientToAddNetworkThread.size()==0 && ClientToRemoveNetworkThread.size()==0)
+			return;
+		bool paused = pauseAllThread();
+		if(!paused)
+			return;
+		_add(ClientToAddNetworkThread);
+		_remove(ClientToRemoveNetworkThread);
+		resumeAllThread();
+	}		
+	
+}
+
+
 
 bool CEntityManager::exist(uint8 eid)
 {

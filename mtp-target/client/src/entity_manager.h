@@ -40,6 +40,23 @@
 // Classes
 //
 
+class CEntityInitData
+{
+
+public:
+
+	CEntityInitData(uint8 _eid, const std::string &_name, sint32 _totalScore, NLMISC::CRGBA &_color, bool _spectator):eid(_eid),name(_name),totalScore(_totalScore),color(_color),spectator(_spectator)
+	{
+
+	}
+
+	uint8 eid;
+	const std::string &name;
+	sint32 totalScore;
+	NLMISC::CRGBA &color;
+	bool spectator;
+};
+
 class CEntityManager : public CSingleton<CEntityManager>, public ITask
 {
 public:
@@ -56,6 +73,10 @@ public:
 
 	void	add(uint8 eid, const std::string &name, sint32 totalScore, NLMISC::CRGBA &color, bool spectator);
 	void	remove(uint8 eid);
+	void	flushAddRemoveList();
+	void	_add(std::list<CEntityInitData> &addList);
+	void	_remove(std::list<uint8> &removeList);
+
 	bool	exist(uint8 eid) ;
 
 	void	startSession();
@@ -87,8 +108,8 @@ private:
 
 	//CEntity		Entities[256];
 	CEntities Entities;
-	std::list<uint8> ClientToAddTaskManagerThread;
-	std::list<uint8> ClientToAddNetworkThread;
+	std::list<CEntityInitData> ClientToAddTaskManagerThread;
+	std::list<CEntityInitData> ClientToAddNetworkThread;
 	std::list<uint8> ClientToRemoveTaskManagerThread;
 	std::list<uint8> ClientToRemoveNetworkThread;
 	

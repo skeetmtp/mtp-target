@@ -36,6 +36,7 @@
 #include "mtp_target.h"
 #include "main.h"
 #include "task_manager.h"
+#include "network_task.h"
 	
 
 //
@@ -53,7 +54,8 @@ using namespace NLMISC;
 bool DisplayDebug = false;
 bool FollowEntity = false;
 string Cookie, FSAddr, ReplayFile;
-uint MainThreadId = 0;
+
+uint TaskManagerThreadId = 0;
 uint NetworkThreadId = 0;
 
 
@@ -122,7 +124,7 @@ int main(int argc, char **argv)
 
 #endif
 
-	MainThreadId = getThreadId();
+	TaskManagerThreadId = getThreadId();
 	// add the main task
 	CTaskManager::instance().add(CMtpTarget::instance(), 70);
 
@@ -131,6 +133,60 @@ int main(int argc, char **argv)
 
 	// return
 	return EXIT_SUCCESS;
+}
+
+
+CSynchronized<PauseFlags> pauseAllFlags("pauseAll");
+
+bool pauseAllThread()
+{
+	{
+		CSynchronized<PauseFlags>::CAccessor acces(&pauseAllFlags);
+		if(acces.value().pauseCount>0)
+			return false;
+		acces.value().pauseCount = 1;
+	}
+	bool allOk = true;
+	allOk = allOk && pauseTaskManager(false);
+	if(!allOk)
+	{
+		CSynchronized<PauseFlags>::CAccessor acces(&pauseAllFlags);
+		acces.value().pauseCount = 0;
+		return false;		
+	}
+	allOk = allOk && pauseNetwork(false);
+	if(!allOk)
+	{
+		resumeTaskManager();
+		CSynchronized<PauseFlags>::CAccessor acces(&pauseAllFlags);
+		acces.value().pauseCount = 0;
+		return false;		
+	}
+	
+	
+	while(true)
+	{
+		int threadPausedCount = 0;
+		if(isTaskManagerPaused())
+			threadPausedCount++;
+		if(isNetworkPaused())
+			threadPausedCount++;
+		if(threadPausedCount==1)
+			break;
+		nlSleep(10);
+	}
+	
+	return true;
+}
+
+void resumeAllThread()
+{
+	resumeTaskManager();
+	resumeNetwork();	
+	{
+		CSynchronized<PauseFlags>::CAccessor acces(&pauseAllFlags);
+		acces.value().pauseCount = 0;
+	}
 }
 
 
