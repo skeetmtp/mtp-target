@@ -412,8 +412,9 @@ void CIntroTask::updateConnectionOnLine()
 	
 	CInetAddress addr;
 	
-	addr.setNameAndPort(CLoginClientMtp::ShardList[ServerId].WSAddr+":"+toString(CConfigFileTask::instance().configFile().getVar("TcpPort").asInt()));
-			
+//	addr.setNameAndPort(CLoginClientMtp::ShardList[ServerId].WSAddr+":"+toString(CConfigFileTask::instance().configFile().getVar("TcpPort").asInt()));
+	addr.setNameAndPort(CLoginClientMtp::ShardList[ServerId].WSAddr+":"+toString(CLoginClientMtp::ShardList[ServerId].port));
+	
 	string res = CNetworkTask::instance().connect(&addr);
 	if(res.empty())
 	{
