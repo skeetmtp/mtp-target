@@ -62,7 +62,6 @@ using namespace NLMISC;
 void CGameTask::init()
 {
 	CTaskManager::instance().add(CLevelManager::instance(), 60);
-	CTaskManager::instance().add(CSkyTask::instance(), 100);
 	CTaskManager::instance().add(CHudTask::instance(), 1020);
 	CTaskManager::instance().add(CScoreTask::instance(), 1030);
 	CTaskManager::instance().add(CChatTask::instance(), 1040);
@@ -88,7 +87,6 @@ void CGameTask::stop()
 {
 	ITask::stop();
 	CLevelManager::instance().stop();
-	CSkyTask::instance().stop();
 	CHudTask::instance().stop();
 	CScoreTask::instance().stop();
 	CChatTask::instance().stop();

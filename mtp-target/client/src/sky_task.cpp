@@ -77,6 +77,16 @@ using namespace NLMISC;
 // Functions
 //
 
+
+CSkyTask::CSkyTask():ITask()
+{
+	ShapeName = "sky.shape";
+	EnvMap0Name = "water_env.tga";
+	EnvMap1Name = "water_env.tga";
+	HeightMap0Name = "water_disp.tga";
+	HeightMap1Name = "water_disp2.tga";
+}
+
 void cbVar (CConfigFile::CVar &var)
 {
 	if (CSkyTask::instance().WaterShape == 0)
@@ -117,7 +127,7 @@ void CSkyTask::init()
 	nelSkyScene->getCam ()->setPerspective(degToRad(CConfigFileTask::instance().configFile().getVar("Fov").asFloat()), 1.33f, 0.15f, 3000.0f);
 	nelSkyScene->getCam ()->setTransformMode (UTransformable::DirectMatrix);
 
-	string res = CResourceManager::instance().get("sky.shape");
+	string res = CResourceManager::instance().get(shapeName());
 	nelSkyMesh = nelSkyScene->createInstance(res);
 	if (nelSkyMesh)
 	{
@@ -135,14 +145,14 @@ void CSkyTask::init()
 		CScene		&scene = su->getScene ();
 
 		// load textures
-		res = CResourceManager::instance().get("water_env.tga");
+		res = CResourceManager::instance().get(envMap0Name());
 		ITexture *envMap1   = new CTextureFile(res);
-		res = CResourceManager::instance().get("water_env.tga");
+		res = CResourceManager::instance().get(envMap1Name());
 		ITexture *envMap2   = new CTextureFile(res);
 		
-		res = CResourceManager::instance().get("water_disp.tga");
+		res = CResourceManager::instance().get(heightMap0Name());
 		ITexture *heightMap  = new CTextureFile(res);
-		res = CResourceManager::instance().get("water_disp2.tga");
+		res = CResourceManager::instance().get(heightMap1Name());
 		ITexture *heightMap2 = new CTextureFile(res);
 		
 		WaterShape = new CWaterShape;
@@ -258,3 +268,57 @@ void CSkyTask::render()
 void CSkyTask::release()
 {
 }
+
+
+void CSkyTask::shapeName(std::string shapeName)
+{
+	ShapeName = shapeName;
+}
+
+void CSkyTask::envMap0Name(std::string envMapName)
+{
+	EnvMap0Name = envMapName;
+}
+
+void CSkyTask::envMap1Name(std::string envMapName)
+{
+	EnvMap1Name = envMapName;
+}
+
+void CSkyTask::heightMap0Name(std::string heightMap)
+{
+	HeightMap0Name = heightMap;
+}
+
+void CSkyTask::heightMap1Name(std::string heightMap)
+{
+	HeightMap1Name = heightMap;
+}
+
+
+
+string CSkyTask::shapeName()
+{
+	return ShapeName;
+}
+
+string CSkyTask::envMap0Name()
+{
+	return EnvMap0Name;
+}
+
+string CSkyTask::envMap1Name()
+{
+	return EnvMap1Name;
+}
+
+string CSkyTask::heightMap0Name()
+{
+	return HeightMap0Name;
+}
+
+string CSkyTask::heightMap1Name()
+{
+	return HeightMap1Name;
+}
+

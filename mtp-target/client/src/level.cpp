@@ -38,11 +38,13 @@ extern "C"
 
 #include "level.h"
 #include "3d_task.h"
+#include "sky_task.h"
 #include "hud_task.h"
 #include "mtp_target.h"
+#include "editor_task.h"
+#include "task_manager.h"
 #include "entity_manager.h"
 #include "config_file_task.h"
-#include "editor_task.h"
 #include "resource_manager.h"
 #include "../../common/lua_nel.h"
 #include "../../common/lua_utility.h"
@@ -74,6 +76,13 @@ using namespace NLMISC;
 // Functions
 //
 
+void luaGetStrVariable(lua_State *L, std::string &var)
+{
+	const char *res = lua_tostring(L, -1);
+	var = res;
+	lua_pop(L, 1);
+}
+
 CLevel::CLevel(const string &filename)
 {
 	nlinfo("Trying to load level '%s'", filename.c_str());
@@ -86,6 +95,13 @@ CLevel::CLevel(const string &filename)
 
 	LuaState = luaOpenAndLoad(filename);
 
+	string skyName;
+	lua_pushstring(LuaState, "skyName");
+	lua_gettable(LuaState, LUA_GLOBALSINDEX);
+	luaGetStrVariable(LuaState,skyName);
+	luaGetGlobalVariable(LuaState, skyName);
+	nlinfo("skyName '%s'", skyName.c_str());
+	
 	luaGetGlobalVariable(LuaState, Name);
 	nlinfo("level name '%s'", Name.c_str());
 	
@@ -191,10 +207,15 @@ CLevel::CLevel(const string &filename)
 	Valid = true;
 	if(C3DTask::instance().levelParticle()!=0)
 		C3DTask::instance().levelParticle()->show();
+
+	//CSkyTask::instance().shapeName("sky.shape");
+	CTaskManager::instance().add(CSkyTask::instance(), 100);
 }
 
 CLevel::~CLevel()
 {
+	CSkyTask::instance().stop();
+
 	if(C3DTask::instance().levelParticle()!=0)
 		C3DTask::instance().levelParticle()->hide();
 

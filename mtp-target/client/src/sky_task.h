@@ -60,6 +60,22 @@ public:
 
 	virtual std::string name() { return "CSkyTask"; }
 
+	void shapeName(std::string shapeName);
+	void envMap0Name(std::string envMapName);
+	void envMap1Name(std::string envMapName);
+	void heightMap0Name(std::string heightMap);
+	void heightMap1Name(std::string heightMap);
+
+	std::string shapeName();
+	std::string envMap0Name();
+	std::string envMap1Name();
+	std::string heightMap0Name();
+	std::string heightMap1Name();
+	
+	friend class CSingleton<CSkyTask>;
+protected:
+	CSkyTask();
+	
 private:
 
 	NL3D::UScene			*nelSkyScene;
@@ -69,6 +85,12 @@ private:
 	NL3D::CWaterModel		*WaterModel;
 	NL3D::UInstance			*WaterMesh;	
 
+	std::string ShapeName;
+	std::string EnvMap0Name;
+	std::string EnvMap1Name;
+	std::string HeightMap0Name;
+	std::string HeightMap1Name;
+	
 	friend void cbVar (NLMISC::CConfigFile::CVar &var);
 };
 
