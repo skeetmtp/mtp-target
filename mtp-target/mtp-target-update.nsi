@@ -14,6 +14,7 @@ OutFile "${APPNAME}-update-${APPOLDVERSION}-${APPVERSION}.exe"
 !insertmacro MUI_PAGE_WELCOME
 !insertmacro MUI_PAGE_COMPONENTS
 !insertmacro MUI_PAGE_INSTFILES
+!define MUI_FINISHPAGE_NOAUTOCLOSE
 !insertmacro MUI_PAGE_FINISH
 
 !insertmacro MUI_UNPAGE_CONFIRM
@@ -23,6 +24,8 @@ OutFile "${APPNAME}-update-${APPOLDVERSION}-${APPVERSION}.exe"
 !insertmacro MUI_LANGUAGE "English"
 !insertmacro MUI_RESERVEFILE_LANGDLL
 
+ShowInstDetails show
+
 Section "base" Section1
 	call IsMtptInstalledUpdate
 	; Set Section properties
@@ -30,7 +33,22 @@ Section "base" Section1
 	SetOverwrite on
 	
 	SetOutPath "$INSTDIR\client"
-	FILE "client\ReleaseDebug\mtp-target.exe"
+	FILE "mtp-target.pat"
+	Rename "$INSTDIR\client\mtp-target.exe" "$INSTDIR\client\mtp-target_old.exe" 
+	InitPluginsDir
+	DetailPrint "Updating $INSTDIR\client\mtp-target.exe..."
+	vpatch::vpatchfile "$INSTDIR\client\mtp-target.pat" "$INSTDIR\client\mtp-target_old.exe" "$INSTDIR\client\mtp-target.exe"
+	Pop $R0
+	;DetailPrint "Result: $R0"
+	Delete "$INSTDIR\client\mtp-target.pat"
+	StrCmp $R0 "OK" patch_ok
+	Rename "$INSTDIR\client\mtp-target_old.exe" "$INSTDIR\client\mtp-target.exe" 
+	Abort $R0
+	Goto patch_error
+	patch_ok:
+	Delete "$INSTDIR\client\mtp-target_old.exe"
+	patch_error:
+	;FILE "client\ReleaseDebug\mtp-target.exe"
 	FILE "client\mtp_target_default.cfg"
 	;FILE "..\nel\lib\nel_drv_opengl_win_rd.dll"
 	;FILE "..\nel\lib\nel_drv_direct3d_win_rd.dll"
@@ -43,7 +61,7 @@ Section "base" Section1
 	
 	
 	SetOutPath "$INSTDIR\client\data"
-	FILE "client\data\font\*.ttf"
+	;FILE "client\data\font\*.ttf"
 	
 	WriteUninstaller "$INSTDIR\Uninst.exe"
 	CreateShortCut "$SMPROGRAMS\${APPNAME}\Uninstall.lnk" "$INSTDIR\uninstall.exe"
@@ -77,7 +95,7 @@ Section "server" Section2
 	SetOverwrite on
 	
 	SetOutPath "$INSTDIR\server"
-	FILE "server\ReleaseDebug\mtp_target_service.exe"
+	;FILE "server\ReleaseDebug\mtp_target_service.exe"
 	FILE "server\mtp_target_service_default.cfg"
 	;FILE "..\wpkg\bin\stlport_vc645.dll"
 
