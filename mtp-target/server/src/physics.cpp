@@ -540,10 +540,17 @@ class PhysicsThread : public IRunnable
 							}
 							else
 							{
+								const dReal *curentLenVel;
 								if(e->Accel)
 									dBodyAddForce(e->Body, e->Force.x, e->Force.y, e->Force.z);
-									//dBodyAddTorque(e->Body, e->ForceX, e->ForceY, e->ForceZ);
-								//nlinfo(">> %f %f %f",e->ForceX, e->ForceY, e->ForceZ);
+								curentLenVel = dBodyGetLinearVel(e->Body);
+								CVector currentLinearVelocity(curentLenVel[0],curentLenVel[1],curentLenVel[2]);
+								if(e->maxLinearVelocity()>0 && currentLinearVelocity.norm()>e->maxLinearVelocity())
+								{
+									currentLinearVelocity.normalize();
+									currentLinearVelocity *= e->maxLinearVelocity();
+									dBodySetAngularVel(e->Body, currentLinearVelocity.x,currentLinearVelocity.y,currentLinearVelocity.z);
+								}
 							}
 
 							//if(e->NbOpenClose >= e->MaxOpenClose)
