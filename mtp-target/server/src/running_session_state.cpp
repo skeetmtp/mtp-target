@@ -210,7 +210,9 @@ void CRunningSessionState::update()
 			// send the message to all entities
 			CNetwork::instance().send(msgout);
 
-			CUnifiedNetwork::getInstance()->send("LS", msgout2);
+			// only push the score to database if there s some clients
+			if(nbplayers != 0)
+				CUnifiedNetwork::getInstance()->send("LS", msgout2);
 
 			CEntityManager::instance().saveAllValidReplay();
 			nlinfo("replay saved");
