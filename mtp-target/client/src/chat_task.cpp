@@ -24,6 +24,8 @@
 
 #include "stdpch.h"
 
+#include "time.h"
+
 #include "3d_task.h"
 #include "time_task.h"
 #include "game_task.h"
@@ -36,6 +38,9 @@
 #include "config_file_task.h"
 #include "resource_manager.h"
 
+#ifdef NL_OS_WINDOWS
+#define strtime _strtime
+#endif
 
 //
 // Namespaces
@@ -64,6 +69,17 @@ static std::list<std::string>::reverse_iterator CurrentChatLine = ChatText.rbegi
 void CChatTask::init()
 {
 	chatLineCount = CConfigFileTask::instance().configFile().getVar("ChatLineCount").asInt();
+	logChat = CConfigFileTask::instance().configFile().getVar("LogChat").asInt()!=0;
+	fp = NULL;
+	if(logChat)
+	{
+		fp = fopen ("chat.log", "at");
+		time_t t = time(NULL);
+		tm *ltime = localtime(&t);
+		fprintf(fp,"-----------------------------------\n\n");
+		fprintf(fp,"%02d-%02d-%d\n",ltime->tm_mon+1,ltime->tm_mday,1900+ltime->tm_year);
+	}
+	
 }
 
 void CChatTask::update()
@@ -164,5 +180,12 @@ void CChatTask::addLine(const std::string &text)
 	else
 	{
 		ChatText.push_back(text);
+	}
+	if(logChat && fp)
+	{
+		char tbuffer [9];
+		strtime( tbuffer );
+		fprintf(fp,"%s %s\n",tbuffer,text.c_str());
+		fflush(fp);
 	}
 }

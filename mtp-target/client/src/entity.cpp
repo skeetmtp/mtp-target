@@ -84,6 +84,7 @@ CEntity::CEntity()
 	showCollideWhenFly = false;
 	showCollideWhenFlyPos = CVector(0,0,0);
 	addOpenCloseKey = false;
+	addChatLine = "";
 	addCrashEventKey = CCrashEvent(false,CVector::Null);
 	FadeParticleDuration = 1.0f;
 	FadeParticleStartTime = 0.0f;

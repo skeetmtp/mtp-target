@@ -74,6 +74,8 @@ static void cbChat(CNetMessage &msgin)
 	{
 		msgin.serial(msg);
 		CChatTask::instance().addLine(msg);
+		if(SessionFile) 
+			fprintf(SessionFile, "%hu CH %s\n",0, msg.c_str());
 	}
 }
 

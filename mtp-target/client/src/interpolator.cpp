@@ -28,6 +28,7 @@
 #include <nel/misc/common.h>
 
 #include "entity.h"
+#include "chat_task.h"
 #include "time_task.h"
 #include "mtp_target.h"
 #include "font_manager.h"
@@ -67,6 +68,7 @@ CEntityState::CEntityState()
 	OnWater = false;
 	OpenCloseEvent = false;
 	CrashEvent = CCrashEvent(false,CVector::Null);	
+	ChatLine = "";
 }
 
 CEntityState::CEntityState(const CVector &p,bool ow, bool oce, const CCrashEvent &ce)
@@ -75,21 +77,31 @@ CEntityState::CEntityState(const CVector &p,bool ow, bool oce, const CCrashEvent
 	OnWater = ow;
 	OpenCloseEvent = oce;
 	CrashEvent = ce;
+	ChatLine = "";
+}
+
+CEntityState::CEntityState(const CVector &p,bool ow, bool oce, const CCrashEvent &ce, std::string chatLine)
+{
+	Position = p;
+	OnWater = ow;
+	OpenCloseEvent = oce;
+	CrashEvent = ce;
+	ChatLine = chatLine;
 }
 
 CEntityState CEntityState::operator+( const CEntityState &other ) const
 {
-	return CEntityState( Position + other.Position , OnWater || other.OnWater, OpenCloseEvent || other.OpenCloseEvent, CrashEvent + other.CrashEvent);
+	return CEntityState( Position + other.Position , OnWater || other.OnWater, OpenCloseEvent || other.OpenCloseEvent, CrashEvent + other.CrashEvent,ChatLine);
 }
 
 CEntityState operator *( double coef, const CEntityState &value )
 {
-	return CEntityState( (float)coef * value.Position , value.OnWater , value.OpenCloseEvent, value.CrashEvent);
+	return CEntityState( (float)coef * value.Position , value.OnWater , value.OpenCloseEvent, value.CrashEvent, value.ChatLine);
 }
 
 CEntityState operator*( const CEntityState &value, double coef )
 {
-	return CEntityState( (float)coef * value.Position , value.OnWater, value.OpenCloseEvent, value.CrashEvent);	
+	return CEntityState( (float)coef * value.Position , value.OnWater, value.OpenCloseEvent, value.CrashEvent,value.ChatLine);	
 }
 
 
@@ -112,7 +124,12 @@ CInterpolator::CInterpolator(double dt)
 	CurrentSmoothDirection = CVector::Null;
 	CurrentOnWater         = false;
 	CurrentOpenCloseEvent  = false;
+	CurrentChatLine		   = "";
 	CurrentCrashEvent  = CCrashEvent(false,CVector::Null);
+
+	LastOpenClose = false;
+	LastChatLine = "";
+	LastCrash = CCrashEvent(false,CVector::Null);;
 	
 	Entity = 0;
 	DT = dt;
@@ -231,6 +248,14 @@ void CInterpolator::update()
 	if(CurrentCrashEvent.Crash)
 		CurrentCrashEvent.Position = CrashEvent.Position;
 	LastCrash=CrashEvent;
+
+	string chatLine1 = chatLine(ServerTime);
+	if(chatLine1.size() && LastChatLine!=chatLine1)
+	{
+		CChatTask::instance().addLine(chatLine1);
+	}
+	LastChatLine = chatLine1;
+	
 }
 
 
@@ -263,6 +288,12 @@ CCrashEvent CInterpolator::crashEvent(double time)
 {
 	CEntityInterpolatorKey key = Keys.back();
 	return key.value().CrashEvent;
+}
+
+string CInterpolator::chatLine(double time) const
+{
+	CEntityInterpolatorKey key = Keys.back();
+	return key.value().ChatLine;
 }
 
 bool CInterpolator::openCloseEvent(double time) const
@@ -365,6 +396,29 @@ bool CLinearInterpolator::openCloseEvent(double time) const
 		nextKeySet = true;
 	}
 	return CInterpolator::openCloseEvent(time);
+}
+
+string CLinearInterpolator::chatLine(double time) const
+{
+	double remainder = fmod(time,DT);
+	double lerpPos = remainder / DT;
+	deque<CEntityInterpolatorKey>::const_reverse_iterator it;
+	CEntityInterpolatorKey nextKey = Keys.back();
+	bool nextKeySet = false;
+	for(it=Keys.rbegin();it!=Keys.rend();it++)
+	{
+		CEntityInterpolatorKey key = *it;
+		if(key.serverTime()<time)
+		{
+			if(!nextKeySet)
+				break;
+			
+			return key.value().ChatLine;
+		}
+		nextKey = key;
+		nextKeySet = true;
+	}
+	return CInterpolator::chatLine(time);
 }
 
 

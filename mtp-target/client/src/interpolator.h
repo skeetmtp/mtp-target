@@ -64,11 +64,13 @@ struct CEntityState
 {
 	CEntityState();
 	CEntityState(const NLMISC::CVector &position, bool onWater, bool openClose, const CCrashEvent &crashEvent);
+	CEntityState(const NLMISC::CVector &position, bool onWater, bool openClose, const CCrashEvent &crashEvent, std::string chatLine);
 	
 	NLMISC::CVector Position;
 	bool			OnWater;
 	bool			OpenCloseEvent;
 	CCrashEvent		CrashEvent;
+	std::string		ChatLine;
 
 	CEntityState operator+(const CEntityState &other) const;
 
@@ -147,6 +149,7 @@ protected:
 
 	virtual CCrashEvent		crashEvent(double time);
 	virtual bool			openCloseEvent(double time) const;
+	virtual std::string		chatLine(double time) const;
 	virtual NLMISC::CVector	position(double time);
 	virtual NLMISC::CVector	speed(double time);
 	virtual NLMISC::CVector	direction(double time);
@@ -172,9 +175,10 @@ protected:
 	NLMISC::CVector CurrentSmoothDirection;
 	bool			CurrentOnWater;
 	bool			CurrentOpenCloseEvent;
-
-	bool LastOpenClose;
+	std::string     CurrentChatLine;
 	
+	bool LastOpenClose;
+	std::string LastChatLine;
 	CCrashEvent LastCrash;
 	CCrashEvent CurrentCrashEvent;
 	
@@ -198,6 +202,7 @@ protected:
 
 	virtual CCrashEvent		crashEvent(double time);
 	virtual bool			openCloseEvent(double time) const;
+	virtual std::string		chatLine(double time) const;
 	virtual NLMISC::CVector position(double time);
 	virtual NLMISC::CVector speed(double time);
 	virtual NLMISC::CVector direction(double time);

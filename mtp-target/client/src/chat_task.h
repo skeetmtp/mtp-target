@@ -51,7 +51,8 @@ public:
 		
 private:
 	int chatLineCount;
-
+	bool logChat;
+	FILE *fp;
 };
 
 #endif

@@ -185,7 +185,8 @@ void CMtpTarget::init()
 							ce = CEntityManager::instance()[eid].addCrashEventKey;
 							CEntityManager::instance()[eid].addCrashEventKey.Crash = false;
 						}
-						CEntityManager::instance()[eid].interpolator().addKey(CEntityInterpolatorKey(CEntityState(v,false,oc,ce),t));//.position(v,t, false); //put the entity in the good position
+						CEntityManager::instance()[eid].interpolator().addKey(CEntityInterpolatorKey(CEntityState(v,false,oc,ce,CEntityManager::instance()[eid].addChatLine),t));//.position(v,t, false); //put the entity in the good position
+						CEntityManager::instance()[eid].addChatLine = "";
 					}
 					else
 						nlwarning ("%d not found", eid);
@@ -201,6 +202,22 @@ void CMtpTarget::init()
 					CVector v(x, y, z);
 					if(CEntityManager::instance().exist(eid))
 						CEntityManager::instance()[eid].addCrashEventKey = CCrashEvent(true,v);
+				}
+				else if (string(cmd) == "CH")
+				{
+					char chatLine[1024];
+					fgets(chatLine,1024,fp);
+					uint l = strlen(chatLine);
+					if(l>0 && chatLine[l-1]=='\n')
+						chatLine[l-1] = '\0';
+					//fscanf (fp, "%s\n",&chatLine);
+					uint8 eid = CEntityManager::instance().findFirstEId();
+					if(eid!=255)
+					{
+						if(CEntityManager::instance().exist(eid))
+							CEntityManager::instance()[eid].addChatLine = chatLine;
+					}
+					nlinfo("replay chat line : %s",chatLine);
 				}
 				else
 				{

@@ -132,6 +132,7 @@ public:
 	NLMISC::CVector		 LastSent2MePos;
 	NLMISC::CVector		 LastSent2OthersPos;
 
+	std::string			 addChatLine;
 	bool				 addOpenCloseKey;
 	CCrashEvent			 addCrashEventKey;
 private:
