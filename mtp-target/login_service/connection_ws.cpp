@@ -158,7 +158,7 @@ static void cbWSIdentification (CMessage &msgin, const std::string &serviceName,
 		if(IService::getInstance ()->ConfigFile.getVar("AcceptExternalShards").asInt () == 1)
 		{
 			// we accept new shard, add it
-			reason = sqlQuery("insert into shard (ShardId, WsAddr, Online, Name) values ("+toString(shardId)+", '"+ia.ipAddress()+"', 1, '"+ia.ipAddress()+"')", nbrow, row, result);
+			reason = sqlQuery("insert into shard (ShardId, WsAddr, State, Name) values ("+toString(shardId)+", '"+ia.ipAddress()+"', 'Online', '"+ia.ipAddress()+"')", nbrow, row, result);
 			if(!reason.empty()) { refuseShard(sid, reason.c_str()); return; }
 			nlinfo("The ShardId %d with ip '%s' was inserted in the database and is online!", shardId, ia.ipAddress().c_str ());
 		}
