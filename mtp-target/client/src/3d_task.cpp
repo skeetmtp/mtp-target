@@ -234,7 +234,7 @@ void C3DTask::render()
 	Driver->enableFog(true);
 	Scene->render();
 
-	if(EnableExternalCamera && CLevelManager::instance().currentLevel().ExternalCameras.size() > 0)
+	if(EnableExternalCamera && CLevelManager::instance().levelPresent() && CLevelManager::instance().currentLevel().ExternalCameras.size() > 0)
 	{
 		CMatrix oldmat = C3DTask::instance().scene().getCam().getMatrix();
 		

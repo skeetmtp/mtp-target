@@ -351,7 +351,10 @@ void CControler::update()
 			CQuat q;
 			c.getMatrix().getRot(q);
 			
-			nlinfo("Add this in the '%s', in the ExternalCamera section:", CLevelManager::instance().currentLevel().filename().c_str());
+			if(CLevelManager::instance().levelPresent())
+				nlinfo("Add this in the '%s', in the ExternalCamera section:", CLevelManager::instance().currentLevel().filename().c_str());
+			else
+				nlinfo("no level to get ExternalCamera ");
 			nlinfo("\t{ Position = CVector(%f, %f, %f), Rotation = CAngleAxis(%f, %f, %f, %f) },",
 				v.x, v.y, v.z, q.x, q.y, q.z, q.w);
 		}
