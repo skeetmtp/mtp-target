@@ -59,7 +59,7 @@ void CSwap3DTask::render()
 	{
 		CBitmap btm;
 		C3DTask::instance().driver().getBuffer (btm);
-		btm.flipV();
+//		btm.flipV();
 		string filename = CFile::findNewFile ("screenshot.jpg");
 		COFile fs (filename);
 		btm.writeJPG(fs);
