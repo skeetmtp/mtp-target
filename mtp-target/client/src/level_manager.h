@@ -53,6 +53,9 @@ public:
 
 	// find and load a new level
 	void loadLevel(const std::string &fileName);
+protected:
+	friend class CSingleton<CLevelManager>;
+	CLevelManager();
 
 private:
 

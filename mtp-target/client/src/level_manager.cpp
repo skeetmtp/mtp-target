@@ -60,6 +60,11 @@ using namespace NLNET;
 // Functions
 //
 
+CLevelManager::CLevelManager() : CSingleton<CLevelManager>()
+{
+	CurrentLevel = 0;
+}
+
 void CLevelManager::init()
 {
 	CurrentLevel = 0;
