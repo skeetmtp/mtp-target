@@ -64,7 +64,7 @@ static map<string, pair<string, pair<string, sint32> > > UserIdNameAssociations;
 
 static string ListenAddr;
 
-string getUserFromCookie(const string &cookie, sint32 &totalScore,string userTexture)
+string getUserFromCookie(const string &cookie, sint32 &totalScore,string &userTexture)
 {
 	map<string, pair<string, pair<string, sint32> > >::iterator it = UserIdNameAssociations.find(cookie);
 	if(it == UserIdNameAssociations.end())
