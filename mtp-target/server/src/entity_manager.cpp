@@ -477,7 +477,7 @@ void CEntityManager::login(CEntity *e)
 
 CEntity *CEntityManager::getByName(const std::string &name)
 {
-	CEntity *res = NULL;
+	CEntity *res = 0;
 	for(EntityConstIt it = entities().begin(); it != entities().end(); it++)
 	{
 		if((*it)->name() == name)
@@ -561,7 +561,7 @@ CEntity *CEntityManager::getById(uint8 eid)
 	if(eid == 255)
 	{
 		nlwarning("Can't find client because eid 255 is not valid");
-		return NULL;
+		return 0;
 	}
 	
 	CEntity *res = 0;
@@ -580,7 +580,7 @@ CEntity *CEntityManager::getById(uint8 eid)
 	}
 	
 	nlwarning("Can't find client eid %hu ", (uint16)eid);
-	return NULL;
+	return 0;
 	
 }
 
@@ -669,7 +669,7 @@ uint8 CEntityManager::nbEntities()
 CEntity *CEntityManager::getNthEntity(uint8 number)
 {
 	uint8  num = 0;
-	CEntity *res = NULL;
+	CEntity *res = 0;
 	EntityIt it;
 	for( it = entities().begin(); it != entities().end(); it++)
 	{
@@ -679,7 +679,7 @@ CEntity *CEntityManager::getNthEntity(uint8 number)
 		num++;
 	}
 
-	return NULL;
+	return 0;
 }
 
 

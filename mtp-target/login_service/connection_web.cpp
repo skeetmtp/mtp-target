@@ -58,7 +58,7 @@ using namespace NLNET;
 // Variables
 //
 
-CBufServer *WebServer = NULL;
+CBufServer *WebServer = 0;
 
 // uint32 is the hostid to the web connection
 map<uint32, CLoginCookie> TempCookies;
@@ -70,7 +70,7 @@ map<uint32, CLoginCookie> TempCookies;
 
 static void cbWSShardChooseShard/* (CMessage &msgin, TSockId from, CCallbackNetBase &netbase)*/ (CMessage &msgin, const std::string &serviceName, uint16 sid)
 {
-	nlassert(WebServer != NULL);
+	nlassert(WebServer != 0);
 
 	//
 	// S10: receive "SCS" message from WS
@@ -221,10 +221,10 @@ WebCallback WebCallbackArray[] = {
 
 void connectionWebInit ()
 {
-	nlassert(WebServer == NULL);
+	nlassert(WebServer == 0);
 
 	WebServer = new CBufServer ();
-	nlassert(WebServer != NULL);
+	nlassert(WebServer != 0);
 
 	uint16 port = (uint16) IService::getInstance ()->ConfigFile.getVar ("WebPort").asInt();
 	WebServer->init (port);
@@ -237,7 +237,7 @@ void connectionWebInit ()
 
 void connectionWebUpdate ()
 {
-	nlassert(WebServer != NULL);
+	nlassert(WebServer != 0);
 
 	try
 	{
@@ -281,7 +281,7 @@ void connectionWebUpdate ()
 
 void connectionWebRelease ()
 {
-	nlassert(WebServer != NULL);
+	nlassert(WebServer != 0);
 
 	delete WebServer;
 	WebServer = 0;

@@ -49,7 +49,7 @@ using namespace NLMISC;
 //
 	
 static float percent = 0.12f;
-static guiSPG<CGuiFrame> testFrame = NULL;
+static guiSPG<CGuiFrame> testFrame = 0;
 
 void CGuiTask::init()
 {
@@ -58,7 +58,7 @@ void CGuiTask::init()
 
 	//test code
 	/*
-	guiSPG<CGuiXml> xml = NULL;
+	guiSPG<CGuiXml> xml = 0;
 	xml = CGuiXmlManager::instance().Load("server_list.xml");
 	testFrame = (CGuiFrame *)xml->get("serverListFrame");
 	CGuiObjectManager::instance().objects.push_back(testFrame);

@@ -59,7 +59,7 @@ using namespace NLNET;
 // Variables
 //
 
-CCallbackServer *ClientsServer = NULL;
+CCallbackServer *ClientsServer = 0;
 
 struct CUser
 {
@@ -71,7 +71,7 @@ struct CUser
 		Active = true;
 		Online = false;
 		Authorized = true;
-		SockId = NULL;
+		SockId = 0;
 	}
 	string Login, Password, ShardPrivilege;
 	uint32 Id;
@@ -250,7 +250,7 @@ bool havePrivilege (string userPriv, string shardPriv)
 
 static void cbWSShardChooseShard(CMessage &msgin, const std::string &serviceName, uint16 sid)
 {
-	nlassert(ClientsServer != NULL);
+	nlassert(ClientsServer != 0);
 
 	//
 	// S10: receive "SCS" message from WS
@@ -593,7 +593,7 @@ static void cbClientDisconnection (TSockId from, void *arg)
 				// prematurated disconnection, clean everything
 				// ace disconnectClient (*it, false, false);
 			}
-			(*it).SockId = NULL;
+			(*it).SockId = 0;
 			return;
 		}
 	}
@@ -609,17 +609,17 @@ const TCallbackItem ClientCallbackArray[] =
 
 void connectionClientInit ()
 {
-	nlassert(ClientsServer == NULL);
+	nlassert(ClientsServer == 0);
 	
 	ClientsServer = new CCallbackServer();
-	nlassert(ClientsServer != NULL);
+	nlassert(ClientsServer != 0);
 
 	uint16 port = (uint16) IService::getInstance ()->ConfigFile.getVar ("ClientsPort").asInt();
 	ClientsServer->init (port);
 
 	ClientsServer->addCallbackArray(ClientCallbackArray, sizeof(ClientCallbackArray)/sizeof(ClientCallbackArray[0]));
-	ClientsServer->setConnectionCallback(cbClientConnection, NULL);
-	ClientsServer->setDisconnectionCallback(cbClientDisconnection, NULL);
+	ClientsServer->setConnectionCallback(cbClientConnection, 0);
+	ClientsServer->setDisconnectionCallback(cbClientDisconnection, 0);
 
 	// catch the messages from Welcome Service to know if the user can connect or not
 	CUnifiedNetwork::getInstance ()->addCallbackArray (WSCallbackArray, sizeof(WSCallbackArray)/sizeof(WSCallbackArray[0]));
@@ -628,7 +628,7 @@ void connectionClientInit ()
 
 void connectionClientUpdate ()
 {
-	nlassert(ClientsServer != NULL);
+	nlassert(ClientsServer != 0);
 
 	try
 	{
@@ -642,7 +642,7 @@ void connectionClientUpdate ()
 
 void connectionClientRelease ()
 {
-	nlassert(ClientsServer != NULL);
+	nlassert(ClientsServer != 0);
 	
 	delete ClientsServer;
 	ClientsServer = 0;

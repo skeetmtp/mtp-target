@@ -543,7 +543,7 @@ CModule *CLevel::getModule(std::string &name)
 	for(uint i = 0; i<getModuleCount();i++)
 		if(Modules[i]->name()==name)
 			return Modules[i];
-	return NULL;
+	return 0;
 }
 
 CParticles *CLevel::getParticles(uint32 id)
@@ -558,7 +558,7 @@ CParticles *CLevel::getParticles(std::string &name)
 	for(uint i = 0; i<getParticlesCount();i++)
 		if(Particles[i]->name()==name)
 			return Particles[i];
-		return NULL;		
+		return 0;		
 }
 
 
@@ -621,9 +621,9 @@ int CLevel::getEntityByName(lua_State *L)
 	CEntity *e = CEntityManager::instance().getByName(name);
 	if(e)
 		nlinfo("Lua(0x%p) : getEntityByName(%s))=0x%p(0x%p)",L,name.c_str(),e,e->luaProxy);
-	if(e==NULL)
+	if(e==0)
 	{
-		nlwarning("getEntityByName(%s)==NULL",name.c_str());
+		nlwarning("getEntityByName(%s)==0",name.c_str());
 		return 0;
 	}
 	else
@@ -637,7 +637,7 @@ int CLevel::getModuleByName(lua_State *L)
 	unsigned int len;
 	const char *moduleName = luaL_checklstring(L, 1, &len);
 	string name(moduleName);
-	CModule *m = NULL;
+	CModule *m = 0;
 	Lunar<CModuleProxy>::push(L, m->luaProxy);
 	return 1;
 }
@@ -648,7 +648,7 @@ int CLevel::getParticlesByName(lua_State *L)
 	unsigned int len;
 	const char *particlesName = luaL_checklstring(L, 1, &len);
 	string name(particlesName);
-	CParticles *p = NULL;
+	CParticles *p = 0;
 	Lunar<CParticlesProxy>::push(L, p->luaProxy);
 	return 1;
 }

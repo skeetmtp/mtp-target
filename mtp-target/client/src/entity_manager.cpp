@@ -371,7 +371,7 @@ CEntity *CEntityManager::getByName(string &name)
 		if(entities()[i]->type() != CEntity::Unknown && entities()[i]->name()==name)
 			return entities()[i];
 	}	
-	return NULL;
+	return 0;
 }
 
 //

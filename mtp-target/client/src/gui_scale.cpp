@@ -116,7 +116,7 @@ CGuiScale::CGuiScale()
 	
 	_buttonPressed = false;
 	_buttonPressedPercent = 0;
-	_ptrValue = NULL;
+	_ptrValue = 0;
 }
 
 CGuiScale::~CGuiScale()

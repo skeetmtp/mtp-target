@@ -49,7 +49,7 @@ CLoginClientMtp::TShardList CLoginClientMtp::ShardList;
 
 string CLoginClientMtp::_GfxInfos;
 
-CCallbackClient *CLoginClientMtp::_CallbackClient = NULL;
+CCallbackClient *CLoginClientMtp::_CallbackClient = 0;
 
 
 // Callback for answer of the login password.
@@ -123,7 +123,7 @@ string CLoginClientMtp::authenticate (const string &loginServiceAddr, const stri
 	//
 	try
 	{
-		nlassert (_CallbackClient == NULL);
+		nlassert (_CallbackClient == 0);
 		_CallbackClient = new CCallbackClient();
 		_CallbackClient->addCallbackArray (CallbackArray, sizeof(CallbackArray)/sizeof(CallbackArray[0]));
 		
@@ -135,7 +135,7 @@ string CLoginClientMtp::authenticate (const string &loginServiceAddr, const stri
 	catch (ESocket &e)
 	{
 		delete _CallbackClient;
-		_CallbackClient = NULL;
+		_CallbackClient = 0;
 		nlwarning ("Connection refused to LS (addr:%s): %s", loginServiceAddr.c_str(), e.what ());
 		return "Connection refused to LS";
 	}
@@ -172,7 +172,7 @@ string CLoginClientMtp::authenticate (const string &loginServiceAddr, const stri
 	if (!VerifyLoginPassword)
 	{
 		delete _CallbackClient;
-		_CallbackClient = NULL;
+		_CallbackClient = 0;
 		return "CLoginClientMtp::authenticate(): LS disconnects me";
 	}
 
@@ -180,7 +180,7 @@ string CLoginClientMtp::authenticate (const string &loginServiceAddr, const stri
 	{
 		_CallbackClient->disconnect ();
 		delete _CallbackClient;
-		_CallbackClient = NULL;
+		_CallbackClient = 0;
 	}
 
 	return VerifyLoginPasswordReason;
@@ -188,7 +188,7 @@ string CLoginClientMtp::authenticate (const string &loginServiceAddr, const stri
 
 string CLoginClientMtp::confirmConnection (uint32 shardListIndex)
 {
-	nlassert (_CallbackClient != NULL && _CallbackClient->connected());
+	nlassert (_CallbackClient != 0 && _CallbackClient->connected());
 	nlassert (shardListIndex < ShardList.size());
 
 	//
@@ -212,14 +212,14 @@ string CLoginClientMtp::confirmConnection (uint32 shardListIndex)
 	if (!ShardChooseShard)
 	{
 		delete _CallbackClient;
-		_CallbackClient = NULL;
+		_CallbackClient = 0;
 		return "CLoginClientMtp::connectToShard(): LS disconnects me";
 	}
 	else
 	{
 		_CallbackClient->disconnect ();
 		delete _CallbackClient;
-		_CallbackClient = NULL;
+		_CallbackClient = 0;
 	}
 
 	if (!ShardChooseShardReason.empty())

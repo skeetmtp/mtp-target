@@ -614,7 +614,7 @@ class PhysicsThread : public IRunnable
 	
 };
 
-static PhysicsThread *physicThread = NULL;
+static PhysicsThread *physicThread = 0;
 
 //
 // Functions

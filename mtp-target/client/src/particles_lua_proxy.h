@@ -32,7 +32,7 @@ public:
 	CParticlesProxy(lua_State *luaSession)
 	{
 //		nlinfo("new CParticlesProxy0 0x%p",this);
-		_particles = NULL;
+		_particles = 0;
 		LuaUserData = 0;
 		LuaUserDataRef = 0;
 	}

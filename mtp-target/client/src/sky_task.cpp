@@ -82,9 +82,9 @@ CSkyTask::CSkyTask():ITask()
 {
 	shapeName("");
 
-	nelSkyScene   = NULL;
-	nelSkyMesh    = NULL;
-	nelCloudScape = NULL;
+	nelSkyScene   = 0;
+	nelSkyMesh    = 0;
+	nelCloudScape = 0;
 }
 
 
@@ -161,13 +161,13 @@ void CSkyTask::release()
 	if(nelCloudScape)
 	{
 		nelSkyScene->deleteCloudScape(nelCloudScape);
-		nelCloudScape = NULL;
+		nelCloudScape = 0;
 	}
 
 	if(nelSkyScene)
 	{
 		C3DTask::instance().driver().deleteScene(nelSkyScene);
-		nelSkyScene = NULL;
+		nelSkyScene = 0;
 	}
 
 	

@@ -56,7 +56,7 @@ bool CLevelProxy::call(string funcName)
 { 
 	int res;
 	lua_State *L = CLuaEngine::instance().session();
-	if(L==NULL)
+	if(L==0)
 		return false;
 	int mp = Lunar<CLevelProxy>::push(L, this);
 	res = Lunar<CLevelProxy>::call(L,funcName.c_str(),0);
@@ -82,7 +82,7 @@ int CLevelProxy::getUserData(lua_State *luaSession)
 	lua_getref(luaSession, LuaUserDataRef); //push obj which have this ref id
 	/*
 	if(!LuaUserDataRef)
-		nlwarning("clien lua call getuserdata but userdata is NULL");
+		nlwarning("clien lua call getuserdata but userdata is 0");
 	*/
 	return 1; // one return value
 }

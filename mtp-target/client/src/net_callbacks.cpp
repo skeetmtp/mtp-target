@@ -458,7 +458,7 @@ static void cbRequestCRCKey(CNetMessage &msgin)
 	CHashKey hashKey;
 	msgin.serial(hashKey);
 	CResourceManager::instance().receivedCRC(fn);
-	nlinfo("cbRequestCRCKey res = %s",fn.c_str());
+	nlinfo("cbRequestCRCKey res = '%s'",fn.c_str());
 }
 
 static void cbRequestDownload(CNetMessage &msgin)
@@ -469,7 +469,7 @@ static void cbRequestDownload(CNetMessage &msgin)
 	uint32 fileSize;
 	
 	msgin.serial(res);
-	nlinfo("cbRequestDownload res = %s",res.c_str());
+	nlinfo("cbRequestDownload res = '%s'",res.c_str());
 	
 	bool receivedError = res.find("FILE:")!=0;
 	

@@ -410,7 +410,7 @@ void CLevel::save()
 	
 	FILE *fp;
 	fp = fopen(fn.c_str(),"rt");
-	nlassert(fp!=NULL);
+	nlassert(fp!=0);
 	string luaStr = "";
 	char ch[256];
 	while(!feof(fp))
@@ -469,7 +469,7 @@ void CLevel::save()
 	
 	
 	fp = fopen(fn.c_str(),"wt");
-	nlassert(fp!=NULL);
+	nlassert(fp!=0);
 	fwrite(luaStr.c_str(),1,luaStr.size(),fp);
 	fclose(fp);
 	

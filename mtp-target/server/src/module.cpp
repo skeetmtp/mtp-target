@@ -76,7 +76,7 @@ static int _dTriRayCallback(dGeomID TriMesh, dGeomID Ray, int TriangleIndex, dRe
 
 CModule::CModule() : CModuleCommon()
 {
-	luaProxy = NULL;
+	luaProxy = 0;
 	triMeshDataId = 0;
 }
 
@@ -92,7 +92,7 @@ void CModule::init(const std::string &name, const std::string &shapeName, uint8 
 	scaleMat.setScale(scale);
 	
 	Geom = 0;
-	luaProxy = NULL;
+	luaProxy = 0;
 	Visible = true;
 	_luaInit();
 	
@@ -170,7 +170,7 @@ CModule::~CModule()
 {
 	if(luaProxy)
 		delete luaProxy;
-	luaProxy = NULL;
+	luaProxy = 0;
 	if(Geom)
 	{
 		if(triMeshDataId)

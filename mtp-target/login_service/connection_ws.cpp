@@ -552,7 +552,7 @@ void connectionWSRelease ()
 
 	while (!Shards.empty())
 	{
-		cbWSDisconnection ("", Shards[0].SId, NULL);
+		cbWSDisconnection ("", Shards[0].SId, 0);
 	}
 	
 /*	

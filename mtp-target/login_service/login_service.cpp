@@ -84,7 +84,7 @@ using namespace NLNET;
 // store specific user information
 NLMISC::CFileDisplayer Fd (NELNS_LOGS "login_service.stat");
 NLMISC::CStdDisplayer Sd;
-NLMISC::CLog *Output = NULL;
+NLMISC::CLog *Output = 0;
 
 //uint32 CUser::NextUserId = 1;	// 0 is reserved
 
@@ -93,11 +93,11 @@ NLMISC::CLog *Output = NULL;
 //vector<CUser>	Users;
 //vector<CShard>	Shards;
 
-IService *ServiceInstance = NULL;
+IService *ServiceInstance = 0;
 
 string DatabaseName, DatabaseHost, DatabaseLogin, DatabasePassword;
 
-MYSQL *DatabaseConnection = NULL;
+MYSQL *DatabaseConnection = 0;
 
 vector<CShard> Shards;
 
@@ -121,24 +121,24 @@ void checkClients ()
 		switch (Users[i].State)
 		{
 		case CUser::Offline:
-			nlassert (Users[i].SockId == NULL);
+			nlassert (Users[i].SockId == 0);
 			nlassert (!Users[i].Cookie.isValid());
-			nlassert (Users[i].ShardId == NULL);
+			nlassert (Users[i].ShardId == 0);
 			break;
 		case CUser::Authorized:
-			nlassert (Users[i].SockId != NULL);
+			nlassert (Users[i].SockId != 0);
 			nlassert (Users[i].Cookie.isValid());
-			nlassert (Users[i].ShardId == NULL);
+			nlassert (Users[i].ShardId == 0);
 			break;
 		case CUser::Awaiting:
-			nlassert (Users[i].SockId == NULL);
+			nlassert (Users[i].SockId == 0);
 			nlassert (!Users[i].Cookie.isValid());
-			nlassert (Users[i].ShardId == NULL);
+			nlassert (Users[i].ShardId == 0);
 			break;
 		case CUser::Online:
-			nlassert (Users[i].SockId == NULL);
+			nlassert (Users[i].SockId == 0);
 			nlassert (!Users[i].Cookie.isValid());
-			nlassert (Users[i].ShardId != NULL);
+			nlassert (Users[i].ShardId != 0);
 			break;
 		default:
 			nlstop;
@@ -175,7 +175,7 @@ void checkClients ()
 			msgout.serial (user.Id);
 			CNetManager::send ("WSLS", msgout, user.ShardId);
 		}
-		user.ShardId = NULL;
+		user.ShardId = 0;
 		break;
 
 	default:
@@ -183,7 +183,7 @@ void checkClients ()
 		break;
 	}
 
-	user.SockId = NULL;
+	user.SockId = 0;
 	user.State = CUser::Offline;
 }
 */
@@ -262,7 +262,7 @@ void displayUsers ()
 void beep (uint freq, uint nb, uint beepDuration, uint pauseDuration)
 {
 #ifdef NL_OS_WINDOWS
-	if (ServiceInstance == NULL)
+	if (ServiceInstance == 0)
 		return;
 
 	try
@@ -289,15 +289,15 @@ void cbDatabaseVar (CConfigFile::CVar &var)
 	DatabaseLogin = IService::getInstance ()->ConfigFile.getVar("DatabaseLogin").asString ();
 	DatabasePassword = IService::getInstance ()->ConfigFile.getVar("DatabasePassword").asString ();
 
-	MYSQL *db = mysql_init(NULL);
-	if(db == NULL)
+	MYSQL *db = mysql_init(0);
+	if(db == 0)
 	{
 		nlwarning ("mysql_init() failed");
 		return;
 	}
 
-	DatabaseConnection = mysql_real_connect(db, DatabaseHost.c_str(), DatabaseLogin.c_str(), DatabasePassword.c_str(), DatabaseName.c_str(),0,NULL,0);
-	if (DatabaseConnection == NULL || DatabaseConnection != db)
+	DatabaseConnection = mysql_real_connect(db, DatabaseHost.c_str(), DatabaseLogin.c_str(), DatabasePassword.c_str(), DatabaseName.c_str(),0,0,0);
+	if (DatabaseConnection == 0 || DatabaseConnection != db)
 	{
 		nlerror ("mysql_real_connect() failed to '%s' with login '%s' and database name '%s'", DatabaseHost.c_str(), DatabaseLogin.c_str(), DatabaseName.c_str());
 		return;
@@ -323,7 +323,7 @@ public:
 		Output = new CLog;
 
 		Output->addDisplayer (&Fd);
-		if (WindowDisplayer != NULL)
+		if (WindowDisplayer != 0)
 			Output->addDisplayer (WindowDisplayer);
 
 		connectionWSInit ();

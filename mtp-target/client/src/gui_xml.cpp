@@ -58,7 +58,7 @@ CGuiObject *CGuiXml::get(string name)
 		if(obj->name()==name)
 			return obj;
 	}
-	return NULL;
+	return 0;
 }
 
 
@@ -86,13 +86,13 @@ CGuiXml *CGuiXmlManager::Load(const string &filename)
 		{
 			nlassert(false);
 			delete res;
-			return NULL;
+			return 0;
 		}
 	}
 	else
 	{
 		nlassert(false);
-		return NULL;
+		return 0;
 	}
 
 
@@ -134,7 +134,7 @@ bool CGuiXml::getVector(xmlNodePtr node,const string &name,CVector &res)
 		char tmpstr[1024];
 		strcpy(tmpstr,s.c_str());
 		char *cstr = tmpstr;
-		char *endstr = NULL;
+		char *endstr = 0;
 		res.x = (float)strtod(cstr,&endstr);
 		if(endstr[0]==',')
 		{

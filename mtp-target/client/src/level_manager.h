@@ -42,7 +42,7 @@ public:
 
 	CLevel &currentLevel() { nlassert(CurrentLevel); return *CurrentLevel; }
 
-	bool levelPresent() {return CurrentLevel!=NULL;	}
+	bool levelPresent() {return CurrentLevel!=0;	}
 
 	virtual void init();
 	virtual void update() { }

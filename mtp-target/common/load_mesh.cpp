@@ -174,7 +174,7 @@ uint32 loadMesh(const std::string &meshFileName, std::vector<NLMISC::CVector> &v
 		return 0;
 	}
 
-	CMesh *m = NULL;
+	CMesh *m = 0;
 	{
 		CShapeStream ss;
 		NLMISC::CIFile i(CPath::lookup(meshFileName, false).c_str());

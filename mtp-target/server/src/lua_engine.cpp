@@ -86,14 +86,14 @@ uint32 CLuaEngine::_sessionId = 0;
 
 CLuaEngine::CLuaEngine()
 {
-	_luaSession = NULL;
+	_luaSession = 0;
 	_error = true;
 }
 
 lua_State *CLuaEngine::session()
 {
 	if(_error)
-		return NULL;
+		return 0;
 	return _luaSession;
 }
 
@@ -158,7 +158,7 @@ void CLuaEngine::release()
 {
 	if(_luaSession && !_error)
 		luaClose(_luaSession);
-	_luaSession = NULL;
+	_luaSession = 0;
 }
 
 void CLuaEngine::entityEntityCollideEvent(CEntity *entity1, CEntity *entity2)
@@ -317,8 +317,8 @@ int CLuaEngine::getEntity(lua_State *L)
 {
 	lua_Number entityNumber = luaL_checknumber(L,1);
 	CEntity *e = CEntityManager::instance().getNthEntity((uint8)entityNumber);
-	if(e==NULL)
-		nlwarning("getNthEntity(%d)==NULL",entityNumber);
+	if(e==0)
+		nlwarning("getNthEntity(%d)==0",entityNumber);
 	else
 		Lunar<CEntityProxy>::push(L, e->luaProxy);
 	return 1;

@@ -57,7 +57,7 @@ CGuiStretchedQuad::CGuiStretchedQuad():_position(0,0,0)
 	_offset = CVector(0,0,0);
 	_color = CRGBA(255,255,255,255);
 
-	_material = NULL;
+	_material = 0;
 	_stretched = true;
 }
 

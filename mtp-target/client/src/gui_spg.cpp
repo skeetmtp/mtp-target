@@ -35,11 +35,11 @@ bool guiSPGCounter::release()
 };
 
 
-guiSPGManager *guiSPGManager::_instance = NULL;
+guiSPGManager *guiSPGManager::_instance = 0;
 
 guiSPGManager &guiSPGManager::instance()
 {
-	if(_instance==NULL)
+	if(_instance==0)
 		_instance = new guiSPGManager;
 	return *_instance;
 }

@@ -37,7 +37,7 @@ public:
 	
 	CLevelProxy(lua_State *luaSession)
 	{
-		_level = NULL;
+		_level = 0;
 		LuaUserData = 0;
 		LuaUserDataRef = 0;
 	}

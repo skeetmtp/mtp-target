@@ -75,9 +75,9 @@ CEntity::CEntity()
 	Rank = 255;
 	LastSent2MePos = CVector::Null;
 	LastSent2OthersPos = CVector::Null;
-	_interpolator = NULL;
+	_interpolator = 0;
 	Ready = false;
-	luaProxy = NULL;
+	luaProxy = 0;
 }
 
 void CEntity::swapOpenClose()

@@ -142,7 +142,7 @@ bool CLevelManager::newLevel()
 	if(CurrentLevel)
 	{
 		delete CurrentLevel;
-		CurrentLevel = NULL;
+		CurrentLevel = 0;
 	}
 	for(i = 0; i < levels.size(); i++)
 	{

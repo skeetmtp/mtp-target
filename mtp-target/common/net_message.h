@@ -53,28 +53,28 @@ public:
 	{
 		Unknown = 0,
 		// alphabetic order
-		Chat,				// CS SC
-		Command,			// CS
-		DisplayText,		//    SC
-		EndSession,			//    SC
-		EditMode,			// CS SC
-		Error,				//    SC
-		Force,				// CS
-		Login,				// CS SC
-		Logout,				//    SC
-		OpenClose,			// CS SC
-		Ready,				// CS SC
-		EverybodyReady,		//    SC
-		RequestCRCKey,		// CS SC
-		RequestDownload,	// CS SC
-		SessionState,		//    SC
-		StartSession,		//    SC
-		Update,				// CS SC
-		UpdateOne,			//    SC
-		FullUpdate,			//    SC
-		UpdateElement,		// CS SC
-		EnableElement,		//    SC
-		ExecLua,			//    SC
+		Chat,				//  1 CS SC
+		Command,			//  2 CS
+		DisplayText,		//  3    SC
+		EndSession,			//  4    SC
+		EditMode,			//  5 CS SC
+		Error,				//  6    SC
+		Force,				//  7 CS
+		Login,				//  8 CS SC
+		Logout,				//  9    SC
+		OpenClose,			// 10 CS SC
+		Ready,				// 11 CS SC
+		EverybodyReady,		// 12    SC
+		RequestCRCKey,		// 13 CS SC
+		RequestDownload,	// 14 CS SC
+		SessionState,		// 15    SC
+		StartSession,		// 16    SC
+		Update,				// 17 CS SC
+		UpdateOne,			// 18    SC
+		FullUpdate,			// 19    SC
+		UpdateElement,		// 20 CS SC
+		EnableElement,		// 21    SC
+		ExecLua,			// 22    SC
 	};
 
 	CNetMessage(TType type = Unknown, bool inputStream = false);

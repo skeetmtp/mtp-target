@@ -82,7 +82,7 @@ void CGuiObjectManager::init()
 	_mouseListener->init();
 	_mouseListener->addToServer(C3DTask::instance().driver().EventServer);
 
-	_focus = NULL;
+	_focus = 0;
 
 	
 }
@@ -117,7 +117,7 @@ void CGuiObjectManager::release()
 
 	//C3DTask::instance().driver().setCapture(false);
 	_mouseListener->removeFromServer(C3DTask::instance().driver().EventServer);
-	_mouseListener = NULL;
+	_mouseListener = 0;
 }
 
 CGuiMouseListener &CGuiObjectManager::mouseListener()

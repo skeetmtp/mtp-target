@@ -120,7 +120,7 @@ NL3D::UMaterial CGuiButtonManager::material(TButtonMaterialId id)
 void CGuiButton::_init()
 {
 	_pressed = false;
-	eventBehaviour = NULL;
+	eventBehaviour = 0;
 }
 
 CGuiButton::CGuiButton()
@@ -165,9 +165,9 @@ void CGuiButton::resetBitmap()
 void CGuiButton::resetBitmap(UMaterial normalBitmap)
 {
 	_normalBitmap       = normalBitmap;
-	_activeBitmap       = NULL;
-	_prelightBitmap     = NULL;
-	_insensitiveBitmap  = NULL;
+	_activeBitmap       = 0;
+	_prelightBitmap     = 0;
+	_insensitiveBitmap  = 0;
 	_stretched          = false;
 }
 
@@ -175,17 +175,17 @@ void CGuiButton::resetBitmap(UMaterial normalBitmap, UMaterial activeBitmap)
 {
 	_normalBitmap       = normalBitmap;
 	_activeBitmap       = activeBitmap;
-	_prelightBitmap     = NULL;
-	_insensitiveBitmap  = NULL;
+	_prelightBitmap     = 0;
+	_insensitiveBitmap  = 0;
 	_stretched          = false;
 }
 
 void CGuiButton::resetBitmap(const string &normalBitmap)
 {
 	_normalBitmap       = CGuiObject::LoadBitmap(normalBitmap);	
-	_activeBitmap       = NULL;
-	_prelightBitmap     = NULL;
-	_insensitiveBitmap  = NULL;
+	_activeBitmap       = 0;
+	_prelightBitmap     = 0;
+	_insensitiveBitmap  = 0;
 	_stretched          = false;
 }
 
@@ -193,8 +193,8 @@ void CGuiButton::resetBitmap(const string &normalBitmap, const string &activeBit
 {
 	_normalBitmap       = CGuiObject::LoadBitmap(normalBitmap);	
 	_activeBitmap       = CGuiObject::LoadBitmap(activeBitmap);	
-	_prelightBitmap     = NULL;
-	_insensitiveBitmap  = NULL;
+	_prelightBitmap     = 0;
+	_insensitiveBitmap  = 0;
 	_stretched          = false;	
 }
 

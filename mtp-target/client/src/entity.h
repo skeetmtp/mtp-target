@@ -150,7 +150,7 @@ private:
 	
 	// private ctor because only CEntityManager can create a CEntity
 	CEntity();
-	virtual ~CEntity() { delete _interpolator; _interpolator = NULL; }
+	virtual ~CEntity() { delete _interpolator; _interpolator = 0; }
 
 	void reset();
 	void luaInit();

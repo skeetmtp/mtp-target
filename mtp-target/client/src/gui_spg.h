@@ -24,7 +24,7 @@ class guiSPGCounter
 public:
 	void *p;
 	int refCounter;
-	guiSPGCounter() {refCounter=0;p=NULL;}
+	guiSPGCounter() {refCounter=0;p=0;}
 	guiSPGCounter(void *p_) : p(p_),refCounter(0) {}
 
 	void addRef()
@@ -72,7 +72,7 @@ private:
 			del = counter->release(); 
 		if(del)
 			delete p;
-		counter=NULL;
+		counter=0;
 	}
 protected:	
 public:
@@ -80,7 +80,7 @@ public:
 	Counter *counter;
 
 	//!constructor
-	guiSPG() : counter(NULL),p(NULL) {};
+	guiSPG() : counter(0),p(0) {};
 	//!constructor
 	guiSPG( T* p_ )  { if(p_) counter=guiSPGManager::instance().get(p_); p=p_; counter->addRef();};
 	//!Copy constructor.
@@ -93,8 +93,8 @@ public:
 		}
 		else
 		{
-			counter=NULL;
-			p=NULL;
+			counter=0;
+			p=0;
 		}
 	} 
 	//!Copy constructor.
@@ -107,13 +107,13 @@ public:
 		}
 		else
 		{
-			counter=NULL;
-			p=NULL;
+			counter=0;
+			p=0;
 		}
 	} 
 
 	//!constructor.
-	guiSPG( int Null ) : counter(NULL),p(NULL) {nlassert(Null==NULL);}	// Assignment to NULL
+	guiSPG( int Null ) : counter(0),p(0) {nlassert(Null==0);}	// Assignment to NULL
 	
 	//!destructor
 	~guiSPG() { release(); }
@@ -173,11 +173,11 @@ public:
 	
 	
 	//!Cast to boolean, simplify if statements with smart pointers.
-	operator bool() { return p != NULL; };
+	operator bool() { return p != 0; };
 	//!Cast to boolean, simplify if statements with smart pointers.
-	operator bool() const { return p != NULL; };
+	operator bool() const { return p != 0; };
 	//!Cast to boolean, simplify if statements with smart pointers.
-	bool  operator !() { return p == NULL; };
+	bool  operator !() { return p == 0; };
 	
 	//!Misc compare functions.
 	bool  operator == ( const T* p1 ) const { return p == p1; };
@@ -226,22 +226,22 @@ inline bool operator == ( T *p, const guiSPG<T> &p1 )	{
 
 template <class T>
 inline bool operator == ( const guiSPG<T> &p1,const int null )	{
-	return p1.p==NULL;
+	return p1.p==0;
 }
 
 template <class T>
 inline bool operator != ( const guiSPG<T> &p1,const int null )	{
-	return p1.p!=NULL;
+	return p1.p!=0;
 }
 
 template <class T>
 inline bool operator == ( const int null,const guiSPG<T> &p1 )	{
-	return p1.p==NULL;
+	return p1.p==0;
 }
 
 template <class T>
 inline bool operator != ( const int null,const guiSPG<T> &p1 )	{
-	return p1.p!=NULL;
+	return p1.p!=0;
 }
 
 	

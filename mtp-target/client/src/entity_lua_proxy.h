@@ -36,7 +36,7 @@ public:
 	
 	CEntityProxy(lua_State *luaSession)
 	{
-		_entity = NULL;
+		_entity = 0;
 		LuaUserData = 0;
 		LuaUserDataRef = 0;
 	}

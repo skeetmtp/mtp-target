@@ -61,8 +61,8 @@ CVariable<bool> EnableEditor("EnableEditor", "1 if you want a key to enable the 
 void CEditorTask::init()
 {
 	_enable = false;
-	_testFrame = NULL;
-	_selectedElement = NULL;
+	_testFrame = 0;
+	_selectedElement = 0;
 	_mouseX = 0;
 	_mouseY = -0.5f;
 	_lastUpdateTime = 0;
@@ -84,7 +84,7 @@ void CEditorTask::_mouseSelectModule()
 	uint32 i;
 	if(mousePressed)
 	{
-		_selectedElement = NULL;
+		_selectedElement = 0;
 		//nlinfo("editor ray test");
 		CViewport vp = C3DTask::instance().scene().getViewport();
 		CMatrix camMat = C3DTask::instance().scene().getCam().getMatrix();
@@ -133,7 +133,7 @@ void CEditorTask::_mouseSelectModule()
 
 		//test plus precis :
 		
-		CEditableElementCommon *nearestElement = NULL;
+		CEditableElementCommon *nearestElement = 0;
 		float nearestElmentDist = 10000.0f;
 		list<CEditableElementCommon *>::iterator it;
 		for(it=bboxModules.begin();it!=bboxModules.end();it++)
@@ -347,7 +347,7 @@ void CEditorTask::enable(bool e)
 	}
 	else
 	{
-		_testFrame = NULL;
+		_testFrame = 0;
 	}
 	_enable = e;
 	FollowEntity = !e;
@@ -362,6 +362,6 @@ bool CEditorTask::enable()
 
 void CEditorTask::reset()
 {
-	_selectedElement = NULL;
+	_selectedElement = 0;
 }
 

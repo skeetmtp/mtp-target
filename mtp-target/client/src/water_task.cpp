@@ -85,11 +85,11 @@ CWaterTask::CWaterTask():ITask()
 	heightMap0Name("");
 	heightMap1Name("");
 
-	nelWaterScene   = NULL;
-	WaterShape    = NULL;
-	WaterModel    = NULL;
-	WaterMesh     = NULL;	
-	WaterInstance = NULL;	
+	nelWaterScene   = 0;
+	WaterShape    = 0;
+	WaterModel    = 0;
+	WaterMesh     = 0;	
+	WaterInstance = 0;	
 }
 
 void cbVar (CConfigFile::CVar &var)
@@ -258,14 +258,14 @@ void CWaterTask::release()
 	if(WaterInstance)
 	{
 		scene.deleteInstance(WaterInstance);
-		WaterInstance = NULL;
+		WaterInstance = 0;
 		//delete WaterShape;
 	}
 
 	if(nelWaterScene)
 	{
 		C3DTask::instance().driver().deleteScene(nelWaterScene);
-		nelWaterScene = NULL;
+		nelWaterScene = 0;
 	}
 
 	

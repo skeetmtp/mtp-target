@@ -58,7 +58,7 @@ bool CModuleProxy::call(string funcName)
 	if(!CLevelManager::instance().levelPresent())
 		return false;
 	lua_State *L = CLevelManager::instance().currentLevel().luaState();
-	if(L==NULL)
+	if(L==0)
 		return false;
 	int mp = Lunar<CModuleProxy>::push(L, this);
 	res = Lunar<CModuleProxy>::call(L,funcName.c_str(),0);
@@ -86,7 +86,7 @@ int CModuleProxy::getUserData(lua_State *luaSession)
 	lua_getref(luaSession, LuaUserDataRef); //push obj which have this ref id
 	/*
 	if(!LuaUserDataRef)
-		nlwarning("clien lua call getuserdata but userdata is NULL");
+		nlwarning("clien lua call getuserdata but userdata is 0");
 	*/
 	return 1; // one return value
 }

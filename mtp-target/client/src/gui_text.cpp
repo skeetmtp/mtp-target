@@ -561,7 +561,7 @@ void CGuiText::init(CGuiXml *xml,xmlNodePtr node)
 
 CGuiTextPercent::CGuiTextPercent():CGuiText()
 {
-	_ptrValue = NULL;
+	_ptrValue = 0;
 }
 
 CGuiTextPercent::~CGuiTextPercent()

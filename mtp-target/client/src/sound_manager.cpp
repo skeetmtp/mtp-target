@@ -69,7 +69,7 @@ static FSOUND_SAMPLE *loadSoundSample(const std::string &filename)
 void CSoundManager::init()
 {
 #ifdef USE_FMOD
-	streamStream = NULL;
+	streamStream = 0;
 	// check version
 	if (FSOUND_GetVersion() < FMOD_VERSION)
 	{

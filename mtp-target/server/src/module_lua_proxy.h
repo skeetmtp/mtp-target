@@ -29,7 +29,7 @@ public:
 	CModuleProxy(lua_State *luaSession)
 	{
 //		nlinfo("new CModuleProxy0 0x%p",this);
-		_module = NULL;
+		_module = 0;
 		LuaUserData = 0;
 		LuaUserDataRef = 0;
 	}

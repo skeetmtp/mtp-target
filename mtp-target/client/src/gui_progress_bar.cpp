@@ -102,7 +102,7 @@ CGuiProgressBar::CGuiProgressBar()
 	CGuiTextPercent *text = new CGuiTextPercent;
 	text->ptrValue(&_percent);
 	element(text);
-	_ptrValue = NULL;
+	_ptrValue = 0;
 }
 
 CGuiProgressBar::~CGuiProgressBar()

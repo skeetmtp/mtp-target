@@ -85,7 +85,7 @@ void CLevelManager::loadLevel(const std::string &fileName)
 	nlinfo("Loading level '%s'", fileName.c_str());
 
 
-	if(CurrentLevel!=NULL)// || CurrentLevel->filename()!=res)
+	if(CurrentLevel!=0)// || CurrentLevel->filename()!=res)
 	{
 		delete CurrentLevel;
 		CurrentLevel = 0;

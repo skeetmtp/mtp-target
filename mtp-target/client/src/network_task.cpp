@@ -175,7 +175,7 @@ string CNetworkTask::connect(CInetAddress *ip)
 
 	try
 	{
-		if (ip==NULL)
+		if (ip==0)
 		{
 			// use cfg
 			addr.setNameAndPort(CConfigFileTask::instance().configFile().getVar("ServerHost").asString()+":"+toString(CConfigFileTask::instance().configFile().getVar("TcpPort").asInt()));

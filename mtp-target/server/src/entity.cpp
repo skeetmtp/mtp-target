@@ -128,7 +128,7 @@ void CEntity::init ()
 	dGeomSetData(Geom, (void *)this);
 	
 	dGeomSetBody(Geom, Body);
-	luaProxy = NULL;
+	luaProxy = 0;
 }
 
 CEntity::CEntity(uint8 eid)
@@ -163,7 +163,7 @@ CEntity::~CEntity()
 	
 	if(luaProxy)
 		delete luaProxy;
-	luaProxy = NULL;
+	luaProxy = 0;
 
 	if(Geom)
 	{

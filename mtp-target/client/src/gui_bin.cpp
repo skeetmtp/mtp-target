@@ -70,12 +70,12 @@ void CGuiBinManager::release()
 //
 CGuiBin::CGuiBin()
 {
-	_element = NULL;
+	_element = 0;
 }
 
 CGuiBin::~CGuiBin()
 {
-	_element = NULL;	
+	_element = 0;
 }
 
 void CGuiBin::_render(const CVector &pos,CVector &maxSize)
@@ -169,7 +169,7 @@ void CGuiBin::init(CGuiXml *xml,xmlNodePtr node)
 	node = xml->doc.getFirstChildNode(node,"element");
 	if(node)
 	{
-		CGuiObject *object = NULL;
+		CGuiObject *object = 0;
 		for( node = xml->doc.getFirstChildNode(node,"object");node;node = xml->doc.getNextChildNode(node,"object") )
 		{
 			object = CGuiObject::XmlCreateFromNode(xml,node);

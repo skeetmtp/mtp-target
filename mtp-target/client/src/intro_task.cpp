@@ -197,7 +197,7 @@ void CIntroTask::updateLoginOnline()
 		CConfigFileTask::instance().configFile().getVar("Login").setAsString(loginText->text);
 		CConfigFileTask::instance().configFile().getVar("Password").setAsString(passwordText->text);
 		CConfigFileTask::instance().configFile().save();
-		_errorServerFrame = NULL;
+		_errorServerFrame = 0;
 		
 		string loginServer = CConfigFileTask::instance().configFile().getVar("LSHost").asString();
 		

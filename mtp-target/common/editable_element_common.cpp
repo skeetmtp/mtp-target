@@ -63,7 +63,7 @@ CEditableElementCommon::CEditableElementCommon()
 	_type = Unknown;
 	_changed = false;
 #ifndef MTPT_SERVER
-	Mesh = NULL;
+	Mesh = 0;
 #endif
 }
 

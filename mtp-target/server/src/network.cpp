@@ -210,7 +210,7 @@ void CNetwork::reset()
 }
 
 
-//static FILE *fp = NULL;
+//static FILE *fp = 0;
 //static int rpos;
 //static int updateCount2 = 0;
 
