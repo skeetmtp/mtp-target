@@ -738,3 +738,17 @@ uint CEntityManager::humanClientCount()
 	return res;
 }
 
+
+void CEntityManager::addIdToRemoveList(uint8 eid)
+{
+	IdToRemove.push_back(eid);	
+}
+
+void CEntityManager::flushRemoveList()
+{
+	for(uint i = 0; i < IdToRemove.size(); i++)
+	{
+		CEntityManager::instance().remove(IdToRemove[i]);
+	}
+	IdToRemove.clear();	
+}

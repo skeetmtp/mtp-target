@@ -56,7 +56,7 @@ void CNetMessage::setHeader(TType type)
 }
 
 
-void CNetMessage::send(NLNET::CTcpSock *sock)
+bool CNetMessage::send(NLNET::CTcpSock *sock)
 {
 	nlassert(sock);
 
@@ -74,7 +74,11 @@ void CNetMessage::send(NLNET::CTcpSock *sock)
 	if(res != NLNET::CSock::Ok)
 	{
 		nlwarning("Send failed: %s (code %u)", NLNET::CSock::errorString(NLNET::CSock::getLastError()).c_str(), NLNET::CSock::getLastError());
+		//sock->close();
+		//sock->disconnect();
+		return false;
 	}
+	return true;
 }
 
 NLNET::CSock::TSockResult CNetMessage::receive(NLNET::CTcpSock *sock)

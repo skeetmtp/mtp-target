@@ -131,10 +131,11 @@ public:
 				for(CEntityManager::EntityConstIt it = acces.value().begin(); it != acces.value().end(); it++)
 				{
 					nlassert(*it);
+					CClient *c = (CClient *)(*it);
+					
 					if((*it)->type() != CEntity::Client)
 						continue;
 
-					CClient *c = (CClient *)(*it);
 					nlassert(c->sock());
 
 					if(FD_ISSET(c->sock()->descriptor(), &readers) == 0)
@@ -402,6 +403,7 @@ void CNetwork::update()
 		}
 	}
 	updateCount++;
+	CEntityManager::instance().flushRemoveList();
 }
 
 
@@ -431,7 +433,11 @@ void CNetwork::send(uint8 eid, CNetMessage &msg, bool checkReady)
 			nlassert((*it)->type() == CEntity::Client);
 			CClient *c = (CClient *)(*it);
 			if(!checkReady || c->networkReady())
-			msg.send(c->sock());
+			{
+				bool sok = msg.send(c->sock());
+				if(!sok)
+					CEntityManager::instance().addIdToRemoveList(c->id());
+			}
 		}
 	}
 }
@@ -445,7 +451,11 @@ void CNetwork::send(CNetMessage &msg)
 		{
 			CClient *c = (CClient *)(*it);
 			if(c->networkReady())
-				msg.send(c->sock());
+			{
+				bool sok = msg.send(c->sock());
+				if(!sok)
+					CEntityManager::instance().addIdToRemoveList(c->id());
+			}
 		}
 	}
 }
@@ -459,7 +469,11 @@ void CNetwork::sendAllExcept(uint8 eid, CNetMessage &msg)
 		{
 			CClient *c = (CClient *)(*it);
 			if(c->networkReady())
-				msg.send(c->sock());
+			{
+				bool sok = msg.send(c->sock());
+				if(!sok)
+					CEntityManager::instance().addIdToRemoveList(c->id());
+			}
 		}
 	}
 }

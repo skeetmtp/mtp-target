@@ -86,7 +86,7 @@ private:
 
 	TType Type;
 
-	void send (NLNET::CTcpSock *ts);
+	bool send (NLNET::CTcpSock *ts);
 	NLNET::CSock::TSockResult receive (NLNET::CTcpSock *ts);
 
 	friend class CNetwork;

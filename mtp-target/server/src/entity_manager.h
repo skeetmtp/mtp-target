@@ -58,6 +58,8 @@ public:
 
 	void login(CEntity *c);
 
+	void addIdToRemoveList(uint8 eid);
+	void flushRemoveList();
 	void remove(uint8 eid);
 	void remove(const std::string &name);
 
@@ -80,7 +82,8 @@ private:
 	uint8		findNewId();
 	void		checkForcedClientCount();
 	void		sendUpdateList();
-
+	std::vector<uint8> IdToRemove;
+	
 		
 };
 
