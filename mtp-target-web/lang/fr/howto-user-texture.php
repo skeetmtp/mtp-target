@@ -18,11 +18,7 @@ Pour centrer le perso : Touche Control + click gauche<br>
 <li>N'oubliez pas : Sauvez au format <b>TGA 32 bit sans RLE</b>. Le nom du fichier doit suivre la regle : commencer par <code>ping_ball_</code> suivi de la descritipn de votre texture en fini par <code>.tga</code><br>
 Par exemple, <code>ping_ball_ryzom.tga</code></li>
 <li>Envoyez la sur notre serveur <a href="<?php echo "$user_texture" ?>">via cette page</a></li>
-<li>Ouvrez le fichier <code>mtp_target.cfg</code> contenu dans le repertoire du jeu (par defaut <code>C:\Program Files\mtp-target\client</code>)</li>
-<li>Ajoutez la ligne suivante : <br>
-<code>EntityTexture = "ryzom";</code><br>
-ou ryzom est la description que vous aviez mise dans le nom du fichier envoyé
-</li>
+<li>Selectionez la <a href="?page=user_texture_selection.php">ici</a></li>
 </ul>
 
 <h3>Changer la couleur de l'avatar</h3>

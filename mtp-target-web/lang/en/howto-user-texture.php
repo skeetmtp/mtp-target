@@ -18,11 +18,7 @@ To center avatar : Control key + left mouse button<br>
 <li>Remember : Save it in <b> TGA format without RLE </b>. The file name *must* follow the name rules: it must starts with <code>ping_ball_</code> and, after, the name of your texture and <code>.tga</code><br>
 For example, a valid name is <code>ping_ball_ryzom.tga</code></li>
 <li>Upload it to our server <a href="<?php echo "$user_texture" ?>">using this page</a></li>
-<li>Open the file <code>mtp_target.cfg</code> located in the game directory (default location is <code>C:\Program Files\mtp-target\client</code>)</li>
-<li>Add the follow line in the file: <br>
-<code>EntityTexture = "ryzom";</code><br>
-where ryzom is the middle name of your texture you uploaded
-</li>
+<li>Select it <a href="?page=user_texture_selection.php">here</a></li>
 </ul>
 
 <h3>Changing avatar color</h3>

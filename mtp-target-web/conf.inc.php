@@ -59,6 +59,6 @@
      $contact_email = "mailto:contact@mtp-target.org?subject=mtp-target";
      
 //special link
-     $user_texture = "http://mtp-target.dyndns.org/mtp-target/";
+     $user_texture = "?page=user_upload_texture.php";
 
 ?>

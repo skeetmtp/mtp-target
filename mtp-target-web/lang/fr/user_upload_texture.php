@@ -15,7 +15,7 @@
 
 ?>
 
-<p>Cette page vous permet d'ajouter votre <a href="view_custom.php">propre texture</a> a votre pingoo!</p>
+<p>Cette page vous permet d'ajouter votre <a href="?page=stat_user_texture.php">propre texture</a> a votre pingoo!</p>
 
 <p>SVP, lisez bien les regles suivants, sinon ca ne marchera pas :</p>
 

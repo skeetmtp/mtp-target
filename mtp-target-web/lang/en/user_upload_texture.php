@@ -15,7 +15,7 @@
 
 ?>
 
-<p>This page allow you to upload a <a href="view_custom.php">user texture</a> for your pingoo!</p>
+<p>This page allow you to upload a <a href="?page=stat_user_texture.php">user texture</a> for your pingoo!</p>
 
 <p>Please, read well the rules or it'll not work correctly:</p>
 
