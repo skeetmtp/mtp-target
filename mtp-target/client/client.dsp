@@ -135,7 +135,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 nlmisc_d.lib nlnet_d.lib nl3d_d.lib freetype211.lib fmodvc.lib user32.lib gdi32.lib advapi32.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept /libpath:"../../RealTimeFairy/extern/lib"
-# ADD LINK32 nlmisc_df.lib nlnet_df.lib nl3d_df.lib lua.lib jpeg.lib freetype.lib zlib.lib xml2.lib fmodvc.lib user32.lib gdi32.lib advapi32.lib shell32.lib /nologo /subsystem:windows /debug /machine:I386 /out:"DebugFast/mtp-target.exe" /pdbtype:sept /libpath:"../../RealTimeFairy/extern/lib"
+# ADD LINK32 nlmisc_df.lib nlnet_df.lib nl3d_df.lib lua.lib libjpeg.lib freetype.lib zlib.lib xml2.lib fmodvc.lib user32.lib gdi32.lib advapi32.lib shell32.lib /nologo /subsystem:windows /debug /machine:I386 /out:"DebugFast/mtp-target.exe" /pdbtype:sept /libpath:"../../RealTimeFairy/extern/lib"
 
 !ENDIF 
 
