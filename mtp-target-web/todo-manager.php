@@ -44,6 +44,7 @@ function confirmLink(theLink)
 	<tr  align="center">
     <?php
   		printf("<td width=\"5%%\" bgcolor=\"%s\"><b>&nbsp;Priority&nbsp;</b></td>\n",$table_todo_head_color);
+  		printf("<td width=\"5%%\" bgcolor=\"%s\"><b>&nbsp;<a href=\"%s&order=%s&descCount=%s\">Date&nbsp;</b></td>\n",$table_todo_head_color,$thisPage,"opendate",$order=="opendate"?($descCount+1):$descCount);
   		printf("<td width=\"5%%\" bgcolor=\"%s\"><b>&nbsp;<a href=\"%s&order=%s&descCount=%s\">Status</a>&nbsp;</b></td>\n",$table_todo_head_color,$thisPage,"status",$order=="status"?($descCount+1):$descCount);
         printf("<td width=\"5%%\" bgcolor=\"%s\"><b>&nbsp;<a href=\"%s&order=%s&descCount=%s\">Type</a>&nbsp;</b></td>\n",$table_todo_head_color,$thisPage,"type",$order=="type"?($descCount+1):$descCount);
   		printf("<td width=\"60%%\" bgcolor=\"%s\"><b>&nbsp;<a href=\"%s&order=%s&descCount=%s\">Title</a>&nbsp;</b></td>\n",$table_todo_head_color,$thisPage,"title",$order=="title"?($descCount+1):$descCount);
@@ -59,7 +60,10 @@ function confirmLink(theLink)
                 $desc = " DESC";
             else
                 $desc = "";
-            $requete = sprintf("SELECT * FROM todo ORDER BY %s%s ,closedate DESC, priority DESC, opendate DESC;",$order,$desc);
+            if($order=="opendate")
+            	$requete = sprintf("SELECT * FROM todo ORDER BY %s%s ,closedate DESC, priority DESC;",$order,$desc);
+            else
+            	$requete = sprintf("SELECT * FROM todo ORDER BY %s%s ,closedate DESC, priority DESC, opendate DESC;",$order,$desc);
             $resultat = exec_requete($requete);
             $count = 0;
             while ($ligne = mysql_fetch_array($resultat))
@@ -101,6 +105,8 @@ function confirmLink(theLink)
                   if($kind=="release")
                            $color =$table_todo_release_color;
                   printf("<td bgcolor=\"%s\">&nbsp;%d&nbsp;</td>",$color,$priority);
+                  $date = substr($ligne[5],0,4+2+2+2);//"0000-00-00";
+                  printf("<td bgcolor=\"%s\">&nbsp;%s&nbsp;</td>",$color,$date);
                   printf("<td bgcolor=\"%s\">&nbsp;%s&nbsp;</td>",$color,$status);
                   printf("<td bgcolor=\"%s\">&nbsp;%s&nbsp;</td>",$color,$ligne[7]);
                   printf("<td bgcolor=\"%s\">&nbsp;<a href=\"%s&id=%s&order=%s\">%s</a>&nbsp;</td>",$color,$thisPage,$ligne[0],$order,$ligne[8]);
