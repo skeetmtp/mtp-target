@@ -326,7 +326,10 @@ void CMtpTarget::loadNewSession()
 {
 	bool paused = pauseAllThread();
 	if(!paused)
+	{
+		nlwarning("CMtpTarget::loadNewSession() : pauseAllThread() failed");
 		return;
+	}
 	
 	nlassert(NewSession);
 	CEntityManager::instance().everybodyReady(false);
