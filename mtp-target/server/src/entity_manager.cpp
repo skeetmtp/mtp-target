@@ -840,7 +840,7 @@ string CEntityManager::check(const string &login, const string &password, bool d
 					score = accounts.asInt(i+2);
 
 				sint32 maxScore = IService::getInstance()->ConfigFile.getVar("MaxScore").asInt();
-				if(!isAdmin(login) && maxScore != -1 && score >= maxScore)
+				if(!isAdmin(login) && !isModerator(login) && maxScore != -1 && score >= maxScore)
 				{
 					return toString("Your score (%d) is now too high for this server (limited to %d). Try a more difficult server", score, maxScore);
 				}
@@ -1301,3 +1301,17 @@ bool CEntityManager::isAdmin(const string &name) const
 	}
 	return false;
 }
+
+bool CEntityManager::isModerator(const string &name) const
+{
+	CConfigFile::CVar &mod = IService::getInstance()->ConfigFile.getVar("Moderator");
+	for(uint i = 0; i < (uint)mod.size(); i++)
+	{
+		if(mod.asString(i) == name)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+

@@ -207,6 +207,19 @@ bool CEntity::isAdmin() const
 	return false;
 }
 
+bool CEntity::isModerator() const
+{
+	CConfigFile::CVar &moderator = IService::getInstance()->ConfigFile.getVar("Moderator");
+	for(uint i = 0; i < (uint)moderator.size(); i++)
+	{
+		if(moderator.asString(i) == name())
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 void CEntity::name(const string &name)
 {
 	Name = name;

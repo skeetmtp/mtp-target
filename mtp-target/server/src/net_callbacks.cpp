@@ -67,7 +67,7 @@ static void cbCommand(CClient *c, CNetMessage &msgin)
 	string cmd;
 	msgin.serial(cmd);
 
-	if(c->isAdmin())
+	if(c->isAdmin() || c->isModerator())
 	{
 		//CNetwork::instance().networkTask().addCommand(cmd);
 		ICommand::execute(cmd, *InfoLog);

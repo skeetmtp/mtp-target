@@ -102,9 +102,10 @@ void CClient::setForce(const CVector &clientForce)
 	CEntity::setForce(clientForce);
 }
 
+
 bool CClient::forceReceived()
 {
-	if(isAdmin())
+	if(isAdmin() || isModerator()) //admins can be afk
 		return true;
 	return ForceReceived;
 }
