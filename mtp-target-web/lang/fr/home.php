@@ -1,7 +1,7 @@
 
 <h3>Introduction</h3>
 
-<p><img src="scheme.jpg" alt="" width="256" height="192" align="right"> 
+<p><img src="<?php echo $image_dir; ?>/scheme.jpg" alt="" width="256" height="192" align="right"> 
 Mtp Target est un clone du jeu <i>Monkey Target</i> (un des six mini jeu de <i>Super Monkey Ball</i>).<br>
 Apres avoir dévalé une gigantesque pente, votre but est de toucher une cible.<br>
 Ce jeu a etait entierement concu sous licence <a href="http://www.gnu.org/copyleft/gpl.html">GNU GPL</a>.<br>

@@ -1,6 +1,9 @@
 <?php
      $die_message = "error";
 
+     $sshot_dir = "http://mtptarget.free.fr/screenshot";	
+     $image_dir = "http://mtptarget.free.fr";	
+
 //color
      $table_newsheader_bgcolor_color = "#666666";
      $table_newsheader_head_color = "#FFCC00";

@@ -80,9 +80,9 @@
 <table border="0" cellpadding="5" cellspacing="0" width="100%">
 <tr align="center">
     <td colspan="<?php echo count($menu_array);?>">
-        <a href="index.php"><img src="logo.png" ALT="Logo"></a>
-        <a href="?page=<?php echo $page;?>&lang=en"><img src="en.png" ALT="English"></a>
-        <a href="?page=<?php echo $page;?>&lang=fr"><img src="fr.png" ALT="French"></a>
+        <a href="index.php"><img src="<?php echo $image_dir; ?>/logo.png" ALT="Logo"></a>
+        <a href="?page=<?php echo $page;?>&lang=en"><img src="<?php echo $image_dir; ?>/en.png" ALT="English"></a>
+        <a href="?page=<?php echo $page;?>&lang=fr"><img src="<?php echo $image_dir; ?>/fr.png" ALT="French"></a>
     </td>
 </tr>
 <tr>

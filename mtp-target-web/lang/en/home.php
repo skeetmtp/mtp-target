@@ -1,7 +1,7 @@
 
 <h3>Introduction</h3>
 
-<p><img src="scheme.jpg" alt="" width="256" height="192" align="right"> 
+<p><img src="<?php echo $image_dir; ?>/scheme.jpg" alt="" width="256" height="192" align="right"> 
 Mtp Target is a <i>Monkey Target</i> clone (one of the six mini-games from the video game : <i>Super Monkey Ball</i>).<br>
 After rolling your pingoo ball down a giant ramp, your goal is to hit a target as accurately as possible.<br>
 This game is entierely under  <a href="http://www.gnu.org/copyleft/gpl.html">GNU GPL</a> Licence.
