@@ -221,7 +221,6 @@ CLevel::~CLevel()
 		//C3DTask::instance().scene().deleteInstance(StartPositions[j]);
 	}
 	StartPoints.clear();
-	CHudTask::instance().messages.clear();
 }
 
 CVector CLevel::startPosition(uint32 id)

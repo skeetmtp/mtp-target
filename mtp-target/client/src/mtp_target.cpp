@@ -42,8 +42,9 @@
 
 #include "global.h"
 #include "entity.h"
-#include "gui_task.h"
 #include "3d_task.h"
+#include "gui_task.h"
+#include "hud_task.h"
 #include "time_task.h"
 #include "game_task.h"
 #include "mtp_target.h"
@@ -673,6 +674,7 @@ void mtpTarget::endSession()
 {
 	// end of a session
 	CMtpTarget::instance().State = CMtpTarget::eEndSession;
+	CHudTask::instance().messages.clear();
 }
 
 /*
