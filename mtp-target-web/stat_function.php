@@ -83,6 +83,25 @@ function userId2Name($user_id)
 	  return -1;	
 }
 
+function getUserTeam($user_name)
+{
+  $ok = (ereg("^\[[A-Za-z0-9]+\][\-_\.A-Za-z0-9([)(|\]|])]+$",$user_name));
+  if(!$ok)
+  	return "";
+  $res = "";
+  $l = strlen($user_name);
+  $i = 1;
+  for($i=1;$i<$l;$i++)
+  {
+  	if($user_name[$i]==']')
+  		return $res;
+  	else
+  		$res .= $user_name[$i];
+  }
+  return $res;
+  	
+}
+
 function mapId2Name($map_id)
 {
 	  $requete = "SELECT LevelName FROM map WHERE Id=".$map_id.";";

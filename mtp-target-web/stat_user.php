@@ -7,6 +7,7 @@ include_once("stat_map_graph_display.php");
 
 	$uid = $p_user_id;
 	$user_name = userId2Name($uid);
+	$user_team = getUserTeam($user_name);
 	$cacheFileName = $cache_dir."/stat_user_".$uid.".html";
 	printf("<center><b>%s</b> stats : </center><br><br>",$user_name);
 	
@@ -58,6 +59,7 @@ include_once("stat_map_graph_display.php");
 	fprintf($html_fp,"Last game : %s<br>\n",$userLastSessionDate);
 	fprintf($html_fp,"Rank : %s<br>\n",$userRank);
 	fprintf($html_fp,"total score = %s<br>\n",hugeNumber2Human($totalScore));
+	fprintf($html_fp,"Team : <b><a href=\"?page=stat_team.php&p_team=%s\">%s</a></b><br>\n",$user_team,$user_team);
 	
 	fprintf($html_fp,"%d sessions played<br>\n",$sessionPlayedCount);
 	fprintf($html_fp,"have played during %s<br>\n",timeInSeconds2HumanDuration($sessionPlayedDuration));
