@@ -43,6 +43,7 @@
   $sshot_img04 = "Vole";
   $sshot_img08 = "En approche";
   $sshot_img09 = "Atterissage";
+  $sshot_img10 = "Personalisation des Avatars";
 
 
 //contact
