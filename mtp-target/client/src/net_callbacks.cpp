@@ -169,66 +169,75 @@ static void cbUpdate(CNetMessage &msgin)
 	//msgin.serial (rsxTime);
 
 	//while(msgin.getPos() < (sint32)msgin.length())
-	nlassert(CEntityManager::instance().updateListId.size());
+	//nlassert(CEntityManager::instance().updateListId.size());
 	std::list <uint8 >::iterator it;
-	for(it=CEntityManager::instance().updateListId.begin();it!=CEntityManager::instance().updateListId.end();it++)
+	//for(it=CEntityManager::instance().updateListId.begin();it!=CEntityManager::instance().updateListId.end();it++)
+	for(eid=0;eid<255;eid++)
 	{
-		eid = *it;
-		float deltaCoef = 100;
-
-		/*
-		uint8 dxx,sxx;
-		msgin.serial(sxx,dxx);
-		dpos.x = convert8_8fp(sxx,dxx);
-		uint8 dxy,sxy;
-		msgin.serial(sxy,dxy);
-		dpos.y = convert8_8fp(sxy,dxy);
-		uint8 dxz,sxz;
-		msgin.serial(sxz,dxz);
-		dpos.z = convert8_8fp(sxz,dxz);
-		*/
-
-		uint32 bits;
-		msgin.serial(bits);
-		packBit32 pb32(bits);
-		uint32 ndx,nsx;
-		pb32.unpackBits(nsx,6);
-		pb32.unpackBits(ndx,4);//z
-		//		nlinfo(">>>>z dx/ndx = %d/%d ",dxz,ndx);
-		//		nlinfo(">>>>z sx/nsx = %d/%d ",sxz,nsx);
-		//nlassert(dxz==ndx);
-		//nlassert(sxz==nsx);
-		dpos.z = convert8_8fp(nsx,ndx);
-		pb32.unpackBits(nsx,6);
-		pb32.unpackBits(ndx,4);//y
-		//		nlinfo(">>>>y dx/ndx = %d/%d ",dxy,ndx);
-		//		nlinfo(">>>>y sx/nsx = %d/%d ",sxy,nsx);
-		//nlassert(dxy==ndx);
-		//nlassert(sxy==nsx);
-		dpos.y = convert8_8fp(nsx,ndx);
-		pb32.unpackBits(nsx,6);
-		pb32.unpackBits(ndx,4);//x
-		//		nlinfo(">>>>x dx/ndx = %d/%d ",dxx,ndx);
-		//		nlinfo(">>>>x sx/nsx = %d/%d ",sxx,nsx);
-		//nlassert(dxx==ndx);
-		//nlassert(sxx==nsx);
-		dpos.x = convert8_8fp(nsx,ndx);
-		
-		pos = CEntityManager::instance()[eid].LastSent2OthersPos + dpos;
-		CEntityManager::instance()[eid].LastSent2OthersPos = pos;
-		CEntityManager::instance()[eid].LastSent2MePos = pos;
-		if(DisplayDebug)
-			nlinfo("TCP update client %hu a %g %g %g ping %hu", (uint16)eid, pos.x, pos.y, pos.z);
-
 		if(CEntityManager::instance().exist(eid))
 		{
-			CEntityManager::instance()[eid].interpolator().addKey(CEntityInterpolatorKey(CEntityState(pos,false),rsxTime));
-			//CEntityManager::instance()[eid].ping(ping);
-		}
-		else
-		{
-			nlstop;
-			nlwarning("Received a position of an unknown entity %hu", (uint16)eid);
+			if(msgin.getPos() >= (sint32)msgin.length())
+			{
+				nlwarning("cbUpdate not enough data in message (stopped at eid = %d)",eid);
+				break;
+			}
+			//eid = *it;
+			float deltaCoef = 100;
+
+			/*
+			uint8 dxx,sxx;
+			msgin.serial(sxx,dxx);
+			dpos.x = convert8_8fp(sxx,dxx);
+			uint8 dxy,sxy;
+			msgin.serial(sxy,dxy);
+			dpos.y = convert8_8fp(sxy,dxy);
+			uint8 dxz,sxz;
+			msgin.serial(sxz,dxz);
+			dpos.z = convert8_8fp(sxz,dxz);
+			*/
+
+			uint32 bits;
+			msgin.serial(bits);
+			packBit32 pb32(bits);
+			uint32 ndx,nsx;
+			pb32.unpackBits(nsx,6);
+			pb32.unpackBits(ndx,4);//z
+			//		nlinfo(">>>>z dx/ndx = %d/%d ",dxz,ndx);
+			//		nlinfo(">>>>z sx/nsx = %d/%d ",sxz,nsx);
+			//nlassert(dxz==ndx);
+			//nlassert(sxz==nsx);
+			dpos.z = convert8_8fp(nsx,ndx);
+			pb32.unpackBits(nsx,6);
+			pb32.unpackBits(ndx,4);//y
+			//		nlinfo(">>>>y dx/ndx = %d/%d ",dxy,ndx);
+			//		nlinfo(">>>>y sx/nsx = %d/%d ",sxy,nsx);
+			//nlassert(dxy==ndx);
+			//nlassert(sxy==nsx);
+			dpos.y = convert8_8fp(nsx,ndx);
+			pb32.unpackBits(nsx,6);
+			pb32.unpackBits(ndx,4);//x
+			//		nlinfo(">>>>x dx/ndx = %d/%d ",dxx,ndx);
+			//		nlinfo(">>>>x sx/nsx = %d/%d ",sxx,nsx);
+			//nlassert(dxx==ndx);
+			//nlassert(sxx==nsx);
+			dpos.x = convert8_8fp(nsx,ndx);
+			
+			pos = CEntityManager::instance()[eid].LastSent2OthersPos + dpos;
+			CEntityManager::instance()[eid].LastSent2OthersPos = pos;
+			CEntityManager::instance()[eid].LastSent2MePos = pos;
+			if(DisplayDebug)
+				nlinfo("TCP update client %hu a %g %g %g ping %hu", (uint16)eid, pos.x, pos.y, pos.z);
+
+			if(CEntityManager::instance().exist(eid))
+			{
+				CEntityManager::instance()[eid].interpolator().addKey(CEntityInterpolatorKey(CEntityState(pos,false),rsxTime));
+				//CEntityManager::instance()[eid].ping(ping);
+			}
+			else
+			{
+				nlstop;
+				nlwarning("Received a position of an unknown entity %hu", (uint16)eid);
+			}
 		}
 	}
 }
@@ -328,13 +337,13 @@ static void cbFullUpdate(CNetMessage &msgin)
 	//msgin.serial (rsxTime);
 	
 
-	//while(msgin.getPos() < (sint32)msgin.length())
-	nlassert(CEntityManager::instance().updateListId.size());
-	std::list <uint8 >::iterator it;
-	for(it=CEntityManager::instance().updateListId.begin();it!=CEntityManager::instance().updateListId.end();it++)
+	//nlassert(CEntityManager::instance().updateListId.size());
+	//std::list <uint8 >::iterator it;
+	//for(it=CEntityManager::instance().updateListId.begin();it!=CEntityManager::instance().updateListId.end();it++)
+	while(msgin.getPos() < (sint32)msgin.length())
 	{
-		eid = *it;
-		//msgin.serial(eid);
+		//eid = *it;
+		msgin.serial(eid);
 		msgin.serial(pos, ping);
 		//pos = CEntityManager::instance()[eid].LastSentPos + dpos;
 		CEntityManager::instance()[eid].LastSent2MePos = pos;
@@ -555,7 +564,6 @@ void netCallbacksHandler(CNetMessage &msgin)
 	SWITCH_CASE(OpenClose);
 	SWITCH_CASE(Update);
 	SWITCH_CASE(UpdateOne);
-	SWITCH_CASE(UpdateList);
 	SWITCH_CASE(FullUpdate);
 	SWITCH_CASE(UpdateElement);
 	SWITCH_CASE(Ready);

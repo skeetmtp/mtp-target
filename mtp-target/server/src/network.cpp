@@ -236,7 +236,6 @@ void CNetwork::update()
 	{
 		CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
 		{
-			bool sendUpdateList = false;
 			TTime currentTime = CTime::getLocalTime();
 			unsigned int i;
 			CEntityManager::EntityConstIt it;
@@ -250,8 +249,6 @@ void CNetwork::update()
 				npos.z = (float)pos[2];
 				
 				uint8 eid = (*it)->id();
-				if(i>=CEntityManager::instance().IdUpdateList.size() || eid!=CEntityManager::instance().IdUpdateList[i])
-					sendUpdateList = true;
 				uint16 ping = (*it)->Ping.getSmoothValue();
 				//msgout.serial(eid);
 				
@@ -262,10 +259,6 @@ void CNetwork::update()
 					break;
 				}
 			}
-			if(acces.value().size()!=CEntityManager::instance().IdUpdateList.size())
-				sendUpdateList = true;
-			if(sendUpdateList)
-				CEntityManager::instance().sendUpdateList();
 		}
 		
 		if((updateCount%MT_NETWORK_FULL_UPDATE_PERIODE)==0)
@@ -287,7 +280,7 @@ void CNetwork::update()
 					
 					uint8 eid = (*it)->id();
 					uint16 ping = (*it)->Ping.getSmoothValue();
-					//msgout.serial(eid);
+					msgout.serial(eid);
 					msgout.serial((*it)->Pos, ping);
 					
 					if((*it)->type() != CEntity::Bot)
@@ -310,56 +303,63 @@ void CNetwork::update()
 				
 				TTime currentTime = CTime::getLocalTime();
 				
-				for(CEntityManager::EntityConstIt it = acces.value().begin(); it != acces.value().end(); it++)
+				for(list<uint8>::iterator it1=CEntityManager::instance().IdUpdateList.begin();it1!=CEntityManager::instance().IdUpdateList.end();it1++)
 				{
-					const dReal *pos = dBodyGetPosition((*it)->Body);
-					
-					(*it)->Pos.x = (float)pos[0];
-					(*it)->Pos.y = (float)pos[1]; 
-					(*it)->Pos.z = (float)pos[2];
-					
-					uint8 eid = (*it)->id();
-					uint16 ping = (*it)->Ping.getSmoothValue();
-					//msgout.serial(eid);
-
-					CVector dpos = (*it)->Pos - (*it)->LastSent2OthersPos;
-					
-					uint8 sx;
-					uint8 dx;
-					CVector sendDPos;
-					packBit32 pb32;
-
-					sendDPos.x = computeOut8_8fp(dpos.x,dx,sx);
-					pb32.packBits(dx,4);
-					pb32.packBits(sx,6);
-					sendDPos.y = computeOut8_8fp(dpos.y,dx,sx);
-					pb32.packBits(dx,4);
-					pb32.packBits(sx,6);
-					sendDPos.z = computeOut8_8fp(dpos.z,dx,sx);
-					pb32.packBits(dx,4);
-					pb32.packBits(sx,6);
-
-					msgout.serial(pb32.bits);
-
-					/*
-					if((*it)->id()==rpos && dpos.z!=0)
-					//if(dpos.z!=0)
+					uint8 eid = *it1;
+					for(CEntityManager::EntityConstIt it = acces.value().begin(); it != acces.value().end(); it++)
 					{
-						sint8 dsx = sx;// - (*it)->LastSentSX;
-						//fwrite(&dx,1,1,fp);
-						fwrite(&dsx,1,1,fp);
-						fflush(fp);
-						(*it)->LastSentSX = sx;
+						if((*it)->id()==eid)
+						{
+							const dReal *pos = dBodyGetPosition((*it)->Body);
+							
+							(*it)->Pos.x = (float)pos[0];
+							(*it)->Pos.y = (float)pos[1]; 
+							(*it)->Pos.z = (float)pos[2];
+							
+							uint8 eid = (*it)->id();
+							uint16 ping = (*it)->Ping.getSmoothValue();
+							//msgout.serial(eid);
+
+							CVector dpos = (*it)->Pos - (*it)->LastSent2OthersPos;
+							
+							uint8 sx;
+							uint8 dx;
+							CVector sendDPos;
+							packBit32 pb32;
+
+							sendDPos.x = computeOut8_8fp(dpos.x,dx,sx);
+							pb32.packBits(dx,4);
+							pb32.packBits(sx,6);
+							sendDPos.y = computeOut8_8fp(dpos.y,dx,sx);
+							pb32.packBits(dx,4);
+							pb32.packBits(sx,6);
+							sendDPos.z = computeOut8_8fp(dpos.z,dx,sx);
+							pb32.packBits(dx,4);
+							pb32.packBits(sx,6);
+
+							msgout.serial(pb32.bits);
+
+							/*
+							if((*it)->id()==rpos && dpos.z!=0)
+							//if(dpos.z!=0)
+							{
+								sint8 dsx = sx;// - (*it)->LastSentSX;
+								//fwrite(&dx,1,1,fp);
+								fwrite(&dsx,1,1,fp);
+								fflush(fp);
+								(*it)->LastSentSX = sx;
+							}
+							*/
+							
+							
+							if((*it)->type() != CEntity::Bot)
+								(*it)->LastSentPing.push(currentTime);
+							
+							CVector newPos = (*it)->LastSent2OthersPos + sendDPos; 
+							(*it)->LastSent2OthersPos = newPos;
+							(*it)->LastSent2MePos = newPos;
+						}
 					}
-					*/
-					
-					
-					if((*it)->type() != CEntity::Bot)
-						(*it)->LastSentPing.push(currentTime);
-					
-					CVector newPos = (*it)->LastSent2OthersPos + sendDPos; 
-					(*it)->LastSent2OthersPos = newPos;
-					(*it)->LastSent2MePos = newPos;
 				}
 			}
 			

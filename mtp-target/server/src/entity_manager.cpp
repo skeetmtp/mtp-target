@@ -68,6 +68,7 @@ static uint8 WatchingId = 0;
 
 void CEntityManager::init()
 {
+	IdUpdateList.clear();
 	EntitiesToAdd.clear();
 	IdToRemove.clear();
 	checkForcedClientCount();
@@ -157,30 +158,27 @@ void CEntityManager::addClient(NLNET::CTcpSock *sock)
 
 void CEntityManager::add(CEntity *entity)
 {
-	CEntities::CWriteAccessor acces(entities());
-	acces.value().push_back(entity);
+	{
+		CEntities::CWriteAccessor acces(entities());
+		acces.value().push_back(entity);
+	}
+	updateIdUpdateList();
 }
 
-
-void CEntityManager::sendUpdateList()
+void CEntityManager::updateIdUpdateList()
 {
-	nlinfo("send new id update list");
-	CNetMessage msgout(CNetMessage::UpdateList);
+	int minId = 0;
+	CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
+	IdUpdateList.clear();
+	for(int i=0;i<255;i++)
 	{
-		CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
-		IdUpdateList.clear();
-		
-		TTime currentTime = CTime::getLocalTime();
-		
 		for(CEntityManager::EntityConstIt it = acces.value().begin(); it != acces.value().end(); it++)
 		{
 			uint8 eid = (*it)->id();
-			IdUpdateList.push_back(eid);
-			msgout.serial(eid);
-		}
-		CNetwork::instance().send(msgout);
+			if(eid==i)
+				IdUpdateList.push_back(eid);
+		}			
 	}
-	nlinfo("new id update list sent");
 }
 
 
@@ -272,7 +270,7 @@ void CEntityManager::login(CEntity *e)
 		// now the client can receive position update
 		((CClient*)e)->networkReady(true);
 	}
-	CEntityManager::instance().sendUpdateList();				
+	updateIdUpdateList();
 }
 
 CEntity *CEntityManager::getByName(const std::string &name)
@@ -320,6 +318,35 @@ void CEntityManager::remove(const string &name)
 		nlwarning("Can't remove a client %s : not found",name.c_str());
 }
 
+CEntity *CEntityManager::getById(uint8 eid)
+{
+	if(eid == 255)
+	{
+		nlwarning("Can't find client because eid 255 is not valid");
+		return NULL;
+	}
+	
+	CEntity *res = 0;
+	
+	{
+		EntityIt it;
+		CEntities::CWriteAccessor acces(entities());
+		for( it = acces.value().begin(); it != acces.value().end(); it++)
+		{
+			if((*it)->id() == eid)
+			{
+				// only unlink the client from the list
+				res = (*it);
+				return res;
+			}
+		}
+	}
+	
+	nlwarning("Can't find client eid %hu ", (uint16)eid);
+	return NULL;
+	
+}
+
 void CEntityManager::remove(uint8 eid)
 {
 	if(eid == 255)
@@ -359,7 +386,8 @@ void CEntityManager::remove(uint8 eid)
 	CNetMessage msgout(CNetMessage::Logout);
 	msgout.serial(eid);
 	CNetwork::instance().send(msgout);
-
+	updateIdUpdateList();
+	
 	delete c;
 
 	checkForcedClientCount();

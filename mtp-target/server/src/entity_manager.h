@@ -77,16 +77,16 @@ public:
 
 	bool connected(const std::string &name);
 	uint humanClientCount();
-	void sendUpdateList();
 
 	bool nameExist(std::string name);
 	void saveAllValidReplay();
 	bool everyBodyReady();
-
+	CEntity *getById(uint8 eid);
+		
 	float slowerVelocity();
 		
 		
-	std::vector<uint8> IdUpdateList;
+	std::list<uint8> IdUpdateList;
 private:
 
 	CEntities Entities;
@@ -94,6 +94,8 @@ private:
 	void add(CEntity *entity);
 	uint8		findNewId();
 	void		checkForcedClientCount();
+	void		updateIdUpdateList();
+		
 
 	std::list<uint8> IdToRemove;
 	std::list<CEntity *> EntitiesToAdd;

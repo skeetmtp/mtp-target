@@ -71,7 +71,6 @@ public:
 		StartSession,		//    SC
 		Update,				// CS SC
 		UpdateOne,			//    SC
-		UpdateList,			//    SC
 		FullUpdate,			//    SC
 		UpdateElement,		// CS SC
 		EnableElement,		//    SC
