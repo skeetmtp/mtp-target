@@ -303,7 +303,19 @@ bool pauseAllThread()
 	}
 	if(i>=maxLoopCount)
 	{
-		nlwarning("pauseAllThread() failed after %d tries during 1 second",maxLoopCount);
+		nlwarning("pauseAllThread() failed after %d tries during %d ms",maxLoopCount,maxLoopCount*10);
+		uint tid = getThreadId();
+		if(tid==MainThreadId)
+			nlwarning("pauseAllThread() called in MainThreadId");
+		if(tid==NetworkThreadId)
+			nlwarning("pauseAllThread() called in NetworkThreadId");
+		if(tid==PhysicThreadId)
+			nlwarning("pauseAllThread() called in PhysicThreadId");
+		nlwarning("isServicePaused()=%s",isServicePaused()?"true":"false");
+		nlwarning("isPhysicsPaused()=%s",isPhysicsPaused()?"true":"false");
+		nlwarning("isNetworkPaused()=%s",isNetworkPaused()?"true":"false");
+		nlwarning("resuming paused thread ...");
+		resumeAllThread();
 		return false;
 	}
 	

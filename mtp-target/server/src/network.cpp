@@ -167,7 +167,8 @@ void CNetworkTask::run()
 			}
 		}
 
-		CEntityManager::instance().flushAddRemoveList();
+		//SKEET disable : let only main thread loop do the flush job ?
+		//CEntityManager::instance().flushAddRemoveList();
 		
 	}
 }
