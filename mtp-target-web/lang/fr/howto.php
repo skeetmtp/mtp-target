@@ -5,6 +5,7 @@
 <li><a href="?page=./lang/fr/howto-play.php">Comment jouer.</a></li>
 <li><a href="?page=./lang/fr/howto-user-texture.php">Comment personnaliser mon avatar.</a></li>
 <li><a href="?page=./lang/fr/howto-team.php">Comment creer/rejoindre une equipe.</a></li>
+<li><a href="?page=./lang/fr/howto-server.php">Comment mettre en place son server.</a></li>
 <!--
 <li><a href="?page=./lang/fr/howto-level.php">Comment creer son Niveau.</a></li>
 <li><a href="?page=./lang/fr/howto-win-server.php">Comment creer un serveur Windows(c).</a></li>
