@@ -3,13 +3,12 @@
 <h3>Lancer le jeu</h3>
 <ul>
 <li>récuperez <a href="http://mtptarget.free.fr/download">le programme d'installation</a>.</li>
-<li>lancer <code>mtptarget_launcher.exe</code>.</li>
+<li>Installez et lancez mtp-target.</li>
 <li>Entrez un login et un mot de passe, la premiere fois que vous vous logger, ces informations sont enregistrées dans la base de donnée<br>
 <b>Attention</b> : Taille maximum du login <b>20 characteres</b>, uniquement les characteres suivant sont authorisés : <b>a-z A-Z 0-9 [ ] _ -</b>
 </li>
 <li>Mantenant choisissez un des serveurs disponible</li>
 <li>Le jeu peut etre automatiquement patché</li>
-<li>Une fenetre <code>"Press enter to connect to the server"</code> devrai apparaitre, appuyer sur <b>ENTER</b> :).</li>
 <li>Une fois dans le jeu, vous devez attendre que la session courante s'acheve (60 seconds maxi).</li>
 </ul>
 
@@ -35,11 +34,7 @@
 
 <h3>Les touches</h3>
 <ul>
-<li><b>F1</b> : Affiche les boites de physique (debug info)</li>
 <li><b>F2</b> : Fait une capture d'ecran</li>
-<li><b>F4</b> : Affiche les info de debug</li>
-<li><b>F5</b> : Termine la session courante (seulement en etant admin)</li>
-<li><b>F6</b> : Reset la session courante (seulement en etant admin)</li>
 <li><b>F9</b> : Vue sur le joueur suivant</li>
 <li><b>F10</b> : Vue sur le joueur precedent</li>
 <li><b>F11</b> : Vue sur votre joueur</li>

@@ -2,14 +2,13 @@
 
 <h3>Launching the game</h3>
 <ul>
-<li>Get the <a href="http://mtptarget.free.fr/download">install program</a>.</li>
-<li>Run <code>mtptarget_launcher.exe</code>.</li>
+<li>Get the <a href="http://mtptarget.free.fr/download">install here</a>.</li>
+<li>Install and run mtp-target</li>
 <li>Enter a login and a password, the first time you login, these informations will be stored into the database<br>
 <b>Warning</b> : login size is <b>20 characters max</b>, and only thoses chararters are allowed <b>a-z A-Z 0-9 [ ] _ -</b>
 </li>
 <li>Now you have to choose one of the available server</li>
 <li>The game could be automaticaly patched now.</li>
-<li>A window with <code>"Press enter to connect to the server"</code> should appear, so press <b>ENTER</b> :).</li>
 <li>Once you are into the game you have to wait the current session ends (60 seconds max).</li>
 </ul>
 
@@ -35,11 +34,7 @@
 
 <h3>The keys</h3>
 <ul>
-<li><b>F1</b> : Display Physic boxes (debug info)</li>
 <li><b>F2</b> : Make a screenshot</li>
-<li><b>F4</b> : Display debug infos</li>
-<li><b>F5</b> : End the current session (admin only command)</li>
-<li><b>F6</b> : Reset the current session (session scores too) (admin only command)</li>
 <li><b>F9</b> : Watch next player</li>
 <li><b>F10</b> : Watch previous player</li>
 <li><b>F11</b> : Watch your player</li>
