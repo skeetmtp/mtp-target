@@ -2,7 +2,7 @@
 
 <h3>Launching the game</h3>
 <ul>
-<li>Get the <a href="http://mtptarget.free.fr/mtp-target.exe">install program</a>.</li>
+<li>Get the <a href="http://mtptarget.free.fr/download">install program</a>.</li>
 <li>Run <code>mtptarget_launcher.exe</code>.</li>
 <li>Enter a login and a password, the first time you login, these informations will be stored into the database </li>
 <li>Now you have to choose one of the available server</li>

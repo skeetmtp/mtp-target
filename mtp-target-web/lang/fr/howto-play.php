@@ -2,7 +2,7 @@
 
 <h3>Lancer le jeu</h3>
 <ul>
-<li>récuperez <a href="http://mtptarget.free.fr/mtp-target.exe">le programme d'installation</a>.</li>
+<li>récuperez <a href="http://mtptarget.free.fr/download">le programme d'installation</a>.</li>
 <li>lancer <code>mtptarget_launcher.exe</code>.</li>
 <li>Entrez un login et un mot de passe, la premiere fois que vous vous logger, ces informations sont enregistrées dans la base de donnée</li>
 <li>Mantenant choisissez un des serveurs disponible</li>

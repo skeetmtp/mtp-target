@@ -38,5 +38,8 @@
 
 //email
      $contact_email = "mailto:lecroart@noos.fr?subject=mtp target";
+     
+//special link
+     $user_texture = "http://mtp-target.dyndns.org/mtp-target/";
 
 ?>
