@@ -47,7 +47,7 @@ Modules =
 {
 	{ Position = CVector(1.237044,-5.196737,3.016793), Scale = CVector(10.000000, 30.000000, 10.000000), Rotation = CAngleAxis(0.000000,0.000000,1.000000,0.000000), Lua="box_sol", Shape="box_sol" },
 	{ Position = CVector(1.461541,-5.196831,2.886570), Scale = CVector(10.000000, 30.000000, 10.000000), Rotation = CAngleAxis(0.000000,0.000000,1.000000,0.000000), Lua="box_sol", Shape="box_sol" },
-	{ Position = CVector(0.007647,-0.001760,3.018186), Scale = CVector(10.000000, 30.000000, 10.000000), Rotation = CAngleAxis(0.000000,0.000000,1.000000,0.000000), Lua="box_sol", Shape="box_sol" },
+	{ Position = CVector(0.007647,-0.001760,1.045297), Scale = CVector(10.000000, 30.000000, 10.000000), Rotation = CAngleAxis(0.000000,0.000000,1.000000,0.000000), Lua="box_sol", Shape="box_sol" },
 	{ Position = CVector(1.597312,-3.605328,0.886570), Scale = CVector(10.000000, 50.000000, 50.000000), Rotation = CAngleAxis(0.000000,0.000000,1.000000,0.000000), Lua="race_check_point1", Shape="box_sol" },
 	{ Position = CVector(0.000000,-0.001563,0.886570), Scale = CVector(1.000000, 1.000000, 0.300000), Rotation = CAngleAxis(0.000000,0.000000,1.000000,0.000000), Lua="race_lane", Shape="race_lane" },
 	{ Position = CVector(0.903500,-0.179719,0.886570), Scale = CVector(1.000000, 1.000000, 0.300000), Rotation = CAngleAxis(0.000000,0.000000,1.000000,-0.785300), Lua="race_lane", Shape="race_turn_90" },
