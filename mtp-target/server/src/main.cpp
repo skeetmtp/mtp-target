@@ -298,6 +298,7 @@ bool pauseAllThread()
 
 void resumeAllThread()
 {
+	//getThreadId();
 	resumeService();
 	resumePhysics();
 	resumeNetwork();	
