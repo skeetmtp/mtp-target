@@ -514,6 +514,7 @@ static void cbStartSession(CNetMessage &msgin)
 	msgin.serialCont(eids);
 
 	nlassert(ranks.size()==eids.size());
+	nlinfo("cbStartSession(%s)",levelName.c_str());
 
 	for(uint32 i=0;i<eids.size();i++)
 		CEntityManager::instance()[eids[i]].rank(ranks[i]);

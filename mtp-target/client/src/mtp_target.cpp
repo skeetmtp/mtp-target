@@ -130,6 +130,7 @@ void CMtpTarget::error(string reason)
 
 void CMtpTarget::reset()
 {
+	nlinfo("CMtpTarget::reset()");
 	CEntityManager::instance().reset();
 	controler().reset();
 	NewSession = false;
@@ -201,6 +202,7 @@ void CMtpTarget::loadNewSession()
 	CEntityManager::instance().everybodyReady(false);
 	
 	NewSession = false;
+	nlinfo("loadNewSession() %s",NewLevelName.c_str());
 	
 	if(NewLevelName.empty())
 		return;
