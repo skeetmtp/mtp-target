@@ -72,6 +72,10 @@ void CModuleCommon::init()
 CModuleCommon::CModuleCommon() : CEditableElementCommon()
 { 
 	_type = Module;
+	Bounce = false;
+	Score = 0;
+	Accel = 0;
+	Friction = 0;
 }
 
 CModuleCommon::~CModuleCommon()

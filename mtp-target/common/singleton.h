@@ -45,6 +45,7 @@ public:
 		if(Instance)
 		{
 			delete Instance;
+			Instance = 0;
 		}
 	}
 	
