@@ -116,7 +116,7 @@ public:
 	virtual void onPressed(int rowId)
 	{
 		nlinfo("user want to connect to server : %d",rowId);
-		if(rowId>0)
+		if(rowId>=0)
 			CIntroTask::instance().doConnectionOnLine(rowId);
 	}
 private:
