@@ -126,6 +126,7 @@ void CSoundManager::init()
 		{
 			string m3uFileName = CConfigFileTask::instance().configFile().getVar("M3UList").asString();
 			string m3uDirectory = CFile::getPath(m3uFileName);
+			nlinfo("CSoundManager: loading '%s'",m3uFileName.c_str());
 			m3uFile.open(m3uFileName.c_str());
 			if (m3uFile.good())
 			{
@@ -135,7 +136,18 @@ void CSoundManager::init()
 				{
 					std::getline(m3uFile, cline);
 					if(cline.size() && cline[0] != '#' && cline[0] != ' ')
-						m3uVector.push_back(m3uDirectory+cline);		
+					{
+						if (CFile::isExists(cline))
+						{
+							nlinfo("CSoundManager: adding music :'%s'",cline.c_str());
+							m3uVector.push_back(cline);
+						}
+						else if (CFile::isExists(m3uDirectory+cline))
+						{
+							nlinfo("CSoundManager: adding music :'%s'",(m3uDirectory+cline).c_str());
+							m3uVector.push_back(m3uDirectory+cline);		
+						}
+					}
 				}
 				useM3U = m3uVector.size()>0;
 				if (CConfigFileTask::instance().configFile().getVar("M3UShuffle").asInt() == 0)
@@ -144,7 +156,7 @@ void CSoundManager::init()
 			}
 			else
 			{
-				nlwarning("CSoundManager: Can't load '%s'",CConfigFileTask::instance().configFile().getVar("M3UList").asString().c_str());
+				nlwarning("CSoundManager: Can't load '%s'",m3uFileName.c_str());
 				playStream(useM3U);
 			}
 		}
