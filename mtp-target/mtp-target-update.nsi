@@ -1,135 +1,105 @@
-;!define MUI_PRODUCT "mtp-target" ;Define your own software name here
-;!define MUI_VERSION "1.0.1" ;Define your own software version here
-;!define MUI_OLD_VERSION "1.0.0"
-
-; Script create for version 2.0b3 1.30 (from 09.mar.03) with GUI NSIS (c) by Dirk Paehl. Thank you for use my program
+; Modern interface settings
 !include "MUI.nsh"
 !include "mtp-target.nsh"
 
- 
-;--------------------------------
-;Configuration
-;version
-
- 
- 
-;General
-OutFile "${MUI_PRODUCT}-update-${MUI_OLD_VERSION}-${MUI_VERSION}.exe"
-
-;Folder selection page
-InstallDir "$PROGRAMFILES\${MUI_PRODUCT}"
-
-;Remember install folder
-InstallDirRegKey HKCU "Software\${MUI_PRODUCT}" ""
+; Main Install settings
+Name "${APPNAMEANDVERSION}"
+InstallDir "$PROGRAMFILES\${APPNAME}"
+InstallDirRegKey HKLM "Software\${APPNAME}" ""
+OutFile "${APPNAME}-update-${APPOLDVERSION}-${APPVERSION}.exe"
 
 
+!define MUI_ABORTWARNING
 
-Function IsMtpInstalled
- Push $R0
- ClearErrors
- ReadRegStr $R0 HKCU "Software\${MUI_PRODUCT}" "version"
- IfErrors lbl_na
-   StrCmp $R0 "${MUI_OLD_VERSION}" lbl_end
-     MessageBox MB_OK|MB_ICONSTOP "This update if for version ${MUI_OLD_VERSION}" 
-     Quit 
- lbl_na:
-   MessageBox MB_OK|MB_ICONSTOP "Mtp Target not installed." 
-   Quit 
- lbl_end:
- Pop $R0
-FunctionEnd
+!insertmacro MUI_PAGE_WELCOME
+!insertmacro MUI_PAGE_COMPONENTS
+!insertmacro MUI_PAGE_INSTFILES
+!insertmacro MUI_PAGE_FINISH
 
+!insertmacro MUI_UNPAGE_CONFIRM
+!insertmacro MUI_UNPAGE_INSTFILES
 
-;--------------------------------
-;Modern UI Configuration
- !define MUI_DIRECTORYPAGE
- !define MUI_ABORTWARNING
- !define MUI_UNINSTALLER
- !define MUI_UNCONFIRMPAGE
+; Set languages (first is default language)
+!insertmacro MUI_LANGUAGE "English"
+!insertmacro MUI_RESERVEFILE_LANGDLL
 
- 
-;--------------------------------
- ;Language
- 
-  !insertmacro MUI_LANGUAGE "english"
-;--------------------------------
+Section "base" Section1
+	call IsMtpInstalled
+	; Set Section properties
+	SectionIn RO
+	SetOverwrite on
+	
+	SetOutPath "$INSTDIR"
+	FILE "client\ReleaseDebug\mtp-target.exe"
+	FILE "client\mtp_target_default.cfg"
+	FILE "server\ReleaseDebug\mtp_target_service.exe"
+	FILE "server\mtp_target_service_default.cfg"
+	; Set Section Files and Shortcuts
+	CreateDirectory "$SMPROGRAMS\${APPNAME}"
+	CreateShortCut "$SMPROGRAMS\${APPNAME}\Play Mtp-Target.lnk" "$INSTDIR\mtp-target.exe"
+	CreateShortCut "$SMPROGRAMS\${APPNAME}\About.lnk" "http://mtptarget.free.fr/" "" "$INSTDIR\mtp-target.exe" 0
+	
+	;WriteUninstaller "$INSTDIR\Uninst.exe"
+	CreateShortCut "$SMPROGRAMS\${APPNAME}\Uninstall.lnk" "$INSTDIR\uninstall.exe"
 
-;-------------------------------- 
-;Installer Sections
-
-Section "section_test_version" section_test_version
-call IsMtpInstalled
 SectionEnd
 
-     
-Section "section_1" section_1
-SetOutPath "$INSTDIR"
-FILE "client\ReleaseDebug\mtp-target.exe"
-FILE "client\mtp_target_default.cfg"
-FILE "server\ReleaseDebug\mtp_target_service.exe"
-FILE "server\mtp_target_service_default.cfg"
-SectionEnd
-Section "section_2" section_2
-SetOutPath "$INSTDIR\data"
-FILE "client\data\lua\*.*"
+Section "server" Section2
+	call IsMtpInstalled
+	; Set Section properties
+	SetOverwrite on
+	
+	SetOutPath "$INSTDIR"
+	FILE "server\ReleaseDebug\mtp_target_service.exe"
+	FILE "server\mtp_target_service_default.cfg"
+
+	; Set Section Files and Shortcuts
+	CreateDirectory "$SMPROGRAMS\${APPNAME}"
+	CreateShortCut "$SMPROGRAMS\mtp-target\Launch dedicated server.lnk" "$INSTDIR\mtp_target_service.exe" "" "$INSTDIR\mtp_target_service.exe" 0
+
 SectionEnd
 
-;Add Shortcuts
-Section "toto"
-CreateDirectory "$SMPROGRAMS\mtp-target"
-SetOutPath $INSTDIR
-CreateShortCut "$SMPROGRAMS\mtp-target\Play Mtp-Target.lnk" "$INSTDIR\mtp-target.exe" "" "$INSTDIR\mtp-target.exe" 0
-CreateShortCut "$SMPROGRAMS\mtp-target\About.lnk" "http://mtptarget.free.fr/" "" "$INSTDIR\mtp-target.exe" 0
-CreateShortCut "$SMPROGRAMS\mtp-target\Launch dedicated server.lnk" "$INSTDIR\mtp_target_service.exe" "" "$INSTDIR\mtp_target_service.exe" 0
-CreateShortCut "$SMPROGRAMS\mtp-target\Uninstall Mtp-Target.lnk" "$INSTDIR\uninst.exe" "" "$INSTDIR\uninst.exe" 0
-WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\mtp-target" "DisplayName" "mtp-target (remove only)"
-WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\mtp-target" "UninstallString" "$INSTDIR\Uninst.exe"
-WriteRegStr HKCU "Software\${MUI_PRODUCT}" "" $INSTDIR
-WriteRegStr HKCU "Software\${MUI_PRODUCT}" "version" "${MUI_VERSION}"
-WriteUninstaller "$INSTDIR\Uninst.exe"
- 
-;Display the Finish header
-;Insert this macro after the sections if you are not using a finish page
- 
+
+Section -FinishSection
+
+	WriteRegStr HKLM "Software\${APPNAME}" "" "$INSTDIR"
+	WriteRegStr HKCU "Software\${APPNAME}" "version" "${APPVERSION}"
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "DisplayName" "${APPNAME}"
+	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "UninstallString" "$INSTDIR\uninstall.exe"
+	WriteUninstaller "$INSTDIR\uninstall.exe"
+
 SectionEnd
- 
-    !insertmacro MUI_SECTIONS_FINISHHEADER
- 
-;--------------------------------  
-;Descriptions 
-                                    
- 
-;--------------------------------
-    
-;Uninstaller Section
-   
-Section "Uninstall" 
- 
-  ;Add your stuff here  
-   
-  ;Delete Files 
- Delete "$INSTDIR\*.*" 
- Delete "$INSTDIR\cache\*.*" 
- RmDir "$INSTDIR\cache"
- Delete "$INSTDIR\data\*.*" 
- RmDir "$INSTDIR\data"
- Delete "$INSTDIR\replay\*.*" 
- RmDir "$INSTDIR\replay"
-   
-  ;Delete Start Menu Shortcuts
-  Delete "$SMPROGRAMS\mtp-target\*.*"
-  RmDir "$SMPROGRAMS\mtp-target"
-  ;Delete Uninstaller And Unistall Registry Entries
-  DeleteRegKey HKEY_LOCAL_MACHINE "SOFTWARE\mtp-target"
-  DeleteRegKey HKEY_LOCAL_MACHINE "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\mtp-target"
+
+; Modern install component descriptions
+!insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
+	!insertmacro MUI_DESCRIPTION_TEXT ${Section1} "Client data"
+	!insertmacro MUI_DESCRIPTION_TEXT ${Section2} "Server"
+!insertmacro MUI_FUNCTION_DESCRIPTION_END
+
+;Uninstall section
+Section Uninstall
+
+	;Remove from registry...
+	DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}"
+	DeleteRegKey HKLM "SOFTWARE\${APPNAME}"
+
+	Delete "$INSTDIR\*.*" 
+	Delete "$INSTDIR\cache\*.*" 
+	RmDir "$INSTDIR\cache"
+	Delete "$INSTDIR\data\*.*" 
+	RmDir "$INSTDIR\data"
+	Delete "$INSTDIR\replay\*.*" 
+	RmDir "$INSTDIR\replay"
+
+	;Delete Start Menu Shortcuts
+	Delete "$SMPROGRAMS\${APPNAME}\*.*"
+  RmDir "$SMPROGRAMS\${APPNAME}"
+
   RMDir "$INSTDIR"
-DeleteRegKey /ifempty HKCU "Software\${MUI_PRODUCT}"
-  !insertmacro MUI_UNFINISHHEADER
-             
+  DeleteRegKey /ifempty HKCU "Software\${APPNAME}"
+
 SectionEnd
-               
-Function .onInstSuccess
-   ExecShell open "$INSTDIR\config.exe"
-FunctionEnd
-   
-;eof
+
+BrandingText "plopida"
+
+; eof
