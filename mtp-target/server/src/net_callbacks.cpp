@@ -180,7 +180,7 @@ static void cbLogin(CClient *c, CNetMessage &msgin)
 	if(error.empty())
 	{
 		// init() must be after the check() call
-		c->init(login,texture,color,trace);
+		c->init(login,texture,color,trace,mesh);
 		c->Cookie = cookie;
 		if(!cookie.empty())
 		{

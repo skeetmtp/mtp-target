@@ -149,7 +149,6 @@ void cbLSChooseShard (CMessage &msgin, const std::string &serviceName, uint16 si
 		msgin.serial(userTrace);
 		nlinfo("LS sent user trace: %s",userTrace.c_str());
 	}
-	
 	if(msgin.getPos() < (sint32)msgin.length())
 	{
 		msgin.serial(userMesh);

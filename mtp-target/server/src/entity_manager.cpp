@@ -291,6 +291,7 @@ void CEntityManager::login(CEntity *e)
 		bool oc  = e->isOpen();
 		msgout.serial(oc);
 		msgout.serial(e->Trace);
+		msgout.serial(e->MeshName);
 		CNetwork::instance().sendAllExcept(nid, msgout);
 
 		if(e->type() == CEntity::Client)
@@ -321,6 +322,7 @@ void CEntityManager::login(CEntity *e)
 		bool oc  = e->isOpen();
 		msgout.serial(oc);
 		msgout.serial(e->Trace);
+		msgout.serial(e->MeshName);
 
 		string CurrentLevel="";
 		// version 5 client can't handle startsession on login 
@@ -378,6 +380,7 @@ void CEntityManager::login(CEntity *e)
 					bool oc  = (*it)->isOpen();
 					msgout.serial(oc);
 					msgout.serial((*it)->Trace);
+					msgout.serial((*it)->MeshName);
 					CNetwork::instance().send(nid, msgout);
 				}
 			}
