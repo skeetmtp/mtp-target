@@ -957,7 +957,7 @@ MTPT_COMMAND(kick, "kick a user from the server", "[<eid>|<name>]")
 	return true;
 }
 
-NLMISC_COMMAND(chat, "switch user chat on/off", "[<eid>|<name>]")
+NLMISC_COMMAND(mute, "switch user chat on/off", "[<eid>|<name>]")
 {
 	if(args.size() != 1) return false;
 	
