@@ -35,6 +35,13 @@ function entityWaterCollideEvent ( entity )
     entity:displayText(0,6,1,0,255,0,"Extra Ball !!",40);
 end
 
+function Module:init()
+  if(self:getScore()>0) then
+    newPos = CVector(2*(math.random(100)/50-0.5), -14.33, 2.8);
+    self:setPos(newPos);
+  end
+end
+
 function Module:collide( entity )
   if(entity:getIsOpen()==0 and self:getScore()>0 and entity:getMeanVelocity()<0.03) then
     self:setEnabled(0);
