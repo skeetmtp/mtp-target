@@ -54,7 +54,7 @@ public:
 	
 	NL3D::UDriver		&driver() const { nlassert(Driver); return *Driver; }
 
-	NL3D::UMaterial		&createMaterial() const ;
+	NL3D::UMaterial		createMaterial() const;
 
 	NL3D::UScene		&scene() const { nlassert(Scene); return *Scene; }
 	C3dMouseListener	&mouseListener() const { nlassert(MouseListener); return *MouseListener; }
