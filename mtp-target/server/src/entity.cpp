@@ -156,6 +156,11 @@ void CEntity::_luaInit()
 CEntity::~CEntity()
 {
 	pausePhysics();
+	
+	if(luaProxy)
+		delete luaProxy;
+	luaProxy = NULL;
+
 	if(Geom)
 	{
 		// to be sure, set the data to dummy before erasing
@@ -180,9 +185,16 @@ void CEntity::startPointId(uint8 id)
 	dGeomSetPosition(Geom, startPos.x, startPos.y, startPos.z);
 }
 
+void CEntity::reset() 
+{
+	collideModules.clear();
+	collideEntity.clear();
+	collideWater = false;
+}
+
 void CEntity::update() 
 {
-	H_AUTO(CEntityUpdate);
+		H_AUTO(CEntityUpdate);
 	set<CModule *>::iterator mit;
 	for(mit=collideModules.begin();mit!=collideModules.end();mit++)
 		CLuaEngine::instance().entitySceneCollideEvent(this,*mit);	

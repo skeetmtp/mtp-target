@@ -62,6 +62,7 @@ public:
 	virtual void isOpen(bool oc);
 	
 	virtual void update();
+	virtual void reset();
 	virtual void initBeforeStartLevel();
 	
 	virtual void display(NLMISC::CLog &log = *NLMISC::InfoLog) { }
