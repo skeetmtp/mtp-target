@@ -223,10 +223,17 @@ void CCamera::update()
 	if(lpos > 1.0f)
 		lpos = 1.0f;
 	CurrentHeightSpeed = lerp(CurrentHeightSpeed,heightSpeed,(float)lpos);
-
+		
 	if(CEntityManager::instance()[EId].interpolator().available())
 	{
-		if(CEntityManager::instance()[EId].openClose())
+		bool openClose = CEntityManager::instance()[EId].openClose();
+		CVector distFromStart = CVector::Null;
+		if(CEntityManager::instance()[EId].startPointId()!=255 && CLevelManager::instance().levelPresent())
+			distFromStart = CEntityManager::instance()[EId].interpolator().currentPosition() - CLevelManager::instance().currentLevel().startPosition(CEntityManager::instance()[EId].startPointId());
+		if(distFromStart.norm()<MinDistFromStartPointToMove && !openClose)
+			CurrentHeightSpeed = 0;
+
+		if(openClose)
 			updated = updateRampe(OpenBackDist, OpenHeight, OpenTargetBackDist, OpenTargetHeight);
 		else
 			updated = updateRampe(CloseBackDist, CloseHeight - CurrentHeightSpeed, CloseTargetBackDist, CloseTargetHeight);
@@ -258,12 +265,15 @@ bool CCamera::updateRampe(float backDist,float height,float targetBackDist,float
 	CurrentTargetBackDist	= lerp(CurrentTargetBackDist, targetBackDist, (float)lpos);
 	CurrentTargetHeight		= lerp(CurrentTargetHeight, targetHeight, (float)lpos);
 
+	bool openClose = CEntityManager::instance()[EId].openClose();
 	CVector distFromStart = CVector::Null;
 	if(CEntityManager::instance()[EId].startPointId()!=255 && CLevelManager::instance().levelPresent())
 		distFromStart = CEntityManager::instance()[EId].interpolator().currentPosition() - CLevelManager::instance().currentLevel().startPosition(CEntityManager::instance()[EId].startPointId());
 	float facing;
-	if(distFromStart.norm()>MinDistFromStartPointToMove)
+	if(distFromStart.norm()>MinDistFromStartPointToMove || openClose)
+	{
 		facing = rotLerp(Facing, (float)CEntityManager::instance()[EId].interpolator().facing(), (float)lpos);
+	}
 	else
 	{
 		CVector dir = InitialPosition;
