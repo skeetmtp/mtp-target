@@ -138,6 +138,7 @@ link:
 	-ln -s ../../common/editable_element_common.cpp editable_element_common.cpp
 	-ln -s ../../common/module_common.cpp module_common.cpp
 	-ln -s ../../common/load_mesh.cpp load_mesh.cpp
+	-ln -s ../../common/custom_floating_point.cpp custom_floating_point.cpp
 
 client: $(OBJS)
 	$(CXX) -o $@ $(OBJS) $(LDFLAGS)
