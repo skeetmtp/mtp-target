@@ -97,7 +97,21 @@ void CLevel::_luaInit()
 	float ReleaseLevel = 1;
 	luaGetGlobalVariable(_luaSession, ReleaseLevel);
 
-	if(ReleaseLevel!=IService::getInstance()->ConfigFile.getVar("ReleaseLevel").asFloat())
+	CConfigFile::CVar &releaseLevel = IService::getInstance()->ConfigFile.getVar("ReleaseLevel");
+	bool releaseLevelOk = false;
+	for(uint i = 0; i < (uint)releaseLevel.size(); i ++)
+	{
+		int rl = releaseLevel.asInt(i);
+		if(ReleaseLevel == rl)
+		{
+			releaseLevelOk = true;
+			break;
+		}
+	}
+	if(releaseLevel.size()==0)
+		releaseLevelOk = true;
+	
+	if(!releaseLevelOk)
 	{
 		Valid = false;
 		return;
