@@ -319,10 +319,6 @@ void CEntityManager::login(CEntity *e)
 		msgout.serial(e->Texture);
 		bool s = e->spectator();
 		msgout.serial(s);
-		bool oc  = e->isOpen();
-		msgout.serial(oc);
-		msgout.serial(e->Trace);
-		msgout.serial(e->MeshName);
 
 		string CurrentLevel="";
 		// version 5 client can't handle startsession on login 
@@ -345,6 +341,11 @@ void CEntityManager::login(CEntity *e)
 			//timeBeforeTimeout = (float)((TTime)CLevelManager::instance().timeTimeout() - CTime::getLocalTime()-CSessionManager::instance().startTime())/1000.0f;
 		}
 		msgout.serial(timeBeforeTimeout);
+
+		bool oc  = e->isOpen();
+		msgout.serial(oc);
+		msgout.serial(e->Trace);
+		msgout.serial(e->MeshName);
 		CNetwork::instance().send(nid, msgout);
 		
 		// send the welcome message to the new client
