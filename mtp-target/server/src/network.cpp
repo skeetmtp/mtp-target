@@ -236,6 +236,7 @@ void CNetwork::release()
 	if(!NetworkThread || !NetworkTask)
 		return;
 
+	NetworkThread->terminate();
 	delete NetworkThread;
 	NetworkThread = 0;
 	delete NetworkTask;

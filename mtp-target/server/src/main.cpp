@@ -129,7 +129,6 @@ public:
 	{
 		CLevelManager::instance().release();
 		CEntityManager::instance().release();
-		CNetwork::instance().release();
 		CSessionManager::instance().release();
 
 		releasePhysics();
