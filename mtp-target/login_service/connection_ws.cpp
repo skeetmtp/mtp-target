@@ -449,7 +449,7 @@ static void cbReportClient(CMessage &msgin, const std::string &serviceName, uint
 	string info;
 	msgin.serial(ip, userName, reporterName, info);
 
-	string request = toString("insert into report (From,User,Info,Date) values ('%s','%s','%s',NOW());",reporterName.c_str(),userName.c_str(),info.c_str());
+	string request = toString("insert into report (Reporter,User,Info,Date) values ('%s','%s','%s',NOW());",reporterName.c_str(),userName.c_str(),info.c_str());
 	sqlQuery(request, nbrow, row, result);
 }
 

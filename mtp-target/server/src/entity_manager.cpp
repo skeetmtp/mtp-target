@@ -947,7 +947,7 @@ MTPT_COMMAND(kick, "kick a user from the server", "[<eid>|<name>]")
 		string kickerName = entity->name();
 		string info = "";
 		for(uint i=1;i<args.size();i++)
-			info += args[i];
+			info += " "+args[i];
 		
 		msgout.serial(ip, userName, kickerName, info);
 		
@@ -1037,7 +1037,7 @@ MTPT_COMMAND(report, "report a problematic user", "[<eid>|<name>] [comment]")
 	string reporterName = entity->name();
 	string info = "";
 	for(uint i=1;i<args.size();i++)
-		info += args[i];
+		info += " "+args[i];
 	
 	msgout.serial(ip, userName, reporterName, info);
 	
