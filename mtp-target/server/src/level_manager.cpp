@@ -255,7 +255,7 @@ void CLevelManager::display(CLog *log) const
 string CLevelManager::levelName() const
 {
 	if(CurrentLevel)
-		return CFile::getFilename(CurrentLevel->name());
+		return CurrentLevel->name();
 	else
 		return "NoLevel";
 }
@@ -263,7 +263,7 @@ string CLevelManager::levelName() const
 string CLevelManager::levelFilename() const
 {
 	if(CurrentLevel)
-		return CurrentLevel->fileName();
+		return CFile::getFilename(CurrentLevel->fileName());
 	else
 		return "noname.lua";
 }
