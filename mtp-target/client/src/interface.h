@@ -27,52 +27,6 @@
 
 #if 0
 
-//
-// Includes
-//
-
-#include "global.h"
-
-
-//
-// Classes
-//
-
-class mtInterface
-{
-public:
-	mtInterface();
-
-	//void init();
-	void render (uint8 eid);
-
-	//void loginScreen(std::string &OutLogin,std::string &OutPassword);
-	typedef enum { eDisplayNone, eDisplayBeforeFirstSession, eDisplayWaitReady, eDisplayStartSession, eDisplayGame, eDisplayEndSession, eDisplayMax } eDisplay;
-	void display(eDisplay display);
-	//void altimeterSetRange(float minValue, float maxValue);
-	//void altimeterSetValue(float value);
-	void setPartTime(float t);
-//	void addChatLine(const std::string &text);
-//	void updateChat();
-//	void displayChat(bool large = false);
-	//void network();
-	//void displayBackground();
-	void setDisplayViewedName(std::string name);
-
-	std::string LevelName, FullLevelName, Author;
-	std::string string1, string2;
-
-private:
-	std::string _viewedName;
-	eDisplay displaySelected;
-
-	float animTime;
-
-	float altimeterMinValue, altimeterMaxValue;
-	float altimeterValue;
-
-	float partTime;
-};
-
 #endif
+
 #endif

@@ -77,13 +77,15 @@ void CScoreTask::render()
 	// display all players score
 	float x1 = 15.0f;
 	float x2 = 250.0f;
-	float x3 = 500.0f;
-	float x4 = 680.0f;
+	float x3 = 380.0f;
+	float x4 = 500.0f;
+	float x5 = 680.0f;
 	float y = 100.0f;
 	CFontManager::instance().printf(CRGBA(245, 238, 141), x1, y, 1, "name");
 	CFontManager::instance().printf(CRGBA(245, 238, 141), x2, y, 1, "score");
-	CFontManager::instance().printf(CRGBA(245, 238, 141), x3, y, 1, "total");
-	CFontManager::instance().printf(CRGBA(245, 238, 141), x4, y, 1, "ping");
+	CFontManager::instance().printf(CRGBA(245, 238, 141), x3, y, 1, "state");
+	CFontManager::instance().printf(CRGBA(245, 238, 141), x4, y, 1, "total");
+	CFontManager::instance().printf(CRGBA(245, 238, 141), x5, y, 1, "ping");
 	y += CFontManager::instance().fontHeight()+10;
 	
 	vector<uint8> eids;
@@ -94,10 +96,11 @@ void CScoreTask::render()
 		sint32 curScore = CEntityManager::instance()[eids[i]].currentScore();
 		if(curScore<0)
 			printf("ok");
-		CFontManager::instance().printf(CEntityManager::instance()[eids[i]].color(), x1, y, 1, "%s%s", CEntityManager::instance()[eids[i]].name().c_str(), (CEntityManager::instance()[eids[i]].spectator()?" :spec:":""));
+		CFontManager::instance().printf(CEntityManager::instance()[eids[i]].color(), x1, y, 1, "%s", CEntityManager::instance()[eids[i]].name().c_str());
 		CFontManager::instance().printf(CEntityManager::instance()[eids[i]].color(), x2, y, 1, "%d", CEntityManager::instance()[eids[i]].currentScore());
-		CFontManager::instance().printf(CEntityManager::instance()[eids[i]].color(), x3, y, 1, "%d", CEntityManager::instance()[eids[i]].totalScore());
-		CFontManager::instance().printf(CEntityManager::instance()[eids[i]].color(), x4, y, 1, "%u", CEntityManager::instance()[eids[i]].ping());
+		CFontManager::instance().printf(CEntityManager::instance()[eids[i]].color(), x3, y, 1, "%s%s", (CEntityManager::instance()[eids[i]].ready()?"":"$"), (CEntityManager::instance()[eids[i]].spectator()?"@":""));
+		CFontManager::instance().printf(CEntityManager::instance()[eids[i]].color(), x4, y, 1, "%d", CEntityManager::instance()[eids[i]].totalScore());
+		CFontManager::instance().printf(CEntityManager::instance()[eids[i]].color(), x5, y, 1, "%u", CEntityManager::instance()[eids[i]].ping());
 	}
 }
 

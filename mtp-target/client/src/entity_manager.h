@@ -60,7 +60,8 @@ public:
 	
 	// set all spectator to no more spectator
 	void	resetSpectator();
-
+	void	resetReady();
+		
 	void	load3d();
 
 	CEntity &operator [](uint8 eid);

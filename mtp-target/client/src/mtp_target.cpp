@@ -198,6 +198,7 @@ void CMtpTarget::update()
 void CMtpTarget::loadNewSession()
 {
 	nlassert(NewSession);
+	CEntityManager::instance().resetReady();
 	
 	NewSession = false;
 	

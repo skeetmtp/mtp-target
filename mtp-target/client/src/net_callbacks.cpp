@@ -397,6 +397,15 @@ static void cbUpdateElement(CNetMessage &msgin)
 	
 static void cbReady(CNetMessage &msgin)
 {
+	// called when one player is ready
+	uint8 eid;
+	msgin.serial(eid);
+	nlinfo ("player %d is ready",eid);
+	CEntityManager::instance()[eid].ready(true);
+}
+
+static void cbEverybodyReady(CNetMessage &msgin)
+{
 	// called when everybody is ready, can start the countdown
 	nlinfo ("everybody is ready");
 	mtpTarget::instance().everybodyReady();
@@ -550,6 +559,7 @@ void netCallbacksHandler(CNetMessage &msgin)
 	SWITCH_CASE(FullUpdate);
 	SWITCH_CASE(UpdateElement);
 	SWITCH_CASE(Ready);
+	SWITCH_CASE(EverybodyReady);
 	SWITCH_CASE(RequestDownload);
 	SWITCH_CASE(RequestCRCKey);
 	SWITCH_CASE(DisplayText);

@@ -105,6 +105,8 @@ public:
 	
 	bool				 spectator() const { return Spectator; }
 	void				 spectator(bool b) { Spectator = b; }
+	bool				 ready() const { return Ready; }
+	void				 ready(bool b) { Ready = b; }
 	
 	void				 load3d();
 
@@ -152,6 +154,7 @@ private:
 	sint	ParticuleActivated;
 
 	bool	Spectator;
+	bool    Ready;
 
 	friend class CEntityManager;
 };

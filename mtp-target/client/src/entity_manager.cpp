@@ -172,6 +172,17 @@ void CEntityManager::resetSpectator()
 	}
 }
 
+void CEntityManager::resetReady()
+{
+	for(uint i = 0; i < 256; i++)
+	{
+		if(Entities[i].type() != CEntity::Unknown)
+		{
+			Entities[i].ready(false);
+		}
+	}
+}
+
 uint8 CEntityManager::size() const
 {
 	uint8 nb = 0;

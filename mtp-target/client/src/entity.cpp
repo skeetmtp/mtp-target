@@ -77,6 +77,7 @@ CEntity::CEntity()
 	LastSent2MePos = CVector::Null;
 	LastSent2OthersPos = CVector::Null;
 	_interpolator = NULL;
+	Ready = false;
 }
 
 void CEntity::swapOpenClose()
@@ -255,6 +256,7 @@ void CEntity::reset()
 	ObjMatrix.rotateX(1.0f);
 	ObjMatrix.rotateY(1.0f);
 	ParticuleActivated = 0;
+	Ready = false;
 }
 
 void CEntity::init(TEntity type, const std::string &name, sint32 totalScore, CRGBA &color, const std::string &meshname, bool spectator)
@@ -267,6 +269,7 @@ void CEntity::init(TEntity type, const std::string &name, sint32 totalScore, CRG
 	Color = color;
 	MeshName = meshname;
 	Spectator = spectator;
+	Ready = false;
 	interpolator().reset();
 	setIsLocal(false);
 	
