@@ -30,6 +30,7 @@
 #include "level.h"
 #include "level_manager.h"
 #include "resource_manager.h"
+#include "entity_manager.h"
 #include "config_file_task.h"
 
 
@@ -95,7 +96,7 @@ void CLevelManager::loadLevel(const std::string &fileName)
 	
 	CurrentLevel = new CLevel(res);
 	nlassert(CurrentLevel->valid());
-
+	
 	if(CConfigFileTask::instance().configFile().getVar("ForceCRCCheck").asInt())
 		CResourceManager::instance().CRCCheckTimes.clear();
 }
