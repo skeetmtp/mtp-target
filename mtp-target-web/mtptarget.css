@@ -48,6 +48,11 @@ div#menu a:hover
    text-decoration: none; color: black; background: #F2E2C8;
 }
 
+div#small
+{
+   font-size:80%
+}
+
 div#footer
 {
    text-align: right;
