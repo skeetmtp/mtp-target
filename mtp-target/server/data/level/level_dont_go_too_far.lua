@@ -1,7 +1,7 @@
 Name = "Dont go too far"
 Author = "Skeet"
 ServerLua = "level_dont_go_too_far_server.lua"
-ReleaseLevel = 2
+ReleaseLevel = 1
 
 skyShapeFileName = "sky.shape";
 sunAmbientColor = CRGBA(82, 100, 133, 255);
