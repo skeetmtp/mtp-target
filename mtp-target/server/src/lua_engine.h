@@ -68,6 +68,9 @@ private:
 
 	static int getEntityCount(lua_State *L);
 	static int getEntity(lua_State *L);
+	static int getEntityById(lua_State *L);
+	static int getModuleCount(lua_State *L);
+	static int getModule(lua_State *L);
 	static int sendChat(lua_State *L);
 	static int displayTextToAll(lua_State *L);
 	static int setLevelHasBonusTime(lua_State *L);
@@ -77,6 +80,8 @@ private:
 	static int getTimeRemaining(lua_State *L);
 
 	static int execLuaOnAllClient(lua_State *L);
+	static int execLuaOnOneClient(lua_State *L);
+	static int execLuaOnAllButOneClient(lua_State *L);
 	
 	static uint32 _sessionId;
 		

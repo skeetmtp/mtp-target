@@ -125,6 +125,9 @@ void CLuaEngine::init(const std::string &filename)
 		lua_register(session(), "setMaxLevelSessionCount", setMaxLevelSessionCount);
 		lua_register(session(), "getEntityCount", getEntityCount);
 		lua_register(session(), "getEntity", getEntity);
+		lua_register(session(), "getEntityById", getEntityById);
+		lua_register(session(), "getModuleCount", getModuleCount);
+		lua_register(session(), "getModule", getModule);
 		lua_register(session(), "sendChat", sendChat);
 		lua_register(session(), "displayTextToAll", displayTextToAll);
 		lua_register(session(), "setLevelHasBonusTime", setLevelHasBonusTime);
@@ -133,6 +136,8 @@ void CLuaEngine::init(const std::string &filename)
 		lua_register(session(), "getLevelTimeout", getLevelTimeout);
 		lua_register(session(), "getTimeRemaining", getTimeRemaining);
 		lua_register(session(), "execLuaOnAllClient", execLuaOnAllClient);
+		lua_register(session(), "execLuaOnOneClient", execLuaOnOneClient);
+		lua_register(session(), "execLuaOnAllButOneClient", execLuaOnAllButOneClient);
 	}
 	
 	Lunar<CModuleProxy>::Register(session());
@@ -324,6 +329,43 @@ int CLuaEngine::getEntity(lua_State *L)
 	return 1;
 }
 
+int CLuaEngine::getEntityById(lua_State *L)
+{
+	uint eid = (uint )luaL_checknumber(L,1);
+	CEntity *e = CEntityManager::instance().getById(eid);
+	if(e==0)
+		nlwarning("getEntityById(%d)==0",eid);
+	else
+		Lunar<CEntityProxy>::push(L, e->luaProxy);
+	return 1;
+}
+
+int CLuaEngine::getModuleCount(lua_State *L)
+{
+	lua_Number res = 0;
+	if(CLevelManager::instance().haveCurrentLevel())
+		res = CLevelManager::instance().currentLevel().getModuleCount();
+	lua_pushnumber(L,res); 
+	return 1;
+}
+
+int CLuaEngine::getModule(lua_State *L)
+{
+	uint moduleNumber = (uint )luaL_checknumber(L,1);
+	CModule *m = 0;
+	if(CLevelManager::instance().haveCurrentLevel())
+		m = CLevelManager::instance().currentLevel().getModule(moduleNumber);
+	
+	if(m==0)
+	{
+		nlwarning("getModule(%d)==0",moduleNumber);
+		return 0;
+	}
+	else
+		Lunar<CModuleProxy>::push(L, m->luaProxy);
+	return 1;
+}
+
 int CLuaEngine::sendChat(lua_State *L)
 {
 	unsigned int len;
@@ -408,7 +450,45 @@ int CLuaEngine::execLuaOnAllClient(lua_State *L)
 		msgout.serial(code);
 		CNetwork::instance().send(msgout);
 	}
+	
+	return 0;		
+}
 
+int CLuaEngine::execLuaOnOneClient(lua_State *L)
+{
+	uint8 eid = (uint8 )luaL_checknumber(L,1);
+	unsigned int len;
+	const char *text = luaL_checklstring(L, 2, &len);
+	string code(text);
+	CEntity *e = CEntityManager::instance().getById(eid);
+	if(!e || e->type() != CEntity::Client)
+		return 0;
+
+	if(MTPT_NETWORK_VERSION>=2)
+	{
+		//nlwarning("lua : execLuaOnAllClient : %s",code.c_str());
+		CNetMessage msgout(CNetMessage::ExecLua);
+		msgout.serial(code);
+		CNetwork::instance().send(eid,msgout);
+	}
+	
+	return 0;		
+}
+
+int CLuaEngine::execLuaOnAllButOneClient(lua_State *L)
+{
+	uint8 eid = (uint8 )luaL_checknumber(L,1);
+	unsigned int len;
+	const char *text = luaL_checklstring(L, 2, &len);
+	string code(text);
+	if(MTPT_NETWORK_VERSION>=2)
+	{
+		//nlwarning("lua : execLuaOnAllClient : %s",code.c_str());
+		CNetMessage msgout(CNetMessage::ExecLua);
+		msgout.serial(code);
+		CNetwork::instance().sendAllExcept(eid,msgout);
+	}
+	
 	return 0;		
 }
 
