@@ -39,6 +39,7 @@
 #include "entity.h"
 #include "../../common/net_message.h"
 #include "../../common/constant.h"
+#include "../../common/editable_element_common.h"
 
 
 //
