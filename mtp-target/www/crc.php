@@ -68,7 +68,7 @@
 								printf("%s : %s<br>\n",$FolderOrFile,$sha1);
 								fwrite($fp,sprintf("%s\n",$FolderOrFile));
 								fwrite($fp,sprintf("%s\n",$sha1));
-								$command = "gzip -c ".$f." > ".$destDir.$FolderOrFile.".gz";
+								$command = "nice gzip -c ".$f." > ".$destDir.$FolderOrFile.".gz";
 								//sleep(1);
 								//echo "executing : ".$command."<br>";
 								system($command);
