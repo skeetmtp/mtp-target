@@ -1,0 +1,62 @@
+<?php
+
+	
+	 
+?>
+<?php
+include_once("stat_function.php");
+include_once("stat_game.php");
+include_once("stat_map_graph_display.php");
+
+	$cacheFileName = $cache_dir."/stat_global.html";
+	
+	if(isCacheFileUpToDate($cacheFileName))
+	{
+		include($cacheFileName);
+		return;
+	}
+	
+	$html_fp = fopen($cacheFileName, "wt");
+
+	/*
+	TODO : user list(sorted)
+	TODO : game by day graph
+	*/
+	fprintf($html_fp,"<script type='text/javascript' src='js/switchcontent.js'></script>");
+	fprintf($html_fp,"<b><a href=\"javascript:toggleElementByName('expandable')\">expand stats</a></b>");
+
+	$sessionCount = 10;
+	$requete = "SELECT Id FROM session ORDER BY Id DESC LIMIT 0,$sessionCount";
+	drawGames($html_fp,$requete,"Last $sessionCount games",-1);
+
+	//$requete = "SELECT count(*), HOUR(Date) as h FROM session GROUP BY HOUR(Date);";
+	$requete = "SELECT count(*), HOUR(Date) as c FROM session WHERE TO_DAYS(NOW()) = TO_DAYS(Date) GROUP BY c;";
+	$result=exec_game_db_requete($requete);
+	drawGraph($html_fp,$result,true,0,24,"Today games by hour","","Hour");
+
+	$requete = "SELECT count(*), HOUR(Date) as c FROM session WHERE TO_DAYS(NOW())-TO_DAYS(session.Date)<=29 GROUP BY c;";
+	$result=exec_game_db_requete($requete);
+	drawGraph($html_fp,$result,true,0,24,"Last 30 days games by hour","","Hour");
+
+	$yearToStat = 2004;
+	$link = "<a href=\"?page=stat_day.php&p_year_to_stat=$yearToStat&p_day_to_stat=%s&p_month_to_stat=%s\">%s";
+	$requete = "SELECT count(*), 29-(TO_DAYS(NOW())-TO_DAYS(session.Date)),DAYOFMONTH(session.Date), MONTH(session.Date) FROM session WHERE TO_DAYS(NOW())-TO_DAYS(session.Date)<=29 GROUP BY TO_DAYS(session.Date);";
+	$result=exec_game_db_requete($requete);
+	drawGraphMultipleLink($html_fp,$result,false,0,30,"Last 30 days games by day","",array("", "Day","Month"),true,$link);
+
+	$link = "<a href=\"?page=stat_month.php&p_year_to_stat=$yearToStat&p_month_to_stat=%s\">%s";
+	$requete = "SELECT count(*), MONTH(Date) as c FROM session WHERE TO_DAYS(NOW())-TO_DAYS(session.Date)<=365 GROUP BY c;";
+	$result=exec_game_db_requete($requete);
+	drawGraphLink($html_fp,$result,false,1,12,"Last 12 months games","","Month",$link);
+
+	$requete = "SELECT count(*),map.Id,map.LevelName FROM session,map WHERE map.LevelName=session.LevelName GROUP BY session.LevelName;";
+	$result=exec_game_db_requete($requete);
+	drawMapUsage($html_fp,$result,1,15,"Level usage",array("", "Level"));
+	
+	
+
+
+	fclose($html_fp);	  
+	include($cacheFileName);	
+?>
+	

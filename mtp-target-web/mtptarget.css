@@ -30,6 +30,12 @@ img
 }
 
 
+div#delete
+{
+   font: bold 1em sans-serif;
+   text-decoration: none; color:#FF0000;
+}
+
 div#menu a
 {
    font: bold 1em sans-serif;
@@ -50,5 +56,30 @@ div#footer
 
 div#main
 {
-   text-align: left;
+	font-size: small;
+	text-align: left;
 }
+
+div#stat_table th
+{	
+	font-size: small;
+	text-align: center;
+	text-decoration: none; 
+	background:#FFEEDD;
+}
+
+div#stat_table td
+{	
+	font-size: small;
+	text-align: center;
+	text-vertical-align: middle;
+	text-decoration: none; 
+}
+
+div#stat_table a
+{	
+   font: bold 1em sans-serif;
+   text-decoration: none; color:#700B09;
+}
+
+

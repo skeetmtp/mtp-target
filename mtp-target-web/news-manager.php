@@ -50,7 +50,7 @@ function confirmLink(theLink)
 <?php
 
 
-$requete = sprintf("SELECT * FROM news ORDER BY date DESC;");
+$requete = sprintf("SELECT * FROM news ORDER BY date DESC LIMIT 0,10;");
 $resultat = exec_requete($requete);
 $count = 0;
 while ($ligne = mysql_fetch_array($resultat))
@@ -68,7 +68,10 @@ while ($ligne = mysql_fetch_array($resultat))
               
 ?>
     </td>
-    <td valign="top" width="400"><?php include(sprintf("./lang/%s/news-header.php",$lang));?></td>
+    <td valign="top" width="400">
+    	<?php include("stat_player_of_the_day.php");?>
+    	<?php include(sprintf("./lang/%s/news-header.php",$lang));?>
+    </td>
 </tr>
 </table>
 

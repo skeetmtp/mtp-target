@@ -1,9 +1,11 @@
 <?php
   include_once("conf.inc.php");
   include_once("config.php");
+  include_once("common.php");
   include_once("mysql-func.php");
   include_once("ingame_stats.php");
-
+  include_once("cache_2_html.php");
+  
   if(isset($page) && !validPage($page)) unset($page);
   if(isset($login) && !validInput($login)) unset($login);
   if(isset($password) && !validInput($password)) unset($password);
@@ -14,38 +16,7 @@
       setcookie("mtp_target_lang",$lang,time()+3600*24*30);
   }
   include_once("lang.php");
-  if(isset($login) && isset($password))
-  {
-  }
-  else
-  {
-  	if(isset($_COOKIE['mtp_target_admin_login']))
-    	$login = $_COOKIE['mtp_target_admin_login'];
-    else
-    	$login = "";	
-  	if(isset($_COOKIE['mtp_target_admin_password']))
-	    $password = $_COOKIE['mtp_target_admin_password'];
-	  else
-    	$password = "";	
-  }
-  
-  $requete = "SELECT * FROM user WHERE login='".$login."' AND password='".$password."';";
-  $resultat=exec_requete($requete);
-
-  if($ligne = mysql_fetch_array($resultat))
-  {
-    $login = $ligne[0];
-    setcookie("mtp_target_admin_login",$login,time()+3600*24*30);
-    setcookie("mtp_target_admin_password",$password,time()+3600*24*30);
-  }
-  else
-  {
-    unset($login);
-    unset($password);
-  }
-    
-  $logged=isset($login) && $login!="";
-
+  include_once("check_admin_login.php");
   if(isset($_COOKIE['mtp_target_default_page']))
   	$default_page = $HTTP_COOKIE_VARS['mtp_target_default_page'];
   if(isset($default_page))
@@ -72,7 +43,6 @@
     "todo"  => array ("url"=>"?page=todo-manager.php", "name"=>$menuLinkText_Todo),
     "stats"  => array ("url"=>"?page=stats.php", "name"=>$menuLinkText_Stats),
     "contact"  => array ("url"=>"?page=contact.php", "name"=>$menuLinkText_Contact),
-    "admin"  => array ("url"=>"?page=admin.php", "name"=>$menuLinkText_Admin),
   );
 ?>
  
@@ -85,7 +55,7 @@
 <link rel="stylesheet" type="text/css" href="mtptarget.css">
 </head>
 <body>
-<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<table border="0"  cellpadding="0" cellspacing="2" width="100%">
 <tr align="center">
     <td colspan="<?php echo count($menu_array);?>">
         <a href="index.php"><img src="<?php echo $image_dir; ?>/logo.png" ALT="Logo"></a>
@@ -94,32 +64,47 @@
     </td>
 </tr>
 <tr>
-        <td width="5%"><center><div id="menu">
+
+<table border="0"  cellpadding="0" cellspacing="5" width="100%">
+<tr valign="top">
+<td>
+
+<table border="0"  cellpadding="0" cellspacing="0" width="100%">
+<tr >
+        <td align="center"><div id="menu">
         <?php
-		getStats($nbop, $nbrp, $nbs);
-		printf($menuStat, $nbrp, $nbop, $nbs);
+        
+		if($html_fp = cache2Html("ingame_stats_menu.php.html",1))
+		{
+			getStats($nbop, $nbrp, $nbs);
+			fprintf($html_fp,$menuStat, $nbrp, $nbop, $nbs);
+			flushCache2Html($html_fp);
+		}
+        	
         ?>
-        </div></center></td>
+        </div></td>
 </tr>
 <tr>
-        <td width="5%"><center><div id="menu">
+        <td align="center"><div id="menu">
         <?php
                 printf("| ");
                 foreach($menu_array as $key => $value)
                 {
-                    /*
-                    if($key==$menu)
-                      printf ("<td width=\"5%%\">%s</td>\n",$value["name"]);
-                    else
-                    */
                       printf("<a href=\"%s\">%s</a> | ",$value["url"],$value["name"]);
                 }
         ?>
-        </div></center></td>
+        
+        </div></td>
 </tr>
+</table>
+
+</td>
+<td>
+ 		  <?php include("user_check.php"); ?>
+</td>
+</tr>
+</table>
+
 <tr>
 <td colspan="<?php echo count($menu_array);?>" valign="top" align="left">
 <div id="main">
-<?php
-     //printf("%s<br>",$lang);
-?>

@@ -12,9 +12,10 @@
 </ul>
 */
 ?>
-<h3>Servers statistics</h3>
+<h3>Games statistics</h3>
 <ul>
-<li><a href="?page=scores.php">Highscores</a></li>
+<li><a href="?page=stat_global.php">Mtp Target games stats</a></li>
+<li><a href="?page=stat_ranking.php">Ranking</a></li>
 <li><a href="?page=logged.php">Players online</a></li>
 </ul>
 

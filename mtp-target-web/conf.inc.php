@@ -1,8 +1,13 @@
 <?php
      $die_message = "error";
 
-     $sshot_dir = "http://mtptarget.free.fr/screenshot";	
      $image_dir = "http://mtptarget.free.fr";	
+     $image_dir = "./";	
+     $sshot_dir = $image_dir."/screenshot";	
+     $cache_dir = "cache";
+
+	 $userTexturePath = "http://mtp-target.dyndns.org/user_texture/";
+	 $userTextureStartName = "ping_ball_";
 
 //color
      //switch header color when header change
@@ -18,6 +23,7 @@
      $table_news_bgcolor_color = "#666666";
      $table_news_head_color = "#FFEEDD";
      $table_news_row_color = "#FFFAEA";
+     $table_news_row_color_2 = "#FEF5D8";
 
      $table_head_color = "#ffffff";
      $table_row_color = "#cccccc";
