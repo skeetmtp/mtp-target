@@ -204,6 +204,9 @@ void CIntroTask::updateLoginOnline()
 
 	if(loginButton->pressed() || _autoLogin==1)
 	{
+		CConfigFileTask::instance().configFile().getVar("Login").setAsString(loginText->text);
+		CConfigFileTask::instance().configFile().getVar("Password").setAsString(passwordText->text);
+		CConfigFileTask::instance().configFile().save();
 		_errorServerFrame = NULL;
 		
 		string loginServer = CConfigFileTask::instance().configFile().getVar("LSHost").asString();
@@ -218,6 +221,7 @@ void CIntroTask::updateLoginOnline()
 		}
 		else
 		{
+			
 			ServerId = 0;
 			
 			serverVbox->elements.clear();
@@ -257,6 +261,10 @@ void CIntroTask::updateLoginOnlan()
 	
 	if(loginButton->pressed() || _autoLogin)
 	{
+		CConfigFileTask::instance().configFile().getVar("Login").setAsString(loginText->text);
+		CConfigFileTask::instance().configFile().getVar("Password").setAsString(passwordText->text);
+		CConfigFileTask::instance().configFile().save();
+		
 		CGuiObjectManager::instance().objects.clear();
 		State = eConnectionOnlan;
 	}
@@ -299,10 +307,6 @@ void CIntroTask::updateConnectionOnLine()
 		State = eLoginOnline;
 		return;
 	}
-	
-	CConfigFileTask::instance().configFile().getVar("Login").setAsString(loginText->text);
-	CConfigFileTask::instance().configFile().getVar("Password").setAsString(passwordText->text);
-	CConfigFileTask::instance().configFile().save();
 	
 	// try to connect
 	string res = CNetworkTask::instance().connect(&ip);
