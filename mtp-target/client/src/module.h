@@ -75,18 +75,15 @@ using NLMISC::CMatrix;
 class CModule : public CEditableElement
 {
 public:
-	CModule(const std::string &name, uint8 id, NLMISC::CVector position, NLMISC::CAngleAxis rotation);
+	CModule();
 	virtual ~CModule();
 	
-	virtual bool intersect(NLMISC::CVector rayStart,NLMISC::CVector rayEnd,NLMISC::CVector &rayHit);
+	virtual void init(const std::string &name,uint8 id, NLMISC::CVector position, NLMISC::CAngleAxis rotation);
 	virtual void renderSelection();
 	
 
+
 private:
-	std::vector<NLMISC::CVector> vertices;
-	std::vector<NLMISC::CVector> normals;
-	std::vector<uint32> indices;
-	uint32 NbFaces;
 };
 
 

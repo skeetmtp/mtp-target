@@ -81,8 +81,10 @@ public:
 		StartPosition,
 	};		
 
-	CEditableElement(const std::string &name,uint8 id, NLMISC::CVector position, NLMISC::CAngleAxis rotation);
+	CEditableElement();
 	virtual ~CEditableElement();
+
+	virtual void init(const std::string &name,uint8 id, NLMISC::CVector position, NLMISC::CAngleAxis rotation);
 	
 	virtual bool intersect(NLMISC::CVector rayStart,NLMISC::CVector rayEnd,NLMISC::CVector &rayHit);
 
@@ -103,6 +105,11 @@ public:
 	TType type() { return _type;}
 	
 protected:
+	std::vector<NLMISC::CVector> vertices;
+	std::vector<NLMISC::CVector> normals;
+	std::vector<uint32> indices;
+	uint32 NbFaces;
+	
 	std::string		Name;
 	NL3D::UInstance *Mesh;
 	NLMISC::CVector Position;

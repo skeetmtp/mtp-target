@@ -75,9 +75,28 @@ using namespace NL3D;
 
 
 
-CModule::CModule(const std::string &name,uint8 id, CVector position, CAngleAxis rotation):CEditableElement(name,id,position,rotation)
+CModule::CModule()
 {
+	_type = CEditableElement::Module;
+}
 
+
+CModule::~CModule()
+{
+}
+
+
+
+
+void CModule::init(const string &name,uint8 id, CVector position, CAngleAxis rotation)
+{
+	Name = name;
+	_id = id;
+	_changed = false;
+	
+	Position = position;
+	Rotation = rotation;
+	
 	string MeshName = CResourceManager::instance().get(Name+".shape");
 	
 	vertices.clear();
@@ -89,11 +108,11 @@ CModule::CModule(const std::string &name,uint8 id, CVector position, CAngleAxis 
 	i.serial(ss);
 	i.close();
 	
-
-
+	
+	
 	CMesh *m = (CMesh*)ss.getShapePointer();
 	const CMeshGeom &mg = m->getMeshGeom();
-
+	
 	uint nbmb = mg.getNbMatrixBlock();
 	for(uint i = 0; i < nbmb; i++)
 	{
@@ -130,7 +149,7 @@ CModule::CModule(const std::string &name,uint8 id, CVector position, CAngleAxis 
 		//		}
 		//		if(j)
 	}
-
+	
 	//C3DTask::instance().scene().deleteInstance(Mesh);
 	
 	Mesh = C3DTask::instance().scene().createInstance (MeshName);
@@ -141,53 +160,10 @@ CModule::CModule(const std::string &name,uint8 id, CVector position, CAngleAxis 
 	Mesh->setTransformMode(UTransformable::RotQuat);
 	Mesh->setRotQuat(CQuat(rotation));
 	Mesh->setPos(position);
-
-	_type = CEditableElement::Module;
-}
-
-
-CModule::~CModule()
-{
-}
-
-
-
-
-
-
-
-
-bool CModule::intersect(NLMISC::CVector rayStart,NLMISC::CVector rayEnd,NLMISC::CVector &rayHit)
-{
-	//return true;
-	CMatrix mat = mesh()->getMatrix();
-	CMatrix imat = mat;
-	imat.invert();
-	//rayEnd = imat * rayEnd;
-	//rayStart = imat * rayStart;
 	
-	uint32 i;
-	for(i = 0; i<NbFaces; i++)
-	{
-		CTriangle tri;
-		tri.V0 = mat * vertices[indices[i*3+0]];
-		tri.V1 = mat * vertices[indices[i*3+1]];
-		tri.V2 = mat * vertices[indices[i*3+2]];
-
-		CPlane p;
-		p.make(tri.V0,tri.V1,tri.V2);
-		CVector hit;
-		bool res = tri.intersect(rayStart,rayEnd,hit,p);
-		if(res)
-		{
-			rayHit = hit;
-			return true;
-		}
-	}
-
-
-	return false;
+	
 }
+
 
 
 

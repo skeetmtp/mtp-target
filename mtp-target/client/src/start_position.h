@@ -75,8 +75,9 @@ using NLMISC::CMatrix;
 class CStartPosition : public CEditableElement
 {
 public:
-	CStartPosition(const std::string &name, uint8 id, NLMISC::CVector position, NLMISC::CAngleAxis rotation);
+	CStartPosition();
 	virtual ~CStartPosition();
+	
 private:
 };
 

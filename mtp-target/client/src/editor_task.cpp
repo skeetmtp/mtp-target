@@ -24,22 +24,25 @@
 
 #include "stdpch.h"
 
-
-#include "3d_task.h"
+#include "editor_task.h"
 #include "time_task.h"
-#include "controler.h"
-#include "mtp_target.h"
+#include "3d_task.h"
 #include "network_task.h"
 #include "level_manager.h"
-#include "entity_manager.h"
-#include "gui.h"
-#include "editor_task.h"
+#include "mtp_target.h"
+
+#include <string>
+
+#include <nel/3d/u_material.h>
 
 using namespace std;
 using namespace NLMISC;
 using namespace NL3D;
 
 
+
+static CVector rayTestStart,rayTestEnd;
+static UMaterial *testMat;
 
 //
 // Functions
@@ -54,6 +57,14 @@ void CEditorTask::init()
 	_mouseX = 0;
 	_mouseY = -0.5f;
 	_lastUpdateTime = 0;
+
+	rayTestStart = CVector(0,0,0);
+	rayTestEnd= CVector(0,0,0);
+	testMat = C3DTask::instance().driver().createMaterial();
+	testMat->setColor(CRGBA(255,255,255,255));
+	testMat->setZWrite(true);
+	testMat->setZFunc(UMaterial::always);
+	
 }
 
 
@@ -76,6 +87,10 @@ void CEditorTask::_mouseSelectModule()
 		vp.getRayWithPoint(x,y,rayStart,rayDir,camMat,frustum);
 		rayDir.normalize();
 		rayEnd = rayStart + rayDir * 10000;
+
+		rayTestEnd = rayEnd;
+		rayTestStart = rayStart;
+		
 		list<CEditableElement *> bboxModules;
 		for(i=0;i<CLevelManager::instance().currentLevel().getModuleCount();i++)
 		{
@@ -260,6 +275,13 @@ void CEditorTask::render()
 	{
 		_selectedModule->renderSelection();
 	}
+
+	CLine l;
+	
+	l.V0 = rayTestStart;
+	l.V1 = rayTestEnd;
+	//C3DTask::instance().driver().drawLine(l,*testMat);
+	
 }
 
 void CEditorTask::release()

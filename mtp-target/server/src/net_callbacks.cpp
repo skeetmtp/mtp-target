@@ -190,7 +190,9 @@ static void cbUpdateElement(CClient *c, CNetMessage &msgin)
 		msgout.serial(pos);
 		msgout.serial(eulerRot);
 		CNetwork::instance().sendAllExcept(c->id(),msgout);
-		
+
+		if(CSessionManager::instance().editMode()==0)
+			CSessionManager::instance().editMode(1);
 		if(elementType==CEditableElement::Module)
 			CLevelManager::instance().currentLevel().updateModule(elementId,pos,eulerRot);
 	}

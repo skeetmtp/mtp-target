@@ -75,7 +75,7 @@ using namespace NL3D;
 
 
 
-CStartPosition::CStartPosition(const std::string &name,uint8 id, CVector position, CAngleAxis rotation):CEditableElement(name,id,position,rotation)
+CStartPosition::CStartPosition()
 {
 	_type = CEditableElement::StartPosition;	
 }

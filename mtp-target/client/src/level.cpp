@@ -113,7 +113,8 @@ CLevel::CLevel(const string &filename)
 	{
 		nlinfo("%g %g %g", StartPoints[i].x, StartPoints[i].y, StartPoints[i].z);
 		CAngleAxis Rotation(CVector(1,0,0),0);
-		CStartPosition *startPosition = new CStartPosition("start pos",startPositionId,StartPoints[i],Rotation);
+		CStartPosition *startPosition = new CStartPosition();
+		startPosition->init("start pos",startPositionId,StartPoints[i],Rotation);
 		if (!DisplayStartPositions)
 			startPosition->hide();
 		StartPositions.push_back(startPosition);
@@ -171,7 +172,8 @@ CLevel::CLevel(const string &filename)
 		nlinfo("name %s", Name.c_str());
 		lua_pop(LuaState, 1);  // removes `value'; keeps `key' for next iteration
 
-		CModule *module = new CModule(Name,moduleId,Position,Rotation);
+		CModule *module = new CModule();
+		module->init(Name,moduleId,Position,Rotation);
 		moduleId++;
 		if(!DisplayLevel)
 			module->hide();

@@ -47,6 +47,8 @@
 #include "resource_manager.h"
 #include "level_manager.h"
 
+
+
 #include "stdpch.h"
 
 #include <deque>
@@ -73,36 +75,10 @@ using namespace NL3D;
 
 
 
-CEditableElement::CEditableElement(const string &name,uint8 id, CVector position, CAngleAxis rotation)
+CEditableElement::CEditableElement()
 {
-	Name = name;
-	_id = id;
-	_changed = false;
-
-	
 	mat = C3DTask::instance().driver().createMaterial();
-
-	Position = position;
-	Rotation = rotation;
-
-	string res = CResourceManager::instance().get("col_box.shape");
-	Mesh = C3DTask::instance().scene().createInstance (res);
-	if (!Mesh)
-	{
-		nlwarning ("Can't load 'col_box.shape'");
-	}
-
-	Mesh->setTransformMode(UTransformable::RotQuat);
-	Mesh->setRotQuat(CQuat(rotation));
-	Mesh->setPos(position);
-	
 	_type = Unknown;
-}
-
-
-bool CEditableElement::intersect(NLMISC::CVector rayStart,NLMISC::CVector rayEnd,NLMISC::CVector &rayHit)
-{
-	return true;
 }
 
 
@@ -111,6 +87,119 @@ CEditableElement::~CEditableElement()
 	C3DTask::instance().scene().deleteInstance(Mesh);
 	
 }
+
+
+void CEditableElement::init(const string &name,uint8 id, CVector position, CAngleAxis rotation)
+{
+	Name = name;
+	_id = id;
+	_changed = false;
+	
+	Position = position;
+	Rotation = rotation;
+
+	string MeshName = CResourceManager::instance().get("col_box.shape");
+	
+
+	NbFaces = 0;
+	NLMISC::CIFile i(CPath::lookup(MeshName, false).c_str());
+	CShapeStream ss;
+	i.serial(ss);
+	i.close();
+	
+	
+	
+	CMesh *m = (CMesh*)ss.getShapePointer();
+	const CMeshGeom &mg = m->getMeshGeom();
+	
+	uint nbmb = mg.getNbMatrixBlock();
+	for(uint i = 0; i < nbmb; i++)
+	{
+		uint nbrp = mg.getNbRdrPass(i);
+		for(uint j = 0; j < nbrp; j++)
+		{
+			const CPrimitiveBlock &pb = mg.getRdrPassPrimitiveBlock(i, j);
+			const uint32 *ptr = pb.getTriPointer();
+			uint nbt = pb.getNumTri();
+			NbFaces += nbt;
+			for(uint k = 0; k < nbt*3; k+=3)
+			{
+				indices.push_back(ptr[k+0]);
+				indices.push_back(ptr[k+1]);
+				indices.push_back(ptr[k+2]);
+				//				nlinfo("%d %d %d %d", k, ptr[k+0], ptr[k+1], ptr[k+2]);
+			}
+		}
+	}
+	
+	const CVertexBuffer &vb = mg.getVertexBuffer();
+	uint32 nbv = vb.getNumVertices();
+	for(uint i = 0; i < nbv; i++)
+	{
+		const void *nn = vb.getNormalCoordPointer(i);
+		CVector n = *(CVector*)nn;
+		const void *vv = vb.getVertexCoordPointer(i);
+		CVector v = *(CVector*)vv;
+		//		uint j;
+		//		for(j = 0; j < vertices.c_str(); j++)
+		//		{
+		vertices.push_back(v);
+		normals.push_back(n);
+		//		}
+		//		if(j)
+	}
+	
+	//C3DTask::instance().scene().deleteInstance(Mesh);
+
+	
+	string res = CResourceManager::instance().get(MeshName);
+	Mesh = C3DTask::instance().scene().createInstance (res);
+	if (!Mesh)
+	{
+		nlwarning ("Can't load 'col_box.shape'");
+	}
+	
+	Mesh->setTransformMode(UTransformable::RotQuat);
+	Mesh->setRotQuat(CQuat(rotation));
+	Mesh->setPos(position);
+	
+}
+
+
+bool CEditableElement::intersect(NLMISC::CVector rayStart,NLMISC::CVector rayEnd,NLMISC::CVector &rayHit)
+{
+	//return true;
+	CMatrix mat = mesh()->getMatrix();
+	CMatrix imat = mat;
+	imat.invert();
+	//rayEnd = imat * rayEnd;
+	//rayStart = imat * rayStart;
+	
+	uint32 i;
+	for(i = 0; i<NbFaces; i++)
+	{
+		CTriangle tri;
+		tri.V0 = mat * vertices[indices[i*3+0]];
+		tri.V1 = mat * vertices[indices[i*3+1]];
+		tri.V2 = mat * vertices[indices[i*3+2]];
+		
+		CPlane p;
+		p.make(tri.V0,tri.V1,tri.V2);
+		CVector hit;
+		bool res = tri.intersect(rayStart,rayEnd,hit,p);
+		if(res)
+		{
+			rayHit = hit;
+			return true;
+		}
+	}
+	
+	
+	return false;
+}
+
+
+
 
 
 

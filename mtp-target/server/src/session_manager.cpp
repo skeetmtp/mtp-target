@@ -55,6 +55,7 @@ void CSessionManager::init()
 
 	StartTime = 0;
 	EndTime = 0;
+	_editMode = 0;
 }
 
 void CSessionManager::update()

@@ -287,7 +287,8 @@ void CEntityManager::remove(uint8 eid)
 	}
 
 	nlinfo("Removing client eid %hu name '%s'", (uint16)c->id(), c->name().c_str());
-
+	CSessionManager::instance().editMode(0);
+	
 	// TODO clientConnected(c->Cookie, false);
 
 	CNetMessage msgout(CNetMessage::Logout);
