@@ -115,17 +115,19 @@ static void cbLogin(CNetMessage &msgin)
 
 	msgin.serial(self, eid, name, totalScore);
 	msgin.serial(color, texture, spec);
+
+	string levelName;
+	float timeBeforeTimeout;
+	if(self)
+	{
+		msgin.serial(levelName, timeBeforeTimeout);
+	}
+
 	//TODO remove size test when server version will be 6
-	if(msgin.getPos() < (sint32)msgin.length())
+	if(CNetworkTask::instance().networkVersion>=6)
 	{
 		msgin.serial(oc);
-	}
-	if(msgin.getPos() < (sint32)msgin.length())
-	{
 		msgin.serial(trace);
-	}
-	if(msgin.getPos() < (sint32)msgin.length())
-	{
 		msgin.serial(mesh);
 	}
 	nlinfo("NET: cbLogin self=%d eid=%hu name='%s' totalScore='%d' color=(%d,%d,%d) texture='%s' spec=%d oc=%d trace='%s' mesh='%s'", 
@@ -143,9 +145,6 @@ static void cbLogin(CNetMessage &msgin)
 	{
 		CMtpTarget::instance().displayTutorialInfo(totalScore<=CConfigFileTask::instance().configFile().getVar("MinTotalScoreToHideTutorial").asInt());
 
-		string levelName;
-		float timeBeforeTimeout;
-		msgin.serial(levelName, timeBeforeTimeout);
 		nlinfo("levelName='%s' timeBeforeTimeout=%f", levelName.c_str(), timeBeforeTimeout);
 		
 		if (!levelName.empty())
