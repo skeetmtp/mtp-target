@@ -2,9 +2,9 @@
 include_once("stat_function.php");
 include_once("stat_game.php");
 
-	$uid = userName2Uid($user_login);
+	//$uid = userName2Uid($user_login);
 	//$uid = 5453;
-	$cacheFileName = $cache_dir."/test.html";
+	//$cacheFileName = $cache_dir."/test.html";
 	
 	/*
 	if(isCacheFileUpToDate($cacheFileName))
@@ -14,7 +14,7 @@ include_once("stat_game.php");
 	}
 	*/
 	
-	$html_fp = fopen($cacheFileName, "wt");
+	//$html_fp = fopen($cacheFileName, "wt");
 
 /*
 	$requete = "SELECT user.Login,SUM(user_session.Score) as s FROM session,user_session,user WHERE session.Id=user_session.SessionId AND user_session.UId=user.UId AND TO_DAYS(NOW())-TO_DAYS(session.Date)=30 GROUP BY user_session.UId ORDER BY s DESC LIMIT 0,1 ;";
@@ -25,6 +25,12 @@ include_once("stat_game.php");
 	}
 */
 
-	fclose($html_fp);	  
-	include($cacheFileName);	
+/*
+echo "Votre base est en cours de restauration......\n<br>";
+system("cat __DB_phpbb__.sql | mysql --host=sql7 --user=mtptarge --password=mvyhgmzf mtptarge");
+echo "C'est fini. Votre base est en place sur cet hébergement.";
+*/
+
+	//fclose($html_fp);	  
+	//include($cacheFileName);	
 ?>
