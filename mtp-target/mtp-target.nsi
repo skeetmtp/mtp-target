@@ -1,16 +1,17 @@
-!define MUI_PRODUCT "mtp-target" ;Define your own software name here
-!define MUI_VERSION "1.0" ;Define your own software version here
+;!define MUI_PRODUCT "mtp-target" ;Define your own software name here
+;!define MUI_VERSION "1.0.0" ;Define your own software version here
 
 ; Script create for version 2.0b3 1.30 (from 09.mar.03) with GUI NSIS (c) by Dirk Paehl. Thank you for use my program
 
- !include "MUI.nsh"
+!include "MUI.nsh"
+!include "mtp-target.nsh"
 
  
 ;--------------------------------
 ;Configuration
  
    ;General
-   OutFile "mtp-target.exe"
+   OutFile "${MUI_PRODUCT}-${MUI_VERSION}.exe"
 
   ;Folder selection page
    InstallDir "$PROGRAMFILES\${MUI_PRODUCT}"
@@ -20,9 +21,7 @@ InstallDirRegKey HKCU "Software\${MUI_PRODUCT}" ""
 ;--------------------------------
 ;Modern UI Configuration
  !define MUI_DIRECTORYPAGE
-
  !define MUI_ABORTWARNING
-
  !define MUI_UNINSTALLER
  !define MUI_UNCONFIRMPAGE
 
@@ -55,6 +54,7 @@ FILE "client\data\particule\*.*"
 FILE "client\data\shape\*.*"
 FILE "client\data\sound\*.*"
 FILE "client\data\texture\*.*"
+FILE "client\data\lua\*.*"
 SectionEnd
 
  ;Add Shortcuts
@@ -68,6 +68,7 @@ CreateShortCut "$SMPROGRAMS\mtp-target\Uninstall Mtp-Target.lnk" "$INSTDIR\unins
 WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\mtp-target" "DisplayName" "mtp-target (remove only)"
 WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\mtp-target" "UninstallString" "$INSTDIR\Uninst.exe"
 WriteRegStr HKCU "Software\${MUI_PRODUCT}" "" $INSTDIR
+WriteRegStr HKCU "Software\${MUI_PRODUCT}" "version" "${MUI_VERSION}"
 WriteUninstaller "$INSTDIR\Uninst.exe"
  
  ;Display the Finish header
