@@ -86,6 +86,7 @@ public:
 	void startPointId(uint8 id);
 	bool isAdmin() const;
 	bool isModerator() const;
+	std::string team();
 	
 	void position(NLMISC::CVector pos);
 	NLMISC::CVector  position() {return Pos;};

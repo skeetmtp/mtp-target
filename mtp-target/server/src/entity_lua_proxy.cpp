@@ -76,6 +76,7 @@ Lunar<CEntityProxy>::RegType CEntityProxy::methods[] =
 		bind_method(CEntityProxy, getDefaultFriction),	
 		bind_method(CEntityProxy, setFreezCommand),	
 		bind_method(CEntityProxy, setArrivalTime),	
+		bind_method(CEntityProxy, getTeam),	
 	{0,0}
 };
 
@@ -343,3 +344,15 @@ int CEntityProxy::enableOpenCloseCommand(lua_State *luaSession)
 	_entity->enableOpenCloseCommand(e);
 	return 0;	
 }
+
+int CEntityProxy::getTeam(lua_State *luaSession)
+{
+	uint teamCount = (uint)luaL_checknumber(luaSession,1);
+	lua_Number res = 0;
+	uint teamId = CEntityManager::instance().getTeam(_entity->id(),teamCount);
+	res = teamId;
+	lua_pushnumber(luaSession, res); 
+	return 1;	
+}
+
+

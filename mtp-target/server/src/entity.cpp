@@ -495,6 +495,19 @@ void CEntity::enableOpenCloseCommand(bool e)
 	EnableOpenCloseCommand = e;
 }
 
+string CEntity::team()
+{
+	string res = "";
+	if(Name.size()<3)
+		return res;
+	string tmp = Name.substr(1);
+	uint i = 0;
+	for(i=0;i<tmp.size() && tmp[i]!=']';i++)
+		res += tmp[i];
+	if(tmp[i]!=']')
+		res = "";
+	return res;
+}
 
 //
 // Commands

@@ -73,6 +73,8 @@ public:
 
 	uint8 nbEntities();
 
+	uint getTeam(uint8 eid,uint teamCount);
+	
 	bool connected(const std::string &name);
 	uint humanClientCount();
 

@@ -24,6 +24,8 @@ end
 CEntity_mt.__index = CEntity
 
 local clientId = 0;
+local teamACount = 0;
+local teamBCount = 0;
 
 function CEntity:printTeam()
   if(self.team==0) then
@@ -99,10 +101,17 @@ function Entity:init()
   self:setCurrentScore(0);
   self:setUserData(parent);
   --clientId = self:getEid();
-  print("clientId");
-  print(clientId);
-  self:setStartPointId(clientId+getSessionId()*2);
-  local t = math.mod(clientId,2);
+  --print("clientId");
+  --print(clientId);
+  --local t = math.mod(clientId,2);
+  local t = self:getTeam(2);
+  if(t==0) then
+    self:setStartPointId(teamACount*2+getSessionId()*2);
+    teamACount = teamACount+1;
+  else
+    self:setStartPointId(teamBCount*2+1+getSessionId()*2);
+    teamBCount = teamBCount+1;
+  end
 
   self:displayText(0,5,1,255,255,255,"warning : Team share the score",10);
   if(t==0) then
@@ -197,6 +206,8 @@ function levelInit()
   teamRedScore = 0;
   teamBlueScore = 0;
   clientId = 0;
+  teamACount = 0;
+  teamBCount = 0;
   print("levelinit");
 
 end

@@ -354,6 +354,161 @@ void CEntityManager::login(CEntity *e)
 	updateIdUpdateList();
 }
 
+class teamNumber
+{
+public:
+	teamNumber(string name) {this->name=name; count=1;};
+	teamNumber() {name=""; count=0;};
+	string name;
+	uint count;
+};
+
+uint CEntityManager::getTeam(uint8 eid,uint teamCount)
+{
+	list<teamNumber> teams;
+	list<teamNumber> sortedTeams;
+	vector<list<string> > teamPack;
+	list<teamNumber>::iterator itTeams;
+	
+	//list All team
+	for(EntityConstIt it = entities().begin(); it != entities().end(); it++)
+	{
+		CEntity *e = *it;
+		string eTeam = e->team();
+		if(!eTeam.empty())
+		{
+			bool teamAlreadyExist = false;
+			for(itTeams=teams.begin();itTeams!=teams.end();itTeams++)
+			{
+				if(itTeams->name==eTeam)
+				{
+					teamAlreadyExist = true;
+					itTeams->count++;
+					break;
+				}
+			}
+			if(!teamAlreadyExist)
+			{
+				//nlinfo(">> team : %s",eTeam.c_str());
+				teams.push_back(eTeam);
+			}
+		}
+	}
+	while(teams.size())
+	{
+		teamNumber bigest;
+		list<teamNumber>::iterator itErase;
+		for(itTeams=teams.begin();itTeams!=teams.end();itTeams++)
+		{
+			if(itTeams->count>bigest.count || itTeams->count==0)
+			{
+				bigest = *itTeams;
+				itErase = itTeams;
+			}
+		}
+		if(!bigest.name.empty())
+		{
+			sortedTeams.push_back(bigest);
+			teams.erase(itErase);
+		}
+	}
+	uint i = 0;
+	teamPack.resize(teamCount);
+
+	//fill team in pack
+	for(itTeams=sortedTeams.begin();itTeams!=sortedTeams.end();itTeams++)
+	{
+		//nlinfo(">> team : %s:%d",itTeams->name.c_str(),itTeams->count);
+		if(itTeams->count>1)//at least 2 guys
+		{
+			for(EntityConstIt it = entities().begin(); it != entities().end(); it++)
+			{
+				CEntity *e = *it;
+				string eTeam = e->team();
+				if(eTeam==itTeams->name)
+				{
+					for(uint j=0;j<teamCount;j++)
+					{
+						if(teamPack[i].size()<(CLevelManager::instance().currentLevel().getStartPointCount()/teamCount))
+						{
+							teamPack[i].push_back(e->name());
+							break;
+						}
+						else
+							i = (i+1)%teamCount;						
+					}
+				}
+			}
+			i = (i+1)%teamCount;
+		}
+	}
+	//fill no team people
+	for(EntityConstIt it = entities().begin(); it != entities().end(); it++)
+	{
+		CEntity *e = *it;
+		string eTeam = e->team();
+		if(eTeam.empty())
+		{
+			uint smallestTeamId = 0;
+			uint smallestTeamCount = 10000;
+			//find smallest pack
+			for(uint i=0;i<teamPack.size();i++)
+			{
+				if(teamPack[i].size()<smallestTeamCount)
+				{
+					smallestTeamCount = teamPack[i].size();
+					smallestTeamId = i;
+				}
+			}
+			teamPack[smallestTeamId].push_back(e->name());
+		}
+	}
+	//fill with one guy teams
+	for(itTeams=sortedTeams.begin();itTeams!=sortedTeams.end();itTeams++)
+	{
+		if(itTeams->count==1)
+		{
+			for(EntityConstIt it = entities().begin(); it != entities().end(); it++)
+			{
+				CEntity *e = *it;
+				string eTeam = e->team();
+				if(eTeam==itTeams->name)
+				{
+					uint smallestTeamId = 0;
+					uint smallestTeamCount = 10000;
+					//find smallest pack
+					for(uint i=0;i<teamPack.size();i++)
+					{
+						if(teamPack[i].size()<smallestTeamCount)
+						{
+							smallestTeamCount = teamPack[i].size();
+							smallestTeamId = i;
+						}
+					}
+					teamPack[smallestTeamId].push_back(e->name());
+				}
+			}
+		}
+	}
+	
+
+	//the entity we search team 
+	string eName = getById(eid)->name();
+
+	//display teams
+	for(i=0;i<teamPack.size();i++)
+	{
+		list<string>::iterator it;
+		for(it=teamPack[i].begin();it!=teamPack[i].end();it++)
+		{
+			//nlinfo("team %d : %s",i,(*it).c_str());
+			if((*it)==eName)
+				return i;
+		}
+	}
+	return 0;
+}
+
 CEntity *CEntityManager::getByName(const std::string &name)
 {
 	CEntity *res = 0;
