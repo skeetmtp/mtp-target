@@ -223,21 +223,23 @@ string CLevelManager::updateStats(const std::string &name, sint32 score, float t
 	}
 
 	// stat not found for this level, add them
-	nlinfo("size %d", stats.size());
-	if(stats.size() == 0)
-	{
+	if(time > 0.0f && score > 0)
+	  {
+	    if(stats.size() == 0)
+	      {
 		stats.forceAsString(levelname);
-	}
-	else
-	{
+	      }
+	    else
+	      {
 		stats.setAsString(levelname, stats.size());
-	}
-	stats.SaveWrap = 5;
-	stats.setAsString(name, stats.size());
-	stats.setAsString(toString("%.2f",time), stats.size());
-	stats.setAsString(name, stats.size());
-	stats.setAsString(toString("%d",score), stats.size());
-	nlinfo("new stat");
+	      }
+	    stats.SaveWrap = 5;
+	    stats.setAsString(name, stats.size());
+	    stats.setAsString(toString("%.2f",time), stats.size());
+	    stats.setAsString(name, stats.size());
+	    stats.setAsString(toString("%d",score), stats.size());
+	    nlinfo("new stat");
+	  }
 	return res;
 }
 
