@@ -54,20 +54,21 @@ public:
 		// alphabetic order
 		Chat,				// CS SC
 		Command,			// CS
+		DisplayText,		//    SC
 		EndSession,			//    SC
+		EditMode,			// CS SC
 		Error,				//    SC
 		Force,				// CS
 		Login,				// CS SC
 		Logout,				//    SC
 		OpenClose,			// CS SC
 		Ready,				// CS SC
+		RequestCRCKey,		// CS SC
 		RequestDownload,	// CS SC
 		SessionState,		//    SC
 		StartSession,		//    SC
 		Update,				// CS SC
-		RequestCRCKey,		// CS SC
-		DisplayText,		//    SC
-		UpdateModule,		// CS SC
+		UpdateElement,		// CS SC
 	};
 
 	CNetMessage(TType type = Unknown, bool inputStream = false);
