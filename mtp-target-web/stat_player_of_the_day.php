@@ -16,7 +16,8 @@ include_once("helpers.php");
 		$html_fp = fopen($cacheFileName, "wt");
 	
 	
-		$requete = "SELECT user.Login,SUM(user_session.Score) as s,user.UId FROM session,user_session,user WHERE session.Id=user_session.SessionId AND user_session.UId=user.UId AND TO_DAYS(NOW())-TO_DAYS(session.Date)=0 GROUP BY user_session.UId ORDER BY s DESC LIMIT 0,3 ;";
+		$playerTopCount = 3;
+		$requete = sprintf("SELECT user.Login,SUM(user_session.Score) as s,user.UId FROM session,user_session,user WHERE TO_DAYS(NOW())-TO_DAYS(session.Date)=0 AND session.Id=user_session.SessionId AND user_session.UId=user.UId GROUP BY user_session.UId ORDER BY s DESC LIMIT 0,%d;",$playerTopCount);
 		$result=exec_game_db_requete($requete);
 		if($line = mysql_fetch_array($result))
 		{
