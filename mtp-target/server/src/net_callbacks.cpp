@@ -89,7 +89,7 @@ static void cbCommand(CClient *c, CNetMessage &msgin)
 		c->voteMap(cmd.substr(8));
 		CNetwork::instance().sendChat(c->name()+" executed: /"+cmd);
 	}
-	if(cmd.substr(0,1)=="v")
+	else if(cmd.substr(0,1)=="v")
 	{
 		c->voteMap(cmd.substr(2));
 		CNetwork::instance().sendChat(c->name()+" executed: /"+cmd);
