@@ -117,6 +117,13 @@ NLMISC_COMMAND(forceEnd, "end the session en display the score", "")
 	return true;
 }
 
+NLMISC_COMMAND(reparsePath, "reparse path for new file", "")
+{
+	reparsePath();
+	log.displayNL("reparsePath");
+	return true;
+}
+
 NLMISC_DYNVARIABLE(string, CurrentState, "")
 {
 	if(get)

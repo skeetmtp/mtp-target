@@ -346,6 +346,21 @@ void resumeAllThread()
 }
 
 
+void reparsePath()
+{
+	CConfigFile::CVar *var = NULL;
+	if ((var = IService::getInstance()->ConfigFile.getVarPtr ("Paths")) != NULL)
+	{
+		for (sint i = 0; i < var->size(); i++)
+		{
+			CPath::addSearchPath (var->asString(i), true, false);
+		}
+	}
+	CPath::addSearchPath(IService::getInstance()->ConfigFile.getVar("UserTexture").asString(), false, true);
+}
+
+
+
 //
 // Commands
 //

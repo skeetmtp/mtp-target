@@ -61,4 +61,6 @@ void resumeAllThread();
 
 uint myGetThreadId();
 
+void reparsePath();
+
 #endif
