@@ -73,7 +73,7 @@ CEntityState operator*( CEntityState &value, double coef )
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 
-const double CInterpolator::_minLct = 2.0  * MT_NETWORK_MY_UPDATE_PERIODE;  //less lct time doesnt improve really gameplay
+const double CInterpolator::_minLct = 3.0  * MT_NETWORK_MY_UPDATE_PERIODE;  //less lct time doesnt improve really gameplay
 const double CInterpolator::_maxLct = 12.0 * MT_NETWORK_MY_UPDATE_PERIODE; //if lct > _maxLct, the game become unplayable ...
 
 double CInterpolator::_lct = 0.0;
