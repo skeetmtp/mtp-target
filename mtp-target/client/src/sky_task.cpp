@@ -80,11 +80,11 @@ using namespace NLMISC;
 
 CSkyTask::CSkyTask():ITask()
 {
-	ShapeName = "sky.shape";
-	EnvMap0Name = "water_env.tga";
-	EnvMap1Name = "water_env.tga";
-	HeightMap0Name = "water_disp.tga";
-	HeightMap1Name = "water_disp2.tga";
+	shapeName("");
+	envMap0Name("");
+	envMap1Name("");
+	heightMap0Name("");
+	heightMap1Name("");
 
 	nelSkyScene   = NULL;
 	nelSkyMesh    = NULL;
@@ -297,30 +297,35 @@ void CSkyTask::release()
 
 void CSkyTask::shapeName(std::string shapeName)
 {
+	ShapeName = "sky.shape";
 	if(shapeName.empty()) return;
 	ShapeName = shapeName;
 }
 
 void CSkyTask::envMap0Name(std::string envMapName)
 {
+	EnvMap0Name = "water_env.tga";
 	if(envMapName.empty()) return;
 	EnvMap0Name = envMapName;
 }
 
 void CSkyTask::envMap1Name(std::string envMapName)
 {
+	EnvMap1Name = "water_env.tga";
 	if(envMapName.empty()) return;
 	EnvMap1Name = envMapName;
 }
 
 void CSkyTask::heightMap0Name(std::string heightMap)
 {
+	HeightMap0Name = "water_disp.tga";
 	if(heightMap.empty()) return;
 	HeightMap0Name = heightMap;
 }
 
 void CSkyTask::heightMap1Name(std::string heightMap)
 {
+	HeightMap1Name = "water_disp2.tga";
 	if(heightMap.empty()) return;
 	HeightMap1Name = heightMap;
 }
