@@ -159,74 +159,77 @@ CLevel::CLevel(const string &filename)
 
 	// Load particles
 	lua_getglobal(LuaState, "Particles");
-	lua_pushnil(LuaState);
-	uint8 particlesId = 0;
-	while(lua_next(LuaState, -2) != 0)
+	if (!lua_isnil(LuaState, -1))
 	{
-		// `key' is at index -2 and `value' at index -1
-		CLuaVector Position;
-		lua_pushstring(LuaState,"Position");
-		lua_gettable(LuaState, -2);
-		luaGetVariable(LuaState, Position);		
-		nlinfo("pos %g %g %g", Position.x, Position.y, Position.z);
-		lua_pop(LuaState, 1);  // removes `value'; keeps `key' for next iteration
-		
-		// Get module Scale
-		CLuaVector Scale;
-		lua_pushstring(LuaState,"Scale");
-		lua_gettable(LuaState, -2);
-		luaGetVariable(LuaState, Scale);		
-		nlinfo("scale %g %g %g", Scale.x, Scale.y, Scale.z);
-		lua_pop(LuaState, 1);  // removes `value'; keeps `key' for next iteration
-		
-		// Get module rotation
-		CLuaAngleAxis Rotation;
-		lua_pushstring(LuaState,"Rotation");
-		lua_gettable(LuaState, -2);
-		luaGetVariable(LuaState, Rotation);		
-		nlinfo("rot %g %g %g %g", Rotation.Axis.x , Rotation.Axis.y, Rotation.Axis.z, Rotation.Angle);
-		lua_pop(LuaState, 1);  // removes `value'; keeps `key' for next iteration
-		
-		uint32 Show;
-		lua_pushstring(LuaState,"Show");
-		lua_gettable(LuaState, -2);
-		Show = (uint32)lua_tonumber(LuaState, -1);
-		nlinfo("Show = %d",Show);
-		lua_pop(LuaState, 1);  // removes `value'; keeps `key' for next iteration
-		
-		uint32 Started;
-		lua_pushstring(LuaState,"Started");
-		lua_gettable(LuaState, -2);
-		Started = (uint32)lua_tonumber(LuaState, -1);
-		nlinfo("Started = %d",Started);
-		lua_pop(LuaState, 1);  // removes `value'; keeps `key' for next iteration
-		
-		// Get particles Name
-		string Name;
-		lua_pushstring(LuaState,"Name");
-		lua_gettable(LuaState, -2);
-		luaGetVariable(LuaState, Name);		
-		nlinfo("Name  %s", Name.c_str());
-		lua_pop(LuaState, 1);  // removes `value'; keeps `key' for next iteration
-		
-		// Get particles FileName
-		string FileName;
-		lua_pushstring(LuaState,"FileName");
-		lua_gettable(LuaState, -2);
-		luaGetVariable(LuaState, FileName);		
-		nlinfo("FileName  %s", FileName.c_str());
-		lua_pop(LuaState, 1);  // removes `value'; keeps `key' for next iteration
+		lua_pushnil(LuaState);
+		uint8 particlesId = 0;
+		while(lua_next(LuaState, -2) != 0)
+		{
+			// `key' is at index -2 and `value' at index -1
+			CLuaVector Position;
+			lua_pushstring(LuaState,"Position");
+			lua_gettable(LuaState, -2);
+			luaGetVariable(LuaState, Position);		
+			nlinfo("pos %g %g %g", Position.x, Position.y, Position.z);
+			lua_pop(LuaState, 1);  // removes `value'; keeps `key' for next iteration
+			
+			// Get module Scale
+			CLuaVector Scale;
+			lua_pushstring(LuaState,"Scale");
+			lua_gettable(LuaState, -2);
+			luaGetVariable(LuaState, Scale);		
+			nlinfo("scale %g %g %g", Scale.x, Scale.y, Scale.z);
+			lua_pop(LuaState, 1);  // removes `value'; keeps `key' for next iteration
+			
+			// Get module rotation
+			CLuaAngleAxis Rotation;
+			lua_pushstring(LuaState,"Rotation");
+			lua_gettable(LuaState, -2);
+			luaGetVariable(LuaState, Rotation);		
+			nlinfo("rot %g %g %g %g", Rotation.Axis.x , Rotation.Axis.y, Rotation.Axis.z, Rotation.Angle);
+			lua_pop(LuaState, 1);  // removes `value'; keeps `key' for next iteration
+			
+			uint32 Show;
+			lua_pushstring(LuaState,"Show");
+			lua_gettable(LuaState, -2);
+			Show = (uint32)lua_tonumber(LuaState, -1);
+			nlinfo("Show = %d",Show);
+			lua_pop(LuaState, 1);  // removes `value'; keeps `key' for next iteration
+			
+			uint32 Started;
+			lua_pushstring(LuaState,"Started");
+			lua_gettable(LuaState, -2);
+			Started = (uint32)lua_tonumber(LuaState, -1);
+			nlinfo("Started = %d",Started);
+			lua_pop(LuaState, 1);  // removes `value'; keeps `key' for next iteration
+			
+			// Get particles Name
+			string Name;
+			lua_pushstring(LuaState,"Name");
+			lua_gettable(LuaState, -2);
+			luaGetVariable(LuaState, Name);		
+			nlinfo("Name  %s", Name.c_str());
+			lua_pop(LuaState, 1);  // removes `value'; keeps `key' for next iteration
+			
+			// Get particles FileName
+			string FileName;
+			lua_pushstring(LuaState,"FileName");
+			lua_gettable(LuaState, -2);
+			luaGetVariable(LuaState, FileName);		
+			nlinfo("FileName  %s", FileName.c_str());
+			lua_pop(LuaState, 1);  // removes `value'; keeps `key' for next iteration
 
-		CParticles *particles = new CParticles();
-		particles->init(Name,FileName,particlesId,Position,Scale,Rotation,Show!=0,Started!=0);
-		particlesId++;
-		if(!DisplayLevel)
-			particles->hide();
-		
-		Particles.push_back(particles);
-		lua_pop(LuaState, 1);
-		
-	}		
+			CParticles *particles = new CParticles();
+			particles->init(Name,FileName,particlesId,Position,Scale,Rotation,Show!=0,Started!=0);
+			particlesId++;
+			if(!DisplayLevel)
+				particles->hide();
+			
+			Particles.push_back(particles);
+			lua_pop(LuaState, 1);
+			
+		}		
+	}
 
 	// Load modules
 	lua_getglobal(LuaState, "Modules");
@@ -298,33 +301,36 @@ CLevel::CLevel(const string &filename)
 
 	// Load modules
 	lua_getglobal(LuaState, "ExternalCameras");
-	lua_pushnil(LuaState);
-	while(lua_next(LuaState, -2) != 0)
+	if (!lua_isnil(LuaState, -1))
 	{
-		// `key' is at index -2 and `value' at index -1
-		
-		// Get module position
-		CLuaVector Position;
-		lua_pushstring(LuaState,"Position");
-		lua_gettable(LuaState, -2);
-		luaGetVariable(LuaState, Position);		
-		nlinfo("pos %g %g %g", Position.x, Position.y, Position.z);
-		lua_pop(LuaState, 1);  // removes `value'; keeps `key' for next iteration
-
-		// Get module rotation
-		CLuaAngleAxis Rotation;
-		lua_pushstring(LuaState,"Rotation");
-		lua_gettable(LuaState, -2);
-		luaGetVariable(LuaState, Rotation);		
-		nlinfo("rot %g %g %g %g", Rotation.Axis.x , Rotation.Axis.y, Rotation.Axis.z, Rotation.Angle);
-		lua_pop(LuaState, 1);  // removes `value'; keeps `key' for next iteration
-
-		CVector v(Position.x, Position.y, Position.z);
-		CQuat q(Rotation.Axis.x, Rotation.Axis.y, Rotation.Axis.z, Rotation.Angle);
-		ExternalCameras.push_back(make_pair(v, q));
-		lua_pop(LuaState, 1);
+		lua_pushnil(LuaState);
+		while(lua_next(LuaState, -2) != 0)
+		{
+			// `key' is at index -2 and `value' at index -1
+			
+			// Get module position
+			CLuaVector Position;
+			lua_pushstring(LuaState,"Position");
+			lua_gettable(LuaState, -2);
+			luaGetVariable(LuaState, Position);		
+			nlinfo("pos %g %g %g", Position.x, Position.y, Position.z);
+			lua_pop(LuaState, 1);  // removes `value'; keeps `key' for next iteration
+			
+			// Get module rotation
+			CLuaAngleAxis Rotation;
+			lua_pushstring(LuaState,"Rotation");
+			lua_gettable(LuaState, -2);
+			luaGetVariable(LuaState, Rotation);		
+			nlinfo("rot %g %g %g %g", Rotation.Axis.x , Rotation.Axis.y, Rotation.Axis.z, Rotation.Angle);
+			lua_pop(LuaState, 1);  // removes `value'; keeps `key' for next iteration
+			
+			CVector v(Position.x, Position.y, Position.z);
+			CQuat q(Rotation.Axis.x, Rotation.Axis.y, Rotation.Axis.z, Rotation.Angle);
+			ExternalCameras.push_back(make_pair(v, q));
+			lua_pop(LuaState, 1);
+		}
+		lua_pop(LuaState, 1);  // removes `key'
 	}
-	lua_pop(LuaState, 1);  // removes `key'
 
 	FileName = filename;
 
