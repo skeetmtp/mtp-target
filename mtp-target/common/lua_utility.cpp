@@ -54,6 +54,7 @@ static int lua_nlinfo(lua_State *L)
 	for(int i=0;i<n;i++)
 	{
 		msg += lua_tostring(L,i+1);
+		msg += " ";
 	}
 	lua_pop(L,n);
 	
