@@ -300,7 +300,7 @@ void CEntity::renderName() const
 void CEntity::id(uint8 nid) 
 { 
 	nlassert(!Interpolator);
-	Interpolator = new CExtendedInterpolator(MT_NETWORK_UPDATE_PERIODE);
+	Interpolator = new CExtendedInterpolator(MT_NETWORK_MY_UPDATE_PERIODE);
 	Id = nid;
 }
 
