@@ -196,6 +196,9 @@ SOURCE=.\Src\network_task.h
 # Begin Group "level"
 
 # PROP Default_Filter ""
+# Begin Group "editable_element"
+
+# PROP Default_Filter ""
 # Begin Source File
 
 SOURCE=.\Src\editable_element.cpp
@@ -204,6 +207,23 @@ SOURCE=.\Src\editable_element.cpp
 
 SOURCE=.\Src\editable_element.h
 # End Source File
+# Begin Source File
+
+SOURCE=.\Src\module.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Src\module.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\src\start_point.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\src\start_point.h
+# End Source File
+# End Group
 # Begin Source File
 
 SOURCE=.\Src\level.cpp
@@ -219,22 +239,6 @@ SOURCE=.\Src\level_manager.cpp
 # Begin Source File
 
 SOURCE=.\Src\level_manager.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\Src\module.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\Src\module.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\src\start_position.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\src\start_position.h
 # End Source File
 # End Group
 # Begin Group "lua"

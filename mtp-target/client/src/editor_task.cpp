@@ -107,9 +107,9 @@ void CEditorTask::_mouseSelectModule()
 			}
 		}
 		
-		for(i=0;i<CLevelManager::instance().currentLevel().getStartPositionCount();i++)
+		for(i=0;i<CLevelManager::instance().currentLevel().getStartPointCount();i++)
 		{
-			CEditableElement *module = CLevelManager::instance().currentLevel().getStartPosition(i);
+			CEditableElement *module = CLevelManager::instance().currentLevel().getStartPoint(i);
 			UInstance *mesh = module->mesh();
 			CAABBox bbox;
 			mesh->getShapeAABBox(bbox);

@@ -106,18 +106,18 @@ CLevel::CLevel(const string &filename)
 		}
 	}
 
-	vector<CLuaVector> StartPoints;
-	luaGetGlobalVector(LuaState, StartPoints);
+	vector<CLuaVector> luaStartPoints;
+	luaGetGlobalVectorWithName(LuaState, luaStartPoints, "StartPoints");
 	uint8 startPositionId = 0;
-	for(uint i = 0; i < StartPoints.size(); i++)
+	for(uint i = 0; i < luaStartPoints.size(); i++)
 	{
-		nlinfo("%g %g %g", StartPoints[i].x, StartPoints[i].y, StartPoints[i].z);
+		nlinfo("%g %g %g", luaStartPoints[i].x, luaStartPoints[i].y, luaStartPoints[i].z);
 		CAngleAxis Rotation(CVector(1,0,0),0);
-		CStartPosition *startPosition = new CStartPosition();
-		startPosition->init("start pos",startPositionId,StartPoints[i],Rotation);
+		CStartPoint *startPoint = new CStartPoint();
+		startPoint->init("start pos",startPositionId,luaStartPoints[i],Rotation);
 		if (!DisplayStartPositions)
-			startPosition->hide();
-		StartPositions.push_back(startPosition);
+			startPoint->hide();
+		StartPoints.push_back(startPoint);
 		
 			/*
 		string res = CResourceManager::instance().get("col_box.shape");
@@ -215,17 +215,17 @@ CLevel::~CLevel()
 	}
 	Modules.clear();
 
-	for(uint j = 0; j < StartPositions.size(); j++)
+	for(uint j = 0; j < StartPoints.size(); j++)
 	{
-		delete StartPositions[j];
+		delete StartPoints[j];
 		//C3DTask::instance().scene().deleteInstance(StartPositions[j]);
 	}
-	StartPositions.clear();
+	StartPoints.clear();
 }
 
 CVector CLevel::startPosition(uint32 id)
 {
-	return StartPositions[id]->position();
+	return StartPoints[id]->position();
 }
 
 void CLevel::reset()
@@ -323,7 +323,7 @@ void CLevel::reset()
 void CLevel::display(CLog *log) const
 {
 	log->displayNL("LevelName = %s", name().c_str());
-	log->displayNL("There's %d starting points", StartPositions.size());
+	log->displayNL("There's %d starting points", StartPoints.size());
 	log->displayNL("There's %d Modules", Modules.size());
 }
 
@@ -333,16 +333,16 @@ void CLevel::displayStartPositions(bool b)
 	
 	if(DisplayStartPositions)
 	{
-		for(uint j = 0; j < StartPositions.size(); j++)
+		for(uint j = 0; j < StartPoints.size(); j++)
 		{
-			StartPositions[j]->show();
+			StartPoints[j]->show();
 		}
 	}
 	else
 	{
-		for(uint j = 0; j < StartPositions.size(); j++)
+		for(uint j = 0; j < StartPoints.size(); j++)
 		{
-			StartPositions[j]->hide();
+			StartPoints[j]->hide();
 		}
 	}
 }
@@ -385,20 +385,20 @@ void CLevel::updateModule(uint32 id,CVector pos,CVector rot,uint32 selectedBy)
 	getModule(id)->update(pos,rot,selectedBy);
 }
 
-CStartPosition *CLevel::getStartPosition(uint32 index)
+CStartPoint *CLevel::getStartPoint(uint32 index)
 {
-	nlassert(index<getStartPositionCount());
-	return StartPositions[index];
+	nlassert(index<getStartPointCount());
+	return StartPoints[index];
 }
 
-uint32 CLevel::getStartPositionCount()
+uint32 CLevel::getStartPointCount()
 {
-	nlassert(StartPositions.size()<255);
-	return StartPositions.size();
+	nlassert(StartPoints.size()<255);
+	return StartPoints.size();
 }
 
-void CLevel::updateStartPosition(uint32 id,CVector pos,CVector rot,uint32 selectedBy)
+void CLevel::updateStartPoint(uint32 id,CVector pos,CVector rot,uint32 selectedBy)
 {
-	getStartPosition(id)->update(pos,rot,selectedBy);
+	getStartPoint(id)->update(pos,rot,selectedBy);
 }
 

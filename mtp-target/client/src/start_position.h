@@ -22,6 +22,7 @@
 // This class manages an entity (player or bot)
 //
 
+#if 0
 #ifndef MTPT_START_POSITION
 #define MTPT_START_POSITION
 
@@ -82,4 +83,5 @@ private:
 };
 
 
+#endif
 #endif

@@ -73,161 +73,22 @@ using namespace NL3D;
 
 
 
-CStartPoint::CStartPoint(const string &name,uint8 id, CVector position, CAngleAxis rotation)
-{
-	
-}
 
 
-bool CStartPoint::intersect(NLMISC::CVector rayStart,NLMISC::CVector rayDir,NLMISC::CVector &rayHit)
+CStartPoint::CStartPoint()
 {
-	return true;
+	_type = CEditableElement::StartPosition;	
 }
 
 
 CStartPoint::~CStartPoint()
 {
-	C3DTask::instance().scene().deleteInstance(Mesh);
-	
 }
 
 
-/*
-NL3D::UInstance *CStartPoint::_loadMesh()
-{
-	string res = CResourceManager::instance().get("col_box.shape");
-	UInstance *inst = C3DTask::instance().scene().createInstance (res);
-	if (!inst)
-	{
-		nlwarning ("Can't load 'col_box.shape'");
-		return NULL;
-	}
-	
-	return inst;
-}
-*/
-
-
-//   /E--F
-//  A---B|
-//  | H |G
-//  D---C
 
 
 
-void CStartPoint::renderBBox()
-{
-	mat->setColor(CRGBA(255,255,255,255));
-	mat->setZWrite(true);
-	mat->setZFunc(UMaterial::always);
-	CAABBox bbox;
-	Mesh->getShapeAABBox(bbox);
-	CAABBox tbbox = CAABBox::transformAABBox(Mesh->getMatrix(),bbox);
-	
-	CVector boxMin = tbbox.getMin();
-	CVector boxMax = tbbox.getMax();
 
-	CQuad quad;
-	CVector a = boxMin;
-	CVector b = a;
-	b.x = boxMax.x;
-	CVector c = a;
-	c.x = boxMax.x;
-	c.y = boxMax.y;
-	CVector d = a;
-	d.y = boxMax.y;
-	
-	CVector e = a;
-	e.z = boxMax.z;
-	CVector f = b;
-	f.z = boxMax.z;
-	CVector g = c;
-	g.z = boxMax.z;
-	CVector h = d;
-	h.z = boxMax.z;
-	
-	CLine l;
 
-	l.V0 = a;
-	l.V1 = b;
-	C3DTask::instance().driver().drawLine(l,*mat);
-	l.V0 = b;
-	l.V1 = c;
-	C3DTask::instance().driver().drawLine(l,*mat);
-	l.V0 = c;
-	l.V1 = d;
-	C3DTask::instance().driver().drawLine(l,*mat);
-	l.V0 = d;
-	l.V1 = a;
-	C3DTask::instance().driver().drawLine(l,*mat);
-	
-	l.V0 = e;
-	l.V1 = f;
-	C3DTask::instance().driver().drawLine(l,*mat);
-	l.V0 = f;
-	l.V1 = g;
-	C3DTask::instance().driver().drawLine(l,*mat);
-	l.V0 = g;
-	l.V1 = h;
-	C3DTask::instance().driver().drawLine(l,*mat);
-	l.V0 = h;
-	l.V1 = e;
-	C3DTask::instance().driver().drawLine(l,*mat);
-	
-	l.V0 = a;
-	l.V1 = e;
-	C3DTask::instance().driver().drawLine(l,*mat);
-	l.V0 = b;
-	l.V1 = f;
-	C3DTask::instance().driver().drawLine(l,*mat);
-	l.V0 = c;
-	l.V1 = g;
-	C3DTask::instance().driver().drawLine(l,*mat);
-	l.V0 = d;
-	l.V1 = h;
-	C3DTask::instance().driver().drawLine(l,*mat);
-	
-	
-	/*
-	quad.V0 = a;
-	quad.V1 = b;
-	quad.V2 = c;
-	quad.V3 = d;
-
-	C3DTask::instance().driver().drawQuad(quad,*mat);
-	*/			
-}
-
-void CStartPoint::show()
-{
-	Mesh->show();
-}
-
-void CStartPoint::hide()
-{
-	Mesh->hide();
-}
-
-void CStartPoint::position(CVector pos)
-{
-	Position = pos;
-	Mesh->setPos(pos);
-	_changed = true;
-	CLevelManager::instance().currentLevel().changed(true);
-}
-
-CVector CStartPoint::position()
-{
-	return Position;
-}
-
-UInstance *CStartPoint::mesh()
-{
-	return Mesh;
-}
-
-void CStartPoint::update(NLMISC::CVector pos,NLMISC::CVector rot,uint32 selectedBy)
-{
-	position(pos);
-}
 

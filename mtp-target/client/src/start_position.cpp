@@ -24,6 +24,7 @@
 
 #include "stdpch.h"
 
+#if 0
 #include <deque>
 #include <string>
 
@@ -92,3 +93,4 @@ CStartPosition::~CStartPosition()
 
 
 
+#endif

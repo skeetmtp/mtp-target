@@ -57,6 +57,7 @@
 
 #include "sound_manager.h"
 #include "interpolator.h"
+#include "editable_element.h"
 
 
 //
@@ -71,38 +72,13 @@ using NLMISC::CMatrix;
 // Classes
 //
 
-class CStartPoint
+class CStartPoint : public CEditableElement
 {
 public:
-	CStartPoint(const std::string &name,uint8 id, NLMISC::CVector position, NLMISC::CAngleAxis rotation);
+	CStartPoint();
 	virtual ~CStartPoint();
 	
-	virtual bool intersect(NLMISC::CVector rayStart,NLMISC::CVector rayDir,NLMISC::CVector &rayHit);
-
-	NL3D::UInstance *mesh();
-	void renderBBox();
-
-	void show();
-	void hide();
-	void update(NLMISC::CVector pos,NLMISC::CVector rot,uint32 selectedBy);
-	const std::string	&name() const { return Name; }
-	void position(NLMISC::CVector pos);
-	CVector position();
-
-	uint8 id() {return _id;}
-	bool changed() {return _changed;}
-	void changed(bool c) {_changed = c;}
-	
-	virtual NL3D::UInstance *_loadMesh()=0;
-	
-protected:
-	std::string		Name;
-	NL3D::UInstance *Mesh;
-	NLMISC::CVector Position;
-	NLMISC::CAngleAxis Rotation;
-	NL3D::UMaterial *mat;
-	uint8 _id;
-	bool  _changed;
+private:
 };
 
 
