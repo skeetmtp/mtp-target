@@ -252,8 +252,8 @@ void CNetwork::update()
 		}
 	}
 	
-//	if((updateCount%MT_NETWORK_FULL_UPDATE_PERIODE)==0)
-	if(updateCount==0)
+	if((updateCount%MT_NETWORK_FULL_UPDATE_PERIODE)==0)
+//	if(updateCount==0)
 	{
 		CNetMessage msgout(CNetMessage::FullUpdate);
 		
