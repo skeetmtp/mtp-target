@@ -182,22 +182,22 @@ void CEntityManager::_remove(std::list<uint8> &removeList)
 			nlinfo("Removing client eid %hu name '%s'", (uint16)c->id(), c->name().c_str());
 			CLuaEngine::instance().entityLeaveEvent(c);
 			CSessionManager::instance().editMode(0);
-			
+
 			// TODO clientConnected(c->Cookie, false);
 
 			if(c->type() == CEntity::Client)
 			{
-			  FILE *fp = fopen("connection.stat", "ab");
-			  if(fp)
-			    {
-			      char d[80];
-			      time_t ltime;
-			      time(&ltime);
-			      struct tm *today = localtime(&ltime);
-			      strftime(d, 80, "%04Y %02m %02d %02H %02M %02S", today);
-			      fprintf(fp, "%u %s - '%s'\n", ltime, d, c->name().c_str());
-			      fclose(fp);
-			    }
+				FILE *fp = fopen("connection.stat", "ab");
+				if(fp)
+				{
+					char d[80];
+					time_t ltime;
+					time(&ltime);
+					struct tm *today = localtime(&ltime);
+					strftime(d, 80, "%Y %m %d %H %M %S", today);
+					fprintf(fp, "%u %s - '%s'\n", ltime, d, c->name().c_str());
+					fclose(fp);
+				}
 			}
 
 			CNetMessage msgout(CNetMessage::Logout);
@@ -704,17 +704,46 @@ string CEntityManager::check(const string &login, const string &password, bool d
 	nlinfo("Check new client '%s'", login.c_str());
 
 	if(login.empty())
+	{
 		return "Bad login, it must not be empty";
-	
-	if(!dontCheck && password.empty())
-		return "Bad password, it must not be empty";
-	
+	}
+
 	if(login.size() > 20)
-		return "Bad login, it must be <= 20 char";
-	
-	if(!dontCheck && password.size() > 20)
-		return "Bad password, it must be <= 20 char";
-	
+	{
+		return "Bad login, it must have less than 20 characters";
+	}
+
+	if(!dontCheck)
+	{
+		for(uint i = 0; i < login.size(); i++)
+		{
+			if(!nlisprint(login[i]) || !isalnum(login[i]) && login[i] != '_' && login[i] != '-' && login[i] != '.')
+			{
+				return toString("Bad login, character '%c' is not allowed", login[i]);
+			}
+		}
+
+		if(password.empty())
+		{
+			return "Bad password, it must not be empty";
+		}
+
+		if(password.size() > 20)
+		{
+			return "Bad password, it must have less than 20 characters";
+		}
+
+		for(uint i = 0; i < password.size(); i++)
+		{
+			// switch to lower case
+			if(!nlisprint(password[i]))
+			{
+				return toString("Bad password, character '%c' is not allowed", password[i]);
+			}
+		}
+		
+	}
+
 	uint8 nbc = nbEntities();
 	
 	// check if server not full

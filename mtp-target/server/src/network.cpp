@@ -210,19 +210,19 @@ void CNetwork::reset()
 }
 
 
-static FILE *fp = NULL;
-static int rpos;
-static int updateCount2 = 0;
+//static FILE *fp = NULL;
+//static int rpos;
+//static int updateCount2 = 0;
 
 void CNetwork::update()
 {
 	if(CEntityManager::instance().humanClientCount()==0) return;
-	if(updateCount2==0)
-	{
-		fp = fopen("net.data","wb");
-		rpos = 0;//rand()%10;
-	}
-	updateCount2++;
+//	if(updateCount2==0)
+//	{
+//		fp = fopen("net.data","wb");
+//		rpos = 0;//rand()%10;
+//	}
+//	updateCount2++;
 
 	{
 		{
@@ -412,8 +412,8 @@ void CNetwork::update()
 
 void CNetwork::release()
 {
-	if(fp)
-		fclose(fp);
+//	if(fp)
+//		fclose(fp);
 	if(!NetworkThread || !NetworkTask)
 		return;
 

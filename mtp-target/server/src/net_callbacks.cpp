@@ -83,31 +83,16 @@ static void cbForce(CClient *c, CNetMessage &msgin)
 	msgin.serial(force);
 	c->setForce(force);
 }
-	
-
-static void keepValidChar(string &s)
-{
-	string res = "";
-	uint i;
-	for(i=0;i<s.size();i++)
-	{
-		if('a'<=s[i] && s[i]<='z' || '0'<=s[i] && s[i]<='9' || s[i]=='_' || s[i]=='-')
-			res += s[i];
-		if('A'<=s[i] && s[i]<='Z')
-			res += 'a' + s[i]-'A';
-	}
-	s = res;
-}
 
 static void cbLogin(CClient *c, CNetMessage &msgin)
 {
 	string cookie;
 	string login, password;
-	sint32 score;
 	CRGBA color;
 	string texture;
 	uint32 networkVersion = MTPT_NETWORK_VERSION;
-
+	string error;
+	
 	nlinfo("New client login");
 
 	// first, check the password
@@ -127,59 +112,65 @@ static void cbLogin(CClient *c, CNetMessage &msgin)
 
 	msgin.serial(cookie, login, password, color, texture);
 
-	{
-	  FILE *fp = fopen("connection.stat", "ab");
-	  if(fp)
-	    {
-	      char d[80];
-	      time_t ltime;
-	      time(&ltime);
-	      struct tm *today = localtime(&ltime);
-	      strftime(d, 80, "%04Y %02m %02d %02H %02M %02S", today);
-	      fprintf(fp, "%u %s + '%s' '%s'\n", ltime, d, login.c_str(), texture.c_str());
-	      fclose(fp);
-	    }
-	}
+	login = strlwr(login);
 
-	keepValidChar(login);
-	keepValidChar(password);
-
-	string res;
-	if(cookie.empty())
+	if(error.empty())
 	{
-		// check in normal way
-		res = CEntityManager::instance().check(login, password, false, score);
-	}
-	else
-	{
-		// already checks in LS
-		nlinfo("Receive a client with cookie %s", cookie.c_str());
-		login = getUserFromCookie(cookie);
-		if(login.empty())
+		if(cookie.empty())
 		{
-			res = "Bad cookie identification";
+			// check in normal way
+			error = CEntityManager::instance().check(login, password, false, c->Score);
 		}
 		else
 		{
-			res = CEntityManager::instance().check(login, password, true, score);
+			// already checks in LS
+			nlinfo("Receive a client with cookie %s", cookie.c_str());
+			login = getUserFromCookie(cookie);
+			if(login.empty())
+			{
+				error = "Bad cookie identification";
+			}
+			else
+			{
+				error = CEntityManager::instance().check(login, password, true, c->Score);
+			}
 		}
 	}
-	
-	if(res.empty())
+
+	c->name(login);
+	c->Cookie = cookie;
+	c->Color = color;
+	c->Texture = texture;
+
+	if(error.empty())
 	{
-		c->name(login);
-		c->Cookie = cookie;
-		c->Score = score;
-		c->Color = color;
-		c->Texture = texture;
 		CEntityManager::instance().login(c);
 	}
 	else
 	{
-		nlwarning("Login client '%s' failed: %s", login.c_str(), res.c_str());
+		nlwarning("Login client '%s' failed: %s", login.c_str(), error.c_str());
 		CNetMessage msgout(CNetMessage::Error);
-		msgout.serial(res);
+		msgout.serial(error);
 		CNetwork::instance().send(c->id(), msgout);
+	}
+
+	{
+		FILE *fp = fopen("connection.stat", "ab");
+		if(fp)
+		{
+			char d[80];
+			time_t ltime;
+			time(&ltime);
+			struct tm *today = localtime(&ltime);
+			strftime(d, 80, "%Y %m %d %H %M %S", today);
+			fprintf(fp, "%u %s", ltime, d);
+			fprintf(fp, " %c", (error.empty()?'+':'?'));
+			fprintf(fp, " '%s' '%s'", login.c_str(), texture.c_str());
+			fprintf(fp, " '%s'", (c->sock()?c->sock()->remoteAddr().ipAddress().c_str():"unknown"));
+			if(!error.empty()) fprintf(fp, " '%s'", error.c_str());
+			fprintf(fp, "\n");
+			fclose(fp);
+		}
 	}
 }
 

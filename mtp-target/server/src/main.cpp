@@ -90,20 +90,19 @@ public:
 
 	void init()
 	{
-	  {
-	    FILE *fp = fopen("connection.stat", "ab");
-	    if(fp)
-	      {
-		char d[80];
-		time_t ltime;
-		time(&ltime);
-		struct tm *today = localtime(&ltime);
-		strftime(d, 80, "%04Y %02m %02d %02H %02M %02S", today);
-		fprintf(fp, "%u %s # Server restarted\n", ltime, d);
-		fclose(fp);
-	      }
-	  }
-	  
+		{
+			FILE *fp = fopen("connection.stat", "ab");
+			if(fp)
+			{
+				char d[80];
+				time_t ltime;
+				time(&ltime);
+				struct tm *today = localtime(&ltime);
+				strftime(d, 80, "%Y %m %d %H %M %S", today);
+				fprintf(fp, "%u %s # Server restarted\n", ltime, d);
+				fclose(fp);
+			}
+		}	  
 
 		MainThreadId = getThreadId();
 #ifdef NL_OS_WINDOWS
