@@ -264,8 +264,10 @@ void CEntity::reset()
 	MaxOpenClose = (uint32)DefaultMaxOpenClose;
 	dMass m;
 	dReal radius = 0.01f;
+	pausePhysics();
 	dMassSetSphere(&m, SphereDensity, radius);
     dBodySetMass(Body, &m);
+	resumePhysics();
 	DefaultAccel = 0;
 	DefaultFriction = 0;
 	MaxLinearVelocity = 0;
