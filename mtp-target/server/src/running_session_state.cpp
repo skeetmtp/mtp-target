@@ -51,7 +51,7 @@ using namespace NLMISC;
 void CRunningSessionState::update()
 {
 	TTime currentTime = CTime::getLocalTime();
-	if(CSessionManager::instance().forceEnding() || currentTime > CSessionManager::instance().startTime()+(TTime)TimeBeforeCheck)
+	if(CSessionManager::instance().forceEnding() || ( currentTime > CSessionManager::instance().startTime()+(TTime)TimeBeforeCheck && CSessionManager::instance().editMode()==0 ) )
 	{
 	vector<string> chat;
 

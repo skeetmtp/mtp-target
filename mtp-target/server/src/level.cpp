@@ -219,6 +219,27 @@ void CLevel::updateModule(uint32 id,CVector pos,CVector rot)
 	getModule(id)->update(pos,rot);
 }
 
+/*
+uint8 CLevel::getStartPointCount() 
+{
+	nlassert(Modules.size()<255);
+	return Modules.size();
+}
+
+
+CStartPosition *CLevel::getStartPoint(uint32 id)
+{
+	nlassert(id<getStartPointCount());
+	return StartPositions[id];
+}
+
+
+void CLevel::updateStartPoint(uint32 id,CVector pos,CVector rot)
+{
+	//getStartPoint(id)->update(pos,rot);
+}
+
+  */
 bool isLuaSeparator(char c)
 {
 	return c==' ' || c=='\t' || c=='\n';

@@ -8,12 +8,12 @@ CFG=Server - Win32 DebugFast
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE 
-!MESSAGE NMAKE /f "Server.mak".
+!MESSAGE NMAKE /f "server.mak".
 !MESSAGE 
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "Server.mak" CFG="Server - Win32 DebugFast"
+!MESSAGE NMAKE /f "server.mak" CFG="Server - Win32 DebugFast"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
@@ -221,6 +221,14 @@ SOURCE=.\Src\network.h
 # Begin Group "level"
 
 # PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=.\src\editable_element.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\src\editable_element.h
+# End Source File
 # Begin Source File
 
 SOURCE=.\Src\level.cpp

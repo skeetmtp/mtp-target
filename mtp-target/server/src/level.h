@@ -62,7 +62,12 @@ public:
 	CModule *getModule(uint32 id);
 	uint8 getModuleCount();
 	void updateModule(uint32 id,NLMISC::CVector pos,NLMISC::CVector rot);
-
+	/*
+	CModule *getStartPoint(uint32 id);
+	uint8 getStartPointCount();
+	void updateStartPoint(uint32 id,NLMISC::CVector pos,NLMISC::CVector rot);
+	*/
+	
 	void save();
 	bool changed();
 	

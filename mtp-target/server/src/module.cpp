@@ -83,9 +83,16 @@ void CModule::init()
 	LuaFunctionName = "";
 	luaProxy = NULL;
 	_changed = false;
+
+	_type = Module;
 }
 
-CModule::CModule(const std::string &name, const CLuaVector &position, const CLuaAngleAxis &rotation, uint8 id)
+CModule::CModule() : CEditableElement()
+{ 
+	init(); 
+}
+
+CModule::CModule(const std::string &name, const CLuaVector &position, const CLuaAngleAxis &rotation, uint8 id) : CEditableElement()
 {
 	nlinfo("Adding module '%s' at position %f %f %f", name.c_str(), position.x, position.y, position.z);
 	pausePhysics();

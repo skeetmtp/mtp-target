@@ -32,20 +32,22 @@
 #include "../../common/lua_nel.h"
 #include "../../common/lunar.h"
 
+#include "editable_element.h"
+
 class CModuleProxy;
 
 //
 // Classes
 //
 
-class CModule
+class CModule : public CEditableElement
 {
 public:
 
-	CModule() { init(); }
+	CModule();
 	CModule(const std::string &name, const CLuaVector &position, const CLuaAngleAxis &rotation, uint8 id);
 	
-	~CModule();
+	virtual ~CModule();
 
 	void display(NLMISC::CLog *log = NLMISC::InfoLog) const;
 	void update();

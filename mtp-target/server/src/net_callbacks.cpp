@@ -161,10 +161,19 @@ static void cbOpenClose(CClient *c, CNetMessage &msgin)
 	}
 }
 
-static void cbUpdateModule(CClient *c, CNetMessage &msgin)
+static void cbEditMode(CClient *c, CNetMessage &msgin)
 {
-	uint8 moduleId;
-	msgin.serial(moduleId);
+	uint8 editMode;
+	msgin.serial(editMode);
+	CSessionManager::instance().editMode(editMode);
+}
+
+static void cbUpdateElement(CClient *c, CNetMessage &msgin)
+{
+	uint8 elementType;
+	msgin.serial(elementType);
+	uint8 elementId;
+	msgin.serial(elementId);
 	uint8 selectedBy;
 	msgin.serial(selectedBy);
 	CVector pos;
@@ -174,14 +183,16 @@ static void cbUpdateModule(CClient *c, CNetMessage &msgin)
 
 	if(CSessionManager::instance().currentStateName()=="Running")
 	{
-		CNetMessage msgout(CNetMessage::UpdateModule);
-		msgout.serial(moduleId);
+		CNetMessage msgout(CNetMessage::UpdateElement);
+		msgout.serial(elementType);
+		msgout.serial(elementId);
 		msgout.serial(selectedBy);
 		msgout.serial(pos);
 		msgout.serial(eulerRot);
 		CNetwork::instance().sendAllExcept(c->id(),msgout);
 		
-		CLevelManager::instance().currentLevel().updateModule(moduleId,pos,eulerRot);
+		if(elementType==CEditableElement::Module)
+			CLevelManager::instance().currentLevel().updateModule(elementId,pos,eulerRot);
 	}
 	
 }
@@ -384,6 +395,7 @@ void netCallbacksHandler(CClient *c, CNetMessage &msgin)
 	{
 	SWITCH_CASE(Chat);
 	SWITCH_CASE(Command);
+	SWITCH_CASE(EditMode);
 	SWITCH_CASE(Force);
 	SWITCH_CASE(Login);
 	SWITCH_CASE(OpenClose);
@@ -391,7 +403,7 @@ void netCallbacksHandler(CClient *c, CNetMessage &msgin)
 	SWITCH_CASE(RequestDownload);
 	SWITCH_CASE(RequestCRCKey);
 	SWITCH_CASE(Update);
-	SWITCH_CASE(UpdateModule);
+	SWITCH_CASE(UpdateElement);
 	
 	default: nlinfo("Received an unknown message type %hu", (uint16)msgin.type()); break;
 	}
