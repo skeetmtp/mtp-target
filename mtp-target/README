@@ -1,0 +1,172 @@
+
+  ____ |\________|\_________|\____
+  \   `|   /\__     __/\_____    /
+ _/  \  /  \__/     \_ /_   /   /
+ \____\/    /\___    / _/   ___/
+%%%%%%/____/[SnS]|__/%%\_____/%%%%%
+    
+            presents
+
+  
+           MTP TARGET
+
+Code            :  Ace, Muf, Skeet
+Gfx 3D          :  9dan, paul, Kaiser Foufou
+Music           :  Hulud/Digital Murder
+SFX             :  Garou
+
+       www.melting-pot.org
+
+
+Introduction
+============
+
+Le but est d'atteindre une plateforme qui se situe à l'autre bout d'une rampe
+de lancement. Le joueur incarne un pingouin qui roule sur lui même pour
+descendre la rampe. Une fois dans les airs, le joueur ouvre les ailes pour
+planer et atteindre les cibles.
+
+C'est un jeu basé sur une architecture client serveur. Il se joue sur un
+serveur pouvant gérer jusqu'à 16 joueurs avec un simple modem. Les joueurs
+peuvent intéragir entre eux, comme par exemple, en tombant sur les autres pour
+les éjecter de la cible ou alors les faire dévier de leurs trajecteurs lors
+de la prise d'élan.
+
+Le serveur gère des robots pour remplacer les joueurs. Plus les joueurs jouent
+bien, plus les robots deviennent bons aussi.
+
+Le serveur gère aussi la persistence des accomptes de joueurs ainsi que leur
+score.
+
+Il fonctionne aussi bien en réseau local que sur Internet graçe aux
+algorithmes de compensation de latence mis en place.
+
+Il est entièrement sous la licence GNU GPL et fonctionne aussi bien sous
+GNU/Linux que Windows (le client et le serveur).
+
+
+Comment jouer
+=============
+
+Vous devez avoir une carte 3d accéléré pour que le jeu tourne
+à une vitesse suffisante. Une geforce 3 ou 4 est necessaire pour
+afficher l'eau en pixel shader (DisplayWater=2 dans le MtpTarget.cfg).
+Sinon mettre l'eau normal (DisplayWater=1 dans le MtpTarget.cfg).
+Il se peut que les nuages dynamiques ne fonctionnent pas et font
+des carrés noir, dans se cas, mettez DisplayClouds=0 dans MtpTarget.cfg
+pour les désactiver.
+
+Les instructions de lancement sont pour la version GNU/Linux.
+
+
+    Lancement du server
+    -------------------
+
+Allez dans le repertoire mtp-target/Server et lancer ./mtp_target_service.
+
+
+    Lancement du server
+    -------------------
+
+Allez dans le repertoire mtp-target/Client et lancer ./client.
+
+Une fenêtre doit s'ouvrir avec l'écran de login.
+
+Entrez votre login et votre mot de passe (Si c'est la premiere fois que vous
+venez, il sera automatiquement ajouté à la base de donnée).
+
+Une fenêtre écrit "Press enter to connect to the server" doit apparaître,
+appuyez sur la touche entrée.
+
+Une fois dans le jeu, vous devez attendre la fin de la partie en cours pour
+jouer (une partie dure par défaut 60 secondes). 
+
+
+    Le jeu
+    ------
+
+Un compte à rebours de 5 secondes vous previens que la partie va commencer.
+
+Une fois laché, vous dirigez la boule avec les flêches gauche et droites.
+La touche avant et arrière permet de faire accélerer ou ralentir la boule.
+
+Une fois en l'air, les touches ne fonctionnent plus, il faut alors passé en
+mode vol. Appuyez sur la touche CONTROL pour passer en mode vol.
+
+Les flèches gauches et droite font aller la boule à gauche et à droite.
+
+La flèche avant fait pencher la boule vers le bas ce qui la fait perdre de
+l'altitude plus rapidement mais aussi accélerer. 
+La flèche arrière fait pencher la boule vers le haut ce qui la fait perdre
+de l'altitude plus doucement et ralentie la boule. 
+
+Une fois prés de la cible, Appuyez de nouveau sur la touche CONTROL pour
+retourner en mode normal. 
+
+Attention: Si vous touchez une cible en mode vol, aucun point ne vous saura
+donné.
+Une fois que tout le monde a attéri, les scores s'affie et une nouvelle partie
+commence.
+
+
+    Trucs et astuces
+    ----------------
+
+Si vous avez du temps libre, n'hesitez pas à utiliser les touches F9 et F10
+pour voir les autres joueurs en action. 
+La touche F11 remet la caméra sur soi, pratique pour rapidement reprendre
+contrôle.
+
+Utilisez la bar en bas à droite pour prendre des repères d'altitude. 
+
+
+    Les touches
+    -----------
+
+F1 : Affiche/cache le niveau (pour le debug uniquement)
+SHIFT-F1 : Affiche/cache les boites physiques (pour le debug uniquement)
+F2 : Prend un screenshot
+F3 : Passe en mode fil de fer, point, face pleine
+F4 : Affiche des informations de debug
+F5 : Force la fin de la partie en cours (uniquement pour les admin)
+F6 : Reset la partie en cours, les scores de la partie en cours sont perdu
+     (uniquement pour les admin)
+F7 : Permet de lacher le joueur du pingouin, on passe alors en mode free look
+F8 : Lache/reprend la souris aux autres applications
+F9 : Observe le joueur suivant (Vous pouvez le faire à tout moment)
+F10 : Observe le joueur précédent (Vous pouvez le faire à tout moment)
+F11 : Remet la camera sur le soi meme
+CONTROL : Ouvre et ferme les ailes du pingouin
+TAB : Affiche le tableau des scores
+ESC : Quitte le jeu
+autres touches : Pour le chat
+ENTREE : Envoie la phrase de chat en cours
+
+
+Fichiers
+========
+
+Client/Src : les sources du client
+Client/MtpTarget.cfg : fichier de configuration pour le client
+Client/nel_data : tous les fichiers contenant la 3d, le son, les levels
+Client/replay : permet de revoir vos sauvegardes
+
+Server/Src : les sources du serveur
+Server/mtp_target_service.cfg : fichier de configuration pour le serveur
+
+
+Remerciement
+============
+
+Boz/GMF pour son aide sur l'utilisation du moteur 3d.
+cahanta pour sa patience.
+Tout ceux qui nous ont aidé dans ce projet.
+
+
+Librairies Utilisées
+====================
+
+NeL pour le moteur 3d et le framework (http://www.nevrax.org)
+ODE pour le moteur physique (http://www.q12.org/ode)
+fmod pour le moteur son (http://www.fmod.org)
+FreeType pour la gestion des fonts (http://www.freetype.org/)
