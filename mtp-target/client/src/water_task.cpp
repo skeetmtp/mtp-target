@@ -89,6 +89,7 @@ CWaterTask::CWaterTask():ITask()
 	WaterShape    = NULL;
 	WaterModel    = NULL;
 	WaterMesh     = NULL;	
+	WaterInstance = NULL;	
 }
 
 void cbVar (CConfigFile::CVar &var)
@@ -136,8 +137,8 @@ void CWaterTask::init()
 	{
 		string res;
 		static std::string shapeName("water_quad.shape");
-//		CSceneUser *su = dynamic_cast<CSceneUser *>(&C3DTask::instance().scene());
-		CSceneUser *su = dynamic_cast<CSceneUser *>(nelWaterScene);
+		CSceneUser *su = dynamic_cast<CSceneUser *>(&C3DTask::instance().scene());
+//		CSceneUser *su = dynamic_cast<CSceneUser *>(nelWaterScene);
 		CScene		&scene = su->getScene ();
 
 		// load textures
@@ -205,7 +206,8 @@ void CWaterTask::init()
 
 		scene.getShapeBank()->add(shapeName, WaterShape);
 
-		WaterModel = NLMISC::safe_cast<CWaterModel *>(scene.createInstance(shapeName));
+		WaterInstance = scene.createInstance(shapeName);
+		WaterModel = NLMISC::safe_cast<CWaterModel *>(WaterInstance);
 		WaterModel->setPos(0.0f,0.0f,1.0f*GScale);
 
 		//	CWaterHeightMap &whm = GetWaterPoolManager().getPoolByID(0);
@@ -249,6 +251,16 @@ void CWaterTask::render()
 
 void CWaterTask::release()
 {
+	CSceneUser *su = dynamic_cast<CSceneUser *>(&C3DTask::instance().scene());
+//	CSceneUser *su = dynamic_cast<CSceneUser *>(nelWaterScene);
+	CScene		&scene = su->getScene ();
+
+	if(WaterInstance)
+	{
+		scene.deleteInstance(WaterInstance);
+		//delete WaterShape;
+	}
+
 	if(nelWaterScene)
 	{
 		C3DTask::instance().driver().deleteScene(nelWaterScene);

@@ -30,6 +30,7 @@
 // Includes
 //
 
+#include "3d/transform_shape.h"
 
 
 //
@@ -80,6 +81,7 @@ private:
 	NL3D::CWaterShape		*WaterShape;
 	NL3D::CWaterModel		*WaterModel;
 	NL3D::UInstance			*WaterMesh;	
+	NL3D::CTransformShape   *WaterInstance;
 
 	std::string EnvMap0Name;
 	std::string EnvMap1Name;
