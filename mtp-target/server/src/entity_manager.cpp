@@ -803,7 +803,7 @@ string CEntityManager::check(const string &login, const string &password, bool d
 		for(uint i = 0; i < password.size(); i++)
 		{
 			// switch to lower case
-			if(!nlisprint(password[i]) || password[i] == ' ' || password[i] == ',' || password[i] == '{' || password[i] == '}' || password[i] == ';' || password[i] == '"' || isspace(password[i]))
+			if(!nlisprint(password[i]) || password[i] == ' ' || password[i] == ',' || password[i] == '{' || password[i] == '}' || password[i] == ';' || password[i] == '/' || password[i] == '\\' || password[i] == '"' || isspace(password[i]))
 			{
 				return toString("Bad password, character '%c' is not allowed", password[i]);
 			}
