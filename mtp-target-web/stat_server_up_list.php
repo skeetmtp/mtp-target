@@ -2,7 +2,7 @@
 include_once("stat_function.php");
 include_once("stat_game.php");
 
-	$uid = userName2Uid($user_login);
+	//$uid = userName2Uid($user_login);
 	//$uid = 5453;
 	$cacheFileName = $cache_dir."/test.html";
 	

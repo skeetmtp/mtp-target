@@ -3,7 +3,7 @@ include_once("stat_function.php");
 include_once("stat_game.php");
 include_once("stat_graph_display.php");
 
-	$uid = userName2Uid($user_login);
+	//$uid = userName2Uid($user_login);
 	assertValidNumber($p_server_id);
 	$server_id = $p_server_id;
 	$serverName = Id2ServerName($server_id);
