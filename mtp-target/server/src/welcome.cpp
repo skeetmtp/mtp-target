@@ -60,13 +60,13 @@ using namespace NLNET;
 //
 
 /// association between cookie in string and username
-static map<string, pair<string, sint32> > UserIdNameAssociations;
+static map<string, pair<string, pair<string, sint32> > > UserIdNameAssociations;
 
 static string ListenAddr;
 
 string getUserFromCookie(const string &cookie, sint32 &totalScore)
 {
-	map<string, pair<string, sint32> >::iterator it = UserIdNameAssociations.find(cookie);
+	map<string, pair<string, pair<string, sint32> > >::iterator it = UserIdNameAssociations.find(cookie);
 	if(it == UserIdNameAssociations.end())
 	{
 		totalScore = 0;
@@ -74,7 +74,7 @@ string getUserFromCookie(const string &cookie, sint32 &totalScore)
 	}
 	else
 	{
-		totalScore = (*it).second.second;
+		totalScore = (*it).second.second.second;
 		return (*it).second.first;
 	}
 }
@@ -119,7 +119,7 @@ void cbLSChooseShard (CMessage &msgin, const std::string &serviceName, uint16 si
 
 	CUnifiedNetwork::getInstance()->send("LS", msgout);
 
-	UserIdNameAssociations.insert(make_pair(cookie, make_pair(userName,totalScore)));
+	UserIdNameAssociations.insert(make_pair(cookie, make_pair(userName,make_pair(userTexture,totalScore))));
 
 	nlinfo("Client %s will come with cookie %s to ip '%s' with total score %d userTexture '%s'", userName.c_str(), cookie.c_str(), ListenAddr.c_str(), totalScore,userTexture.c_str());
 }

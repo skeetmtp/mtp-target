@@ -146,7 +146,7 @@ static void cbLogin(CClient *c, CNetMessage &msgin)
 		{
 			// already checks in LS
 			nlinfo("Receive a client with cookie %s", cookie.c_str());
-			login = getUserFromCookie(cookie, c->Score);
+			login = getUserFromCookie(cookie, c->Score, texture);
 			if(login.empty())
 			{
 				error = "Bad cookie identification";
