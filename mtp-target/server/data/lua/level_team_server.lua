@@ -1,13 +1,17 @@
 ---------------------- Level  ----------------------
 
 setMaxLevelSessionCount(3);
-
+setLevelHasBonusTime(0);
+local teamRedScore = 0;
+local teamBlueScore = 0;
+local currentTeamRedScore = 0;
+local currentTeamBlueScore = 0;
 
 ---------------------- Entity ----------------------
 CEntity = {}
 CEntity_mt = {}
-function CEntity:new()
-  return setmetatable({ team = 0, id = 0 }, CEntity_mt)
+function CEntity:new(baseEntity)
+  return setmetatable({base=baseEntity, team = 0, id = 0 }, CEntity_mt)
 end
 
 function CEntity:print()
@@ -30,6 +34,42 @@ function CEntity:getTeam()
   return self.team;
 end
 
+function CEntity:setTeamScore( score )
+  --print("setTeamScore");
+  --print(self.base:getCurrentScore());
+  --print(score);
+  
+  --if(self.base:getCurrentScore()==score) then
+  --  return;
+  --end
+  
+  if(self.team==0) then
+    --if(currentTeamRedScore>=score) then
+    --  return;
+    --end
+    --currentTeamRedScore = score;
+    currentTeamRedScore = currentTeamRedScore + score;
+    self.base:setCurrentScore(score);
+  else
+    --if(currentTeamBlueScore>=score) then
+    --  return;
+    --end
+    --currentTeamBlueScore = score;
+    currentTeamBlueScore = currentTeamBlueScore + score;
+    self.base:setCurrentScore(score);
+  end
+  --end    
+end
+
+function CEntity:setFinalScore()
+  if(self.team==0) then
+    self.base:setCurrentScore(teamRedScore);
+  else
+    self.base:setCurrentScore(teamBlueScore);
+  end
+    
+end
+
 function CEntity:setTeam( t )
   self.team = t;
 end
@@ -39,15 +79,19 @@ function Entity:parent()
 end
 
 function Entity:init()
-  local parent = CEntity:new();
+  local parent = CEntity:new(self);
   self:setCurrentScore(0);
   self:setUserData(parent);
+  --clientId = self:getEid();
+  print("clientId");
+  print(clientId);
   self:setStartPointId(clientId+getSessionId()*2);
   local t = math.mod(clientId,2);
 
+  self:displayText(0,4,1,255,255,255,"Score is shared beetween the team",10);
   if(t==0) then
-  	self:displayText(0,5,1,255,0,0,"You are in RED team",15);
   	self:displayText(0,6,1,255,0,0,"Land on RED target !",20);
+  	self:displayText(0,4,1,255,0,0,"Score is shared beetween the team",10);
   else
   	self:displayText(0,5,1,100,100,255,"You are in BLUE team",15);
   	self:displayText(0,6,1,100,100,255,"Land on BLUE target !",20);
@@ -60,7 +104,7 @@ function Entity:init()
 end
 
 function Entity:preUpdate()
-  self:setCurrentScore(0);
+  --self:setCurrentScore(0);
 end
 
 function Entity:update()
@@ -75,6 +119,7 @@ function entityEntityCollideEvent ( entity1, entity2 )
 end
 
 function entityWaterCollideEvent ( entity )
+  entity:parent():setTeamScore(0);
   pos = CVector(1,2,3.456);
   pos = entity:getStartPointPos();
   --entity:setPos(pos);
@@ -114,9 +159,9 @@ function Module:collide( entity )
     entity:setCurrentScore(0)
   else
     if(self:parent():getTeam()==entity:parent():getTeam()) then
-      entity:setCurrentScore(self:getScore())
+      entity:parent():setTeamScore(self:getScore())
     else
-      entity:setCurrentScore(-self:getScore())
+      entity:parent():setTeamScore(-self:getScore())
     end
   end
   --print(entity:getName());
@@ -127,5 +172,48 @@ function Module:collide( entity )
 end
 
 
+------------- Level -------------
 
+function levelInit()
+  teamRedScore = 0;
+  teamBlueScore = 0;
+  clientId = 0;
+  print("levelinit");
+
+end
+
+function levelPreUpdate()
+
+  currentTeamRedScore = 0;
+  currentTeamBlueScore = 0;
+
+end
+
+function levelPostUpdate()
+
+  if(currentTeamRedScore~=teamRedScore) then
+    displayTextToAll(0,5,1,255,0,0,teamRedScore,1);
+    teamRedScore = currentTeamRedScore;
+  end
+
+  if(currentTeamBlueScore~=teamBlueScore) then
+    displayTextToAll(0,6,1,100,100,255,teamBlueScore,1);
+    teamBlueScore = currentTeamBlueScore;
+  end
+
+end
+
+
+function levelEndSession()
+  local entityCount = getEntityCount();
+  
+  print("end sesssion");
+  print(teamRedScore);
+  print(teamBlueScore);
+  
+  for i=0,entityCount do
+    getEntity(i):parent():setFinalScore();
+  end
+
+end
 
