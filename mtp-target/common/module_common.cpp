@@ -88,7 +88,7 @@ void CModuleCommon::init(const string &name, const std::string &shapeName, uint8
 	CEditableElementCommon::init(name,shapeName,id,position,scale,rotation);
 	nlinfo("Adding module '%s'(%s) at position %f %f %f , scale : %f %f %f", name.c_str(), shapeName.c_str(), position.x, position.y, position.z, scale.x, scale.y, scale.z);
 	ShapeName = shapeName+".shape";
-	
+	LuaShapeName = shapeName;
 }
 
 
@@ -114,7 +114,7 @@ void CModuleCommon::enabled(bool e)
 
 string CModuleCommon::toLuaString()
 {
-	return toString("{ Position = CVector(%f,%f,%f), Scale = CVector(%f, %f, %f), Rotation = CAngleAxis(%f,%f,%f,%f), Name=\"%s\" }",Position.x,Position.y,Position.z,Scale.x,Scale.y,Scale.z,Rotation.Axis.x,Rotation.Axis.y,Rotation.Axis.z,Rotation.Angle,Name.c_str());
+	return toString("{ Position = CVector(%f,%f,%f), Scale = CVector(%f, %f, %f), Rotation = CAngleAxis(%f,%f,%f,%f), Lua=\"%s\", Shape=\"%s\" }",Position.x,Position.y,Position.z,Scale.x,Scale.y,Scale.z,Rotation.Axis.x,Rotation.Axis.y,Rotation.Axis.z,Rotation.Angle,Name.c_str(),LuaShapeName.c_str());
 }
 
 

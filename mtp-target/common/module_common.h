@@ -82,7 +82,7 @@ protected:
 	float				Accel;
 	float				Friction;
 	bool				Enabled;
-
+	std::string			LuaShapeName;
 private:
 	
 };
