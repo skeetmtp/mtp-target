@@ -89,6 +89,8 @@ public:
 	void startPointId(uint8 id);
 	bool isAdmin() const;
 	bool isModerator() const;
+	bool canSpeak();
+	void canSpeak(bool speak);
 	std::string team();
 	
 	void position(NLMISC::CVector pos);
@@ -182,6 +184,7 @@ private:
 	uint8				 Id;
 	std::string			 Name;				// empty name mean that the client not already send login information
 	float				 MaxLinearVelocity;
+	bool				 CanSpeak;
 };
 
 #endif

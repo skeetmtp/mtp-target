@@ -104,6 +104,7 @@ void CEntity::init ()
 	ForceReceived = true;
 	AfkCount = 0;
 	VoteMap = "";
+	CanSpeak = true;
 
 	nlassert(World);
 	pausePhysics();
@@ -531,6 +532,17 @@ void CEntity::voteMap(const string &voteMap)
 string CEntity::voteMap()
 {
 	return VoteMap;
+}
+
+
+bool CEntity::canSpeak()
+{
+	return CanSpeak	;
+}
+
+void CEntity::canSpeak(bool speak)
+{
+	CanSpeak = speak;
 }
 
 
