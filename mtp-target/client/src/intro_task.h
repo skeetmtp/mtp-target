@@ -69,7 +69,7 @@ private:
 	uint32 ServerId;
 	
 	guiSPG<CGuiFrame> menuFrame;
-	guiSPG<CGuiButton> playOnLineButton;
+//	guiSPG<CGuiButton> playOnLineButton;
 	guiSPG<CGuiButton> playOnLanButton;
 	guiSPG<CGuiButton> exitButton3;
 	

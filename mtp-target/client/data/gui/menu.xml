@@ -3,12 +3,13 @@
 <resource>
 	<object class="CGuiFrame" name="menuFrame">
 		<alignment>eAlignCenterHorizontal|eAlignCenterVertical</alignment>
-		<minSize>0,200</minSize>
+		<minSize>0,80</minSize>
 		<position>0,50</position>
 		<element>
 			<object class="CGuiVBox" name="vbox">
 				<alignment>eAlignExpandHorizontal|eAlignExpandVertical</alignment>
 				<element>
+					<!--
 					<object class="CGuiButton" name="bPlayOnline">
 						<minSize>150,0</minSize>
 						<element>
@@ -22,6 +23,15 @@
 						<element>
 							<object class="CGuiText" name="txtPlayOnlan">
 								<string> Play on lan </string>
+							</object>
+						</element>
+					</object>
+					-->
+					<object class="CGuiButton" name="bPlayOnlan">
+						<minSize>150,0</minSize>
+						<element>
+							<object class="CGuiText" name="txtPlayOnlan">
+								<string> Connect </string>
 							</object>
 						</element>
 					</object>

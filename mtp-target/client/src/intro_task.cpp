@@ -118,20 +118,6 @@ void CIntroTask::error(string &reason)
 	CGuiObjectManager::instance().objects.push_back(_errorServerFrame);
 
 	errorServerReason->text = reason;
-	/*
-	string::size_type pos = reason.find("failed");
-	if(pos == string::npos)
-	{
-		errorServerReason->text = reason;
-	}
-	else
-	{
-		errorServerReason->text = reason.substr(0,pos+6);
-		errorServerReason->text += '\n';
-		errorServerReason->text += reason.substr(pos+6);
-		
-	}
-	*/
 }
 
 
@@ -142,7 +128,7 @@ void CIntroTask::updateInit()
 	guiSPG<CGuiXml> xml = NULL;
 	xml = CGuiXmlManager::instance().Load("menu.xml");
 	menuFrame = (CGuiFrame *)xml->get("menuFrame");
-	playOnLineButton = (CGuiButton *)xml->get("bPlayOnline");
+	//playOnLineButton = (CGuiButton *)xml->get("bPlayOnline");
 	playOnLanButton = (CGuiButton *)xml->get("bPlayOnlan");
 	exitButton3 = (CGuiButton *)xml->get("bExit");
 	exitButton3->eventBehaviour = new CGuiExitButtonEventBehaviour();
@@ -175,12 +161,14 @@ void CIntroTask::updateMenu()
 {
 	if(State!=eMenu) return;
 
+	/*
 	if(playOnLineButton->pressed())
 	{
 		CGuiObjectManager::instance().objects.clear();
 		CGuiObjectManager::instance().objects.push_back(loginFrame);
 		State = eLoginOnline;
 	}
+	*/
 	if(playOnLanButton->pressed())
 	{
 		CGuiObjectManager::instance().objects.clear();
@@ -317,9 +305,6 @@ void CIntroTask::updateConnectionOnLine()
 	if(res.empty())
 	{
 		_autoLogin = 0;//autologin only once
-		// no connection problem
-		// remove this intro task
-		//remove();
 		stop();
 		// stop the background
 		CBackgroundTask::instance().stop();
@@ -352,9 +337,6 @@ void CIntroTask::updateConnectionOnLan()
 	if(res.empty())
 	{
 		_autoLogin = 0;//autologin only once
-		// no connection problem
-		// remove this intro task
-//		remove();
 		stop();
 		// stop the background
 		CBackgroundTask::instance().stop();
