@@ -46,12 +46,14 @@ Lunar<CModuleProxy>::RegType CModuleProxy::methods[] =
 	bind_method(CModuleProxy, setMetatable),	
 		bind_method(CModuleProxy, getUserData),	
 		bind_method(CModuleProxy, setUserData),	
+		bind_method(CModuleProxy, setCollide),	
 		bind_method(CModuleProxy, setBounce),	
 		bind_method(CModuleProxy, setScore),	
 		bind_method(CModuleProxy, getScore),	
 		bind_method(CModuleProxy, setAccel),	
 		bind_method(CModuleProxy, setFriction),	
 		bind_method(CModuleProxy, setEnabled),	
+		bind_method(CModuleProxy, setVisible),	
 		bind_method(CModuleProxy, getName),	
 		bind_method(CModuleProxy, setShapeName),	
 	{0,0}
@@ -92,6 +94,13 @@ int CModuleProxy::setBounce(lua_State *L)
 	return 0; 
 }
 
+int CModuleProxy::setCollide(lua_State *L)
+{ 
+	lua_Number c = luaL_checknumber(L,1);
+	_module->collide(c==1); 
+	return 0; 
+}
+
 int CModuleProxy::setScore(lua_State *L)
 { 
 	lua_Number score = luaL_checknumber(L,1);
@@ -125,6 +134,14 @@ int CModuleProxy::setEnabled(lua_State *L)
 	lua_Number enabled = luaL_checknumber(L,1);
 	bool e = enabled==1;
 	_module->enabled(e); 
+	return 0; 
+}
+
+int CModuleProxy::setVisible(lua_State *L)
+{ 
+	lua_Number visible = luaL_checknumber(L,1);
+	bool e = visible==1;
+	_module->visible(e); 
 	return 0; 
 }
 

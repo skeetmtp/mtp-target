@@ -53,12 +53,14 @@ public:
 	int getUserData(lua_State *luaSession);
 	int setUserData(lua_State *luaSession);
 	
+	int setCollide(lua_State *L);
 	int setBounce(lua_State *L);
 	int setScore(lua_State *L);
 	int getScore(lua_State *L);
 	int setAccel(lua_State *L);
 	int setFriction(lua_State *L);
 	int setEnabled(lua_State *L);
+	int setVisible(lua_State *L);
 	int getName(lua_State *luaSession);
 	int setShapeName(lua_State *luaSession);
 	
