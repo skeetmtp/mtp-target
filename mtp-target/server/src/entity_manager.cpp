@@ -1002,30 +1002,37 @@ MTPT_COMMAND(ban, "ban a user from the server", "[<eid>|<name>] [duration]")
 		return true;
 
 	CClient *c = NULL;
-	if(e->type()!=e->Client)
-		return true;
+	if(e->type()==e->Client)
+		c = (CClient *)e;
 
-	c = (CClient *)e;
+	if(c)
+	{
+		CMessage msgout("BC");
 
-	CMessage msgout("BC");
+		const CInetAddress inetAddr = CNetwork::instance().hostAddress(c->sock());
+		string ip = inetAddr.ipAddress();
+		string userName = c->name();
+		string kickerName = entity->name();
+		
+		uint32 duration = 10;
+		if(args.size() >= 2)
+			duration = atoi(args[1].c_str());
+		if(duration>60)
+			duration=60;
 
-	const CInetAddress inetAddr = CNetwork::instance().hostAddress(c->sock());
-	string ip = inetAddr.ipAddress();
-	string userName = c->name();
-	string kickerName = entity->name();
-	
-	uint32 duration = 10;
-	if(args.size() >= 2)
-		duration = atoi(args[1].c_str());
-	if(duration>60)
-		duration=60;
+		msgout.serial(ip, userName, kickerName, duration);
+		
+		nlinfo("%s bans %s (%s) %d",kickerName.c_str(), userName.c_str(),ip.c_str(),duration);
+		CUnifiedNetwork::getInstance()->send("LS", msgout);
 
-	msgout.serial(ip, userName, kickerName, duration);
-	
-	nlinfo("%s bans %s (%s) %d",kickerName.c_str(), userName.c_str(),ip.c_str(),duration);
-	CUnifiedNetwork::getInstance()->send("LS", msgout);
-	string cmd = "/kick "+userName;
-	CCommand::execute(entity,cmd, *InfoLog);
+		string reason = "You have been banned";
+		CNetMessage msgout2(CNetMessage::Error);
+		msgout2.serial(reason);
+		CNetwork::instance().send(c->id(), msgout2);
+	}
+
+
+	CEntityManager::instance().remove(e->id());
 	
 	//TODO
 	
