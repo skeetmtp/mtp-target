@@ -104,7 +104,8 @@ void CEntity::init ()
 	AfkCount = 0;
 
 	nlassert(World);
-
+	pausePhysics();
+	
 	// create body
 	Body = dBodyCreate(World);
 	nlassert(Body);
@@ -133,6 +134,7 @@ void CEntity::init ()
 	
 	dGeomSetBody(Geom, Body);
 	luaProxy = 0;
+	resumePhysics();
 }
 
 
@@ -179,6 +181,7 @@ CEntity::~CEntity()
 		delete luaProxy;
 	luaProxy = 0;
 
+	pausePhysics();
 	if(Geom)
 	{
 		// to be sure, set the data to dummy before erasing
@@ -192,6 +195,7 @@ CEntity::~CEntity()
 		dBodyDestroy(Body);
 		Body = 0;
 	}
+	resumePhysics();
 }
 
 bool CEntity::isAdmin() const
@@ -230,8 +234,10 @@ void CEntity::startPointId(uint8 id)
 {
 	StartingPointId = id % CLevelManager::instance().currentLevel().getStartPointCount();
 	CVector startPos = CLevelManager::instance().currentLevel().getStartPoint(StartingPointId)->position();
+	pausePhysics();
 	dBodySetPosition(Body, startPos.x, startPos.y, startPos.z);
 	dGeomSetPosition(Geom, startPos.x, startPos.y, startPos.z);
+	resumePhysics();
 	if(type()==CEntity::Client)
 		if(CNetwork::instance().version()>=2)
 		{
