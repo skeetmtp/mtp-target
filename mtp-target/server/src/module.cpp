@@ -76,6 +76,7 @@ static int _dTriRayCallback(dGeomID TriMesh, dGeomID Ray, int TriangleIndex, dRe
 CModule::CModule() : CModuleCommon()
 {
 	luaProxy = NULL;
+	triMeshDataId = 0;
 }
 
 void CModule::init(const std::string &name,uint8 id, NLMISC::CVector position, NLMISC::CAngleAxis rotation)
@@ -98,14 +99,14 @@ void CModule::init(const std::string &name,uint8 id, NLMISC::CVector position, N
 		OdeVertices[i*3+2] = Vertices[i].z /** triColl.scaleZ*/;
 //		nlinfo("%d %f %f %f", i, Vertices[i*3+0], Vertices[i*3+1], Vertices[i*3+2]);
 	}
-	dTriMeshDataID data = dGeomTriMeshDataCreate();
+	triMeshDataId = dGeomTriMeshDataCreate();
 
 //	dGeomTriMeshDataBuildSingle(data, &OdeVertices[0], 3*sizeof(dReal), OdeVertices.size()/3, &Indices[0], Indices.size(), 3*sizeof(int));
-	dGeomTriMeshDataBuild(data, &OdeVertices[0], 3*sizeof(dReal), OdeVertices.size()/3, &Indices[0], Indices.size(), 3*sizeof(int));
+	dGeomTriMeshDataBuild(triMeshDataId, &OdeVertices[0], 3*sizeof(dReal), OdeVertices.size()/3, &Indices[0], Indices.size(), 3*sizeof(int));
 
 	{
 		CSynchronized<dSpaceID>::CAccessor acces(&Space);
-		Geom = dCreateTriMesh(acces.value(), data, _dTriCallback, _dTriArrayCallback, _dTriRayCallback);
+		Geom = dCreateTriMesh(acces.value(), triMeshDataId, _dTriCallback, _dTriArrayCallback, _dTriRayCallback);
 	}
 	nlassert(Geom);
 	dGeomSetData(Geom, this);
@@ -165,6 +166,12 @@ CModule::~CModule()
 	luaProxy = NULL;
 	if(Geom)
 	{
+		if(triMeshDataId)
+		{
+			dGeomTriMeshDataDestroy(triMeshDataId);
+			triMeshDataId = 0;
+		}
+
 		dGeomSetData(Geom, (void *)0xDEADBEEF);
 		dGeomDestroy(Geom);
 		Geom = 0;

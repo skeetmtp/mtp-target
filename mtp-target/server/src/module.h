@@ -61,6 +61,7 @@ private:
 	
 	dGeomID				Geom;
 	lua_State			*LuaState;
+	dTriMeshDataID		triMeshDataId;
 };
 
 
