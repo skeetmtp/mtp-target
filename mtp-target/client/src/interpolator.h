@@ -149,6 +149,7 @@ protected:
 	
 	static double  _lct;
 	double  _dt;
+	float   _maxDistBetween2Keys;
 	static const double _minLct;
 	static const double _maxLct;
 

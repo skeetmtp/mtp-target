@@ -27,6 +27,7 @@
 #include "interpolator.h"
 #include "mtp_target.h"
 #include "../../common/constant.h"
+#include "config_file_task.h"
 
 using namespace std;
 using namespace NLMISC;
@@ -88,6 +89,9 @@ CInterpolator::CInterpolator(double dt)
 	
 	_entity = 0;
 	_dt = dt;
+
+	_maxDistBetween2Keys = CConfigFileTask::instance().configFile().getVar("InterpolatorMaxDistBetween2Keys").asFloat();
+	
 	reset();
 }
 
@@ -302,10 +306,13 @@ CVector CLinearInterpolator::_position(double time)
 			if(!nextKeySet)
 				break;
 
-			CVector dpos = (nextKey.value().position - key.value().position ) / (float)_dt;
+			CVector dpos = (nextKey.value().position - key.value().position );
 			//TODO put 10 into a .cfg variable
-			if(dpos.norm()>10) 
+			if(dpos.norm()>_maxDistBetween2Keys) 
+			{
+				nlinfo("drop key : dist between current and last  = %f",dpos.norm());
 				return nextKey.value().position;
+			}
 			return CEntityInterpolatorKey::Lerp(key.value(),nextKey.value(),lerpPos).position;
 		}
 		nextKey = key;
