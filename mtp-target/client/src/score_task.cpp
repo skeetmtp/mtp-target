@@ -96,11 +96,16 @@ void CScoreTask::render()
 		sint32 curScore = CEntityManager::instance()[eids[i]].currentScore();
 		if(curScore<0)
 			printf("ok");
-		CFontManager::instance().printf(CEntityManager::instance()[eids[i]].color(), x1, y, 1, "%s", CEntityManager::instance()[eids[i]].name().c_str());
-		CFontManager::instance().printf(CEntityManager::instance()[eids[i]].color(), x2, y, 1, "%d", CEntityManager::instance()[eids[i]].currentScore());
-		CFontManager::instance().printf(CEntityManager::instance()[eids[i]].color(), x3, y, 1, "%s%s", (CEntityManager::instance()[eids[i]].ready()?"":"$"), (CEntityManager::instance()[eids[i]].spectator()?"@":""));
-		CFontManager::instance().printf(CEntityManager::instance()[eids[i]].color(), x4, y, 1, "%d", CEntityManager::instance()[eids[i]].totalScore());
-		CFontManager::instance().printf(CEntityManager::instance()[eids[i]].color(), x5, y, 1, "%u", CEntityManager::instance()[eids[i]].ping());
+		CRGBA col(255,255,255,255);
+		//col = CEntityManager::instance()[eids[i]].color();
+		if(CEntityManager::instance()[eids[i]].isLocal())
+			col = CRGBA(255,200,0,255);
+
+		CFontManager::instance().printf(col, x1, y, 1, "%s", CEntityManager::instance()[eids[i]].name().c_str());
+		CFontManager::instance().printf(col, x2, y, 1, "%d", CEntityManager::instance()[eids[i]].currentScore());
+		CFontManager::instance().printf(col, x3, y, 1, "%s%s", (CEntityManager::instance()[eids[i]].ready()?"":"$"), (CEntityManager::instance()[eids[i]].spectator()?"@":""));
+		CFontManager::instance().printf(col, x4, y, 1, "%d", CEntityManager::instance()[eids[i]].totalScore());
+		CFontManager::instance().printf(col, x5, y, 1, "%u", CEntityManager::instance()[eids[i]].ping());
 	}
 }
 
