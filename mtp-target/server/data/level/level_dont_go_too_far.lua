@@ -1,7 +1,7 @@
 Name = "Dont go too far"
 Author = "Skeet"
 ServerLua = "level_dont_go_too_far_server.lua"
-ReleaseLevel = 0
+ReleaseLevel = 2
 
 skyShapeFileName = "sky.shape";
 sunAmbientColor = CRGBA(82, 100, 133, 255);
@@ -63,16 +63,16 @@ Modules =
 	{ Position = CVector(10.000000,-25.000000,3.500000), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_island", Shape="snow_island" },
 	{ Position = CVector(6.000000,-14.000000,2.800000), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_island2", Shape="snow_island2" },
 	{ Position = CVector(-3.800000,-17.000000,2.000000), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_island3", Shape="snow_island3" },
-	{ Position = CVector(-0.100000,-15.300000,10.000000), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="box_sol", Shape="box_sol" },
-	{ Position = CVector(-0.100000,-15.300000,10.000000), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="box_sol", Shape="box_sol" },
-	{ Position = CVector(-0.100000,-15.300000,10.000000), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="box_sol", Shape="box_sol" },
-	{ Position = CVector(-0.100000,-15.300000,10.000000), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="box_sol", Shape="box_sol" },
-	{ Position = CVector(-0.100000,-15.300000,10.000000), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="box_sol", Shape="box_sol" },
-	{ Position = CVector(-0.100000,-14.912012,3.035431), Scale = CVector(2.000000, 10.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="dont_go_too_far_lane", Shape="box_sol" },
+	{ Position = CVector(-0.100000,-14.912012,3.037934), Scale = CVector(2.000000, 10.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="dont_go_too_far_lane", Shape="box_sol" },
 	{ Position = CVector(-0.097495,-15.040000,3.020000), Scale = CVector(2.000000, 2.000000, 0.500000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="dont_go_too_far_target_300", Shape="box_sol" },
 	{ Position = CVector(-0.098685,-15.060000,3.010000), Scale = CVector(4.000000, 4.000000, 0.500000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="dont_go_too_far_target_100", Shape="box_sol" },
 	{ Position = CVector(-0.100000,-15.080000,3.000000), Scale = CVector(6.000000, 6.000000, 0.500000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="dont_go_too_far_target_50", Shape="box_sol" },
 	{ Position = CVector(0.000000,0.000000,5.000000), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_ramp", Shape="snow_ramp" },
+	{ Position = CVector(-0.174782,-15.078223,3.061672), Scale = CVector(1.000000, 6.000000, 6.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="box_sol", Shape="box_sol" },
+	{ Position = CVector(-0.098757,-15.011895,3.024662), Scale = CVector(6.000000, 0.500000, 2.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="box_sol", Shape="box_sol" },
+	{ Position = CVector(-0.100000,-15.148162,3.060950), Scale = CVector(6.000000, 1.000000, 6.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="box_sol", Shape="box_sol" },
+	{ Position = CVector(-0.026166,-15.073698,3.064236), Scale = CVector(1.000000, 6.000000, 6.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="box_sol", Shape="box_sol" },
+	{ Position = CVector(-0.100000,-15.081491,3.102471), Scale = CVector(6.000000, 6.000000, 2.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="box_sol", Shape="box_sol" },
 
 }
 

@@ -43,7 +43,7 @@ function entityWaterCollideEvent ( entity )
 end
 
 function Module:collide( entity )
-  if(entity:getIsOpen()==0) then
+  if(entity:getIsOpen()==0 and self:getScore()~=0) then
     entity:setCurrentScore(self:getScore());
    end
 end
