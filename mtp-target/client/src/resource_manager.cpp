@@ -31,9 +31,14 @@
 #include <3d/shape.h>
 #include <3d/texture.h>
 #include <3d/material.h>
+#include <3d/shape_bank.h>
+#include <3d/driver_user.h>
 #include <3d/register_3d.h>
 #include <3d/texture_file.h>
 #include <3d/texture_multi_file.h>
+#include <nel/3d/u_particle_system_instance.h>
+#include <3d/particle_system.h>
+#include <3d/particle_system_shape.h>
 
 #include "zlib.h"
 
@@ -166,7 +171,42 @@ void CResourceManager::loadChildren(const std::string &filename)
 			}
 		}
 	}
-	//TODO else if(ext == "ps")
+	else if(ext == "ps")
+	{
+		// need to get texture inside the shape
+		NL3D::registerSerial3d();
+		
+
+		string fn = CFile::getFilename(filename);
+		CShapeBank *bank = new CShapeBank;
+		string shapeCache("mtptShapeCache");
+		bank->addShapeCache(shapeCache);
+		bank->setShapeCacheSize(shapeCache,1024*1024);
+		std::vector<std::string> filelist;
+		filelist.push_back(filename);
+		CDriverUser *drv = (CDriverUser *)(&C3DTask::instance().driver());
+		bank->preLoadShapes(shapeCache,filelist,string("*.ps"),NULL,true,drv->getDriver());
+		bool b = bank->isShapeWaiting();
+		IShape *is = bank->getShape(fn);
+		//bank->load(filename)
+
+		CParticleSystemShape *ps = (CParticleSystemShape *)is;
+		
+		uint numTexture = ps->getNumCachedTextures();
+		nlinfo("loadchildren(%s) : num texture = %d",filename.c_str(),numTexture);
+		
+		for(uint i=0;i<numTexture;i++)
+		{
+			ITexture *tex = ps->getCachedTexture(i);
+			CTextureFile *utex = (CTextureFile *)tex;
+			nlinfo("loadchildren(%s) : texture = %s",filename.c_str(),utex->getFileName().c_str());
+			get(utex->getFileName());
+		}
+		
+		bank->reset();
+		delete bank;
+		
+	}
 }
 
 
