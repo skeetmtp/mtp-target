@@ -994,7 +994,7 @@ bool CEntityManager::everyBodyReady()
 				if( (float)(CTime::getLocalTime() - (*it)->WaitingReadyTimeoutStart)/1000.0f > 20) //timeout
 				{
 					IdToRemove.push_back((*it)->id());
-					string timeoutMsg = toString("%s : wait for ready timeout",(*it)->name().c_str());
+					string timeoutMsg = toString("kick %s : wait for ready timeout",(*it)->name().c_str());
 					msgs.push_back(timeoutMsg);
 				}
 				res = false;
