@@ -152,6 +152,8 @@ public:
 		checkServicePaused();
 		CEntityManager::instance().flushAddRemoveList();
 
+		updateConnectedClients();
+
 		return true;
 	}
 
