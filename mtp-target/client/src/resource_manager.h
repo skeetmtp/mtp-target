@@ -25,10 +25,6 @@
 #ifndef MTPT_RESOURCE_MANAGER
 #define MTPT_RESOURCE_MANAGER
 
-#if 1 //use new resource manager
-#include "resource_manager2.h"
-#else
-
 //
 // Includes
 //
@@ -45,7 +41,7 @@
 
 typedef std::map<std::string, double> filename2LastCRCCheckTime;
 
-class CResourceManager : public CSingleton<CResourceManager>, public ITask
+class CResourceManagerLan : public CSingleton<CResourceManagerLan>, public ITask
 {
 public:
 
@@ -54,7 +50,7 @@ public:
 	virtual void render() { };
 	virtual void release() { };
 	
-	virtual std::string name() const { return "CResourceManager"; }
+	virtual std::string name() const { return "CResourceManagerLan"; }
 	
 	// return empty string it a problem occurs or the full path of the file
 	std::string get(const std::string &filename);
@@ -90,5 +86,4 @@ private:
 	std::string			CacheDirectory;
 };
 
-#endif
 #endif

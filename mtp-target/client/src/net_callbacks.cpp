@@ -42,7 +42,7 @@
 #include "net_callbacks.h"
 #include "level_manager.h"
 #include "entity_manager.h"
-#include "resource_manager.h"
+#include "resource_manager2.h"
 #include "config_file_task.h"
 #include "../../common/custom_floating_point.h"
 
@@ -524,7 +524,7 @@ static void cbRequestCRCKey(CNetMessage &msgin)
 	msgin.serial(fn, hashKey);
 	nlinfo("NET: cbRequestCRCKey fn='%s' hashKey='%s'", fn.c_str(), hashKey.toString().c_str());
 
-	CResourceManager::instance().receivedCRC(fn);
+	CResourceManagerLan::instance().receivedCRC(fn);
 }
 
 static void cbRequestDownload(CNetMessage &msgin)
@@ -545,7 +545,7 @@ static void cbRequestDownload(CNetMessage &msgin)
 		msgin.serialCont(buf);
 		msgin.serial(eof);
 	}
-	CResourceManager::instance().receivedBlock(res, buf, eof, fileSize, receivedError);
+	CResourceManagerLan::instance().receivedBlock(res, buf, eof, fileSize, receivedError);
 }
 
 static void cbDisplayText(CNetMessage &msgin)

@@ -35,6 +35,8 @@
 #include <nel/misc/mem_stream.h>
 #include <nel/misc/sha1.h>
 
+#include "resource_manager.h"
+
 
 
 //
@@ -66,12 +68,6 @@ public:
 	
 	std::string getFile(std::string &filename,bool now=true);
 
-	//compatibility func
-	void refresh(const  std::string &filename) {};
-	void receivedCRC(std::string &fn) {};
-	void receivedBlock(const std::string &res, const std::vector<uint8> &buf, bool eof, uint32 fileSize, bool receivedError){};
-	void clearCrcCheckTimes(){};
-	
 private:
 	//bool CResourceManager::downloadFile (const std::string &source, const std::string &dest);
 	void loadChildren(const std::string &filename);

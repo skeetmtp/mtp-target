@@ -55,7 +55,7 @@
 #include "font_manager.h"
 #include "background_task.h"
 #include "config_file_task.h"
-#include "resource_manager.h"
+#include "resource_manager2.h"
 
 #include <curl/curl.h>
 
@@ -536,6 +536,7 @@ string CResourceManager::get(const string &filename, bool &ok)
 
 	if(!connected())
 	{
+		return CResourceManagerLan::instance().get(filename,ok);
 		if(!path.empty())
 		{
 			ok = true;

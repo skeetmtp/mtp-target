@@ -60,7 +60,7 @@
 #include "entity_manager.h"
 #include "entity_manager.h"
 #include "background_task.h"
-#include "resource_manager.h"
+#include "resource_manager2.h"
 #include "config_file_task.h"
 
 //
@@ -109,6 +109,7 @@ void CMtpTarget::init()
 	CTaskManager::instance().add(CEntityManager::instance(), 24);
 	CTaskManager::instance().add(CNetworkTask::instance(), 25);
 	CTaskManager::instance().add(CResourceManager::instance(), 30);
+	CTaskManager::instance().add(CResourceManagerLan::instance(), 30);
 	CTaskManager::instance().add(C3DTask::instance(), 110);
 	CTaskManager::instance().add(CGuiTask::instance(), 130);
 	CTaskManager::instance().add(CEditorTask::instance(), 120);

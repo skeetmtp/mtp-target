@@ -36,7 +36,7 @@
 
 #include "3d_task.h"
 #include "lens_flare_task.h"
-#include "resource_manager.h"
+#include "resource_manager2.h"
 
 
 //

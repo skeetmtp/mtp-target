@@ -38,7 +38,7 @@
 #include "global.h"
 #include "entity.h"
 #include "mtp_target.h"
-#include "resource_manager.h"
+#include "resource_manager2.h"
 
 #include "stdpch.h"
 

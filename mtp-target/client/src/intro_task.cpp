@@ -37,7 +37,7 @@
 #include "network_task.h"
 #include "task_manager.h"
 #include "background_task.h"
-#include "resource_manager.h"
+#include "resource_manager2.h"
 #include "config_file_task.h"
 
 

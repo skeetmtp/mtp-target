@@ -58,8 +58,6 @@
 #include "config_file_task.h"
 #include "resource_manager.h"
 
-#ifndef MTPT_RESOURCE_MANAGER2
-
 
 //
 // Namespaces
@@ -75,7 +73,7 @@ using namespace NLMISC;
 //
 
 
-void CResourceManager::init()
+void CResourceManagerLan::init()
 {
 	CPath::remapExtension("dds", "tga", true);
 	CacheDirectory = CPath::standardizePath(CConfigFileTask::instance().configFile().getVar("CacheDirectory").asString());
@@ -95,13 +93,13 @@ void CResourceManager::init()
 	CRCCheckTimes.clear();
 }
 
-void CResourceManager::receivedCRC(string &fn)
+void CResourceManagerLan::receivedCRC(string &fn)
 {
 	CRCReceived = true;
 	CRCUpToDate = fn.empty();
 	if(!CRCUpToDate)
 	{
-		nlinfo("CResourceManager::receivedCRC %s: key different",fn.c_str());
+		nlinfo("CResourceManagerLan::receivedCRC %s: key different",fn.c_str());
 		filename2LastCRCCheckTime::iterator it = CRCCheckTimes.find(CFile::getFilename(fn));
 		if(it!=CRCCheckTimes.end())
 			CRCCheckTimes.erase(it);		
@@ -109,7 +107,7 @@ void CResourceManager::receivedCRC(string &fn)
 }
 
 
-void CResourceManager::receivedBlock(const string &res, const vector<uint8> &buf, bool eof, uint32 fileSize, bool receivedError)
+void CResourceManagerLan::receivedBlock(const string &res, const vector<uint8> &buf, bool eof, uint32 fileSize, bool receivedError)
 {
 	Reason = res;
 	Buffer = buf;
@@ -133,7 +131,7 @@ void CResourceManager::receivedBlock(const string &res, const vector<uint8> &buf
 	ReceivedFilename = res.substr(strlen("FILE:"));
 }
 
-void CResourceManager::loadChildren(const std::string &filename)
+void CResourceManagerLan::loadChildren(const std::string &filename)
 {
 	string ext = CFile::getExtension(filename);
 	if(ext == "shape")
@@ -213,7 +211,7 @@ void CResourceManager::loadChildren(const std::string &filename)
 }
 
 
-bool CResourceManager::waitNetworkMessage(bool stopFlag,bool &received, bool displayBackground)
+bool CResourceManagerLan::waitNetworkMessage(bool stopFlag,bool &received, bool displayBackground)
 {
 		C3DTask::instance().update();
 		CTimeTask::instance().update();
@@ -261,7 +259,7 @@ bool CResourceManager::waitNetworkMessage(bool stopFlag,bool &received, bool dis
 }
 
 
-void CResourceManager::refresh(const string &filename)
+void CResourceManagerLan::refresh(const string &filename)
 {
 	string fn = CFile::getFilename(filename);
 	filename2LastCRCCheckTime::iterator it = CRCCheckTimes.find(fn);
@@ -272,13 +270,13 @@ void CResourceManager::refresh(const string &filename)
 	}
 }
 
-string CResourceManager::get(const string &filename)
+string CResourceManagerLan::get(const string &filename)
 {
 	bool ok;
 	return get(filename, ok);
 }
 
-string CResourceManager::get(const string &filename, bool &ok)
+string CResourceManagerLan::get(const string &filename, bool &ok)
 {
 	string unk;
 	ok = false;
@@ -309,7 +307,7 @@ string CResourceManager::get(const string &filename, bool &ok)
 	float updatePercent = 0;
 	guiSPG<CGuiFrame> mainFrame = 0;
 
-	//nlinfo("CResourceManager get(%s)",filename.c_str());
+	//nlinfo("CResourceManagerLan get(%s)",filename.c_str());
 
 	if(!path.empty())
 	{
@@ -332,7 +330,7 @@ string CResourceManager::get(const string &filename, bool &ok)
 				checkingFilename->text = fn;
 				CGuiObjectManager::instance().objects.push_back(mainFrame);
 
-				nlinfo("CResourceManager::get(%s) sending RequestCRCKey and waiting result",fn.c_str());
+				nlinfo("CResourceManagerLan::get(%s) sending RequestCRCKey and waiting result",fn.c_str());
 				CHashKey hashKey = getSHA1(path);
 				CNetMessage msgout(CNetMessage::RequestCRCKey);
 				msgout.serial(fns);
@@ -370,7 +368,7 @@ string CResourceManager::get(const string &filename, bool &ok)
 		}
 		else
 		{
-			nlinfo("CResourceManager::get %s : key diferent",fn.c_str());			
+			nlinfo("CResourceManagerLan::get %s : key diferent",fn.c_str());			
 		}
 	}
 
@@ -466,7 +464,7 @@ string CResourceManager::get(const string &filename, bool &ok)
 			updatePercent = ((float)part) / FileSize;
 		if(part>FileSize)
 		{
-			nlwarning("CResourceManager::get() received more data than expected");
+			nlwarning("CResourceManagerLan::get() received more data than expected");
 			break;
 		}
 	}
@@ -505,4 +503,3 @@ string CResourceManager::get(const string &filename, bool &ok)
 	return destfn;
 }
 
-#endif

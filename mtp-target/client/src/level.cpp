@@ -51,7 +51,7 @@ extern "C"
 #include "module_lua_proxy.h"
 #include "particles_lua_proxy.h"
 #include "config_file_task.h"
-#include "resource_manager.h"
+#include "resource_manager2.h"
 #include "../../common/lua_nel.h"
 #include "../../common/lua_utility.h"
 
@@ -433,7 +433,7 @@ CLevel::~CLevel()
 		*/
 
 	if(changed())
-		CResourceManager::instance().refresh(FileName);
+		CResourceManagerLan::instance().refresh(FileName);
 
 	CEditorTask::instance().reset();
 

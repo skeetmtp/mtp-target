@@ -27,7 +27,7 @@
 #include "3d_task.h"
 #include "time_task.h"
 #include "background_task.h"
-#include "resource_manager.h"
+#include "resource_manager2.h"
 
 
 //

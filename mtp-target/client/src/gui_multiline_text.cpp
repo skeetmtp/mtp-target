@@ -29,7 +29,7 @@
 #include "time_task.h"
 #include "gui_object.h"
 #include "font_manager.h"
-#include "resource_manager.h"
+#include "resource_manager2.h"
 #include "gui_multiline_text.h"
 
 

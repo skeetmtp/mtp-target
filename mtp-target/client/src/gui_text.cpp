@@ -26,7 +26,7 @@
 
 #include "3d_task.h"
 #include "time_task.h"
-#include "resource_manager.h"
+#include "resource_manager2.h"
 #include "font_manager.h"
 #include "gui_text.h"
 #include "gui_multiline_text.h"

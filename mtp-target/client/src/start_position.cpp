@@ -45,7 +45,7 @@
 #include "entity.h"
 #include "network_task.h"
 #include "mtp_target.h"
-#include "resource_manager.h"
+#include "resource_manager2.h"
 #include "level_manager.h"
 
 #include "stdpch.h"

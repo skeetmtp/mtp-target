@@ -25,7 +25,7 @@
 #include "stdpch.h"
 #include "level_manager.h"
 #include "entity_lua_proxy.h"
-#include "resource_manager.h"
+#include "resource_manager2.h"
 
 
 //

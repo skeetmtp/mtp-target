@@ -36,7 +36,7 @@
 #include "entity_manager.h"
 #include "background_task.h"
 #include "config_file_task.h"
-#include "resource_manager.h"
+#include "resource_manager2.h"
 #include "level_manager.h"
 
 

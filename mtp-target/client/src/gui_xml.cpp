@@ -24,7 +24,7 @@
 
 #include "stdpch.h"
 
-#include "resource_manager.h"
+#include "resource_manager2.h"
 #include "gui_xml.h"
 #include "gui.h"
 

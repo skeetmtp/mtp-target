@@ -30,7 +30,7 @@
 #include "level.h"
 #include "mtp_target.h"
 #include "level_manager.h"
-#include "resource_manager.h"
+#include "resource_manager2.h"
 #include "entity_manager.h"
 #include "config_file_task.h"
 
@@ -106,7 +106,7 @@ void CLevelManager::loadLevel(const std::string &fileName)
 	//nlassert(CurrentLevel->valid());
 	
 	if(CConfigFileTask::instance().configFile().getVar("ForceCRCCheck").asInt())
-		CResourceManager::instance().clearCrcCheckTimes();
+		CResourceManagerLan::instance().clearCrcCheckTimes();
 }
 
 void CLevelManager::display(CLog *log) const

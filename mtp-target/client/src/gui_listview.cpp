@@ -24,7 +24,7 @@
 
 #include "3d_task.h"
 #include "time_task.h"
-#include "resource_manager.h"
+#include "resource_manager2.h"
 #include "gui_listview.h"
 #include <nel/3d/u_material.h>
 #include "gui_xml.h"
