@@ -146,7 +146,6 @@ int CEntityProxy::displayText(lua_State *luaSession)
 	float x = (float)luaL_checknumber(luaSession,1);
 	float y = (float)luaL_checknumber(luaSession,2);
 	float s = (float)luaL_checknumber(luaSession,3);
-	
 
 	uint8 r = (uint8 )luaL_checknumber(luaSession,4);
 	uint8 g = (uint8 )luaL_checknumber(luaSession,5);

@@ -70,6 +70,8 @@ CLevelManager::CLevelManager()
 {
 	NextLevelId = 0;
 	CurrentLevel = 0;
+	LevelSessionCount = 0;
+	MaxLevelSessionCount = 0;
 }
 
 void CLevelManager::init()
@@ -93,8 +95,18 @@ void CLevelManager::release()
 
 bool CLevelManager::newLevel()
 {
+	LevelSessionCount++;
 	pausePhysics();
 	CEntityManager::instance().reset();
+
+
+	if(LevelSessionCount>MaxLevelSessionCount && CurrentLevel)
+	{
+		nlinfo("newLevel() : keeping level : '%s'",CurrentLevel->name().c_str());
+		resumePhysics();	
+		return true;	
+	}
+
 	uint i;
 	nlinfo("Find a new level");
 
@@ -111,6 +123,7 @@ bool CLevelManager::newLevel()
 	}
 
 	nlassert(levels.size() > 0);
+
 
 	if(CurrentLevel)
 	{
@@ -150,6 +163,18 @@ string CLevelManager::levelName()
 		return "NoLevel";
 }
 
+
+uint32  CLevelManager::levelSessionCount()
+{
+	return LevelSessionCount;
+}
+
+void  CLevelManager::maxLevelSessionCount(uint32 levelCount)
+{
+	MaxLevelSessionCount = levelCount;	
+	LevelSessionCount = 1;
+}
+
 //
 // Commands
 //
@@ -168,3 +193,4 @@ NLMISC_DYNVARIABLE(string, CurrentLevel, "")
 		*pointer = CLevelManager::instance().levelName();
 	}
 }
+

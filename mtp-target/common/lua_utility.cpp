@@ -95,12 +95,30 @@ static int lua_ALERT(lua_State *L)
 	return 0;
 }
 
+static int lua_ERRORMESSAGE(lua_State *L)
+{
+	nlwarning("lua ERROR");
+	return 0;
+}
+
 static int lua_exit(lua_State *L)
 {
 	const int exitCode = (int) lua_tonumber(L,-1);
 	lua_pop(L,1);
 	nlinfo("LUA : exit(%d)",exitCode);
 	return 0;
+}
+
+static int mydefault_panic (lua_State *L) {
+	nlwarning("lua panic");
+	return 0;
+}
+
+static int myTB = 0;
+
+int luaGetTB()
+{
+	return myTB;
 }
 
 lua_State *luaOpen()
@@ -124,7 +142,16 @@ lua_State *luaOpen()
 	lua_register(L, "warn", lua_nlwarning);
 	lua_register(L, "error", lua_nlwarning);
 	lua_register(L, "_ALERT", lua_ALERT);
+	lua_register(L, "_TRACEBACK ", lua_ERRORMESSAGE);
+	lua_register(L, "_ERRORMESSAGE ", lua_ERRORMESSAGE);
 	lua_register(L, "exit", lua_exit);
+	lua_atpanic(L,mydefault_panic);
+
+	lua_settop(L, 0);
+	lua_pushliteral(L, "_TRACEBACK");
+	lua_gettable(L, LUA_GLOBALSINDEX);   // get traceback function
+	myTB = lua_gettop(L);
+	
 
 	Luna<CLuaVector>::Register(L);
 	Luna<CLuaAngleAxis>::Register(L);

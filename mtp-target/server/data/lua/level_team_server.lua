@@ -1,5 +1,6 @@
 ---------------------- Level  ----------------------
 
+setMaxLevelSessionCount(2);
 
 
 ---------------------- Entity ----------------------
@@ -38,6 +39,7 @@ function Entity:parent()
 end
 
 function Entity:init()
+  self:displayText(0,7,1,255,255,255,"aa",20);
   local parent = CEntity:new();
   self:setCurrentScore(0);
   self:setUserData(parent);

@@ -124,7 +124,7 @@ void CHudTask::render()
 	{
 		CHudMessage m = *it;
 		double time = CTimeTask::instance().time();
-		if(time>it->endTime)
+		if(it->endTime!=0.0 && time>it->endTime)
 		{
 			it2delete = it;
 			it++;

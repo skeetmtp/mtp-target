@@ -54,8 +54,10 @@ public:
 	lua_State *session();
 
 private:
-	static int CLuaEngine::lua_ALERT(lua_State *L);
-	static int CLuaEngine::getSessionId(lua_State *L);
+	static int lua_ALERT(lua_State *L);
+	static int getSessionId(lua_State *L);
+	static int getLevelSessionCount(lua_State *L);
+	static int setMaxLevelSessionCount(lua_State *L);
 	static uint32 _sessionId;
 		
 	lua_State *_luaSession;

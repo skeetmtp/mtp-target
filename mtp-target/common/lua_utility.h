@@ -119,7 +119,7 @@ void luaGetVariable(lua_State *L, T &var)
 #define CHECK_BEFORE(L) lua_pushnumber(L, 1234.5678)
 #define CHECK_AFTER(L) { nlassert(lua_tonumber(L, -1) == 1234.5678); lua_pop(L, 1); }
 
-
+int luaGetTB();
 
 
 

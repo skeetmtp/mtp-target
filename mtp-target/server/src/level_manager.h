@@ -50,11 +50,15 @@ public:
 
 	// return true if a current level exists
 	bool haveCurrentLevel() const { return CurrentLevel != 0; }
-
+	uint32 levelSessionCount();
+	void maxLevelSessionCount(uint32 levelCount);
+	
 private:
 
 	uint8						NextLevelId;
-
+	uint32						MaxLevelSessionCount;
+	uint32						LevelSessionCount;
+		
 	CLevel						*CurrentLevel;
 
 	// private ctor due to singleton pattern

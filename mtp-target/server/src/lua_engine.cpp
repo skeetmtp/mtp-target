@@ -115,14 +115,20 @@ void CLuaEngine::init(const std::string &filename)
 	_sessionId++;
 	_sessionId = _sessionId % 1024;
 	
+	
+	if(session())
+	{
+		lua_register(session(), "getSessionId", getSessionId);
+		lua_register(session(), "getLevelSessionCount", getLevelSessionCount);
+		lua_register(session(), "setMaxLevelSessionCount", setMaxLevelSessionCount);
+	}
+	
 	Lunar<CModuleProxy>::Register(session());
 	Lunar<CEntityProxy>::Register(session());
+
 	string path = CPath::lookup("helpers.lua", false, false);
 	luaLoad(session(),path);
 	luaLoad(session(),filename);
-
-	if(session())
-		lua_register(session(), "getSessionId", getSessionId);
 	
 }
 
@@ -195,6 +201,19 @@ void CLuaEngine::entityWaterCollideEvent(CEntity *entity)
 int CLuaEngine::getSessionId(lua_State *L)
 {
 	lua_pushnumber(L,_sessionId); 
+	return 1;
+}
+
+int CLuaEngine::getLevelSessionCount(lua_State *L)
+{
+	lua_Number levelSessionCount = 0;
+	lua_pushnumber(L,levelSessionCount); 
+	return 1;
+}
+
+int CLuaEngine::setMaxLevelSessionCount(lua_State *L)
+{
+	lua_Number maxLevelSessionCount = luaL_checknumber(L,1);
 	return 1;
 }
 

@@ -46,7 +46,10 @@ public:
 		this->scale = scale;
 		this->message = message;
 		this->col = col;
-		this->endTime = duration + CTimeTask::instance().time();
+		if(duration==0)
+			this->endTime = 0;
+		else
+			this->endTime = duration + CTimeTask::instance().time();
 	}
 	virtual ~CHudMessage()
 	{

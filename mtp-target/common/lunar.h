@@ -93,8 +93,8 @@ public:
     if (status) {
       const char *msg = lua_tostring(L, -1);
       if (msg == NULL) msg = "(error with no message)";
-      lua_pushfstring(L, "%s:%s status = %d\n%s",
-                      T::className, method, status, msg);
+	  nlwarning("lunar call error : %s:%s status = %d\n%s", T::className, method, status, msg);
+      lua_pushfstring(L, "%s:%s status = %d\n%s", T::className, method, status, msg);
       lua_remove(L, base);             // remove old message
       return -1;
     }
