@@ -391,6 +391,8 @@ static void cbUpdateElement(CNetMessage &msgin)
 
 	if(elementType==CEditableElementCommon::Module)
 		CLevelManager::instance().currentLevel().updateModule(elementId,pos,eulerRot,selectedBy);
+	if(elementType==CEditableElementCommon::StartPosition)
+		CLevelManager::instance().currentLevel().updateStartPoint(elementId,pos,eulerRot,selectedBy);
 }
 	
 static void cbReady(CNetMessage &msgin)
