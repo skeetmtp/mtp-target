@@ -878,7 +878,7 @@ bool CEntityManager::everyBodyReady()
 	// send the message to all entities
 	for(it = acces.value().begin(); it != acces.value().end(); it++)
 	{
-		if(!(*it)->Ready)
+		if(!(*it)->Ready && (*it)->type()==CEntity::Client)
 		{
 			return false;
 		}

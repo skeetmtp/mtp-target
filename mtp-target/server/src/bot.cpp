@@ -54,6 +54,7 @@ CBot::CBot(uint8 eid, const string &name, bool isAutomaticBot) :
 {
 	// no random color for bot, it s too ugly :) Color.set(rand()%255, rand()%255, rand()%255);
 	Color.set(255, 255, 255);
+	Ready = true;
 }
 
 CBot::~CBot()
