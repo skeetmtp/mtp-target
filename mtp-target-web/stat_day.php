@@ -53,14 +53,14 @@ include_once("stat_map_graph_display.php");
 		drawGraphLink($html_fp,$result,true,0,24,sprintf("%s : $user_name games by hour",date("M-d-Y", mktime(0, 0, 0, $monthToStat, $dayToStat, $yearToStat))),"","Hour",$link);
 	}
 
-	if($user_id==0)
+	if($uid==0)
 	{	
 		$requete = "SELECT MAX(NbPlayers), HOUR(Date) as c FROM session WHERE TO_DAYS('$dayString')=TO_DAYS(session.Date) GROUP BY c;";
 		$result=exec_game_db_requete($requete);
 		drawGraphLink($html_fp,$result,true,0,24,sprintf("%s : max players on ONE server by hour",date("M-d-Y", mktime(0, 0, 0, $monthToStat, $dayToStat, $yearToStat))),"","Hour",$link);
 	}
 
-	if($user_id==0)
+	if($uid==0)
 		$requete = "SELECT count(*),map.Id,map.LevelName FROM session,map WHERE map.LevelName=session.LevelName AND TO_DAYS('$dayString')=TO_DAYS(session.Date) GROUP BY session.LevelName;";
 	else
 		$requete = "SELECT count(*),map.Id,map.LevelName FROM user_session,session,map WHERE map.LevelName=session.LevelName AND TO_DAYS('$dayString')=TO_DAYS(session.Date) AND session.Id=user_session.SessionId AND user_session.UId=$uid GROUP BY session.LevelName;";
