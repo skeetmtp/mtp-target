@@ -62,7 +62,7 @@
 					printf("<td><a href=\"../user_texture/$entry\"><img src=\"../user_texture/$entryjpg\" ALT=\"file\"></a></td>");
 					echo "<td><table>";
 					echo "<tr><td>Name: $entry</td></tr>";
-					echo "<tr><td>Uploaded: $moddate</td></tr>
+					echo "<tr><td>Uploaded: $moddate</td></tr>";
 					echo "<tr><td>Add the following line in mtp_target.cfg</td></tr>";
 					echo "<tr><td>EntityTexture = \"$cfgEntry\";</td></tr>";
 					echo "</table>";
