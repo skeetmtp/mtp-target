@@ -23,9 +23,10 @@
 //
 
 #include "stdpch.h"
-#include "entity_lua_proxy.h"
-#include "lua_engine.h"
 #include "network.h"
+#include "lua_engine.h"
+#include "level_manager.h"
+#include "entity_lua_proxy.h"
 
 
 //
@@ -48,6 +49,13 @@ Lunar<CEntityProxy>::RegType CEntityProxy::methods[] =
 		bind_method(CEntityProxy, getUserData),	
 		bind_method(CEntityProxy, setUserData),	
 		bind_method(CEntityProxy, getName),	
+		bind_method(CEntityProxy, getOpenCloseCount),	
+		bind_method(CEntityProxy, setOpenCloseCount),	
+		bind_method(CEntityProxy, getOpenCloseMax),	
+		bind_method(CEntityProxy, setOpenCloseMax),	
+		bind_method(CEntityProxy, getPos),	
+		bind_method(CEntityProxy, setPos),	
+		bind_method(CEntityProxy, getStartPointPos),	
 		bind_method(CEntityProxy, getStartPointId),	
 		bind_method(CEntityProxy, setStartPointId),	
 		bind_method(CEntityProxy, getIsOpen),	
@@ -98,6 +106,57 @@ int CEntityProxy::setUserData(lua_State *luaSession)
 	LuaUserData = lua_touserdata(luaSession, 1); // get arg
 	LuaUserDataRef = lua_ref(luaSession,1); //get ref id and lock it
 	return 0; // no return value
+}
+
+int CEntityProxy::getOpenCloseMax(lua_State *luaSession)
+{
+	lua_Number moc = _entity->MaxOpenClose;
+	lua_pushnumber(luaSession, moc); 
+	return 1;
+}
+
+int CEntityProxy::setOpenCloseMax(lua_State *luaSession)
+{
+	uint32 moc = (uint32)luaL_checknumber(luaSession,1);
+	_entity->MaxOpenClose = moc;
+	return 0;
+}
+
+int CEntityProxy::getOpenCloseCount(lua_State *luaSession)
+{
+	lua_Number noc = _entity->NbOpenClose;
+	lua_pushnumber(luaSession, noc); 
+	return 1;
+}
+
+int CEntityProxy::setOpenCloseCount(lua_State *luaSession)
+{
+	uint32 noc = (uint32)luaL_checknumber(luaSession,1);
+	_entity->NbOpenClose = noc;
+	return 0;
+}
+
+int CEntityProxy::getPos(lua_State *luaSession)
+{
+	entityPos = _entity->position();
+	Lunar<CLuaVector>::push(luaSession,&entityPos);
+	return 1;
+}
+
+int CEntityProxy::setPos(lua_State *luaSession)
+{
+	CLuaVector pos  = *Lunar<CLuaVector>::check(luaSession,-1);
+	nlinfo("set pos (%f %f %f)",pos.x,pos.y,pos.z);
+	_entity->position(pos);
+	return 0;
+}
+
+int CEntityProxy::getStartPointPos(lua_State *luaSession)
+{
+	lua_Number id = _entity->StartingPointId;
+	startPos = CLevelManager::instance().currentLevel().getStartPoint((uint32)id)->position();
+	Lunar<CLuaVector>::push(luaSession,&startPos);
+	return 1;
 }
 
 int CEntityProxy::getStartPointId(lua_State *luaSession)

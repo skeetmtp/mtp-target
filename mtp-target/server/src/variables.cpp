@@ -86,7 +86,7 @@ void initVariables()
 	IMP_VAR(TimeBeforeRestart);
 	IMP_VAR(TimeBeforeCheck);
 	IMP_VAR(MinVelBeforeEnd);
-	IMP_VAR(MaxOpenClose);
+	IMP_VAR(DefaultMaxOpenClose);
 	IMP_VAR(BounceWater);
 	IMP_VAR(BounceVelWater);
 	IMP_VAR(BounceClient);

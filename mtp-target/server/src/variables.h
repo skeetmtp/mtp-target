@@ -70,7 +70,7 @@ DEC_VAR(TimeBeforeStart);
 DEC_VAR(TimeBeforeRestart);
 DEC_VAR(TimeBeforeCheck);
 DEC_VAR(MinVelBeforeEnd);
-DEC_VAR(MaxOpenClose);
+DEC_VAR(DefaultMaxOpenClose);
 DEC_VAR(BounceWater);
 DEC_VAR(BounceVelWater);
 DEC_VAR(BounceClient);

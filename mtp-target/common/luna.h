@@ -1,4 +1,4 @@
-
+#if 0
 #ifndef LUNA
 #define LUNA
 
@@ -119,4 +119,5 @@ private:
   }
 };
 
+#endif
 #endif

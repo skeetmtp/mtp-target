@@ -185,7 +185,7 @@ void optionCallback(const string &var, const string &val)
 {
 	bool found = false;
 
-	SET_VAR(MaxOpenClose);
+	SET_VAR(DefaultMaxOpenClose);
 	SET_VAR(TimeBeforeStart);
 	SET_VAR(TimeBeforeRestart);
 	SET_VAR(TimeBeforeCheck);
@@ -388,7 +388,7 @@ static void nearCallback(void *data, dGeomID o1, dGeomID o2)
 						nlinfo("entity %s just frozen because touch a scene in open mode", entity->name().c_str());
 
 					entity->CurrentScore = 0;
-					entity->NbOpenClose = (uint32) MaxOpenClose;
+					entity->NbOpenClose = entity->MaxOpenClose;
 					entity->FreezeCommand = true;
 					entity->InGame = false;
 					dBodySetLinearVel(entity->Body, 0.0f, 0.0f, 0.0f);
@@ -408,7 +408,7 @@ static void nearCallback(void *data, dGeomID o1, dGeomID o2)
 					if(entity->OpenClose)
 						entity->InGame = false;
 
-					entity->NbOpenClose = (uint32) MaxOpenClose;
+					//entity->NbOpenClose = entity->MaxOpenClose;
 					//entity->FreezeCommand = true;
 					dBodySetLinearVel(entity->Body, 0.0f, 0.0f, 0.0f);
 					entity->Force = CVector::Null;
@@ -546,7 +546,7 @@ class PhysicsThread : public IRunnable
 								//nlinfo(">> %f %f %f",e->ForceX, e->ForceY, e->ForceZ);
 							}
 
-							//if(e->NbOpenClose >= MaxOpenClose)
+							//if(e->NbOpenClose >= e->MaxOpenClose)
 							if(e->Friction)
 							{
 								if(e->Friction>1000)
@@ -558,7 +558,7 @@ class PhysicsThread : public IRunnable
 						}
 						e->Friction = 0;
 	//					e->jointed = false;
-						if(e->type()==CEntity::Bot && !e->FreezeCommand && e->InGame && e->NbOpenClose<MaxOpenClose)
+						if(e->type()==CEntity::Bot && !e->FreezeCommand && e->InGame && e->NbOpenClose<e->MaxOpenClose)
 						{
 							CVector v;
 							CBot *b = (CBot *)e;
@@ -651,7 +651,7 @@ void initPhysics()
 	nlinfo("set gravity : off");
 	//dWorldSetERP(World,0.2f);
 	//decrease CFM to prevent bodies from follow module edge when 2 modules are in contact
-	dWorldSetCFM(World,1e-2); //default is 1e-5
+	dWorldSetCFM(World,(float)1e-2); //default is 1e-5
 	
 	{
 		CSynchronized<dSpaceID>::CAccessor acces(&Space);
@@ -742,7 +742,7 @@ NLMISC_COMMAND(displayLevel, "display the current level", "")
 	log.displayNL("LevelName = %s (from %s)", LevelName.c_str(), (LevelNameFromCfg?"cfg":"level"));
 	log.displayNL("Author = %s (from %s)", Author.c_str(), (AuthorFromCfg?"cfg":"level"));
 	
-	DISP_VAR(MaxOpenClose);
+	DISP_VAR(DefaultMaxOpenClose);
 	DISP_VAR(TimeBeforeStart);
 	DISP_VAR(TimeBeforeRestart);
 	DISP_VAR(TimeBeforeCheck);

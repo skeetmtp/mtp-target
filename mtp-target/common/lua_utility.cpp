@@ -153,9 +153,9 @@ lua_State *luaOpen()
 	myTB = lua_gettop(L);
 	
 
-	Luna<CLuaVector>::Register(L);
-	Luna<CLuaAngleAxis>::Register(L);
-	Luna<CLuaRGBA>::Register(L);
+	Lunar<CLuaVector>::Register(L);
+	Lunar<CLuaAngleAxis>::Register(L);
+	Lunar<CLuaRGBA>::Register(L);
 	
 	return L;
 }

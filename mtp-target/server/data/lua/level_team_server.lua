@@ -75,6 +75,11 @@ function entityEntityCollideEvent ( entity1, entity2 )
 end
 
 function entityWaterCollideEvent ( entity )
+  pos = CVector(1,2,3.456);
+  pos = entity:getStartPointPos();
+  entity:setPos(pos);
+  entity:setOpenCloseCount(0);
+  --entity:setPos(entity:getStartPointPos());
 end
 
 ---------------------- Module ----------------------
@@ -118,7 +123,8 @@ function Module:collide( entity )
   --print(entity:getName());
   --print(entity:parent():getTeam());
   --entity:setCurrentScore(self:getScore());
-  self:parent():disable();
+  
+  --self:parent():disable();
 end
 
 

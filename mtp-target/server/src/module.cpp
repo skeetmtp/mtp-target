@@ -231,11 +231,18 @@ void CModule::enabled(bool e)
 
 	CModuleCommon::enabled(e);
 
-	CNetMessage msgout(CNetMessage::ShowElement);
+	CNetMessage msgout(CNetMessage::EnableElement);
 	msgout.serial(_id);
 	msgout.serial(e);
 	CNetwork::instance().send(msgout);
 	nlinfo("enable element %s to %s",name().c_str(),e?"true":"false");
+	pausePhysics();
+	if(e)
+		dGeomEnable(Geom);
+	else
+		dGeomDisable(Geom);
+	resumePhysics();
+	
 }
 
 

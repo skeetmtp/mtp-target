@@ -76,6 +76,7 @@ void CEntity::init ()
 	Time = 0.0f;
 	OpenClose = false;
 	NbOpenClose = 0;
+	MaxOpenClose = (uint32)DefaultMaxOpenClose;
 	FreezeCommand = true;
 	InGame = false;
 	Ready = false;
@@ -267,7 +268,7 @@ bool CEntity::openClose()
 
 	if(NbOpenClose >= MaxOpenClose)
 	{
-		nlinfo("Client '%s' tries to %s but he reached the MaxOpenClose limit", Name.c_str(), (OpenClose?"open":"close"));
+		nlinfo("Client '%s' tries to %s but he reached the MaxOpenClose limit (%d/%d)", Name.c_str(), (OpenClose?"open":"close"),NbOpenClose,MaxOpenClose);
 		return false;
 	}
 
@@ -340,6 +341,14 @@ void CEntity::setForce(const CVector &clientForce)
 	Accel = 0.0f;
 }
 
+void CEntity::position(NLMISC::CVector pos)
+{
+	Pos = pos;
+	pausePhysics();
+	dBodySetPosition(Body, Pos.x, Pos.y, Pos.z);
+	dGeomSetPosition(Geom, Pos.x, Pos.y, Pos.z);
+	resumePhysics();
+}
 
 //
 // Commands

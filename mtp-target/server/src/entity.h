@@ -76,7 +76,10 @@ public:
 	void name(const std::string &name);
 	void startPointId(uint8 id);
 	bool isAdmin() const;
-		
+
+	void position(NLMISC::CVector pos);
+	NLMISC::CVector  position() {return Pos;};
+	
 	TEntity					 type() const { return Type; }
 
 	bool					 spectator() const { return Spectator; }
@@ -101,6 +104,7 @@ public:
 
 	bool				 OpenClose;			// open = true, close = false (thx to cahanta)
 	uint32				 NbOpenClose;		// how many time did the client press space key
+	uint32				 MaxOpenClose;		// how many time did the client can press space key
 	dBodyID				 Body;
 	dGeomID				 Geom;
 	bool				 FreezeCommand;

@@ -79,6 +79,8 @@ public:
 	CModule();
 	virtual ~CModule();
 	
+	virtual void	enabled(bool b);
+
 	virtual void init(const std::string &name,uint8 id, NLMISC::CVector position, NLMISC::CAngleAxis rotation);
 	virtual void renderSelection();
 	virtual void update(NLMISC::CVector pos,NLMISC::CVector rot);

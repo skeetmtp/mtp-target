@@ -141,7 +141,7 @@ void luaGetVector(lua_State *L, std::vector<T> &var)
 template<class T>
 void luaGetVariable(lua_State *L, T &var)
 {
-	var = *Luna<T>::check(L, -1);
+	var = *Lunar<T>::check(L, -1);
 }
 
 #define CHECK_BEFORE(L) lua_pushnumber(L, 1234.5678)

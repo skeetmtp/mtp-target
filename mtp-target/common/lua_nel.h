@@ -36,6 +36,7 @@ extern "C"
 #include <nel/misc/rgba.h>
 
 #include "luna.h"
+#include "lunar.h"
 
 //
 // Classes
@@ -44,6 +45,7 @@ extern "C"
 class CLuaVector : public NLMISC::CVector
 {
 public:
+	CLuaVector(NLMISC::CVector v):CVector(v) { }
 	CLuaVector() { }
 	CLuaVector(float	_x, float _y, float _z):CVector(_x,_y,_z) { }
 	
@@ -55,7 +57,7 @@ public:
 	}
 	
 	static const char className[];
-	static Luna<CLuaVector>::RegType methods[];
+	static Lunar<CLuaVector>::RegType methods[];
 };
 
 
@@ -74,7 +76,7 @@ public:
 	}
 	
 	static const char className[];
-	static Luna<CLuaAngleAxis>::RegType methods[];
+	static Lunar<CLuaAngleAxis>::RegType methods[];
 };
 
 class CLuaRGBA : public NLMISC::CRGBA
@@ -92,7 +94,7 @@ public:
 	}
 	
 	static const char className[];
-	static Luna<CLuaRGBA>::RegType methods[];
+	static Lunar<CLuaRGBA>::RegType methods[];
 };
 
 

@@ -99,7 +99,7 @@ void CModule::init(const string &name,uint8 id, CVector position, CAngleAxis rot
 	CModuleCommon::init(name,id,position,rotation);
 
 	// Get collision faces
-	loadMesh(ShapeName, Vertices, Normals, Indices,false);
+//	loadMesh(ShapeName, Vertices, Normals, Indices,false);
 	
 	ShapeName = CResourceManager::instance().get(Name+".shape");
 	NbFaces = loadMesh(ShapeName, Vertices, Normals, Indices);
@@ -160,4 +160,19 @@ void CModule::update(NLMISC::CVector pos,NLMISC::CVector rot)
 {
 	//TODO rot
 	position(pos);
+}
+
+
+void CModule::enabled(bool b)
+{
+	if(Enabled==b) return;
+
+	CModuleCommon::enabled(b);
+
+	if(b)
+		Mesh->show();
+	else
+		Mesh->hide();
+
+	nlinfo("%s %s",b?"show":"hide",name().c_str());
 }

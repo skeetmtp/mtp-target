@@ -76,6 +76,7 @@ CModuleCommon::CModuleCommon() : CEditableElementCommon()
 	Score = 0;
 	Accel = 0;
 	Friction = 0;
+	Enabled = true;
 }
 
 CModuleCommon::~CModuleCommon()

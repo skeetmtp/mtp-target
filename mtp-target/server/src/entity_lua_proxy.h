@@ -52,6 +52,13 @@ public:
 	int setUserData(lua_State *luaSession);
 	int getIsOpen(lua_State *luaSession);
 	int setIsOpen(lua_State *luaSession);
+	int getOpenCloseCount(lua_State *luaSession);
+	int setOpenCloseCount(lua_State *luaSession);
+	int getOpenCloseMax(lua_State *luaSession);
+	int setOpenCloseMax(lua_State *luaSession);
+	int getPos(lua_State *luaSession);
+	int setPos(lua_State *luaSession);
+	int getStartPointPos(lua_State *luaSession);
 	int getStartPointId(lua_State *luaSession);
 	int setStartPointId(lua_State *luaSession);
 	
@@ -65,6 +72,8 @@ private:
 	void				*LuaUserData;
 	uint32				 LuaUserDataRef;
 	CEntity *_entity;
+	CLuaVector startPos;
+	CLuaVector entityPos;
 };
 
 

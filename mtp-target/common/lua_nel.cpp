@@ -47,21 +47,21 @@ using namespace NLMISC;
 
 const char CLuaVector::className[] = "CVector";
 
-Luna<CLuaVector>::RegType CLuaVector::methods[] = {
+Lunar<CLuaVector>::RegType CLuaVector::methods[] = {
 	{0,0}
 };
 
 
 const char CLuaAngleAxis::className[] = "CAngleAxis";
 
-Luna<CLuaAngleAxis>::RegType CLuaAngleAxis::methods[] = {
+Lunar<CLuaAngleAxis>::RegType CLuaAngleAxis::methods[] = {
 	{0,0}
 };
 
 
 const char CLuaRGBA::className[] = "CRGBA";
 
-Luna<CLuaRGBA>::RegType CLuaRGBA::methods[] = {
+Lunar<CLuaRGBA>::RegType CLuaRGBA::methods[] = {
 	{0,0}
 };
 
