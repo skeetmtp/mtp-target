@@ -15,8 +15,6 @@ fogDistMin = 0;
 fogDistMax = 150;
 fogColor = clearColor;
 
-cameraMinDistFromStartPointToMove = 1.01;
-
 Cameras =
 {
 	CVector(3, 0, 10),

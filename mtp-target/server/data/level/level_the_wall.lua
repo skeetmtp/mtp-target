@@ -19,8 +19,6 @@ ClientBounce = 1;
 ClientBounceCoef = 0;
 ClientBounceVel = 1;
 
-cameraMinDistFromStartPointToMove = 1.0;
-
 Cameras =
 {
 	CVector(0, 3, 10),
