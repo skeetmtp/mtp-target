@@ -109,15 +109,21 @@ static void cbLogin(CNetMessage &msgin)
 	CRGBA color;
 	string texture;
 	bool spec;
+	bool oc;
 
 	msgin.serial(self, eid, name, totalScore);
 	msgin.serial(color, texture, spec);
-	nlinfo("NET: cbLogin self=%d eid=%hu name='%s' totalScore='%d' color=(%d,%d,%d) texture='%s' spec=%d", 
-		self, (uint16)eid, name.c_str(), totalScore, color.R, color.G, color.B, texture.c_str(), spec);
+	msgin.serial(oc);
+	nlinfo("NET: cbLogin self=%d eid=%hu name='%s' totalScore='%d' color=(%d,%d,%d) texture='%s' spec=%d oc=%d", 
+		self, (uint16)eid, name.c_str(), totalScore, color.R, color.G, color.B, texture.c_str(), spec, oc);
 		
 	nldebug("player list.size = %d", CEntityManager::instance().size());
 
 	CEntityManager::instance().add(eid, name, totalScore, color, texture, spec, self);
+
+	if(oc)
+		CEntityManager::instance()[eid].swapOpenClose();
+
 
 	if(self)
 	{
@@ -129,7 +135,7 @@ static void cbLogin(CNetMessage &msgin)
 		nlinfo("levelName='%s' timeBeforeTimeout=%f", levelName.c_str(), timeBeforeTimeout);
 		
 		if (!levelName.empty())
-			CMtpTarget::instance().startSession(0, timeBeforeTimeout/1000.0f, levelName, "", "");
+			CMtpTarget::instance().startSession(0, timeBeforeTimeout/1000.0f, levelName, "", "", true);
 		else
 			CMtpTarget::instance().timeBeforeTimeout(timeBeforeTimeout/1000.0f);
 	}

@@ -172,11 +172,14 @@ uint8 CEntityManager::findPreviousEId(uint8 eid)
 
 void CEntityManager::startSession()
 {
-	for(uint i = 0; i < 256; i++)
+	if(!CMtpTarget::instance().isSpectatorOnly()) //don't close everybody if we start session being spectator
 	{
-		if(entities()[i]->type() != CEntity::Unknown)
+		for(uint i = 0; i < 256; i++)
 		{
-			entities()[i]->close();
+			if(entities()[i]->type() != CEntity::Unknown)
+			{
+				entities()[i]->close();
+			}
 		}
 	}
 }

@@ -43,6 +43,7 @@ using namespace NL3D;
 
 static bool			 CaptureState = false;
 
+CQuat ControlerFreeLookRot(0,0,0,0);
 CVector ControlerFreeLookPos(0,0,0);
 CMatrix ControlerCamMatrix;
 
@@ -174,6 +175,7 @@ void CControler::update()
 			
 			CMatrix m2;
 			m2.identity();
+			m2.rotate(ControlerFreeLookRot);
 			m2.rotateZ(mouseX);
 			m2.rotateX(mouseY);
 			dv = m2 * dv;
@@ -181,9 +183,10 @@ void CControler::update()
 
 			ControlerCamMatrix.identity();
 			ControlerCamMatrix.translate(ControlerFreeLookPos);
+			ControlerCamMatrix.rotate(ControlerFreeLookRot);
 			ControlerCamMatrix.rotateZ(mouseX);
 			ControlerCamMatrix.rotateX(mouseY);
-//			nlinfo("set camera matrix");
+			//nlinfo("set camera matrix q = %f %f %f : %f",ControlerFreeLookRot.getAxis().x,ControlerFreeLookRot.getAxis().y,ControlerFreeLookRot.getAxis().z,ControlerFreeLookRot.getAngle());
 			C3DTask::instance().scene().getCam().setMatrix(ControlerCamMatrix);
 		}
 		else

@@ -120,6 +120,7 @@ void CEntity::swapOpenClose()
 		ObjMatrix.rotateX(1.0f);
 		ObjMatrix.rotateY(1.0f);
 	}
+	nlinfo("%s is now %s",name().c_str(),OpenClose?"open":"close");
 
 }
 
@@ -429,7 +430,10 @@ void CEntity::load3d()
 		if(!TextureFilename.empty())// && i == 0)
 			CloseMesh.getMaterial(i).setTextureFileName(TextureFilename);
 	}
-	CloseMesh.show();
+	if(OpenClose)
+		CloseMesh.hide();
+	else
+		CloseMesh.show();
 	CloseMesh.setTransformMode (UTransformable::DirectMatrix);
 
 
@@ -445,7 +449,10 @@ void CEntity::load3d()
 		if(!TextureFilename.empty())// && i == 0)
 			OpenMesh.getMaterial(i).setTextureFileName(TextureFilename);
 	}
-	OpenMesh.hide();
+	if(OpenClose)
+		OpenMesh.show();
+	else
+		OpenMesh.hide();
 	OpenMesh.setTransformMode (UTransformable::DirectMatrix);
 
 
@@ -458,7 +465,7 @@ void CEntity::load3d()
 		TraceParticle.activateEmitters(true);
 		TraceParticle.show();
 		TraceParticle.setUserColor(CRGBA(0,0,0,0));
-		ParticuleActivated = 0;
+		ParticuleActivated = OpenClose ? 1:0;
 	}
 	
 	if(ImpactParticle.empty() && CConfigFileTask::instance().configFile().getVar("DisplayParticle").asInt() == 1)

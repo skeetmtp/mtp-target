@@ -584,7 +584,7 @@ void CExtendedInterpolator::update()
 
 	CVector dir = CurrentDirection;//smoothDirection();
 	dir.z = 0.0f;
-	if(dir.norm() > 0.001f && CMtpTarget::instance().State == CMtpTarget::eGame)
+	if(dir.norm() > 0.001f && (CMtpTarget::instance().State == CMtpTarget::eGame || CMtpTarget::instance().isSpectatorOnly()))
 	{
 		dir.normalize();
 		float instantFacing = (float)acos(dir.y);

@@ -341,6 +341,13 @@ void CMtpTarget::update()
 		TimeBeforeSessionStart += (float)CTimeTask::instance().deltaTime();
 		TimeBeforeTimeout -= (float)CTimeTask::instance().deltaTime();
 	}
+	if(CMtpTarget::instance().State == CMtpTarget::eStartSession && IsSpectatorOnly)
+	{
+		//CMtpTarget::instance().controler().Camera.reset();
+		TimeBeforeSessionStart += (float)CTimeTask::instance().deltaTime();
+		TimeBeforeTimeout -= (float)CTimeTask::instance().deltaTime();
+	}
+
 }
 
 void CMtpTarget::displayTutorialInfo(bool b)
@@ -355,6 +362,7 @@ bool CMtpTarget::displayTutorialInfo()
 
 void CMtpTarget::loadNewSession()
 {
+	bool sendReady = !isSpectatorOnly();
 	bool paused = pauseAllThread();
 	if(!paused)
 	{
@@ -411,8 +419,9 @@ void CMtpTarget::loadNewSession()
 	
 	nlinfo ("loaded level");
 	
-	// say to server that we are ready
-	CNetworkTask::instance().ready();
+	// say to server that we are ready if other players wait for us
+	if(sendReady)
+		CNetworkTask::instance().ready();
 	
 	// now we wait the message that say that everybody is ready
 	
@@ -472,11 +481,12 @@ void CMtpTarget::loadNewSession()
 		
 }
 
-void CMtpTarget::startSession(float timeBeforeSessionStart, float timeBeforeTimeout, const string &levelName, const std::string &str1, const std::string &str2)
+void CMtpTarget::startSession(float timeBeforeSessionStart, float timeBeforeTimeout, const string &levelName, const std::string &str1, const std::string &str2,bool isSpectatorOnly)
 {
 	nlinfo("level '%s' loaded, it timeouts in %g seconds", levelName.c_str(), timeBeforeTimeout);
 	
 	C3DTask::instance().mouseListener().reset();
+	IsSpectatorOnly = isSpectatorOnly;
 	NewSession = true;
 	TimeBeforeSessionStart = timeBeforeSessionStart;
 	TimeBeforeTimeout = timeBeforeTimeout;

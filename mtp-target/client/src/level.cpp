@@ -315,25 +315,28 @@ CLevel::CLevel(const string &filename)
 		{
 			// `key' is at index -2 and `value' at index -1
 			
-			// Get module position
+			// Get camera position
 			CLuaVector Position;
 			lua_pushstring(LuaState,"Position");
 			lua_gettable(LuaState, -2);
 			luaGetVariable(LuaState, Position);		
-			nlinfo("pos %g %g %g", Position.x, Position.y, Position.z);
+			nlinfo("ExternalCameras pos %g %g %g", Position.x, Position.y, Position.z);
 			lua_pop(LuaState, 1);  // removes `value'; keeps `key' for next iteration
 			
-			// Get module rotation
+			// Get camera rotation
 			CLuaAngleAxis Rotation;
 			lua_pushstring(LuaState,"Rotation");
 			lua_gettable(LuaState, -2);
 			luaGetVariable(LuaState, Rotation);		
-			nlinfo("rot %g %g %g %g", Rotation.Axis.x , Rotation.Axis.y, Rotation.Axis.z, Rotation.Angle);
+			nlinfo("ExternalCameras rot %g %g %g %g", Rotation.Axis.x , Rotation.Axis.y, Rotation.Axis.z, Rotation.Angle);
 			lua_pop(LuaState, 1);  // removes `value'; keeps `key' for next iteration
 			
 			CVector v(Position.x, Position.y, Position.z);
 			CQuat q(Rotation.Axis.x, Rotation.Axis.y, Rotation.Axis.z, Rotation.Angle);
 			ExternalCameras.push_back(make_pair(v, q));
+			ControlerFreeLookPos = v;
+			ControlerFreeLookRot = q;
+
 			lua_pop(LuaState, 1);
 		}
 		lua_pop(LuaState, 1);  // removes `key'

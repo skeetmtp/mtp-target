@@ -91,7 +91,7 @@ void CHudTask::render()
 		str = "Waiting for other players";
 		ptdt = 1.0f;
 	}
-	if(CMtpTarget::instance().State == CMtpTarget::eBeforeFirstSession)
+	if(CMtpTarget::instance().State == CMtpTarget::eBeforeFirstSession || CMtpTarget::instance().isSpectatorOnly())
 	{
 		str = "Waiting for a new session";
 		ptdt = 1.0f;
@@ -143,92 +143,6 @@ void CHudTask::render()
 		}
 	}
 	
-/*
-	if (CMtpTarget::instance().State == CMtpTarget::eStartSession)
-	{
-		displaySelected = mtInterface::eDisplayWaitReady;
-	}
-	if (CMtpTarget::instance().State == CMtpTarget::eReady)
-	{
-		CMtpTarget::instance().timeBeforeSessionStart -= CTimeTask::instance().deltaTime();
-		displaySelected = mtInterface::eDisplayStartSession;
-		partTime = CMtpTarget::instance().timeBeforeSessionStart;
-		
-		if (CMtpTarget::instance().timeBeforeSessionStart > 4.0f)
-		{
-			CMtpTarget::instance().controler().Camera.reset();
-			CMtpTarget::instance().controler().Camera.ForcedSpeed = 0.0f;
-		}
-		else
-			CMtpTarget::instance().controler().Camera.ForcedSpeed = 1.0f;
-		
-		if (CMtpTarget::instance().timeBeforeSessionStart <= 0)
-		{
-			CMtpTarget::instance().timeBeforeSessionStart = 0;
-			CMtpTarget::instance().State = CMtpTarget::eGame;
-		}
-	}
-	if (CMtpTarget::instance().State == CMtpTarget::eGame)
-	{
-		//CMtpTarget::instance().controler().Camera.reset();
-		CMtpTarget::instance().timeBeforeSessionStart += CTimeTask::instance().deltaTime();
-		TimeBeforeTimeout -= CTimeTask::instance().deltaTime();
-		Interface2d.setPartTime(CMtpTarget::instance().timeBeforeSessionStart);
-		Interface2d.display(mtInterface::eDisplayGame);
-	}
-	if (CMtpTarget::instance().State == CMtpTarget::eEndSession)
-	{
-		Interface2d.display(mtInterface::eDisplayEndSession);
-	}
-	
-
-	if (displaySelected != eDisplayNone)
-	{
-		bool displaySessionInfo = false;
-		char str[32];
-		*str = '\0';
-		
-		float ptdt = 1.0f;
-		
-		switch (displaySelected)
-		{
-		case eDisplayWaitReady:
-			strcpy(str, "Waiting other players");
-			ptdt = 1.0f;
-			break;
-		case eDisplayBeforeFirstSession:
-			strcpy(str, "Waiting for a new session");
-			ptdt = 1.0f;
-			break;
-		case eDisplayStartSession:
-			{
-				displaySessionInfo = true;
-				if (partTime > 5)
-					strcpy(str, "Ready ?");
-				else if (partTime > 0)
-				{
-					if (partTime > 4.8f) // don't play ready sound if it's too late
-						CSoundManager::instance().playGuiSound(CSoundManager::GuiReady);
-					sprintf(str, "%u", ((uint32) partTime)+1);
-					ptdt = partTime - (float)(sint)partTime;
-				}
-				else
-					nlstop;
-			}
-			break;
-		case eDisplayGame:
-			if (partTime < 2)
-			{
-				strcpy(str, "Go");
-			}
-			break;
-		}
-		uint32 len = strlen(str);
-		
-		float scale = 1.0f+3.0f*(1.0f-ptdt);
-		CFontManager::instance().printf(CRGBA(255, 255, 255, (uint)(ptdt*255)), (C3DTask::instance().screenWidth() - len * fontWidth*scale) / 2.0f, 7.0f * fontHeight,scale, str);
-		*/
-
 	
 		if (displaySessionInfo)
 		{

@@ -36,6 +36,7 @@
 #include <nel/misc/config_file.h>
 #include <nel/misc/vector.h>
 #include <nel/misc/matrix.h>
+#include <nel/misc/quat.h>
 #include <nel/misc/reader_writer.h>
 
 #include "global.h"
@@ -49,6 +50,7 @@
 
 extern bool DisplayDebug;
 extern bool FollowEntity;
+extern NLMISC::CQuat ControlerFreeLookRot;
 extern CVector ControlerFreeLookPos;
 extern CMatrix ControlerCamMatrix;
 extern std::string ReplayFile;
@@ -81,7 +83,7 @@ public:
 	void	loadNewSession();
 
 	// called by the net thread
-	void	startSession(float timeBeforeSessionStart, float timeBeforeTimeout, const std::string &levelName, const std::string &str1, const std::string &str2);
+	void	startSession(float timeBeforeSessionStart, float timeBeforeTimeout, const std::string &levelName, const std::string &str1, const std::string &str2,bool isSpectatorOnly=false);
 	void	resetFollowedEntity();
 
 	float	timeBeforeSessionStart() const { return TimeBeforeSessionStart; }
@@ -100,11 +102,13 @@ public:
 	void moveReplay(bool b);
 	std::string	sessionFileName() {return SessionFileName;}
 	
+	bool isSpectatorOnly() {return IsSpectatorOnly;};
 private:
 
 	CControler		*Controler;
 	
 	bool			NewSession;
+	bool			IsSpectatorOnly;
 	float			TimeBeforeSessionStart;
 	float			TimeBeforeTimeout;
 	std::string		NewLevelName;
