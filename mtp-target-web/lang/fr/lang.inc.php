@@ -53,9 +53,10 @@
 
 
 //contact
-  $contact_by_forum = "Vous pouvez poser vos questions sur le ";
-  $contact_by_email = "Vous pouvez nous contacter par ";
+  $contact_by_forum = "Si vous avez des questions d'ordre generales, Vous pouvez poser utiliser le ";
+  $contact_by_email = "Si vous voullez nous contacter (les developpeurs de Mtp Target), utilisez l'";
   $contact_by_irc   = "Si vous voullez discuter de NeL ou Mtp Target, <a href=\"http://www.irchelp.org/irchelp/misc/frnew2irc.html\">par IRC</a>, venez sur le channel #nel sur le server irc.freenode.net";
+
 
 //menu stat
   $menuStat = "<a href=\"?page=stat_ranking.php\"><b>%d joueurs inscrits</b></a> | <a href=\"?page=logged.php\"><b>%d joueurs en ligne</b></a> | <a href=\"?page=stat_global.php\"><b>%d parties jouées</b></a>";

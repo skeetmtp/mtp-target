@@ -53,8 +53,8 @@ Please verify that the solution to your bug/problem is not in the ";
   $sshot_img14 = "water without pixel shader";
 
 //contact
-  $contact_by_forum = "Ask your questions on ";
-  $contact_by_email = "Contact us by ";
+  $contact_by_forum = "If you have general question, you can use the ";
+  $contact_by_email = "If you want to contact us (developer of Mtp Target), use the ";
   $contact_by_irc   = "If you want to talk about NeL or Mtp Target, <a href=\"http://www.irchelp.org/\">using IRC</a>, come to #nel channel on irc.freenode.net";
 
 //menu stat
