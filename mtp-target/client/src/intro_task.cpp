@@ -31,6 +31,7 @@
 #include "time_task.h"
 #include "game_task.h"
 #include "intro_task.h"
+#include "mtp_target.h"
 #include "login_client.h"
 #include "font_manager.h"
 #include "network_task.h"
@@ -95,11 +96,46 @@ private:
 //
 
 
+void CIntroTask::reset()
+{
+	CGuiObjectManager::instance().objects.clear();
+	State=eInit;
+}
 
 void CIntroTask::init()
 {
 	CTaskManager::instance().add(CBackgroundTask::instance(), 59);
+	_autoLogin = CConfigFileTask::instance().configFile().getVar("AutoLogin").asInt();
 	
+	reset();
+}
+
+void CIntroTask::error(string &reason)
+{
+	guiSPG<CGuiXml> xml = CGuiXmlManager::instance().Load("error_server.xml");
+	_errorServerFrame = (CGuiFrame *)xml->get("errorServerFrame");
+	guiSPG<CGuiText>  errorServerReason = (CGuiText *)xml->get("errorServerReason");
+	CGuiObjectManager::instance().objects.push_back(_errorServerFrame);
+
+	string::size_type pos = reason.find("failed");
+	if(pos == string::npos)
+	{
+		errorServerReason->text = reason;
+	}
+	else
+	{
+		errorServerReason->text = reason.substr(0,pos+6);
+		errorServerReason->text += '\n';
+		errorServerReason->text += reason.substr(pos+6);
+		
+	}
+}
+
+
+void CIntroTask::updateInit()
+{
+	if(State!=eInit) return;
+
 	guiSPG<CGuiXml> xml = NULL;
 	xml = CGuiXmlManager::instance().Load("menu.xml");
 	menuFrame = (CGuiFrame *)xml->get("menuFrame");
@@ -124,9 +160,7 @@ void CIntroTask::init()
 	
 	CGuiObjectManager::instance().objects.push_back(menuFrame);
 	State = eMenu;
-
-	_autoLogin = CConfigFileTask::instance().configFile().getVar("AutoLogin").asInt();
-
+	
 	if(_autoLogin==1)
 		State = eLoginOnline;
 	else if(_autoLogin==2)
@@ -176,26 +210,8 @@ void CIntroTask::updateLoginOnline()
 		if(!reason.empty())
 		{
 			_autoLogin = 0;
-			guiSPG<CGuiXml> xml = CGuiXmlManager::instance().Load("error_server.xml");
-			_errorServerFrame = (CGuiFrame *)xml->get("errorServerFrame");
-			guiSPG<CGuiText>  errorServerReason = (CGuiText *)xml->get("errorServerReason");
-			CGuiObjectManager::instance().objects.push_back(_errorServerFrame);
-			
+			error(reason);
 			CGuiObjectManager::instance().objects.push_back(loginFrame);
-			
-			
-			string::size_type pos = reason.find("failed");
-			if(pos == string::npos)
-			{
-				errorServerReason->text = reason;
-			}
-			else
-			{
-				errorServerReason->text = reason.substr(0,pos+6);
-				errorServerReason->text += '\n';
-				errorServerReason->text += reason.substr(pos+6);
-				
-			}
 		}
 		else
 		{
@@ -275,24 +291,7 @@ void CIntroTask::updateConnectionOnLine()
 	if(!reason.empty())
 	{
 		_autoLogin = 0;
-		// TODO login failed GUI
-		guiSPG<CGuiXml> xml = CGuiXmlManager::instance().Load("error_server.xml");
-		_errorServerFrame = (CGuiFrame *)xml->get("errorServerFrame");
-		guiSPG<CGuiText>  errorServerReason = (CGuiText *)xml->get("errorServerReason");
-		CGuiObjectManager::instance().objects.push_back(_errorServerFrame);
-		
-		string::size_type pos = reason.find("failed");
-		if(pos == string::npos)
-		{
-			errorServerReason->text = reason;
-		}
-		else
-		{
-			errorServerReason->text = reason.substr(0,pos+6);
-			errorServerReason->text += '\n';
-			errorServerReason->text += reason.substr(pos+6);
-			
-		}
+		error(reason);
 		CGuiObjectManager::instance().objects.push_back(loginFrame);
 		State = eLoginOnline;
 		return;
@@ -306,9 +305,11 @@ void CIntroTask::updateConnectionOnLine()
 	string res = CNetworkTask::instance().connect(&ip);
 	if(res.empty())
 	{
+		_autoLogin = 0;//autologin only once
 		// no connection problem
 		// remove this intro task
-		remove();
+		//remove();
+		stop();
 		// stop the background
 		CBackgroundTask::instance().stop();
 		// go to the game task
@@ -321,25 +322,7 @@ void CIntroTask::updateConnectionOnLine()
 	else
 	{
 		_autoLogin = 0;
-		// TODO login failed GUI
-		guiSPG<CGuiXml> xml = CGuiXmlManager::instance().Load("error_server.xml");
-		_errorServerFrame = (CGuiFrame *)xml->get("errorServerFrame");
-		guiSPG<CGuiText>  errorServerReason = (CGuiText *)xml->get("errorServerReason");
-		CGuiObjectManager::instance().objects.push_back(_errorServerFrame);
-		
-		string::size_type pos = res.find("failed");
-		if(pos == string::npos)
-		{
-			errorServerReason->text = res;
-		}
-		else
-		{
-			errorServerReason->text = res.substr(0,pos+6);
-			errorServerReason->text += '\n';
-			errorServerReason->text += res.substr(pos+6);
-			
-		}
-
+		error(res);
 		CGuiObjectManager::instance().objects.push_back(loginFrame);
 		State = eLoginOnline;
 		return;
@@ -357,9 +340,11 @@ void CIntroTask::updateConnectionOnLan()
 	string res = CNetworkTask::instance().connect();
 	if(res.empty())
 	{
+		_autoLogin = 0;//autologin only once
 		// no connection problem
 		// remove this intro task
-		remove();
+//		remove();
+		stop();
 		// stop the background
 		CBackgroundTask::instance().stop();
 		// go to the game task
@@ -372,24 +357,7 @@ void CIntroTask::updateConnectionOnLan()
 	else
 	{
 		_autoLogin = 0;
-		guiSPG<CGuiXml> xml = CGuiXmlManager::instance().Load("error_server.xml");
-		_errorServerFrame = (CGuiFrame *)xml->get("errorServerFrame");
-		guiSPG<CGuiText>  errorServerReason = (CGuiText *)xml->get("errorServerReason");
-		CGuiObjectManager::instance().objects.push_back(_errorServerFrame);
-		
-		string::size_type pos = res.find("failed");
-		if(pos == string::npos)
-		{
-			errorServerReason->text = res;
-		}
-		else
-		{
-			errorServerReason->text = res.substr(0,pos+6);
-			errorServerReason->text += '\n';
-			errorServerReason->text += res.substr(pos+6);
-			
-		}
-		
+		error(res);
 		CGuiObjectManager::instance().objects.push_back(loginFrame);
 		State = eLoginOnlan;
 		return;
@@ -412,6 +380,7 @@ void CIntroTask::doConnectionOnLan()
 void CIntroTask::update()
 {
 	updateMenu();
+	updateInit();
 	updateLoginOnline();
 	updateLoginOnlan();
 	updateServerList();
@@ -428,7 +397,16 @@ void CIntroTask::update()
 
 void CIntroTask::render()
 {
-
+	float x = 0;
+	float y = 0;
+	string versionStr = toString("v%s %s",MTPT_RELEASE_VERSION_NUMBER,MTPT_RELEASE_VERSION_NAME);
+	
+	C3DTask::instance().textContext().setHotSpot (UTextContext::BottomLeft);
+	C3DTask::instance().textContext().setColor (CRGBA(0,0,0,255));
+	C3DTask::instance().textContext().setFontSize (12);
+	C3DTask::instance().textContext().setShaded(false);
+	C3DTask::instance().textContext().setKeep800x600Ratio (true);
+	C3DTask::instance().textContext().printAt (CGuiObject::ToProportionalX(x), CGuiObject::ToProportionalY(y), ucstring(versionStr.c_str()));	
 }
 
 void CIntroTask::release()

@@ -45,7 +45,11 @@ public:
 	virtual void render();
 	virtual void release();
 
+	void error(std::string &reason);
+	void reset();
+
 	void updateMenu();
+	void updateInit();
 	void updateLoginOnline();
 	void updateLoginOnlan();
 	void updateServerList();
@@ -58,7 +62,7 @@ public:
 	void doConnectionOnLan();
 private:
 
-	enum TState { eMenu, eLoginOnline, eLoginOnlan, eServerList, eConnectionOnline, eConnectionOnlan, eNone };
+	enum TState { eMenu, eInit, eLoginOnline, eLoginOnlan, eServerList, eConnectionOnline, eConnectionOnlan, eNone };
 	
 	TState State;
 
