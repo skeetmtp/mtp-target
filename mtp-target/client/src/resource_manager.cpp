@@ -343,11 +343,11 @@ string CResourceManager::get(const string &filename, bool &ok)
 				nlassert(tid==TaskManagerThreadId || tid==NetworkThreadId);
 				if(tid==TaskManagerThreadId)
 				{
-					while(waitNetworkMessage(CRCReceived,messageReceived))
+					while(waitNetworkMessage(CRCReceived,messageReceived) && !CMtpTarget::instance().error())
 						checkTaskManagerPaused();
 				}
 				else
-					while(waitNetworkMessage(CRCReceived,messageReceived));
+					while(waitNetworkMessage(CRCReceived,messageReceived) && !CMtpTarget::instance().error());
 					
 				if(!messageReceived)
 					return unk;
@@ -404,6 +404,12 @@ string CResourceManager::get(const string &filename, bool &ok)
 	
 	while(!Eof)
 	{
+		if(CMtpTarget::instance().error())
+		{
+			CFile::deleteFile(packedfn);
+			return unk;			
+		}
+		
 		Received = false;
 		CNetMessage msgout(CNetMessage::RequestDownload);
 		msgout.serial(fn);
