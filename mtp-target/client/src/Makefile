@@ -4,7 +4,7 @@
 #
 
 ODE_INCLUDE     = $(HOME)/cvs/ode/include
-FMOD_INCLUDE    = $(HOME)/external/fmodapi361linux/api/inc
+FMOD_INCLUDE    = $(HOME)/external/fmodapi371linux/api/inc
 STLPORT_INCLUDE = /usr/include/stlport
 LIBXML2_INCLUDE = /usr/include/libxml2
 NEL_INCLUDE     = $(HOME)/cvs/code/nel/include
@@ -39,7 +39,6 @@ LDFLAGS        = -L$(HOME)/install/$(DIR_DBG_$(DBG))/lib \
 		-lfreetype \
 		-lnel3d \
 		-lnelmisc \
-		-L$(HOME)/external/fmodapi361linux/api \
 		-L/usr/lib \
 		-L/usr/X11R6/lib \
 		-llualib50 \
@@ -52,8 +51,9 @@ LDFLAGS        = -L$(HOME)/install/$(DIR_DBG_$(DBG))/lib \
 		-lpthread \
 		-lcrypt \
 		-ljpeg \
-		-llualib50
-
+		-llualib50 \
+		-L$(HOME)/external/fmodapi371linux/api \
+		-lfmod-3.71 		
 # Add the fmod lib if you want sound
 
 #############################################################################
@@ -115,12 +115,28 @@ stdpch.o \
 swap_3d_task.o \
 task_manager.o \
 time_task.o \
-lua_nel.o lua_utility.o net_message.o login_client.o gui_event_behaviour.o
+lua_nel.o \
+lua_utility.o \
+net_message.o \
+login_client.o \
+water_task.o \
+editor_task.o \
+start_point.o \
+start_point_common.o \
+module.o \
+module_common.o \
+load_mesh.o \
+editable_element_common.o \
+gui_event_behaviour.o
 
 link:
 	-ln -s ../../common/lua_nel.cpp lua_nel.cpp
 	-ln -s ../../common/lua_utility.cpp lua_utility.cpp
 	-ln -s ../../common/net_message.cpp net_message.cpp
+	-ln -s ../../common/start_point_common.cpp start_point_common.cpp
+	-ln -s ../../common/editable_element_common.cpp editable_element_common.cpp
+	-ln -s ../../common/module_common.cpp module_common.cpp
+	-ln -s ../../common/load_mesh.cpp load_mesh.cpp
 
 client: $(OBJS)
 	$(CXX) -o $@ $(OBJS) $(LDFLAGS)
