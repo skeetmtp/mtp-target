@@ -1,3 +1,4 @@
+//gcc -o devilconvert -lIL -lILU devilconvert.c
 #include <IL/il.h>
 #include <IL/ilu.h>
 
