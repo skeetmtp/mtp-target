@@ -71,6 +71,8 @@ public:
 
 	float		 minDistFromStartPointToMove();
 	void		 minDistFromStartPointToMove(float dist);
+	float		 minDistFromStartPointToMoveVerticaly();
+	void		 minDistFromStartPointToMoveVerticaly(float dist);
 	
 	float		 ForcedSpeed;
 
@@ -108,6 +110,7 @@ private:
 
 	float		 CurrentHeightSpeed;
 	float		 MinDistFromStartPointToMove;
+	float		 MinDistFromStartPointToMoveVerticaly;
 	
 };
 

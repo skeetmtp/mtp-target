@@ -110,6 +110,7 @@ CCamera::CCamera()
 	ActiveMatrix = &MatrixFollow;
 	Facing = 0;
 	MinDistFromStartPointToMove = 0.01f;
+	MinDistFromStartPointToMoveVerticaly = 0.01f;
 
 #if STAT
 	filestat = fopen ("campos.csv", "wt");
@@ -230,7 +231,7 @@ void CCamera::update()
 		CVector distFromStart = CVector::Null;
 		if(CEntityManager::instance()[EId].startPointId()!=255 && CLevelManager::instance().levelPresent())
 			distFromStart = CEntityManager::instance()[EId].interpolator().currentPosition() - CLevelManager::instance().currentLevel().startPosition(CEntityManager::instance()[EId].startPointId());
-		if(distFromStart.norm()<MinDistFromStartPointToMove && !openClose)
+		if(distFromStart.norm()<MinDistFromStartPointToMoveVerticaly && !openClose)
 			CurrentHeightSpeed = 0;
 
 		if(openClose)
@@ -310,7 +311,9 @@ bool CCamera::updateRampe(float backDist,float height,float targetBackDist,float
 		if (C3DTask::instance().mouseListener().MouseWheel < 0)
 			C3DTask::instance().mouseListener().MouseWheel = 0;
 		
-		rotMat.translate(CVector(0.0f, (float)C3DTask::instance().mouseListener().MouseWheel/2.0f, 0.0f));
+		CVector zoomTans = -getMatrix()->getJ()*(float)(C3DTask::instance().mouseListener().MouseWheel)/2.0f;
+		zoomTans.x = 0;
+		rotMat.translate(zoomTans);
 
 		float minMouseAngleToDisplayPart = 0.35f;
 		bool displayParticle = fabs(C3DTask::instance().mouseListener().MouseX)>minMouseAngleToDisplayPart || C3DTask::instance().mouseListener().MouseY<-0.53f ||  C3DTask::instance().mouseListener().MouseY>0.4f || C3DTask::instance().mouseListener().MouseWheel>4;
@@ -361,3 +364,14 @@ void CCamera::minDistFromStartPointToMove(float dist)
 {
 	MinDistFromStartPointToMove = dist;
 }
+
+float CCamera::minDistFromStartPointToMoveVerticaly()
+{
+	return MinDistFromStartPointToMoveVerticaly;
+}
+
+void CCamera::minDistFromStartPointToMoveVerticaly(float dist)
+{
+	MinDistFromStartPointToMoveVerticaly = dist;
+}
+
