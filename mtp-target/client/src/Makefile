@@ -127,7 +127,8 @@ module.o \
 module_common.o \
 load_mesh.o \
 editable_element_common.o \
-gui_event_behaviour.o
+gui_event_behaviour.o \
+custom_floating_point.o
 
 link:
 	-ln -s ../../common/lua_nel.cpp lua_nel.cpp
