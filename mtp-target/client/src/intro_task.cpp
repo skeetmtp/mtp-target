@@ -427,6 +427,7 @@ void CIntroTask::updateConnectionOnLine()
 	
 	CInetAddress ip;
 	string cookie;
+	nlinfo("CLoginClientMtp::connectToShard(%d)",ServerId);
 	string reason = CLoginClientMtp::connectToShard(ServerId,ip,cookie);
 	if(!reason.empty())
 	{
@@ -437,6 +438,7 @@ void CIntroTask::updateConnectionOnLine()
 		return;
 	}
 
+	nlinfo("CNetworkTask::instance().connect()");
 	reason = CNetworkTask::instance().connect(ip, cookie);
 	if(!reason.empty())
 	{
