@@ -488,9 +488,6 @@ void mtpTarget::init()
 		std::string password = CConfigFileTask::instance().configFile().getVar("Password").asString();
 		login = NLMISC::strlwr(login);
 		password = NLMISC::strlwr(password);
-//		Interface2d.loginScreen(login, password);
-		login = NLMISC::strlwr(login);
-		password = NLMISC::strlwr(password);
 		CConfigFileTask::instance().configFile().getVar("Login").setAsString(login);
 		CConfigFileTask::instance().configFile().getVar("Password").setAsString(password);
 		CConfigFileTask::instance().configFile().save();

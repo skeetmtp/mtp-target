@@ -204,6 +204,8 @@ void CIntroTask::updateLoginOnline()
 
 	if(loginButton->pressed() || _autoLogin==1)
 	{
+		loginText->text = NLMISC::strlwr(loginText->text);
+		passwordText->text = NLMISC::strlwr(passwordText->text);
 		CConfigFileTask::instance().configFile().getVar("Login").setAsString(loginText->text);
 		CConfigFileTask::instance().configFile().getVar("Password").setAsString(passwordText->text);
 		CConfigFileTask::instance().configFile().save();
@@ -261,6 +263,8 @@ void CIntroTask::updateLoginOnlan()
 	
 	if(loginButton->pressed() || _autoLogin)
 	{
+		loginText->text = NLMISC::strlwr(loginText->text);
+		passwordText->text = NLMISC::strlwr(passwordText->text);
 		CConfigFileTask::instance().configFile().getVar("Login").setAsString(loginText->text);
 		CConfigFileTask::instance().configFile().getVar("Password").setAsString(passwordText->text);
 		CConfigFileTask::instance().configFile().save();
