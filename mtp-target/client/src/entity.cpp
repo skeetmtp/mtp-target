@@ -381,7 +381,7 @@ void CEntity::setIsLocal(bool local)
 }
 
 
-void CEntity::fadeParticleColorTo(NLMISC::CRGBA &color,float duration)
+void CEntity::fadeParticleColorTo(const NLMISC::CRGBA &color,float duration)
 {
 	if(FadeParticleColor==color || duration<=0) return;
 

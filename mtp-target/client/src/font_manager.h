@@ -50,7 +50,7 @@ public:
 
 	virtual std::string name() { return "CFontManager"; }
 	
-	NL3D::UMaterial material() const { return Material; }
+	NL3D::UMaterial &material() { return Material; }
 
 	void littlePrintf(float x, float y, const char *format ...);
 	void littlePrintf(const NLMISC::CRGBA &col, float x, float y, const char *format ...);

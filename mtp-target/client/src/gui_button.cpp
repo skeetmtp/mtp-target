@@ -62,10 +62,10 @@ struct buttonMaterialData
 
 static buttonMaterialData buttonMaterials[] = 
 {
-	{"hbutton-prelight.tga"},
-	{"hbutton-insensitive.tga"},
-	{"hbutton.tga"},
-	{"hbutton-active.tga"},
+	buttonMaterialData("hbutton-prelight.tga"),
+	buttonMaterialData("hbutton-insensitive.tga"),
+        buttonMaterialData("hbutton.tga"),
+        buttonMaterialData("hbutton-active.tga"),
 };
 
 

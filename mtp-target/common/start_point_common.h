@@ -26,7 +26,6 @@
 //
 
 #include <vector>
-#include <ode/ode.h>
 
 #include "lua_utility.h"
 #include "lua_nel.h"

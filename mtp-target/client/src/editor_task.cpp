@@ -315,7 +315,8 @@ void CEditorTask::update()
 void CEditorTask::render()
 {
 	C3DTask::instance().driver().setFrustum(C3DTask::instance().scene().getCam().getFrustum());
-	C3DTask::instance().driver().setMatrixMode3D(C3DTask::instance().scene().getCam());
+	UCamera cam = C3DTask::instance().scene().getCam();
+	C3DTask::instance().driver().setMatrixMode3D(cam);
 	if(_selectedElement)
 	{
 		_selectedElement->renderSelection();
@@ -339,7 +340,7 @@ void CEditorTask::enable(bool e)
 	if(e)
 	{
 		nlassert(!_testFrame);
-		guiSPG<CGuiXml> xml = NULL;
+		guiSPG<CGuiXml> xml = 0;
 		xml = CGuiXmlManager::instance().Load("editor.xml");
 		_testFrame = (CGuiFrame *)xml->get("editorFrame");
 		CGuiObjectManager::instance().objects.push_back(_testFrame);	

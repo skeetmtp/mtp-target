@@ -59,7 +59,9 @@ TARGETS		= link mtp_target_service
 # The default build rule
 all:			$(TARGETS)
 
+#############################################################################
 ###### PLEASE!!!! put the .o files in alphabetic order !!!!!
+#############################################################################
 
 OBJS  = \
 bot.o \
@@ -97,15 +99,20 @@ waiting_ready_session_state.o \
 waiting_start_session_state.o \
 welcome.o
 
+#############################################################################
+###### PLEASE!!!! put the .o files in alphabetic order !!!!!
+#############################################################################
+
+
 link:
-	-ln -s ../../common/lua_nel.cpp lua_nel.cpp
-	-ln -s ../../common/lua_utility.cpp lua_utility.cpp
-	-ln -s ../../common/net_message.cpp net_message.cpp
-	-ln -s ../../common/start_point_common.cpp start_point_common.cpp
-	-ln -s ../../common/editable_element_common.cpp editable_element_common.cpp
-	-ln -s ../../common/module_common.cpp module_common.cpp
-	-ln -s ../../common/load_mesh.cpp load_mesh.cpp
-	-ln -s ../../common/custom_floating_point.cpp
+	test -f lua_nel.cpp || ln -s ../../common/lua_nel.cpp lua_nel.cpp
+	test -f lua_utility.cpp || ln -s ../../common/lua_utility.cpp lua_utility.cpp
+	test -f net_message.cpp || ln -s ../../common/net_message.cpp net_message.cpp
+	test -f start_point_common.cpp || ln -s ../../common/start_point_common.cpp start_point_common.cpp
+	test -f editable_element_common.cpp || ln -s ../../common/editable_element_common.cpp editable_element_common.cpp
+	test -f module_common.cpp || ln -s ../../common/module_common.cpp module_common.cpp
+	test -f load_mesh.cpp || ln -s ../../common/load_mesh.cpp load_mesh.cpp
+	test -f custom_floating_point.cpp || ln -s ../../common/custom_floating_point.cpp custom_floating_point.cpp
 
 mtp_target_service: $(OBJS)
 	$(CXX) -o $@ $(OBJS) $(LDFLAGS)

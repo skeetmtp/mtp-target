@@ -114,7 +114,7 @@ public:
 	
 	void				 load3d();
 
-	void				 fadeParticleColorTo(NLMISC::CRGBA &color,float duration);
+	void				 fadeParticleColorTo(const NLMISC::CRGBA &color,float duration);
 
 	CExtendedInterpolator &interpolator() const;
 

@@ -264,7 +264,7 @@ string CResourceManager::get(const string &filename, bool &ok)
 
 	double currentTime = CTimeTask::instance().time();
 	float updatePercent = 0;
-	guiSPG<CGuiFrame> mainFrame = NULL;
+	guiSPG<CGuiFrame> mainFrame = 0;
 
 	//nlinfo("CResourceManager get(%s)",filename.c_str());
 

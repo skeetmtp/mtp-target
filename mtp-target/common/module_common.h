@@ -26,7 +26,9 @@
 //
 
 #include <vector>
+#ifdef MTPT_SERVER
 #include <ode/ode.h>
+#endif
 
 #include "lua_utility.h"
 #include "lua_nel.h"

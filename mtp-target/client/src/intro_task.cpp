@@ -125,7 +125,7 @@ void CIntroTask::updateInit()
 {
 	if(State!=eInit) return;
 
-	guiSPG<CGuiXml> xml = NULL;
+	guiSPG<CGuiXml> xml = 0;
 	xml = CGuiXmlManager::instance().Load("menu.xml");
 	menuFrame = (CGuiFrame *)xml->get("menuFrame");
 	//playOnLineButton = (CGuiButton *)xml->get("bPlayOnline");
@@ -217,7 +217,7 @@ void CIntroTask::updateLoginOnline()
 			serverVbox->elements.clear();
 			for(uint i = 0; i < CLoginClientMtp::ShardList.size(); i++)
 			{
-				guiSPG<CGuiXml> xml = NULL;
+				guiSPG<CGuiXml> xml = 0;
 				xml = CGuiXmlManager::instance().Load("server_item.xml");
 				{
 					guiSPG<CGuiHBox> serverItemHBox = (CGuiHBox *)xml->get("serverItemHBox");
