@@ -33,6 +33,7 @@ LDFLAGS        = -L$(HOME)/install/$(DIR_DBG_$(DBG))/lib \
 		-llualib50 \
 		-lc \
 		-lxml2 \
+		-lcurl \
 		-lz \
 		-lm \
 		-ldl \
