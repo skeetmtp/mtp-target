@@ -192,7 +192,7 @@ void optionCallback(const string &var, const string &val)
 	SET_VAR(TimeBeforeStart);
 	SET_VAR(TimeBeforeRestart);
 	SET_VAR(TimeBeforeCheck);
-	SET_VAR(TimeTimeout);
+//	SET_VAR(TimeTimeout);
 	SET_VAR(NbWaitingClients);
 	SET_VAR(OpenAccelCoef);
 	SET_VAR(CloseAccelCoef);

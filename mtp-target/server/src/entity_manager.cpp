@@ -412,7 +412,7 @@ void CEntityManager::login(CEntity *e)
 		}
 		else
 		{
-			timeBeforeTimeout = (float)((TTime)TimeTimeout - CTime::getLocalTime()-CSessionManager::instance().startTime())/1000.0f;
+			timeBeforeTimeout = (float)((TTime)CLevelManager::instance().timeTimeout() - CTime::getLocalTime()-CSessionManager::instance().startTime())/1000.0f;
 		}
 		msgout.serial(timeBeforeTimeout);
 		CNetwork::instance().send(nid, msgout);

@@ -3,6 +3,8 @@
 setMaxLevelSessionCount(3);
 setLevelHasBonusTime(0);
 setLevelRecordBest(0);
+setLevelTimeout(10);
+
 local teamRedScore = 0;
 local teamBlueScore = 0;
 local currentTeamRedScore = 0;

@@ -75,6 +75,7 @@ CLevelManager::CLevelManager()
 	MaxLevelSessionCount = 0;
 	BonusTime = true;
 	RecordBest = true;
+	TimeTimeout = 60 * 1000;
 }
 
 void CLevelManager::init()
@@ -238,5 +239,15 @@ bool CLevelManager::recordBest()
 void CLevelManager::recordBest(bool b)
 {
 	RecordBest = b;
+}
+
+double CLevelManager::timeTimeout()
+{
+	return TimeTimeout;
+}
+
+void CLevelManager::timeTimeout(double timeout)
+{
+	TimeTimeout = timeout;
 }
 

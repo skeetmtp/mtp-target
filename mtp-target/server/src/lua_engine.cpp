@@ -128,6 +128,7 @@ void CLuaEngine::init(const std::string &filename)
 		lua_register(session(), "displayTextToAll", displayTextToAll);
 		lua_register(session(), "setLevelHasBonusTime", setLevelHasBonusTime);
 		lua_register(session(), "setLevelRecordBest", setLevelRecordBest);
+		lua_register(session(), "setLevelTimeout", setLevelTimeout);
 	}
 	
 	Lunar<CModuleProxy>::Register(session());
@@ -351,6 +352,12 @@ int CLuaEngine::setLevelRecordBest(lua_State *L)
 	return 0;
 }
 
+int CLuaEngine::setLevelTimeout(lua_State *L)
+{
+	double timeout = luaL_checknumber(L,1);
+	CLevelManager::instance().timeTimeout(timeout*1000);
+	return 0;	
+}
 
 int CLuaEngine::lua_ALERT(lua_State *L)
 {

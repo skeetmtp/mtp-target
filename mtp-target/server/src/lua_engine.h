@@ -71,6 +71,7 @@ private:
 	static int displayTextToAll(lua_State *L);
 	static int setLevelHasBonusTime(lua_State *L);
 	static int setLevelRecordBest(lua_State *L);
+	static int setLevelTimeout(lua_State *L);
 	
 	static uint32 _sessionId;
 		

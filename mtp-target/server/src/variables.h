@@ -79,7 +79,7 @@ DEC_VAR(BounceScene);
 DEC_VAR(BounceVelScene);
 DEC_VAR(AngularDecreasing);
 DEC_VAR(NbMaxClients);
-DEC_VAR(TimeTimeout);
+//DEC_VAR(TimeTimeout);
 DEC_VAR(ModuleScore);
 DEC_VAR(ModuleBounce);
 DEC_VAR(ModuleAccel);

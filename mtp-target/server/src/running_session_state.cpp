@@ -60,7 +60,7 @@ void CRunningSessionState::update()
 
 		bool everybodyStopped = true;
 
-		if(currentTime > CSessionManager::instance().startTime()+(TTime)TimeTimeout)
+		if(currentTime > CSessionManager::instance().startTime()+(TTime)CLevelManager::instance().timeTimeout())
 		{
 			nlinfo("Session time out!!!");
 		}

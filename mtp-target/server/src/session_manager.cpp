@@ -29,6 +29,7 @@
 #include "network.h"
 #include "variables.h"
 #include "session_manager.h"
+#include "level_manager.h"
 #include "waiting_clients_session_state.h"
 
 
@@ -131,7 +132,7 @@ NLMISC_DYNVARIABLE(sint32, Timeout, "")
 		if(CSessionManager::instance().startTime())
 		{
 			TTime currentTime = CTime::getLocalTime();
-			*pointer = (sint32)((CSessionManager::instance().startTime()+(TTime)TimeTimeout - currentTime)/1000);
+			*pointer = (sint32)((CSessionManager::instance().startTime()+(TTime)CLevelManager::instance().timeTimeout() - currentTime)/1000);
 		}
 		else
 		{

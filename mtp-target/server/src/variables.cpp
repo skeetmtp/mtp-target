@@ -95,7 +95,7 @@ void initVariables()
 	IMP_VAR(BounceVelScene);
 	IMP_VAR(AngularDecreasing);
 	IMP_VAR(NbMaxClients);
-	IMP_VAR(TimeTimeout);
+//	IMP_VAR(TimeTimeout);
 	IMP_VAR(ModuleScore);
 	IMP_VAR(ModuleBounce);
 	IMP_VAR(ModuleAccel);

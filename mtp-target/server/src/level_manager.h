@@ -60,6 +60,9 @@ public:
 	
 	bool recordBest();
 	void recordBest(bool b);
+
+	double timeTimeout();
+	void timeTimeout(double timeout);
 	
 private:
 
@@ -70,6 +73,7 @@ private:
 	bool						RecordBest;
 	
 	CLevel						*CurrentLevel;
+	double						TimeTimeout;
 
 	// private ctor due to singleton pattern
 	CLevelManager();
