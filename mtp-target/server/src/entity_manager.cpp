@@ -195,7 +195,8 @@ void CEntityManager::_remove(std::list<uint8> &removeList)
 					time(&ltime);
 					struct tm *today = localtime(&ltime);
 					strftime(d, 80, "%Y %m %d %H %M %S", today);
-					fprintf(fp, "%u %s - %d '%s' '%s'\n", ltime, d, humanClientCount(), c->name().c_str(),CLevelManager::instance().haveCurrentLevel()?CLevelManager::instance().currentLevel().name().c_str():"");
+					fprintf(fp, "%u %s - '%s' '%s'\n", ltime, d, c->name().c_str(),CLevelManager::instance().haveCurrentLevel()?CLevelManager::instance().currentLevel().name().c_str():"");
+					fprintf(fp, "c %d\n",humanClientCount());
 					fclose(fp);
 				}
 			}

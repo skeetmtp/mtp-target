@@ -40,7 +40,7 @@
 		$day = intval($sday);
 		$month = intval($smonth);
 		$year = intval($syear);
-		if(strlen($line)!=0)
+		if(strlen($line)!=0 && $ttime!="c")
 		{		
 			if($lastHour!=$hour)
 			{
