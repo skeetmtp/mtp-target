@@ -70,6 +70,7 @@ private:
 	uint32 ServerId;
 	
 	guiSPG<CGuiFrame> menuFrame;
+	guiSPG<CGuiButton> howToPlay;
 	guiSPG<CGuiButton> playOnLineButton;
 	guiSPG<CGuiButton> playOnLanButton;
 	guiSPG<CGuiButton> exitButton3;

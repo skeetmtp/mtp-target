@@ -9,6 +9,14 @@
 			<object class="CGuiVBox" name="vbox">
 				<alignment>eAlignExpandHorizontal|eAlignExpandVertical</alignment>
 				<element>
+					<object class="CGuiButton" name="bHowToPlay">
+						<minSize>150,0</minSize>
+						<element>
+							<object class="CGuiText" name="txtHowToPlay">
+								<string> How To Play </string>
+							</object>
+						</element>
+					</object>
 					<object class="CGuiButton" name="bPlayOnline">
 						<minSize>150,0</minSize>
 						<element>

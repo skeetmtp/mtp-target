@@ -129,6 +129,7 @@ void CIntroTask::updateInit()
 	guiSPG<CGuiXml> xml = 0;
 	xml = CGuiXmlManager::instance().Load("menu.xml");
 	menuFrame = (CGuiFrame *)xml->get("menuFrame");
+	howToPlay = (CGuiButton *)xml->get("bHowToPlay");
 	playOnLineButton = (CGuiButton *)xml->get("bPlayOnline");
 	playOnLanButton = (CGuiButton *)xml->get("bPlayOnlan");
 	exitButton3 = (CGuiButton *)xml->get("bExit");
@@ -173,6 +174,10 @@ void CIntroTask::updateMenu()
 {
 	if(State!=eMenu) return;
 
+	if(howToPlay->pressed())
+	{
+		openURL("http://www.mtp-target.org/index.php?page=./lang/en/howto-play.php");
+	}
 	if(playOnLineButton->pressed())
 	{
 		CGuiObjectManager::instance().objects.clear();
