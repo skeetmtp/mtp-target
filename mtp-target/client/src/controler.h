@@ -50,7 +50,8 @@ public:
 	void	setControledEntity(uint8 eid);
 	uint8	getControledEntity() const;
 	void	update();
-
+	void	reset();
+	
 	CCamera		Camera;
 	
 	uint8		ViewedEId;	// the id of the entity that we currently view (followed)
