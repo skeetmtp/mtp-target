@@ -182,7 +182,22 @@ void CEntityManager::_remove(std::list<uint8> &removeList)
 			CSessionManager::instance().editMode(0);
 			
 			// TODO clientConnected(c->Cookie, false);
-			
+
+			if(c->type() == CEntity::Client)
+			{
+			  FILE *fp = fopen("connection.stat", "ab");
+			  if(fp)
+			    {
+			      char d[80];
+			      time_t ltime;
+			      time(&ltime);
+			      struct tm *today = localtime(&ltime);
+			      strftime(d, 80, "%04Y %02m %02d %02H %02M %02S", today);
+			      fprintf(fp, "%u %s - '%s'\n", ltime, d, c->name().c_str());
+			      fclose(fp);
+			    }
+			}
+
 			CNetMessage msgout(CNetMessage::Logout);
 			msgout.serial(eid);
 			CNetwork::instance().send(msgout);		

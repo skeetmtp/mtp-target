@@ -125,7 +125,21 @@ static void cbLogin(CClient *c, CNetMessage &msgin)
 	// now we know the version is compatible, get them
 
 	msgin.serial(cookie, login, password, color, texture);
-	
+
+	{
+	  FILE *fp = fopen("connection.stat", "ab");
+	  if(fp)
+	    {
+	      char d[80];
+	      time_t ltime;
+	      time(&ltime);
+	      struct tm *today = localtime(&ltime);
+	      strftime(d, 80, "%04Y %02m %02d %02H %02M %02S", today);
+	      fprintf(fp, "%u %s + '%s' '%s'\n", ltime, d, login.c_str(), texture.c_str());
+	      fclose(fp);
+	    }
+	}
+
 	keepValidChar(login);
 	keepValidChar(password);
 
