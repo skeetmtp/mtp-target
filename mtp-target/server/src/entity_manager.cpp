@@ -187,16 +187,21 @@ void CEntityManager::_remove(std::list<uint8> &removeList)
 
 			if(c->type() == CEntity::Client)
 			{
+				char d[80];
+				time_t ltime;
+				time(&ltime);
+				struct tm *today = localtime(&ltime);
+				strftime(d, 80, "%Y %m %d %H %M %S", today);
 				FILE *fp = fopen("connection.stat", "ab");
 				if(fp)
 				{
-					char d[80];
-					time_t ltime;
-					time(&ltime);
-					struct tm *today = localtime(&ltime);
-					strftime(d, 80, "%Y %m %d %H %M %S", today);
 					fprintf(fp, "%u %s - '%s' '%s'\n", ltime, d, c->name().c_str(),CLevelManager::instance().haveCurrentLevel()?CLevelManager::instance().currentLevel().name().c_str():"");
-					fprintf(fp, "c %d\n",humanClientCount());
+					fclose(fp);
+				}
+				fp = fopen("clients_count.stat", "ab");
+				if(fp)
+				{
+					fprintf(fp, "%u %s c %d\n", ltime, d, humanClientCount());
 					fclose(fp);
 				}
 			}
@@ -722,7 +727,7 @@ string CEntityManager::check(const string &login, const string &password, bool d
 	{
 		for(uint i = 0; i < login.size(); i++)
 		{
-			if(!nlisprint(login[i]) || !isalnum(login[i]) && login[i] != '_' && login[i] != '-' && login[i] != '.')
+			if(!nlisprint(login[i]) || !isalnum(login[i]) && login[i] != '_' && login[i] != '-' && login[i] != '.' && login[i] != '[' && login[i] != ']')
 			{
 				return toString("Bad login, character '%c' is not allowed", login[i]);
 			}

@@ -155,21 +155,25 @@ static void cbLogin(CClient *c, CNetMessage &msgin)
 	}
 
 	{
+		char d[80];
+		time_t ltime;
+		time(&ltime);
+		struct tm *today = localtime(&ltime);
+		strftime(d, 80, "%Y %m %d %H %M %S", today);
 		FILE *fp = fopen("connection.stat", "ab");
 		if(fp)
 		{
-			char d[80];
-			time_t ltime;
-			time(&ltime);
-			struct tm *today = localtime(&ltime);
-			strftime(d, 80, "%Y %m %d %H %M %S", today);
 			fprintf(fp, "%u %s", ltime, d);
 			fprintf(fp, " %c", (error.empty()?'+':'?'));
 			fprintf(fp, " '%s' '%s'", login.c_str(), texture.c_str());
 			fprintf(fp, " '%s'", (c->sock()?c->sock()->remoteAddr().ipAddress().c_str():"unknown"));
 			if(!error.empty()) fprintf(fp, " '%s'", error.c_str());
 			fprintf(fp, "\n");
-			fprintf(fp, "c %d\n",CEntityManager::instance().humanClientCount());
+		}
+		fp = fopen("clients_count.stat", "ab");
+		if(fp)
+		{
+			fprintf(fp, "%u %s c %d\n", ltime, d, CEntityManager::instance().humanClientCount());
 			fclose(fp);
 		}
 	}
