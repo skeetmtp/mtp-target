@@ -235,18 +235,27 @@ void CNetworkTask::force(const NLMISC::CVector &force)
 	send(msgout);
 }
 
-void CNetworkTask::moduleUpdate(CModule *module)
+void CNetworkTask::updateEditableElement(CEditableElement *element)
 {
-	CNetMessage msgout(CNetMessage::UpdateModule);
-	uint8 moduleId = module->id();
+	CNetMessage msgout(CNetMessage::UpdateElement);
+	uint8 elementId = element->id();
 	uint8 clientId = 0;
-	msgout.serial(moduleId);
+	uint8 elementType = element->type();
+	msgout.serial(elementType);
+	msgout.serial(elementId);
 	msgout.serial(clientId);
-	CVector pos = module->position();
+	CVector pos = element->position();
 	msgout.serial(pos);
 	CVector rot = CVector(0,0,0);
 	msgout.serial(rot);
 	send(msgout);
 }
 
-
+void CNetworkTask::setEditMode(uint8 editMode)
+{
+	CNetMessage msgout(CNetMessage::EditMode);
+	uint8 em = editMode;
+	msgout.serial(em);
+	send(msgout);
+	
+}

@@ -96,6 +96,7 @@ CEditableElement::CEditableElement(const string &name,uint8 id, CVector position
 	Mesh->setRotQuat(CQuat(rotation));
 	Mesh->setPos(position);
 	
+	_type = Unknown;
 }
 
 

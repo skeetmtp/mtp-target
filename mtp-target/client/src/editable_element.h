@@ -74,6 +74,13 @@ using NLMISC::CMatrix;
 class CEditableElement
 {
 public:
+	enum TType
+	{
+		Unknown = 0,
+		Module,
+		StartPosition,
+	};		
+
 	CEditableElement(const std::string &name,uint8 id, NLMISC::CVector position, NLMISC::CAngleAxis rotation);
 	virtual ~CEditableElement();
 	
@@ -92,6 +99,8 @@ public:
 	uint8 id() {return _id;}
 	bool changed() {return _changed;}
 	void changed(bool c) {_changed = c;}
+
+	TType type() { return _type;}
 	
 protected:
 	std::string		Name;
@@ -101,6 +110,8 @@ protected:
 	NL3D::UMaterial *mat;
 	uint8 _id;
 	bool  _changed;
+
+	TType _type;
 };
 
 

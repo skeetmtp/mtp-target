@@ -37,7 +37,7 @@
 #include <nel/net/inet_address.h>
 
 #include "entity.h"
-#include "module.h"
+#include "editable_element.h"
 #include "../../common/net_message.h"
 #include "../../common/constant.h"
 
@@ -77,7 +77,8 @@ public:
 	void openClose();
 	void ready();
 	void force(const NLMISC::CVector &force);
-	void moduleUpdate(CModule *module);
+	void updateEditableElement(CEditableElement *element);
+	void setEditMode(uint8 editMode);
 		
 	bool connected();
 

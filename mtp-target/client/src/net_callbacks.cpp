@@ -191,18 +191,28 @@ static void cbUpdate(CNetMessage &msgin)
 	}
 }
 
-static void cbUpdateModule(CNetMessage &msgin)
+static void cbEditMode(CNetMessage &msgin)
 {
-	uint8 moduleId;
-	msgin.serial(moduleId);
+	uint8 editMode;
+	msgin.serial(editMode);
+	
+}
+
+static void cbUpdateElement(CNetMessage &msgin)
+{
+	uint8 elementType;
+	msgin.serial(elementType);
+	uint8 elementId;
+	msgin.serial(elementId);
 	uint8 selectedBy;
 	msgin.serial(selectedBy);
 	CVector pos;
 	msgin.serial(pos);
 	CVector eulerRot;
 	msgin.serial(eulerRot);
-	
-	CLevelManager::instance().currentLevel().updateModule(moduleId,pos,eulerRot,selectedBy);
+
+	if(elementType==CEditableElement::Module)
+		CLevelManager::instance().currentLevel().updateModule(elementId,pos,eulerRot,selectedBy);
 }
 	
 static void cbReady(CNetMessage &msgin)
@@ -343,7 +353,7 @@ void netCallbacksHandler(CNetMessage &msgin)
 	SWITCH_CASE(Logout);
 	SWITCH_CASE(OpenClose);
 	SWITCH_CASE(Update);
-	SWITCH_CASE(UpdateModule);
+	SWITCH_CASE(UpdateElement);
 	SWITCH_CASE(Ready);
 	SWITCH_CASE(RequestDownload);
 	SWITCH_CASE(RequestCRCKey);
@@ -351,6 +361,7 @@ void netCallbacksHandler(CNetMessage &msgin)
 	SWITCH_CASE(SessionState);
 	SWITCH_CASE(StartSession);
 	SWITCH_CASE(EndSession);
+	SWITCH_CASE(EditMode);
 	
 	default: nlinfo("Received an unknown message type %hu", (uint16)msgin.type()); break;
 	}

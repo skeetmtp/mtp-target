@@ -8,12 +8,12 @@ CFG=Client - Win32 DebugFast
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE 
-!MESSAGE NMAKE /f "Client.mak".
+!MESSAGE NMAKE /f "client.mak".
 !MESSAGE 
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "Client.mak" CFG="Client - Win32 DebugFast"
+!MESSAGE NMAKE /f "client.mak" CFG="Client - Win32 DebugFast"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
@@ -227,6 +227,14 @@ SOURCE=.\Src\module.cpp
 # Begin Source File
 
 SOURCE=.\Src\module.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\src\start_position.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\src\start_position.h
 # End Source File
 # End Group
 # Begin Group "lua"

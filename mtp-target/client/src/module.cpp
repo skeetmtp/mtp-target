@@ -141,6 +141,8 @@ CModule::CModule(const std::string &name,uint8 id, CVector position, CAngleAxis 
 	Mesh->setTransformMode(UTransformable::RotQuat);
 	Mesh->setRotQuat(CQuat(rotation));
 	Mesh->setPos(position);
+
+	_type = CEditableElement::Module;
 }
 
 

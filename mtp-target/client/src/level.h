@@ -35,6 +35,7 @@ extern "C"
 #include "../../common/lua_nel.h"
 
 #include "module.h"
+#include "start_position.h"
 
 //
 // Classes
@@ -73,6 +74,9 @@ public:
 	CModule *getModule(uint32 id);
 	uint32 getModuleCount();
 	void updateModule(uint32 id,NLMISC::CVector pos,NLMISC::CVector rot,uint32 selectedBy);
+	CStartPosition *getStartPosition(uint32 id);
+	uint32 getStartPositionCount();
+	void updateStartPosition(uint32 id,NLMISC::CVector pos,NLMISC::CVector rot,uint32 selectedBy);
 	
 private:
 	
@@ -89,7 +93,8 @@ private:
 
 //	std::vector<NL3D::UInstance *>	Meshes;
 	std::vector<CModule *>			Modules;
-	std::vector<NL3D::UInstance *>	StartPositions;
+//	std::vector<NL3D::UInstance *>	StartPositions;
+	std::vector<CStartPosition *>	StartPositions;
 	
 	bool							DisplayStartPositions;
 	bool							DisplayLevel;

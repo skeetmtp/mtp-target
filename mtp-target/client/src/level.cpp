@@ -108,9 +108,17 @@ CLevel::CLevel(const string &filename)
 
 	vector<CLuaVector> StartPoints;
 	luaGetGlobalVector(LuaState, StartPoints);
+	uint8 startPositionId = 0;
 	for(uint i = 0; i < StartPoints.size(); i++)
 	{
 		nlinfo("%g %g %g", StartPoints[i].x, StartPoints[i].y, StartPoints[i].z);
+		CAngleAxis Rotation(CVector(1,0,0),0);
+		CStartPosition *startPosition = new CStartPosition("start pos",startPositionId,StartPoints[i],Rotation);
+		if (!DisplayStartPositions)
+			startPosition->hide();
+		StartPositions.push_back(startPosition);
+		
+			/*
 		string res = CResourceManager::instance().get("col_box.shape");
 		UInstance *inst = C3DTask::instance().scene().createInstance (res);
 		if (!inst)
@@ -126,6 +134,8 @@ CLevel::CLevel(const string &filename)
 			inst->hide();
 
 		StartPositions.push_back(inst);
+		*/
+		startPositionId++;
 	}
 
 
@@ -205,14 +215,15 @@ CLevel::~CLevel()
 
 	for(uint j = 0; j < StartPositions.size(); j++)
 	{
-		C3DTask::instance().scene().deleteInstance(StartPositions[j]);
+		delete StartPositions[j];
+		//C3DTask::instance().scene().deleteInstance(StartPositions[j]);
 	}
 	StartPositions.clear();
 }
 
 CVector CLevel::startPosition(uint32 id)
 {
-	return StartPositions[id]->getPos();
+	return StartPositions[id]->position();
 }
 
 void CLevel::reset()
@@ -370,5 +381,22 @@ uint32 CLevel::getModuleCount()
 void CLevel::updateModule(uint32 id,CVector pos,CVector rot,uint32 selectedBy)
 {
 	getModule(id)->update(pos,rot,selectedBy);
+}
+
+CStartPosition *CLevel::getStartPosition(uint32 index)
+{
+	nlassert(index<getStartPositionCount());
+	return StartPositions[index];
+}
+
+uint32 CLevel::getStartPositionCount()
+{
+	nlassert(StartPositions.size()<255);
+	return StartPositions.size();
+}
+
+void CLevel::updateStartPosition(uint32 id,CVector pos,CVector rot,uint32 selectedBy)
+{
+	getStartPosition(id)->update(pos,rot,selectedBy);
 }
 

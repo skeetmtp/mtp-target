@@ -76,7 +76,7 @@ void CEditorTask::_mouseSelectModule()
 		vp.getRayWithPoint(x,y,rayStart,rayDir,camMat,frustum);
 		rayDir.normalize();
 		rayEnd = rayStart + rayDir * 10000;
-		list<CModule *> bboxModules;
+		list<CEditableElement *> bboxModules;
 		for(i=0;i<CLevelManager::instance().currentLevel().getModuleCount();i++)
 		{
 			CModule *module = CLevelManager::instance().currentLevel().getModule(i);
@@ -92,14 +92,29 @@ void CEditorTask::_mouseSelectModule()
 			}
 		}
 		
+		for(i=0;i<CLevelManager::instance().currentLevel().getStartPositionCount();i++)
+		{
+			CEditableElement *module = CLevelManager::instance().currentLevel().getStartPosition(i);
+			UInstance *mesh = module->mesh();
+			CAABBox bbox;
+			mesh->getShapeAABBox(bbox);
+			CAABBox tbbox = CAABBox::transformAABBox(mesh->getMatrix(),bbox);
+			bool intersect = tbbox.intersect(rayStart,rayEnd);
+			if(intersect)
+			{
+				bboxModules.push_back(module);
+				nlinfo("bbox intersect %s 0x%p ",module->name().c_str(),module);
+			}
+		}
+		
 		//test plus precis :
 		
-		CModule *nearestModule = NULL;
+		CEditableElement *nearestModule = NULL;
 		float nearestModuleDist = 10000.0f;
-		list<CModule *>::iterator it;
+		list<CEditableElement *>::iterator it;
 		for(it=bboxModules.begin();it!=bboxModules.end();it++)
 		{
-			CModule *module = *it;
+			CEditableElement *module = *it;
 			CVector rayHit;
 			bool intersect = module->intersect(rayStart,rayEnd,rayHit);
 			if(intersect)
@@ -114,10 +129,10 @@ void CEditorTask::_mouseSelectModule()
 				nlinfo("tri intersect %s 0x%p dist = %f (%f %f %f)",nearestModule->name().c_str(),nearestModule,nearestModuleDist,rayHit.x,rayHit.y,rayHit.z);
 			}
 		}
-		if(nearestModule)
+		if(nearestModule && _selectedModule != nearestModule)
 		{
-			_selectedModule = nearestModule;
 			nlinfo("tri intersect %s 0x%p dist = %f",nearestModule->name().c_str(),nearestModule,nearestModuleDist);
+			_selectedModule = nearestModule;		
 		}
 	}
 }
@@ -132,6 +147,17 @@ void CEditorTask::update()
 	if(_enable)
 	{
 		_mouseSelectModule();
+
+
+		if (C3DTask::instance().kbPressed(KeySPACE) && C3DTask::instance().kbDown(KeyCONTROL))
+		{
+			CMatrix camMat = C3DTask::instance().scene().getCam()->getMatrix();
+			CVector camDir = camMat.getJ();
+			CAABBox bbox;
+			_selectedModule->mesh()->getShapeAABBox(bbox);
+			ControlerFreeLookPos = _selectedModule->position()  - camDir * (bbox.getRadius() + 0.1f);
+		}
+		
 
 		if (C3DTask::instance().kbPressed(KeyNUMPAD4))
 		{
@@ -217,7 +243,7 @@ void CEditorTask::update()
 				CModule *m = CLevelManager::instance().currentLevel().getModule(i);
 				if(m->changed())
 				{
-					CNetworkTask::instance().moduleUpdate(m);
+					CNetworkTask::instance().updateEditableElement(m);
 					m->changed(false);
 				}
 			}
@@ -257,7 +283,8 @@ void CEditorTask::enable(bool e)
 	}
 	_enable = e;
 	FollowEntity = !e;
-//	CMtpTarget::instance().controler().Camera.getMatrix()->getPos(ControlerFreeLookPos);
+	CNetworkTask::instance().setEditMode(_enable?1:0);
+	//	CMtpTarget::instance().controler().Camera.getMatrix()->getPos(ControlerFreeLookPos);
 }
 
 bool CEditorTask::enable()
