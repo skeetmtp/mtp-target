@@ -43,6 +43,40 @@ using namespace NLMISC;
 // Variables
 //
 
+const char CGuiBox::className[] = "CGuiBox";
+
+Lunar<CGuiBox>::RegType CGuiBox::methods[] = 
+{
+	bind_method(CGuiBox, getName),	
+	bind_method(CGuiBox, getCount),	
+	bind_method(CGuiBox, getElement),	
+	{0,0}
+};
+
+
+int CGuiBox::getName(lua_State *luaSession)
+{
+	lua_pushstring(luaSession,name().c_str());
+	return 1;
+}
+
+int CGuiBox::getCount(lua_State *luaSession)
+{
+	lua_Number count = elements.size();
+	lua_pushnumber(luaSession,count);
+	return 1;
+}
+
+int CGuiBox::getElement(lua_State *luaSession)
+{
+	lua_Number argIndex = luaL_checknumber(luaSession,1);
+	uint index = (uint)argIndex;
+	guiSPG<CGuiObject> item = elements[index];
+	item->luaPush(luaSession);
+	return 1;
+}
+
+
 
 //
 // Functions
@@ -136,6 +170,12 @@ CGuiObject::TGuiAlignment CGuiBox::alignment()
 void CGuiBox::alignment(int alignment)
 {
 	CGuiObject::alignment(alignment);
+}
+
+
+void CGuiBox::luaPush(lua_State *L)
+{
+	Lunar<CGuiBox>::push(L, this);
 }
 
 
@@ -363,6 +403,7 @@ float CGuiHBox::_height()
 	}	
 	return res;
 }
+
 
 void CGuiHBox::XmlRegister()
 {

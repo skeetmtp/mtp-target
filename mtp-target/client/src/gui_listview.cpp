@@ -43,6 +43,109 @@ using namespace NLMISC;
 // Variables
 //
 
+const char CGuiListView::className[] = "CGuiListView";
+
+Lunar<CGuiListView>::RegType CGuiListView::methods[] = 
+{
+	bind_method(CGuiListView, getCount),	
+	bind_method(CGuiListView, getElement),	
+	bind_method(CGuiListView, removeElement),	
+	bind_method(CGuiListView, getName),	
+	bind_method(CGuiListView, getSelected),	
+	bind_method(CGuiListView, pushBack),	
+	{0,0}
+};
+
+
+int CGuiListView::getName(lua_State *luaSession)
+{
+	lua_pushstring(luaSession,name().c_str());
+	return 1;
+}
+
+int CGuiListView::getSelected(lua_State *luaSession)
+{
+	uint selected = selectedRow() + 1;//we skip header
+	if(rows.size()<=selected) return 0; //return nothing if nothing selectable
+
+	list<guiSPG<CGuiHBox> >::iterator it;
+	guiSPG<CGuiObject> item = 0;
+	uint i=0;
+	for(i=0,it=rows.begin();it!=rows.end();it++,i++)
+	{
+		if(i==selected)
+		{
+			item = *it;
+			break;
+		}
+	}
+	if(item)
+	{
+		item->luaPush(luaSession);
+		return 1;
+	}
+	return 0;
+}
+
+int CGuiListView::pushBack(lua_State *luaSession)
+{
+	CGuiHBox *obj = (CGuiHBox *)Lunar<CGuiBox>::check(luaSession,1);
+	rows.push_back(obj);
+	return 0;
+}
+
+int CGuiListView::getCount(lua_State *luaSession)
+{
+	lua_Number count = rows.size();
+	lua_pushnumber(luaSession,count);
+	return 1;
+}
+
+int CGuiListView::getElement(lua_State *luaSession)
+{
+	lua_Number argIndex = luaL_checknumber(luaSession,1);
+	uint index = (uint)argIndex;
+	list<guiSPG<CGuiHBox> >::iterator it;
+	guiSPG<CGuiObject> item = 0;
+	uint i=0;
+	for(i=0,it=rows.begin();it!=rows.end();it++,i++)
+	{
+		if(i==index)
+		{
+			item = *it;
+			break;
+		}
+	}
+	if(item)
+	{
+		item->luaPush(luaSession);
+		return 1;
+	}
+	return 0;
+}
+
+int CGuiListView::removeElement(lua_State *luaSession)
+{
+	lua_Number argIndex = luaL_checknumber(luaSession,1);
+	uint index = (uint)argIndex;
+
+	list<guiSPG<CGuiHBox> >::iterator it;
+	uint i=0;
+	for(i=0,it=rows.begin();it!=rows.end();it++,i++)
+	{
+		if(i==index)
+		{
+			rows.remove(*it);
+			break;
+		}
+	}
+	return 0;
+}
+
+
+
+
+
 
 //
 // Functions
@@ -93,8 +196,9 @@ void CGuiListViewManager::init()
 	_headerMaterial.setZFunc(UMaterial::always);
 	_headerMaterial.setDoubleSided();
 	
-	CGuiHBox::XmlRegister();
-	CGuiVBox::XmlRegister();
+	//CGuiHBox::XmlRegister();
+	//CGuiVBox::XmlRegister();
+	CGuiListView::XmlRegister();
 	
 }
 	
@@ -168,7 +272,7 @@ void CGuiListView::spacing(float spacing)
 CGuiObject::TGuiAlignment CGuiListView::alignment()
 {
 	CGuiObject::TGuiAlignment res = CGuiObject::alignment();
-	deque<guiSPG<CGuiHBox> >::iterator it;
+	list<guiSPG<CGuiHBox> >::iterator it;
 	for(it=rows.begin();it!=rows.end();it++)
 	{
 		CGuiObject *obj = *it;
@@ -190,16 +294,25 @@ void CGuiListView::alignment(int alignment)
 void CGuiListView::init(CGuiXml *xml,xmlNodePtr node)
 {
 	CGuiContainer::init(xml,node);
-	/*
+	
 	node = xml->doc.getFirstChildNode(node,"element");
 	if(node)
+	{
 		for( node = xml->doc.getFirstChildNode(node,"object");node;node = xml->doc.getNextChildNode(node,"object") )
 		{
 			CGuiObject *object = CGuiObject::XmlCreateFromNode(xml,node);
-			elements.push_back(object);
-			xml->objects.push_back(object);
+			if(object->getClassName()=="CGuiHBox")
+			{
+				rows.push_back((CGuiHBox *)object);
+				xml->objects.push_back(object);
+			}
+			else
+			{
+				nlwarning("CGuiListView element not a CGuiHBox : %s(%s)",object->name().c_str(),object->getClassName().c_str());
+				nlassert(false);
+			}
 		}
-	*/
+	}
 }
 
 
@@ -207,7 +320,7 @@ void CGuiListView::_render(const CVector &pos,CVector &maxSize)
 {
 	uint rowCount = 0;
 	bool _pressed = false;
-	deque<guiSPG<CGuiHBox> >::iterator it;
+	list<guiSPG<CGuiHBox> >::iterator it;
 	if(rows.empty()) return;
 
 
@@ -372,7 +485,7 @@ void CGuiListView::_render(const CVector &pos,CVector &maxSize)
 
 float CGuiListView::_width()
 {
-	deque<guiSPG<CGuiHBox> >::iterator it;
+	list<guiSPG<CGuiHBox> >::iterator it;
 	float res = 0;
 	for(it=rows.begin();it!=rows.end();it++)
 	{
@@ -391,7 +504,7 @@ float CGuiListView::_width()
 
 float CGuiListView::_height()
 {
-	deque<guiSPG<CGuiHBox> >::iterator it;
+	list<guiSPG<CGuiHBox> >::iterator it;
 	float res = 0;
 	for(it=rows.begin();it!=rows.end();it++)
 	{
@@ -404,9 +517,15 @@ float CGuiListView::_height()
 		return res;
 }
 
+void CGuiListView::luaPush(lua_State *L)
+{
+	Lunar<CGuiListView>::push(L, this);
+}
+
+
 void CGuiListView::XmlRegister()
 {
-	CGuiObjectManager::instance().registerClass("CGuiVBox",CGuiVBox::Create);
+	CGuiObjectManager::instance().registerClass("CGuiListView",CGuiListView::Create);
 }
 
 CGuiObject *CGuiListView::Create()

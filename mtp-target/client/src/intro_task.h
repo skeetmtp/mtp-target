@@ -100,6 +100,8 @@ private:
 	std::string		Text1, Text2, Error1, Error2;
 	guiSPG<CGuiFrame> _errorServerFrame;
 	uint32 _autoLogin;
+
+
 };
 
 #endif

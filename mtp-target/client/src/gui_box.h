@@ -45,6 +45,7 @@ class CGuiBox : public CGuiContainer
 public:
 	
 	CGuiBox();
+	CGuiBox(lua_State *luaSession) {};
 	virtual ~CGuiBox();
 
 	virtual CGuiObject::TGuiAlignment alignment();
@@ -56,6 +57,13 @@ public:
 	virtual void init(CGuiXml *xml,xmlNodePtr node);
 
 	std::deque<guiSPG<CGuiObject> > elements;		
+
+	virtual void luaPush(lua_State *L);
+	static const char className[];	
+	static Lunar<CGuiBox>::RegType methods[];	
+	int getName(lua_State *luaSession);
+	int getCount(lua_State *luaSession);
+	int getElement(lua_State *luaSession);
 private:	
 	float _spacing;
 	CGuiStretchedQuad quad;

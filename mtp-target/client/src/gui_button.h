@@ -87,6 +87,7 @@ private:
 
 	bool _stretched;
 	bool _pressed;
+	std::string _onClickScript;
 };
 
 class CGuiButtonManager : public CSingleton<CGuiButtonManager>

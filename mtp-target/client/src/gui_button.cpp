@@ -272,6 +272,8 @@ void CGuiButton::onPressed()
 
 void CGuiButton::_onPressed()
 {
+	if(_onClickScript.size())
+		lua_dostring(_xml->LuaState,_onClickScript.c_str());
 	if(eventBehaviour)
 		eventBehaviour->onPressed();
 	onPressed();
@@ -330,6 +332,13 @@ void CGuiButton::init(CGuiXml *xml,xmlNodePtr node)
 	else
 		resetBitmap();
 	
+	xmlNodePtr snode = xml->doc.getFirstChildNode(node,"script");
+	if(snode)
+	{
+		_onClickScript=  "";
+		xml->getString(snode,"onClick",_onClickScript);
+	}
+
 }
 
 //

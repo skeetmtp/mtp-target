@@ -46,6 +46,38 @@ using namespace NLMISC;
 //
 // Variables
 //
+const char CGuiText::className[] = "CGuiText";
+
+Lunar<CGuiText>::RegType CGuiText::methods[] = 
+{
+	bind_method(CGuiText, getName),	
+	bind_method(CGuiText, getString),	
+	bind_method(CGuiText, setString),	
+	{0,0}
+};
+
+
+int CGuiText::getName(lua_State *luaSession)
+{
+	lua_pushstring(luaSession,name().c_str());
+	return 1;
+}
+
+int CGuiText::getString(lua_State *luaSession)
+{
+	lua_pushstring(luaSession,text.c_str());
+	return 1;
+}
+
+int CGuiText::setString(lua_State *luaSession)
+{
+	unsigned int len;
+	const char *cnewText= luaL_checklstring(luaSession, 1, &len);
+	string newText(cnewText);
+	text = newText;
+	return 0;
+}
+
 
 
 //
@@ -512,6 +544,10 @@ uint CGuiText::cursorIndex()
 	return _cursorIndex;
 }
 
+void CGuiText::luaPush(lua_State *L)
+{
+	Lunar<CGuiText>::push(L, this);
+}
 
 void CGuiText::XmlRegister()
 {
@@ -573,6 +609,7 @@ void CGuiTextPercent::ptrValue(float *ptrValue)
 {
 	_ptrValue = ptrValue;
 }
+
 
 void CGuiTextPercent::XmlRegister()
 {

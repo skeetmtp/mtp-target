@@ -526,6 +526,14 @@ SOURCE=.\Src\gui_container.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\src\gui_custom.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\src\gui_custom.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\Src\gui_event_behaviour.cpp
 # End Source File
 # Begin Source File
@@ -598,6 +606,14 @@ SOURCE=.\Src\gui_scale.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\src\gui_script.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\src\gui_script.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\Src\gui_scrollbar.cpp
 # End Source File
 # Begin Source File
@@ -635,6 +651,14 @@ SOURCE=.\Src\gui_text.cpp
 # Begin Source File
 
 SOURCE=.\Src\gui_text.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\src\gui_toc.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\src\gui_toc.h
 # End Source File
 # Begin Source File
 

@@ -51,6 +51,7 @@ private:
 class CGuiText : public CGuiObject
 {
 	public:
+	CGuiText(lua_State *luaSession) {};
 	CGuiText(const std::string &text);
 	CGuiText();
 	virtual ~CGuiText();
@@ -88,6 +89,13 @@ class CGuiText : public CGuiObject
 	static void XmlRegister();
 	static CGuiObject *Create();
 	virtual void init(CGuiXml *xml,xmlNodePtr node);
+
+	virtual void luaPush(lua_State *L);
+	static const char className[];	
+	static Lunar<CGuiText>::RegType methods[];	
+	int getName(lua_State *luaSession);
+	int getString(lua_State *luaSession);
+	int setString(lua_State *luaSession);
 private:
 	void _init(const std::string &text);
 	uint _cursorIndex;

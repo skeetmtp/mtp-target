@@ -34,6 +34,7 @@
 
 #include <nel/misc/path.h>
 
+#include "gui.h"
 #include "3d_task.h"
 #include "hud_task.h"
 #include "chat_task.h"
@@ -152,6 +153,8 @@ static void cbLogin(CNetMessage &msgin)
 		else
 			CMtpTarget::instance().timeBeforeTimeout(timeBeforeTimeout/1000.0f);
 	}
+
+	CGuiCustom::instance().onLogin(name);
 }
 
 static void cbLogout(CNetMessage &msgin)
@@ -170,6 +173,7 @@ static void cbLogout(CNetMessage &msgin)
 		//nlerror("You have been kicked");
 	}
 
+	CGuiCustom::instance().onLogout(CEntityManager::instance()[eid].name());
 	CEntityManager::instance().remove(eid);
 }
 

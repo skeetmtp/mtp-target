@@ -65,8 +65,14 @@ void CGameTask::init()
 	CTaskManager::instance().add(CScoreTask::instance(), 1030);
 	CTaskManager::instance().add(CChatTask::instance(), 1040);
 
-	if(CConfigFileTask::instance().configFile().getVar("CaptureMouse").asInt() == 1)
+	bool tocFound = false;
+	//tocFound = CGuiCustom::instance().load("data/gui/custom/");
+	tocFound =  CGuiCustom::instance().count()>0;
+	if(!tocFound && CConfigFileTask::instance().configFile().getVar("CaptureMouse").asInt() == 1)
 		C3DTask::instance().captureCursor(true);
+
+	
+
 }
 
 void CGameTask::update()

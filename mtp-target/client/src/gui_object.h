@@ -33,6 +33,7 @@
 #include "gui_event_behaviour.h"
 #include "gui_spg.h"
 #include <libxml/parser.h>
+#include "../../common/lua_utility.h"
 
 NLMISC::CVector CVectorMax(const NLMISC::CVector &a, const NLMISC::CVector &b);
 class CGuiXml;	
@@ -57,6 +58,7 @@ public:
 	};
 
 	CGuiObject();
+	CGuiObject(lua_State *luaSession) {};
 	virtual ~CGuiObject();
 	
 	virtual void init();
@@ -96,17 +98,25 @@ public:
 	void minSize(const NLMISC::CVector &minSize);
 	
 	std::string name();
+	std::string getClassName();
+	void setClassName(const std::string);
 
 	static CGuiObject *XmlCreateFromNode(CGuiXml *xml,xmlNodePtr node);
 	virtual void init(CGuiXml *xml,xmlNodePtr node);
 		
+	virtual void luaPush(lua_State *L);
+	int getName(lua_State *luaSession);
+	static const char className[];	
+	static Lunar<CGuiObject>::RegType methods[];	
 	
 friend class CGuiXmlManager;	
 friend class CGuiXml;	
 protected:
+	CGuiXml *_xml;
 	std::string _name;
-	virtual float _width() = 0;
-	virtual float _height() = 0;
+	std::string _className;
+	virtual float _width() {return 0;};
+	virtual float _height() {return 0;};
 	virtual void _preRender(const NLMISC::CVector &pos, NLMISC::CVector &maxSize);
 	virtual void _render(const NLMISC::CVector &pos, NLMISC::CVector &maxSize);
 	virtual void _postRender(const NLMISC::CVector &pos, NLMISC::CVector &maxSize);

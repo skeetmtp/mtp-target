@@ -18,56 +18,50 @@
  */
 
 
-//
-// This is the main class that manages all other classes
-//
-
-#ifndef MTPT_GUI_XML_H
-#define MTPT_GUI_XML_H
+#ifndef MTPT_GUI_TOC_H
+#define MTPT_GUI_TOC_H
 
 
 //
 // Includes
 //
 #include "gui_object.h"
+#include "gui_spg.h"
+#include <libxml/parser.h>
 #include <nel/misc/i_xml.h>
-//class CGuiObject;
+#include <vector>
+#include <list>
+
+
 
 //
 // Classes
 //
 
-class CGuiXml
+class CGuiToc
 {
 public:
-	CGuiObject *get(std::string name);
-	CGuiObject *getRoot();
-	CGuiObject *get(uint index);
-	uint count();
+	CGuiToc();
+	virtual ~CGuiToc();
+	virtual void update();
+	virtual void render(const NLMISC::CVector &pos, NLMISC::CVector &maxSize);
 
-	CGuiXml();
-	virtual ~CGuiXml();
+	static CGuiToc *Load(const std::string &filename);
+	static int getGuiElementByName(lua_State *L);
+	static int sendChat(lua_State *L);
+	static int sendCommand(lua_State *L);
+	static int sendToConsole(lua_State *L);
+	static int loadXml(lua_State *L);
 
-	bool getVector(xmlNodePtr node,const std::string &name,NLMISC::CVector &res);
-	bool getAlignment(xmlNodePtr node,const std::string &name,CGuiObject::TGuiAlignment &res);
-	bool getString(xmlNodePtr node,const std::string &name,std::string &res);
-	bool getBool(xmlNodePtr node,const std::string &name,bool &res);
-		
-	friend class CGuiXmlManager;
-	std::list<guiSPG<CGuiObject> > objects;
-	guiSPG<CGuiObject> root;
+	void onLogin(const std::string &name);
+	void onLogout(const std::string &name);
+
 	NLMISC::CIXml doc;
+	CGuiXml *xml;
 	lua_State				*LuaState;
-protected:
 private:
-};
-
-class CGuiXmlManager : public CSingleton<CGuiXmlManager>
-{
-public:
-	static CGuiXml *Load(const std::string &filename, lua_State *luaState=0);
-protected:
-private:
+	guiSPG<CGuiObject> _element;
+	std::list<std::string> filenameList;
 };
 
 

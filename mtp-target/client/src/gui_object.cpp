@@ -44,6 +44,26 @@ using namespace NLMISC;
 // Variables
 //
 
+const char CGuiObject::className[] = "CGuiObject";
+
+Lunar<CGuiObject>::RegType CGuiObject::methods[] = 
+{
+	/*bind_method(CParticlesProxy, setMetatable),	
+	bind_method(CParticlesProxy, getUserData),	
+	bind_method(CParticlesProxy, setUserData),	
+	*/
+	bind_method(CGuiObject, getName),	
+	{0,0}
+};
+
+
+int CGuiObject::getName(lua_State *luaSession)
+{
+	lua_pushstring(luaSession,name().c_str());
+	return 1;
+}
+
+
 
 
 //
@@ -68,6 +88,7 @@ NLMISC::CVector CVectorMax(const NLMISC::CVector &a, const NLMISC::CVector &b)
 
 void CGuiObjectManager::init()
 {
+	CGuiScriptManager::instance().init();
 	CGuiListViewManager::instance().init();
 	CGuiButtonManager::instance().init();
 	CGuiSpacerManager::instance().init();
@@ -95,21 +116,29 @@ void CGuiObjectManager::render()
 	float screenWidth = (float)C3DTask::instance().screenWidth();
 	float screenHeight = (float)C3DTask::instance().screenHeight();
 	C3DTask::instance().driver().setFrustum(CFrustum(0, screenWidth,screenHeight, 0, -1, 1, false));
-	
+
+
+	//nlinfo("(%f,%f) , (%f,%f)",a.x,a.y,b.x,b.y);
+
 	list<CGuiObject *>::iterator it;
 	for(it=objects.begin();it!=objects.end();it++)
 	{
-		CGuiObject *obj = *it;
 		CVector a(0,0,0);
 		CVector b(screenWidth,screenHeight,0);
+		CGuiObject *obj = *it;
 		obj->render(a,b);
 	}
 
+	
+	CVector a(0,0,0);
+	CVector b(screenWidth,screenHeight,0);
+	CGuiCustom::instance().render(a,b);
 	
 }
 
 void CGuiObjectManager::update()
 {
+	CGuiCustom::instance().update();
 }
 
 void CGuiObjectManager::release()
@@ -146,9 +175,14 @@ CGuiObject *CGuiObjectManager::create(const string &className)
 {
 	string2CreateFunction::iterator it;
 	it = _createFunctionMap.find(className);
+	if(it==_createFunctionMap.end())
+		nlwarning("Class not defined : %s",className.c_str());
 	nlassert(it!=_createFunctionMap.end());
 	CreateObjectCB cb = (*it).second;
-	return cb();
+	CGuiObject *res=cb();
+	if(res)
+		res->setClassName(className);
+	return res;
 }
 
 //
@@ -193,6 +227,17 @@ void CGuiObject::release()
 {
 
 }
+
+string CGuiObject::getClassName()
+{
+	return _className;
+}
+
+void CGuiObject::setClassName(const string cname)
+{
+	_className = cname;
+}
+
 
 CVector CGuiObject::globalPosition(const CVector &pos,const CVector &maxSize)
 {
@@ -428,6 +473,12 @@ string CGuiObject::name()
 	return _name;
 }
 
+
+void CGuiObject::luaPush(lua_State *L)
+{
+	Lunar<CGuiObject>::push(L, this);
+}
+
 CGuiObject *CGuiObject::XmlCreateFromNode(CGuiXml *xml, xmlNodePtr node)
 {
 	bool isok;
@@ -443,6 +494,7 @@ CGuiObject *CGuiObject::XmlCreateFromNode(CGuiXml *xml, xmlNodePtr node)
 
 void CGuiObject::init(CGuiXml *xml,xmlNodePtr node)
 {
+	_xml = xml;
 	bool isok;
 	string name;
 	isok = xml->doc.getPropertyString(_name,node,"name");
@@ -456,6 +508,17 @@ void CGuiObject::init(CGuiXml *xml,xmlNodePtr node)
 	TGuiAlignment align;
 	if(xml->getAlignment(node,"alignment",align))
 		alignment(align);
+
+	xmlNodePtr snode = xml->doc.getFirstChildNode(node,"script");
+	if(snode)
+	{
+		string onLoadScript;
+		if(xml->getString(snode,"onLoad",onLoadScript))
+		{
+			lua_dostring(xml->LuaState,onLoadScript.c_str());
+		}
+	}
+
 	
 }
 

@@ -111,7 +111,7 @@ void CMtpTarget::init()
 	CTaskManager::instance().add(CResourceManager::instance(), 30);
 	CTaskManager::instance().add(CResourceManagerLan::instance(), 30);
 	CTaskManager::instance().add(C3DTask::instance(), 110);
-	CTaskManager::instance().add(CGuiTask::instance(), 130);
+	CTaskManager::instance().add(CGuiTask::instance(), 1050);
 	CTaskManager::instance().add(CEditorTask::instance(), 120);
 	CTaskManager::instance().add(CSwap3DTask::instance(), 10000);
 	CTaskManager::instance().add(CFontManager::instance(), 40);

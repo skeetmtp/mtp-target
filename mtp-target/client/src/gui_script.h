@@ -22,52 +22,52 @@
 // This is the main class that manages all other classes
 //
 
-#ifndef MTPT_GUI_XML_H
-#define MTPT_GUI_XML_H
+#ifndef MTPT_GUI_SCRIPT_H
+#define MTPT_GUI_SCRIPT_H
 
 
 //
 // Includes
 //
+
+#include <nel/3d/u_material.h>
+
 #include "gui_object.h"
-#include <nel/misc/i_xml.h>
-//class CGuiObject;
+
 
 //
 // Classes
 //
 
-class CGuiXml
+class CGuiScript : public CGuiObject
 {
 public:
-	CGuiObject *get(std::string name);
-	CGuiObject *getRoot();
-	CGuiObject *get(uint index);
-	uint count();
+	CGuiScript();
+	virtual ~CGuiScript();
 
-	CGuiXml();
-	virtual ~CGuiXml();
 
-	bool getVector(xmlNodePtr node,const std::string &name,NLMISC::CVector &res);
-	bool getAlignment(xmlNodePtr node,const std::string &name,CGuiObject::TGuiAlignment &res);
-	bool getString(xmlNodePtr node,const std::string &name,std::string &res);
-	bool getBool(xmlNodePtr node,const std::string &name,bool &res);
-		
-	friend class CGuiXmlManager;
-	std::list<guiSPG<CGuiObject> > objects;
-	guiSPG<CGuiObject> root;
-	NLMISC::CIXml doc;
-	lua_State				*LuaState;
-protected:
+	void load(lua_State *luaState,const std::string &filename);
+	
+	virtual float _width() {return 0;};
+	virtual float _height() {return 0;};
+	
+	static void XmlRegister();
+	static CGuiObject *Create();
+	virtual void init(CGuiXml *xml,xmlNodePtr node);
 private:
 };
 
-class CGuiXmlManager : public CSingleton<CGuiXmlManager>
+class CGuiScriptManager : public CSingleton<CGuiScriptManager>
 {
 public:
-	static CGuiXml *Load(const std::string &filename, lua_State *luaState=0);
+	virtual void init();
+	virtual void update() { }
+	virtual void render();
+	virtual void release();
+
+	friend class CGuiScript;
 protected:
-private:
+	
 };
 
 

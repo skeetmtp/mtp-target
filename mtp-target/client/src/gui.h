@@ -41,6 +41,9 @@
 #include "gui_scrollbar.h"
 #include "gui_progress_bar.h"
 #include "gui_xml.h"
+#include "gui_toc.h"
+#include "gui_custom.h"
+#include "gui_script.h"
 
 
 

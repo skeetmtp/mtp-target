@@ -48,6 +48,7 @@ public:
 	virtual std::string name() const { return "CChatTask"; }
 
 	void	addLine(const std::string &text);
+	void	addToInput(const std::string &text);
 		
 private:
 	int chatLineCount;

@@ -18,40 +18,41 @@
  */
 
 
-//
-// This is the main class that manages all other classes
-//
-
-#ifndef MTPT_GAME_TASK_H
-#define MTPT_GAME_TASK_H
+#ifndef MTPT_GUI_CUSTOM_H
+#define MTPT_GUI_CUSTOM_H
 
 
 //
 // Includes
 //
-#include "gui.h"
+#include "gui_toc.h"
+#include <vector>
+
 
 
 //
 // Classes
 //
 
-class CGameTask : public CSingleton<CGameTask>, public ITask
+class CGuiCustom : public CSingleton<CGuiCustom>
 {
 public:
-
-	virtual void init();
+	CGuiCustom();
+	virtual ~CGuiCustom();
 	virtual void update();
-	virtual void render();
-	virtual void release();
+	virtual void render(const NLMISC::CVector &pos, NLMISC::CVector &maxSize);
+	CGuiToc *getTocByLuaState(lua_State *L);
+	
+	bool load(const std::string &path);
 
-	virtual void stop();
-	
-	virtual std::string name() const { return "CGameTask"; }
-	
+	void onLogin(const std::string &name);
+	void onLogout(const std::string &name);
+
+	uint32 count() {return tocList.size();};
+
 private:
-	guiSPG<CGuiCustom> customGui;
-
+	std::vector<CGuiToc *> tocList;
 };
+
 
 #endif

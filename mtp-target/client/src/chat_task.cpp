@@ -192,6 +192,11 @@ void CChatTask::release()
 {
 }
 
+void CChatTask::addToInput(const string &text)
+{
+	ChatInput += text;
+}
+
 void CChatTask::addLine(const std::string &text)
 {
 	if (CurrentChatLine == ChatText.rbegin())

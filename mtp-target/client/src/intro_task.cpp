@@ -255,6 +255,8 @@ void CIntroTask::updateInit()
 		State = eLoginOnlan;
 #endif
 	
+	if(CConfigFileTask::instance().configFile().getVar("CustomGui").asInt()>0)
+		CGuiCustom::instance().load("data/gui/custom/");
 	
 }
 
@@ -524,6 +526,7 @@ void CIntroTask::update()
 		// want to quit
 		CTaskManager::instance().exit();
 	}
+
 	
 }
 

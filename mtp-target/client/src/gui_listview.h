@@ -55,6 +55,7 @@ class CGuiListView : public CGuiContainer
 {
 public:
 	
+	CGuiListView(lua_State *luaSession) {};
 	CGuiListView();
 	virtual ~CGuiListView();
 
@@ -76,8 +77,19 @@ public:
 	virtual void init(CGuiXml *xml,xmlNodePtr node);
 	
 
-	std::deque<guiSPG<CGuiHBox> > rows;		
+	std::list<guiSPG<CGuiHBox> > rows;		
 	guiSPG<CGuiListViewEventBehaviour> eventBehaviour;
+
+	
+	virtual void luaPush(lua_State *L);
+	static const char className[];	
+	static Lunar<CGuiListView>::RegType methods[];	
+	int getElement(lua_State *luaSession);
+	int getCount(lua_State *luaSession);
+	int removeElement(lua_State *luaSession);
+	int getName(lua_State *luaSession);
+	int getSelected(lua_State *luaSession);
+	int pushBack(lua_State *luaSession);
 private:	
 	float _spacing;
 	CGuiStretchedQuad quad;

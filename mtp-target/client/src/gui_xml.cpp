@@ -61,6 +61,36 @@ CGuiObject *CGuiXml::get(string name)
 	return 0;
 }
 
+CGuiObject *CGuiXml::getRoot()
+{
+	return root;
+}
+
+CGuiObject *CGuiXml::get(uint index)
+{
+	uint i;
+	CGuiObject *obj;
+	list<guiSPG<CGuiObject> >::iterator it;
+	for(i=0,it=objects.begin();it!=objects.end();it++,i++)
+	{
+		obj = *it;
+		if(i==index)
+			return obj;
+	}
+	return 0;
+}
+
+uint CGuiXml::count()
+{
+	return objects.size();
+}
+
+
+
+CGuiXml::CGuiXml()
+{
+	LuaState = 0;
+}
 
 CGuiXml::~CGuiXml()
 {
@@ -68,7 +98,8 @@ CGuiXml::~CGuiXml()
 }
 
 
-CGuiXml *CGuiXmlManager::Load(const string &filename)
+
+CGuiXml *CGuiXmlManager::Load(const string &filename, lua_State *luaState)
 {
 
 	xmlNodePtr node;
@@ -77,6 +108,7 @@ CGuiXml *CGuiXmlManager::Load(const string &filename)
 	if (file.open(CPath::lookup(filename, false).c_str()))
 	{
 		res = new CGuiXml;
+		res->LuaState = luaState;
 		if (res->doc.init(file))
 		{
 			node = res->doc.getRootNode();
@@ -114,6 +146,7 @@ CGuiXml *CGuiXmlManager::Load(const string &filename)
 	{
 		CGuiObject *object = CGuiObject::XmlCreateFromNode(res,node);
 		res->objects.push_back(object);
+		res->root = object;
 	}
 
 	
