@@ -66,7 +66,13 @@ packBit32::packBit32(uint32 bits)
 
 void packBit32::packBits(uint32 newBits,uint32 count)
 {
-	nlassert(((uint32)1<<count)>newBits);
+	//nlassert(((uint32)1<<count)>newBits);
+	if(newBits>=((uint32)1<<count))
+	{
+		nlwarning("((uint32)1<<count(%d))>newBits(%d)",count,newBits);
+		//TODO SKEET
+		newBits = (1<<count)-1;
+	}
 	currentAccess += count;
 	nlassert(currentAccess<=32);
 	bits = bits<<count;
