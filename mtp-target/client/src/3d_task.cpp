@@ -182,7 +182,7 @@ void C3DTask::init()
 	}
 
 	Driver->EventServer.addListener (EventCharId, &InterfaceListener);
-//	Driver->enableLowLevelKeyboard(true);
+	Driver->enableLowLevelKeyboard(true);
 
 	Driver->setAmbientColor(AmbientColor);
 

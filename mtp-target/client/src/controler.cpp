@@ -381,10 +381,16 @@ void CControler::update()
 			nlinfo(">>KeyLCONTROL");
 		if(C3DTask::instance().kbPressed(KeyRCONTROL))
 			nlinfo(">>KeyRCONTROL");
-		*/
+			*/
+		
 
 		if (C3DTask::instance().kbPressed(KeyLCONTROL) || C3DTask::instance().kbPressed(KeyRCONTROL) || C3DTask::instance().kbPressed(KeyCONTROL) && !C3DTask::instance().kbDown(KeyMENU))
 		{
+			//trick to remove all key control pressed event
+			C3DTask::instance().kbPressed(KeyLCONTROL);
+			C3DTask::instance().kbPressed(KeyRCONTROL);
+			C3DTask::instance().kbPressed(KeyCONTROL);
+
 			CNetworkTask::instance().openClose();
 			//if(isLocal())
 			swapOpenClose();
