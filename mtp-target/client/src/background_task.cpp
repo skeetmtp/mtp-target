@@ -101,11 +101,13 @@ void CBackgroundTask::render()
 			C3DTask::instance().driver().drawBitmap (x, y, BackSize, BackSize, *(UTexture*)Background);
 		}
 	}
-
+	
 	C3DTask::instance().driver().drawBitmap (20+250+_dx2,480-206+_dy2-20, LogoScale*256.0f, LogoScale*256.0f, *(UTexture*)Target, true, CRGBA(0,0,0,100));
 	C3DTask::instance().driver().drawBitmap (250+_dx2,480-206+_dy2, LogoScale*256.0f, LogoScale*256.0f, *(UTexture*)Target);
 	C3DTask::instance().driver().drawBitmap (20+150, 480-300-20, LogoScale*256, LogoScale*256, *(UTexture*)Logo, true, CRGBA(0,0,0,100));
 	C3DTask::instance().driver().drawBitmap (150, 480-300, LogoScale*256, LogoScale*256, *(UTexture*)Logo, true, CRGBA(255,255,255,230));
+
+	C3DTask::instance().driver().drawBitmap (0, 0, 1, 1, *(UTexture*)Background);//FAKE drawbitmap (no alpha in texture)to restore soem flag on gfx card (ati bug)
 }
 
 void CBackgroundTask::release()
