@@ -68,7 +68,8 @@ public:
 	uint8 getStartPointCount();
 	void updateStartPoint(uint32 id,NLMISC::CVector pos,NLMISC::CVector rot);
 	
-	
+	void initBeforeStartLevel();
+		
 	void save();
 	bool changed();
 	

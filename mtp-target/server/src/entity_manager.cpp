@@ -1114,3 +1114,15 @@ float CEntityManager::slowerVelocity()
 
 	return res;
 }
+
+void CEntityManager::initBeforeStartLevel()
+{
+	CEntityManager::EntityConstIt it;
+	for(it = entities().begin(); it != entities().end(); it++)
+	{
+		CEntity *c = *it;
+		c->initBeforeStartLevel();		
+	}
+	
+	
+}

@@ -201,9 +201,19 @@ void CLevel::_luaInit()
 	}
 	lua_pop(_luaSession, 1);  // removes `key'
 	
+
+}
+
+void CLevel::initBeforeStartLevel()
+{
+	
+	CEntityManager::instance().initBeforeStartLevel();
+
 	for(uint i = 0; i < Modules.size(); i++)
 		Modules[i]->initBeforeStartLevel();
 
+	CLuaEngine::instance().levelInit();
+	
 }
 
 CLevel::~CLevel()

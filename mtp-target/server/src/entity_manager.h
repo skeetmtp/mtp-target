@@ -67,6 +67,7 @@ public:
 	void addBot(const std::string &name, bool isAutomatic);
 	void removeBot();
 
+	void initBeforeStartLevel();
 	void openClose(uint8 eid);
 	void update(uint8 eid, const NLMISC::CVector &entityForce);
 

@@ -64,7 +64,6 @@ void CWaitingClientsSessionState::update()
 
 		CLevelManager::instance().newLevel();
 		string CurrentLevel = CLevelManager::instance().currentLevel().fileName();
-		CLuaEngine::instance().levelInit();
 
 //ace		string luaCodeFilename = CPath::lookup(CurrentLevel+".lua", false);
 //		CLuaEngine::loadLevelCode(luaCodeFilename);
@@ -106,7 +105,7 @@ void CWaitingClientsSessionState::update()
 				(*it)->LastVel[i] = 0;
 			
 			(*it)->LastVelPos = 0;
-			(*it)->initBeforeStartLevel();
+			//(*it)->initBeforeStartLevel();
 			
 			// bot are always ready
 			if((*it)->type() == CEntity::Bot)

@@ -59,5 +59,6 @@ void CWaitingReadySessionState::update()
 		
 		CNetMessage msgout(CNetMessage::EverybodyReady);
 		CNetwork::instance().send(msgout);
+		CLevelManager::instance().currentLevel().initBeforeStartLevel();
 	}
 }
