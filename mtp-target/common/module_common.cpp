@@ -85,7 +85,7 @@ void CModuleCommon::init(const string &name,uint8 id, CVector position, CAngleAx
 	ShapeName = name+".shape";
 	
 	// Get collision faces
-	loadMesh(ShapeName, Vertices, Indices);
+	loadMesh(ShapeName, Vertices, Normals, Indices);
 
 }
 

@@ -58,7 +58,7 @@ using namespace NLMISC;
 //
 
 
-void loadMesh(const std::string &meshFileName, std::vector<NLMISC::CVector> &vertices, std::vector<int> &indices)
+void loadMesh(const std::string &meshFileName, std::vector<NLMISC::CVector> &vertices, std::vector<NLMISC::CVector> &normals, std::vector<int> &indices)
 {
 	NL3D::registerSerial3d();
 
@@ -117,10 +117,13 @@ void loadMesh(const std::string &meshFileName, std::vector<NLMISC::CVector> &ver
 	{
 		const void *vv = vb.getVertexCoordPointer(i);
 		CVector v = *(CVector*)vv;
+		const void *nn = vb.getNormalCoordPointer(i);
+		CVector n = *(CVector*)nn;
 //		uint j;
 //		for(j = 0; j < vertices.c_str(); j++)
 //		{
 			vertices.push_back(tmat * v);
+			normals.push_back(n);
 //		}
 //		if(j)
 	}
