@@ -9,6 +9,7 @@ function Entity:init()
   self:setCurrentScore(0);
   self:setStartPointId(clientId+getSessionId()*2);
   clientId = clientId + 1;
+  --clientId = math.random(2);
   --self:setMaxLinearVelocity(0.2);
 end
 
