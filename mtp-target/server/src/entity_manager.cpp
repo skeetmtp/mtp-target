@@ -979,7 +979,7 @@ MTPT_COMMAND(mute, "switch user chat on/off", "[<eid>|<name>]")
 {
 	if(args.size() != 1) return false;
 	
-	nlinfo("ban %s", args[0].c_str());
+	nlinfo("mute %s", args[0].c_str());
 	
 	CEntity *e = getByString(args[0]);
 
@@ -1024,6 +1024,8 @@ MTPT_COMMAND(ban, "ban a user from the server", "[<eid>|<name>] [duration]")
 	
 	nlinfo("%s bans %s (%s) %d",kickerName.c_str(), userName.c_str(),ip.c_str(),duration);
 	CUnifiedNetwork::getInstance()->send("LS", msgout);
+	string cmd = "/kick "+userName;
+	CCommand::execute(entity,cmd, *InfoLog);
 	
 	//TODO
 	
