@@ -1,4 +1,35 @@
 <?php
+include_once("config.php");
+
+function validInput($input)
+{
+  if(strlen($input)>20) return false;
+  $res = (ereg("^[\-_\.A-Za-z0-9([)(|\]|])]+$",$input));
+  //$res = (ereg("^[_\.A-Za-z0-9\-]+$",$input));
+  /*
+  if(!$res)
+  	echo "not a valid input : ".$input."<br>";
+  */
+  return $res;
+}
+
+function textureName2Id($texture_name)
+{
+	  $requete = "SELECT Id FROM texture WHERE Name='".$texture_name."';";
+	  $resultat=exec_game_db_requete($requete);
+	
+	  if($ligne = mysql_fetch_array($resultat))
+	  {
+	  	return $ligne[0];
+	  }
+	  echo "texture not found : ".$texture_name;
+	  return -1;	
+}
+
+
+
+if(!isset($user_login) || !validInput($user_login))
+	$user_login = "Anonymous";
 
 $uploaddir = '/home/ace/cvs/mtp-target/user_texture/';
 $uploadfilename = strtolower($_FILES['userfile']['name']);
@@ -34,9 +65,16 @@ if (move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile))
    	fclose($fp);
    }
 
+/*
+   echo "<p>Thank you $user_login !";
    echo "<p>The file '".$uploadfilename."' was uploaded(will be available on servers within 15 min).";
    echo "<p>Don't forget  to add the following line in your mtp_target.cfg: ";
    echo '<pre>EntityTexture = "'.$regs[1].'";</pre></p>';
+*/   
+   $requete = sprintf("INSERT INTO texture (Name,Date,UploadBy) VALUES('%s','%s','%s');",$regs[1],date("Y-m-d H:i:s"),$user_login);
+   $resultat=exec_game_db_requete($requete);
+   $user_texture_id = textureName2Id($regs[1]);
+   header("Location: http://www.mtp-target.org/index.php?page=user_texture_upload_done.php&user_texture_id=$user_texture_id");
 }
 else
 {

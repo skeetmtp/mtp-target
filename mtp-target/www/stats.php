@@ -383,21 +383,23 @@ function generateHtml($server)
 	fprintf($html_fp,"</table>\n");
 	fclose($html_fp);
 }
-	if(!isset($server)) $server = "easy";
-	
-	//$lastModeTime = strtotime(date("Y-m-d H:i:s")) - filemtime("stats_$server.html");
-	//printf("%d<br>",$lastModeTime);
 
-	if (!file_exists("stats_$server.html") || (strtotime(date("Y-m-d H:i:s")) - filemtime("stats_$server.html"))>60*5)
-		generateHtml($server);
-	
-	$html_fp = fopen("stats_$server.html", "rt");
-	while (!feof($html_fp)):
-		$line = fgets($html_fp, 2048);
-		echo $line;
-		$html_fp++;
-	endwhile;
-	fclose($html_fp);
+
+if(!isset($server)) $server = "easy";
+
+//$lastModeTime = strtotime(date("Y-m-d H:i:s")) - filemtime("stats_$server.html");
+//printf("%d<br>",$lastModeTime);
+
+if (!file_exists("stats_$server.html") || (strtotime(date("Y-m-d H:i:s")) - filemtime("stats_$server.html"))>60*5)
+	generateHtml($server);
+
+$html_fp = fopen("stats_$server.html", "rt");
+while (!feof($html_fp)):
+	$line = fgets($html_fp, 2048);
+	echo $line;
+	$html_fp++;
+endwhile;
+fclose($html_fp);
 
 ?>
 </body>
