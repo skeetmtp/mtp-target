@@ -307,19 +307,20 @@ static void nearCallback(void *data, dGeomID o1, dGeomID o2)
 			break;
 		case CLIENT_CLIENT:
 
-			contact[i].surface.mode = dContactBounce;
-//			contact[i].surface.mu = dInfinity;
-			contact[i].surface.mu = 0;
-			contact[i].surface.mu2 = 0;
-			if(CLevelManager::instance().haveCurrentLevel())
+			if(CLevelManager::instance().haveCurrentLevel() && CLevelManager::instance().currentLevel().clientBounce())
 			{
-				contact[i].surface.bounce = BounceClient;
-				contact[i].surface.bounce_vel = BounceVelClient;
+				contact[i].surface.mode = dContactBounce;
+				//			contact[i].surface.mu = dInfinity;
+				contact[i].surface.mu = 0;
+				contact[i].surface.mu2 = 0;
+				contact[i].surface.bounce = CLevelManager::instance().currentLevel().clientBounceCoef();
+				contact[i].surface.bounce_vel = CLevelManager::instance().currentLevel().clientBounceVel();
 			}
 			else
 			{
-				contact[i].surface.bounce = CLevelManager::instance().currentLevel().clientBounceCoef();
-				contact[i].surface.bounce_vel = CLevelManager::instance().currentLevel().clientBounceVel();
+				contact[i].surface.mode = dContactMu2;
+				contact[i].surface.mu = dInfinity;
+				contact[i].surface.mu2 = dInfinity;
 			}
 			/*
 			contact[i].surface.mode = dContactMu2;
