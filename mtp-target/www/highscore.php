@@ -39,7 +39,6 @@
 			list($user,$pass,$score) = explode(" ",$line);
 			$arr = explode(" ",$line);
 			$p=0;
-			$teamnb = 0;
 
 			for ($i = 0; $i+2 < sizeof($arr);)
 			{
@@ -51,16 +50,16 @@
 				if($b !== false && $e !== false)
 				{
 					$team = substr($my1[$p],$b+1,$e-$b-1);
-					$team_name[$teamnb] = $team;
-					$team_score[$teamnb] = $team_score[$teamnb] + $my2[$p];
-					$teamnb++;
+					$team_score[$team] = $team_score[$team] + $my2[$p];
 				}
 
 				$i+=3;
 				$p++;
 			}
+			arsort($team_score, SORT_NUMERIC);
+			reset($team_score);
+
 			array_multisort($my2, SORT_DESC, $my1);
-			array_multisort($team_score, SORT_DESC, $team_name);
 
 			echo "<h3>Registered:</h3>";
 			echo sizeof($my1)." players</p>";
@@ -76,8 +75,13 @@
 				echo "$my1[$i] : $my2[$i]<br>";
 
                         echo "<h3>Team Highscores:</h3>";
-                        for ($i = 0; $i < 3; $i++)
-                                echo "$team_name[$i] : $team_score[$i]<br>";
+			$i = 0;	
+			while (list($key, $val) = each($team_score))
+			{
+                                echo "$key : $val<br>";
+				$i=$i+1;
+				if($i==3) break;
+			}
 
 		}
 		else if (strstr ($line, "Levels"))
