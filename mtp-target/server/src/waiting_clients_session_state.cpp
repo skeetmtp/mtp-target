@@ -131,13 +131,7 @@ void CWaitingClientsSessionState::update()
 			
 			// bot are always ready
 			if((*it)->type() == CEntity::Bot)
-			{
 				(*it)->Ready = true;
-				CNetMessage msgout(CNetMessage::Ready);
-				uint8 eid = (*it)->id();
-				msgout.serial(eid);
-				CNetwork::instance().send(msgout);
-			}
 		}
 		
 		CNetMessage msgout(CNetMessage::StartSession);
@@ -158,6 +152,17 @@ void CWaitingClientsSessionState::update()
 		msgout.serialCont(eids);		
 		CNetwork::instance().send(msgout);
 		
+		for(it = acces.value().begin(); it != acces.value().end(); it++, i++)
+		{
+			if((*it)->type() == CEntity::Bot)
+			{
+				CNetMessage msgout(CNetMessage::Ready);
+				uint8 eid = (*it)->id();
+				msgout.serial(eid);
+				CNetwork::instance().send(msgout);
+			}
+		}
+			
 /*
 		for(it = acces.value().begin(); it != acces.value().end(); it++)
 		{
