@@ -91,7 +91,7 @@ CWaterTask::CWaterTask():ITask()
 	WaterMesh     = NULL;	
 }
 
-static void cbVar (CConfigFile::CVar &var)
+void cbVar (CConfigFile::CVar &var)
 {
 	if (CWaterTask::instance().WaterShape == 0)
 	{
