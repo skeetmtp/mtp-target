@@ -28,6 +28,7 @@
 #include <nel/net/service.h>
 
 #include "level.h"
+#include "mtp_target.h"
 #include "level_manager.h"
 #include "resource_manager.h"
 #include "entity_manager.h"
@@ -92,6 +93,7 @@ void CLevelManager::loadLevel(const std::string &fileName)
 	}
 
 	string res = CResourceManager::instance().get(fileName);
+	if(CMtpTarget::instance().error()) return;
 	nlassert(!res.empty());
 	
 	CurrentLevel = new CLevel(res);

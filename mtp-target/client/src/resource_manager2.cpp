@@ -623,10 +623,12 @@ string CResourceManager::get(const string &filename, bool &ok)
 			}
 			else
 			{
-				string msg = toString("Cannot get file from server : '%s'",fn.c_str());
+				nlwarning("cannot provide any file");
+				string msg = toString("Cannot get file from server : '%s'\n please contact developers",fn.c_str());
 				CMtpTarget::instance().error(msg);	
 			}
 		}
+		nlinfo("return : '%s'",path.c_str());
 		loadChildren(path);
 		ok = true;
 		return path;
