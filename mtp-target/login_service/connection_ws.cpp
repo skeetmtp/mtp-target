@@ -349,7 +349,7 @@ static void cbWSIdentification (CMessage &msgin, const std::string &serviceName,
 			Shards[s].SId = sid;
 			Shards[s].ShardId = shardId;
 			Shards[s].Online = true;
-			Shards[s].WSAddr = ia.ipAddress();
+			Shards[s].WSAddr = row[1];
 			Shards[s].ShardName = row[3];
 		}
 		else
