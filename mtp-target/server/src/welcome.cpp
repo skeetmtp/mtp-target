@@ -60,17 +60,23 @@ using namespace NLNET;
 //
 
 /// association between cookie in string and username
-static map<string, string> UserIdNameAssociations;
+static map<string, pair<string, sint32> > UserIdNameAssociations;
 
 static string ListenAddr;
 
-string getUserFromCookie(const string &cookie)
+string getUserFromCookie(const string &cookie, sint32 &totalScore)
 {
-	map<string, string>::iterator it = UserIdNameAssociations.find(cookie);
+	map<string, pair<string, sint32> >::iterator it = UserIdNameAssociations.find(cookie);
 	if(it == UserIdNameAssociations.end())
-		return "dummy";
+	{
+		totalScore = 0;
+		return "";
+	}
 	else
-		return(*it).second;
+	{
+		totalScore = (*it).second.second;
+		return (*it).second.first;
+	}
 }
 
 
@@ -89,9 +95,9 @@ void cbLSChooseShard (CMessage &msgin, const std::string &serviceName, uint16 si
 	//
 
 	string cookie, userName;
+	sint32 totalScore;
 
-	msgin.serial(cookie);
-	msgin.serial(userName);
+	msgin.serial(cookie, userName, totalScore);
 
 	// always accept clients
 	string reason = "";
@@ -110,9 +116,9 @@ void cbLSChooseShard (CMessage &msgin, const std::string &serviceName, uint16 si
 
 	CUnifiedNetwork::getInstance()->send("LS", msgout);
 
-	UserIdNameAssociations.insert(make_pair(cookie, userName));
+	UserIdNameAssociations.insert(make_pair(cookie, make_pair(userName,totalScore)));
 
-	nlinfo("Client %s will come with cookie %s to ip '%s'", userName.c_str(), cookie.c_str(), ListenAddr.c_str());
+	nlinfo("Client %s will come with cookie %s to ip '%s' with total score %d", userName.c_str(), cookie.c_str(), ListenAddr.c_str(), totalScore);
 }
 
 void cbFailed(CMessage &msgin, const std::string &serviceName, uint16 sid)

@@ -577,8 +577,6 @@ bool CEntityManager::connected(const std::string &name)
 
 string CEntityManager::check(const string &login, const string &password, bool dontCheck, sint32 &score)
 {
-	score = 0;
-
 	nlinfo("Check new client '%s'", login.c_str());
 
 	if(login.empty())

@@ -340,6 +340,8 @@ static void cbClientChooseShard(CMessage &msgin, TSockId from, CCallbackNetBase 
 		msgout.serial(cookie);
 		string name = row[1];
 		msgout.serial(name);
+		sint32 totalScore = atoi(row[6]);
+		msgout.serial(totalScore);
 		CUnifiedNetwork::getInstance()->send(sid, msgout);
 
 		return;

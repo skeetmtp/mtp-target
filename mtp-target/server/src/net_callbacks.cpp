@@ -107,6 +107,8 @@ static void cbLogin(CClient *c, CNetMessage &msgin)
 	string texture;
 	uint32 networkVersion = CNetwork::instance().version();
 	string error;
+
+	c->Score = 0;
 	
 	nlinfo("New client login");
 	
@@ -144,7 +146,7 @@ static void cbLogin(CClient *c, CNetMessage &msgin)
 		{
 			// already checks in LS
 			nlinfo("Receive a client with cookie %s", cookie.c_str());
-			login = getUserFromCookie(cookie);
+			login = getUserFromCookie(cookie, c->Score);
 			if(login.empty())
 			{
 				error = "Bad cookie identification";
