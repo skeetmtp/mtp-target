@@ -39,6 +39,17 @@ if(!checkLoginPassword($user_merge_login,$user_merge_password))
 	$requete = sprintf("UPDATE user_session SET UId=%d WHERE UId=%d;",$merge_uid,$delete_uid);
 	$result=exec_game_db_requete($requete);
 
+	$oldScore = 0;
+	$requete = sprintf("Select Score FROM user WHERE UId=%d;",$delete_uid);
+	$result=exec_game_db_requete($requete);
+	if($ligne = mysql_fetch_array($result))
+	{
+		$oldScore = $ligne[0];
+	}
+
+	$requete = sprintf("UPDATE user SET Score=Score+%d WHERE UId=%d;",$oldScore,$merge_uid);
+	$result=exec_game_db_requete($requete);
+
 	$requete = sprintf("DELETE FROM user WHERE UId=%d;",$delete_uid);
 	$result=exec_game_db_requete($requete);
 
