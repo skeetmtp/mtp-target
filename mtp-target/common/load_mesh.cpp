@@ -102,27 +102,30 @@ uint32 loadMesh(const std::string &meshFileName, std::vector<NLMISC::CVector> &v
 		uint nbrp = mg.getNbRdrPass(i);
 		for(uint j = 0; j < nbrp; j++)
 		{
-			const CPrimitiveBlock &pb = mg.getRdrPassPrimitiveBlock(i, j);
-			const uint32 *ptr = pb.getTriPointer();
-			uint nbt = pb.getNumTri();
-			for(uint k = 0; k < nbt*3; k+=3)
+			const CIndexBuffer &ib = mg.getRdrPassPrimitiveBlock(i, j);
+			CIndexBufferRead iba;
+			ib.lock(iba);
+			const uint32 *ibptr = iba.getPtr();
+			uint nbi = ib.getNumIndexes();
+			for(uint k = 0; k < nbi; k++)
 			{
-				nbFaces++;
-				indices.push_back(ptr[k+0]);
-				indices.push_back(ptr[k+1]);
-				indices.push_back(ptr[k+2]);
-//				nlinfo("%d %d %d %d", k, ptr[k+0], ptr[k+1], ptr[k+2]);
+				indices.push_back(ibptr[k]);
+				if((k%3)==2)
+					nbFaces++;
+				//				nlinfo("%d %d %d %d", k, ptr[k+0], ptr[k+1], ptr[k+2]);
 			}
 		}
 	}
 
 	const CVertexBuffer &vb = mg.getVertexBuffer();
+	CVertexBufferRead vba;
+    vb.lock (vba);
 	uint32 nbv = vb.getNumVertices();
 	for(uint i = 0; i < nbv; i++)
 	{
-		const void *vv = vb.getVertexCoordPointer(i);
+		const void *vv = vba.getVertexCoordPointer(i);
 		CVector v = *(CVector*)vv;
-		const void *nn = vb.getNormalCoordPointer(i);
+		const void *nn = vba.getNormalCoordPointer(i);
 		CVector n = *(CVector*)nn;
 //		uint j;
 //		for(j = 0; j < vertices.c_str(); j++)

@@ -15,7 +15,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "client"=".\client\client.dsp" - Package Owner=<4>
+Project: "Client"=".\client\client.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -24,22 +24,13 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
-    Project_Dep_Name misc
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name net
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name driver_opengl
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name 3d
+    Project_Dep_Name driver_direct3d
     End Project Dependency
 }}}
 
 ###############################################################################
 
-Project: "server"=".\server\server.dsp" - Package Owner=<4>
+Project: "Server"=".\server\server.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -47,12 +38,18 @@ Package=<5>
 
 Package=<4>
 {{{
-    Begin Project Dependency
-    Project_Dep_Name misc
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name net
-    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "driver_direct3d"="..\nel\src\3d\driver\direct3d\driver_direct3d.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
     Begin Project Dependency
     Project_Dep_Name 3d
     End Project Dependency

@@ -126,7 +126,8 @@ void C3DTask::init()
 #ifdef NL_OS_WINDOWS
 	icon = (uint)LoadIcon(ghInstance,MAKEINTRESOURCE(IDI_ICON1));
 #endif
-	Driver = UDriver::createDriver(icon);
+	bool useD3D = CConfigFileTask::instance().configFile().getVar("OpenGL").asInt()==0;
+	Driver = UDriver::createDriver(icon,useD3D);
 	nlassert(Driver);
 
 	// Create the window with config file values
