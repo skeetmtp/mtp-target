@@ -34,6 +34,13 @@ using namespace NLMISC;
 using namespace NL3D;
 
 
+CCrashEvent CCrashEvent::operator+( const CCrashEvent &other ) const
+{
+	return CCrashEvent( crash || other.crash , pos + other.pos);
+}
+
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////
 //
 //
@@ -44,28 +51,30 @@ CEntityState::CEntityState()
 	this->position = CVector::Null;
 	this->onWater = false;
 	this->openCloseEvent = false;
+	this->crashEvent = CCrashEvent(false,CVector::Null);	
 }
 
-CEntityState::CEntityState(const CVector &position,bool onWater,bool openCloseEvent)
+CEntityState::CEntityState(const CVector &position,bool onWater,bool openCloseEvent, CCrashEvent crashEvent)
 {
 	this->position = position;
 	this->onWater = onWater;
 	this->openCloseEvent = openCloseEvent;
+	this->crashEvent = crashEvent;
 }
 
 CEntityState CEntityState::operator+( const CEntityState &other ) const
 {
-	return CEntityState( position + other.position , onWater || other.onWater, openCloseEvent || other.openCloseEvent);
+	return CEntityState( position + other.position , onWater || other.onWater, openCloseEvent || other.openCloseEvent, crashEvent + other.crashEvent);
 }
 
 CEntityState operator *( double coef, CEntityState &value )
 {
-	return CEntityState( (float)coef * value.position , value.onWater , value.openCloseEvent);
+	return CEntityState( (float)coef * value.position , value.onWater , value.openCloseEvent, value.crashEvent);
 }
 
 CEntityState operator*( CEntityState &value, double coef )
 {
-	return CEntityState( (float)coef * value.position , value.onWater, value.openCloseEvent);	
+	return CEntityState( (float)coef * value.position , value.onWater, value.openCloseEvent, value.crashEvent);	
 }
 
 
@@ -89,6 +98,7 @@ CInterpolator::CInterpolator(double dt)
 	_currentSmoothDirection = CVector::Null;
 	_currentOnWater         = false;
 	_currentOpenCloseEvent  = false;
+	_currentCrashEvent  = CCrashEvent(false,CVector::Null);
 	
 	_entity = 0;
 	_dt = dt;
@@ -204,15 +214,32 @@ void CInterpolator::update()
 	_currentDirection       = _direction(_serverTime);
 	_currentSmoothDirection = _currentDirection;
 
-	 bool ocEvent = _openCloseEvent(_serverTime);
-	 _currentOpenCloseEvent = ocEvent && (_lastOpenClose!=ocEvent);
-	 _lastOpenClose=ocEvent;
+	bool ocEvent = _openCloseEvent(_serverTime);
+	_currentOpenCloseEvent = ocEvent && (_lastOpenClose!=ocEvent);
+	_lastOpenClose=ocEvent;
+	
+	CCrashEvent crashEvent = _crashEvent(_serverTime);
+	_currentCrashEvent.crash = crashEvent.crash && (_lastCrash.crash!=crashEvent.crash);
+	if(_currentCrashEvent.crash)
+		_currentCrashEvent.pos = crashEvent.pos;
+	_lastCrash=crashEvent;
+	
 }
 
 
 bool CInterpolator::outOfKey()
 {
 	return _keys.size()<2 || _outOfKeyCount>10;
+}
+
+CCrashEvent CInterpolator::crashEvent() 
+{
+	CCrashEvent res = _currentCrashEvent;
+	if(_currentCrashEvent.crash)
+	{
+		_currentCrashEvent.crash = false;
+	}
+	return res;
 }
 
 bool CInterpolator::openCloseEvent() 
@@ -251,6 +278,12 @@ bool CInterpolator::onWater() const
 }
 
 
+
+CCrashEvent CInterpolator::_crashEvent(double time) 
+{
+	CEntityInterpolatorKey key = _keys.back();
+	return key.value().crashEvent;
+}
 
 bool CInterpolator::_openCloseEvent(double time) 
 {
@@ -310,6 +343,30 @@ CLinearInterpolator::~CLinearInterpolator()
 	
 }
 
+
+CCrashEvent CLinearInterpolator::_crashEvent(double time) 
+{
+	double remainder = fmod(time,_dt);
+	double lerpPos = remainder / _dt;
+	deque<CEntityInterpolatorKey>::reverse_iterator it;
+	CEntityInterpolatorKey nextKey = _keys.back();
+	bool nextKeySet = false;
+	for(it=_keys.rbegin();it!=_keys.rend();it++)
+	{
+		CEntityInterpolatorKey key = *it;
+		if(key.serverTime()<time)
+		{
+			if(!nextKeySet)
+				break;
+			
+			return key.value().crashEvent;
+		}
+		nextKey = key;
+		nextKeySet = true;
+	}
+	_outOfKeyCount++;
+	return CInterpolator::_crashEvent(time);
+}
 
 bool CLinearInterpolator::_openCloseEvent(double time) 
 {

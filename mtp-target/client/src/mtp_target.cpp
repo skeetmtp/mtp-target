@@ -178,7 +178,13 @@ void CMtpTarget::init()
 							CEntityManager::instance()[eid].addOpenCloseKey = false;
 							oc = true;
 						}
-						CEntityManager::instance()[eid].interpolator().addKey(CEntityInterpolatorKey(CEntityState(v,false,oc),t));//.position(v,t, false); //put the entity in the good position
+						CCrashEvent ce(false,CVector::Null);
+						if(CEntityManager::instance()[eid].addCrashEventKey.crash)
+						{
+							ce = CEntityManager::instance()[eid].addCrashEventKey;
+							CEntityManager::instance()[eid].addCrashEventKey.crash = false;
+						}
+						CEntityManager::instance()[eid].interpolator().addKey(CEntityInterpolatorKey(CEntityState(v,false,oc,ce),t));//.position(v,t, false); //put the entity in the good position
 					}
 					else
 						nlwarning ("%d introuvable", eid);
@@ -186,6 +192,12 @@ void CMtpTarget::init()
 				else if (string(cmd) == "OC")
 				{
 					CEntityManager::instance()[eid].addOpenCloseKey = true;
+				}
+				else if (string(cmd) == "CE")
+				{
+					fscanf (fp, "%f %f %f", &x, &y, &z);
+					CVector v(x, y, z);
+					CEntityManager::instance()[eid].addCrashEventKey = CCrashEvent(true,v);
 				}
 				else
 				{
@@ -272,8 +284,7 @@ void CMtpTarget::update()
 		{
 			TimeBeforeSessionStart = 0;
 			CMtpTarget::instance().State = CMtpTarget::eGame;
-			if(ReplayFile.empty())
-				CEntityManager::instance().sessionReset();			
+			CEntityManager::instance().sessionReset();			
 		}
 	}
 	if(CMtpTarget::instance().State == CMtpTarget::eGame)
@@ -363,7 +374,7 @@ void CMtpTarget::loadNewSession()
 	if(!NLMISC::CFile::isDirectory("replay"))
 		NLMISC::CFile::createDirectory("replay");
 	
-	if(CConfigFileTask::instance().configFile().getVar("GenerateReplay").asInt() == 1)
+	if(ReplayFile.empty() && CConfigFileTask::instance().configFile().getVar("GenerateReplay").asInt() == 1)
 	{
 		SessionFile = fopen (NLMISC::CFile::findNewFile("replay/session.mtr").c_str(), "wt");
 		nlassert (SessionFile != 0);

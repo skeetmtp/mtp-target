@@ -260,7 +260,13 @@ static void cbUpdate(CNetMessage &msgin)
 					CEntityManager::instance()[eid].addOpenCloseKey = false;
 					oc = true;
 				}
-				CEntityManager::instance()[eid].interpolator().addKey(CEntityInterpolatorKey(CEntityState(pos,false,oc),rsxTime));
+				CCrashEvent ce(false,CVector::Null);
+				if(CEntityManager::instance()[eid].addCrashEventKey.crash)
+				{
+					ce = CEntityManager::instance()[eid].addCrashEventKey;
+					CEntityManager::instance()[eid].addCrashEventKey.crash = false;
+				}
+				CEntityManager::instance()[eid].interpolator().addKey(CEntityInterpolatorKey(CEntityState(pos,false,oc,ce),rsxTime));
 				//CEntityManager::instance()[eid].ping(ping);
 			}
 			else
@@ -348,7 +354,13 @@ static void cbUpdateOne(CNetMessage &msgin)
 				CEntityManager::instance()[eid].addOpenCloseKey = false;
 				oc = true;
 			}
-			CEntityManager::instance()[eid].interpolator().addKey(CEntityInterpolatorKey(CEntityState(pos,false,oc),rsxTime));
+			CCrashEvent ce(false,CVector::Null);
+			if(CEntityManager::instance()[eid].addCrashEventKey.crash)
+			{
+				ce = CEntityManager::instance()[eid].addCrashEventKey;
+				CEntityManager::instance()[eid].addCrashEventKey.crash = false;
+			}
+			CEntityManager::instance()[eid].interpolator().addKey(CEntityInterpolatorKey(CEntityState(pos,false,oc,ce),rsxTime));
 			//CEntityManager::instance()[eid].ping(ping);
 		}
 		/*
@@ -402,7 +414,13 @@ static void cbFullUpdate(CNetMessage &msgin)
 				CEntityManager::instance()[eid].addOpenCloseKey = false;
 				oc = true;
 			}
-			CEntityManager::instance()[eid].interpolator().addKey(CEntityInterpolatorKey(CEntityState(pos,false,oc),rsxTime));
+			CCrashEvent ce(false,CVector::Null);
+			if(CEntityManager::instance()[eid].addCrashEventKey.crash)
+			{
+				ce = CEntityManager::instance()[eid].addCrashEventKey;
+				CEntityManager::instance()[eid].addCrashEventKey.crash = false;
+			}
+			CEntityManager::instance()[eid].interpolator().addKey(CEntityInterpolatorKey(CEntityState(pos,false,oc,ce),rsxTime));
 			CEntityManager::instance()[eid].ping(ping);
 		}
 		/*
@@ -622,7 +640,9 @@ static void cbCollideWhenFly(CNetMessage &msgin)
 	// check if the player exists
 	if(!CEntityManager::instance().exist(eid)) { nlwarning("The eid doesn't exist"); return; }
 
-	CEntityManager::instance()[eid].collideWhenFly(pos);
+	CEntityManager::instance()[eid].addCrashEventKey = CCrashEvent(true,pos);
+	if(SessionFile) 
+		fprintf(SessionFile, "%hu CE %f %f %f\n", (uint16)eid,pos.x,pos.y,pos.z);
 }
 
 //

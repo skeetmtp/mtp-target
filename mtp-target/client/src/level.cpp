@@ -447,7 +447,8 @@ void CLevel::reset()
 	{
 		nlinfo("camera %g %g %g", Cameras[i].x, Cameras[i].y, Cameras[i].z);
 		uint8 eid = CMtpTarget::instance().controler().getControledEntity();
-		CEntityManager::instance()[eid].startPointId(CEntityManager::instance()[eid].rank());
+		if(ReplayFile.empty())
+			CEntityManager::instance()[eid].startPointId(CEntityManager::instance()[eid].rank());
 		if (i == 0 || eid != 255 && CEntityManager::instance()[eid].startPointId() == (uint8)i)
 		{
 			CMtpTarget::instance().controler().Camera.setInitialPosition(Cameras[i]);

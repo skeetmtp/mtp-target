@@ -84,6 +84,7 @@ CEntity::CEntity()
 	showCollideWhenFly = false;
 	showCollideWhenFlyPos = CVector(0,0,0);
 	addOpenCloseKey = false;
+	addCrashEventKey = CCrashEvent(false,CVector::Null);
 }
 
 void CEntity::swapOpenClose()
@@ -142,6 +143,12 @@ void CEntity::update()
 
 	if(interpolator().openCloseEvent())
 		swapOpenClose();
+
+	CCrashEvent ce = interpolator().crashEvent();
+	if(ce.crash)
+	{
+		collideWhenFly(ce.pos);		
+	}
 	
 
 //	nlinfo("set matrix for %hu", (uint16)id());
@@ -319,7 +326,8 @@ void CEntity::reset()
 
 void CEntity::sessionReset()
 {
-	interpolator().reset();
+	if(ReplayFile.empty())
+		interpolator().reset();
 	OpenClose = false;
 	showCollideWhenFly = false;
 	showCollideWhenFlyPos = CVector(0,0,0);

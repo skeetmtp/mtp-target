@@ -48,15 +48,35 @@ using NLMISC::CMatrix;
 // Classes
 //
 
+class CCrashEvent
+{
+public:
+	CCrashEvent()
+	{
+		crash = false;
+		pos = CVector::Null;
+	}
+	CCrashEvent(bool crash,CVector pos)
+	{
+		this->crash = crash;
+		this->pos = pos;
+	}
+	bool crash;
+	CVector pos;
+
+	CCrashEvent operator+( const CCrashEvent &other ) const;
+	
+};
 
 class CEntityState
 {
 public:
 	CEntityState();
-	CEntityState(const CVector &position, bool onWater, bool openClose);
+	CEntityState(const CVector &position, bool onWater, bool openClose, CCrashEvent crashEvent);
 	CVector position;
 	bool    onWater;
 	bool    openCloseEvent;
+	CCrashEvent    crashEvent;
 	CEntityState operator+( const CEntityState &other ) const;
 	friend CEntityState operator*( double coef, CEntityState &value );
 	friend CEntityState operator*( CEntityState &value, double coef );
@@ -105,6 +125,7 @@ public:
 	virtual ~CInterpolator();
 	virtual void update();
 
+	CCrashEvent    crashEvent();
 	bool    openCloseEvent();
 	CVector	position() const;
 	CVector	speed() const;
@@ -126,6 +147,7 @@ public:
 	void entity(CEntity *entity);
 	
 protected:
+	virtual CCrashEvent _crashEvent(double time);
 	virtual bool _openCloseEvent(double time);
 	virtual CVector _position(double time);
 	virtual CVector _speed(double time);
@@ -159,6 +181,9 @@ protected:
 	bool _lastOpenClose;
 	bool _currentOpenCloseEvent;
 	
+	CCrashEvent _lastCrash;
+	CCrashEvent _currentCrashEvent;
+	
 	CEntity *_entity;
 private:
 };
@@ -170,6 +195,7 @@ public:
 	CLinearInterpolator(double dt);
 	virtual ~CLinearInterpolator();
 protected:
+	virtual CCrashEvent _crashEvent(double time);
 	virtual bool _openCloseEvent(double time);
 	virtual CVector _position(double time);
 	virtual CVector _speed(double time);

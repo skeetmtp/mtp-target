@@ -133,6 +133,7 @@ public:
 	NLMISC::CVector		 LastSent2OthersPos;
 
 	bool				 addOpenCloseKey;
+	CCrashEvent			 addCrashEventKey;
 private:
 	
 	NLMISC::CRGBA   FadeParticleColor;
