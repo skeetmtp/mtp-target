@@ -359,7 +359,7 @@ void CIntroTask::updateConnectionOnLine()
 		return;
 	}
 
-	reason = CNetworkTask::instance().connect(ip, cookie);
+	reason = CNetworkTask::instance().connect(ip, cookie.toString());
 	if(!reason.empty())
 	{
 		_autoLogin = 0;
@@ -387,7 +387,7 @@ void CIntroTask::updateConnectionOnLan()
 	
 	CGuiObjectManager::instance().objects.clear();
 	
-	string res = CNetworkTask::instance().connect(CInetAddress(CConfigFileTask::instance().configFile().getVar("ServerHost").asString()+":"+toString(CConfigFileTask::instance().configFile().getVar("TcpPort").asInt())), CLoginCookie());
+	string res = CNetworkTask::instance().connect(CInetAddress(CConfigFileTask::instance().configFile().getVar("ServerHost").asString()+":"+toString(CConfigFileTask::instance().configFile().getVar("TcpPort").asInt())));
 	if(res.empty())
 	{
 		_autoLogin = 0;//autologin only once

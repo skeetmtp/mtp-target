@@ -166,7 +166,7 @@ bool CNetworkTask::connected()
 	return Sock.connected();
 }
 
-string CNetworkTask::connect(const CInetAddress &ip, const CLoginCookie &cookie)
+string CNetworkTask::connect(const CInetAddress &ip, const string &cookie)
 {
 	if (Sock.connected())
 		return "";
@@ -185,14 +185,13 @@ string CNetworkTask::connect(const CInetAddress &ip, const CLoginCookie &cookie)
 		CRGBA color(CConfigFileTask::instance().configFile().getVar("EntityColor").asInt(0), CConfigFileTask::instance().configFile().getVar("EntityColor").asInt(1), CConfigFileTask::instance().configFile().getVar("EntityColor").asInt(2));
 		string texture = CConfigFileTask::instance().configFile().getVar("EntityTexture").asString();
 		uint32 networkVersion = CConfigFileTask::instance().configFile().getVar("NetworkVersion").asInt();
-		msgout.serial(networkVersion, static_cast<CLoginCookie>(cookie), login);
+		msgout.serial(networkVersion, static_cast<string>(cookie), login);
 		msgout.serial(password, color, texture);
 		CNetworkTask::instance().send(msgout);
 	}
 	catch (Exception &e)
 	{
-//		return std::string("Can't connect to TCP server: ") + e.what();
-		return std::string("error : ") + e.what();
+		return std::string("Error: ") + e.what();
 	}
 	
 	return "";

@@ -67,7 +67,7 @@ public:
 	virtual std::string name() const { return "CNetworkTask"; }
 	
 	// return an empty string if connected, the reason if failed
-	std::string connect(const NLNET::CInetAddress &ip, const NLNET::CLoginCookie &cookie);
+	std::string connect(const NLNET::CInetAddress &ip, const std::string &cookie = "");
 	
 	void send(CNetMessage &msg);
 
