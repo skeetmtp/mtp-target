@@ -9,7 +9,7 @@ function Entity:init()
   self:displayText(0,5,1,255,255,255,"paint in green as many block as possible",10);
   self:displayText(0,6,1,255,255,255,"other players paint in red",10);
   self:setCurrentScore(0);
-  self:setStartPointId(clientId+getSessionId()*2);
+  --self:setStartPointId(clientId+getSessionId()*2);
   clientId = clientId + 1;
   --clientId = math.random(2);
   --self:setMaxLinearVelocity(0.2);

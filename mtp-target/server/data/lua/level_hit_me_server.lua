@@ -103,7 +103,7 @@ function Entity:init()
   --clientId = self:getEid();
   print("clientId");
   print(clientId);
-  self:setStartPointId(clientId+getSessionId()*2);
+  --self:setStartPointId(clientId+getSessionId()*2);
   local t = math.mod(clientId,2);
 
   self:displayText(0,4,1,255,255,255,"warning : Team share the score",10);

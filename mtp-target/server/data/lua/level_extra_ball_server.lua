@@ -9,7 +9,7 @@ local clientId = 0;
 function Entity:init()
   self:enableCrashInFly(0);
   self:setCurrentScore(0);
-  self:setStartPointId(clientId+getSessionId());
+  --self:setStartPointId(clientId+getSessionId());
   clientId = clientId + 1;
 end
 

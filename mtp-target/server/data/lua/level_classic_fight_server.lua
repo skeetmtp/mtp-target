@@ -9,7 +9,7 @@ function Entity:init()
   self:displayText(0,5,1,255,200,0,"warning : In this level you can control pingoo on target",60);
   self:setCurrentScore(0);
   self:setOpenCloseMax(3);
-  self:setStartPointId(clientId+getSessionId()*2);
+  --self:setStartPointId(clientId+getSessionId()*2);
   clientId = clientId + 1;
 end
 

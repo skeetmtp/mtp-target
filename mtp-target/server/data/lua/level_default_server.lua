@@ -7,7 +7,7 @@ local clientId = 0;
 
 function Entity:init()
   self:setCurrentScore(0);
-  self:setStartPointId(clientId+getSessionId()*2);
+  --self:setStartPointId(clientId+getSessionId()*2);
   clientId = clientId + 1;
 end
 

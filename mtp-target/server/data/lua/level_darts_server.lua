@@ -10,7 +10,7 @@ function Entity:init()
   self:setCurrentScore(0);
   --print(self:getName());
   --print("entity init");
-  self:setStartPointId(clientId+getSessionId()*2);
+  --self:setStartPointId(clientId+getSessionId()*2);
   clientId = clientId + 1;
 end
 

@@ -57,7 +57,7 @@ function Entity:init()
   self:setOpenCloseMax(2);
   self:setCurrentScore(0);
   self:setUserData(parent);
-  self:setStartPointId(clientId+getSessionId()*2);
+  --self:setStartPointId(clientId+getSessionId()*2);
   if(clientId==0) then
     t = 0;
   else
