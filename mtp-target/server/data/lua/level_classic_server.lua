@@ -3,6 +3,7 @@
 
 
 ---------------------- Entity ----------------------
+local clientId = 0;
 
 function Entity:init()
   --print(self:getName());
