@@ -53,11 +53,14 @@ Lunar<CEntityProxy>::RegType CEntityProxy::methods[] =
 		bind_method(CEntityProxy, setOpenCloseCount),	
 		bind_method(CEntityProxy, getOpenCloseMax),	
 		bind_method(CEntityProxy, setOpenCloseMax),	
+		bind_method(CEntityProxy, getMaxLinearVelocity),	
+		bind_method(CEntityProxy, setMaxLinearVelocity),	
 		bind_method(CEntityProxy, getPos),	
 		bind_method(CEntityProxy, setPos),	
 		bind_method(CEntityProxy, getStartPointPos),	
 		bind_method(CEntityProxy, getStartPointId),	
 		bind_method(CEntityProxy, setStartPointId),	
+		bind_method(CEntityProxy, getIsSpectator),	
 		bind_method(CEntityProxy, getIsOpen),	
 		bind_method(CEntityProxy, setIsOpen),	
 		bind_method(CEntityProxy, setCurrentScore),	
@@ -122,6 +125,20 @@ int CEntityProxy::setOpenCloseMax(lua_State *luaSession)
 	return 0;
 }
 
+int CEntityProxy::getMaxLinearVelocity(lua_State *luaSession)
+{
+	lua_Number mlv = _entity->maxLinearVelocity();
+	lua_pushnumber(luaSession, mlv); 
+	return 1;
+}
+
+int CEntityProxy::setMaxLinearVelocity(lua_State *luaSession)
+{
+	float mlv = (float)luaL_checknumber(luaSession,1);
+	_entity->maxLinearVelocity(mlv);
+	return 0;
+}
+
 int CEntityProxy::getOpenCloseCount(lua_State *luaSession)
 {
 	lua_Number noc = _entity->NbOpenClose;
@@ -171,6 +188,13 @@ int CEntityProxy::setStartPointId(lua_State *luaSession)
 	uint8 id = (uint8)luaL_checknumber(luaSession,1);
 	_entity->startPointId(id);
 	return 0; // no return value
+}
+
+int CEntityProxy::getIsSpectator(lua_State *luaSession)
+{
+	lua_Number isSpec = _entity->spectator() ? 1 : 0;
+	lua_pushnumber(luaSession, isSpec); 
+	return 1;	
 }
 
 int CEntityProxy::getIsOpen(lua_State *luaSession)

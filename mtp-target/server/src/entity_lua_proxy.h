@@ -56,11 +56,14 @@ public:
 	int setOpenCloseCount(lua_State *luaSession);
 	int getOpenCloseMax(lua_State *luaSession);
 	int setOpenCloseMax(lua_State *luaSession);
+	int getMaxLinearVelocity(lua_State *luaSession);
+	int setMaxLinearVelocity(lua_State *luaSession);
 	int getPos(lua_State *luaSession);
 	int setPos(lua_State *luaSession);
 	int getStartPointPos(lua_State *luaSession);
 	int getStartPointId(lua_State *luaSession);
 	int setStartPointId(lua_State *luaSession);
+	int getIsSpectator(lua_State *luaSession);
 	
 	int getName(lua_State *luaSession);
 	int displayText(lua_State *luaSession);
