@@ -84,6 +84,7 @@ public:
 
 	float	timeBeforeSessionStart() const { return TimeBeforeSessionStart; }
 	float	timeBeforeTimeout() const { return TimeBeforeTimeout; }
+	void	timeBeforeTimeout(float t) { TimeBeforeTimeout = t; }
 	
 	enum TState { eLoginPassword, eConnect, eBeforeFirstSession, eStartSession, eReady, eGame, eEndSession };
 	
@@ -129,7 +130,7 @@ public:
 	void	init();
 	void	update();
 	void	render();
-	void	renderInterface ();
+	//void	renderInterface ();
 	void	release ();
 
 	void	everybodyReady();

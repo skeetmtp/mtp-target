@@ -105,8 +105,10 @@ static void cbLogin(CNetMessage &msgin)
 			msgin.serial(timeBeforeTimeout);
 			if (!levelName.empty())
 			{
-				CMtpTarget::instance().startSession(0, timeBeforeTimeout, levelName);
+				CMtpTarget::instance().startSession(0, timeBeforeTimeout/1000.0f, levelName);
 			}
+			else
+				CMtpTarget::instance().timeBeforeTimeout(timeBeforeTimeout/1000.0f);
 		}
 		catch(Exception &)
 		{
@@ -579,8 +581,6 @@ static void cbExecLua(CNetMessage &msgin)
 		CLevelManager::instance().currentLevel().execLuaCode(luaCode);
 }
 
-
-	
 //
 // Callback handler
 //

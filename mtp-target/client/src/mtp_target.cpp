@@ -195,6 +195,12 @@ void CMtpTarget::update()
 		TimeBeforeSessionStart += (float)CTimeTask::instance().deltaTime();
 		TimeBeforeTimeout -= (float)CTimeTask::instance().deltaTime();
 	}
+	if(CMtpTarget::instance().State == CMtpTarget::eBeforeFirstSession)
+	{
+		//CMtpTarget::instance().controler().Camera.reset();
+		TimeBeforeSessionStart += (float)CTimeTask::instance().deltaTime();
+		TimeBeforeTimeout -= (float)CTimeTask::instance().deltaTime();
+	}
 }
 
 void CMtpTarget::displayTutorialInfo(bool b)
@@ -599,6 +605,8 @@ void mtpTarget::release()
 }
 */
 
+//TODO skeet no more used ?
+#if 0
 void mtpTarget::renderInterface()
 {
 	/*
@@ -670,7 +678,7 @@ void mtpTarget::renderInterface()
 		CFontManager::instance().littlePrintf(0, 16, "Cam (%.2f %.2f %.2f)", CMtpTarget::instance().controler().Camera.getMatrixFollow()->getPos().x, CMtpTarget::instance().controler().Camera.getMatrixFollow()->getPos().y, CMtpTarget::instance().controler().Camera.getMatrixFollow()->getPos().z);
 	}
 }
-
+#endif
 
 void mtpTarget::everybodyReady()
 {
