@@ -57,14 +57,14 @@ Section "client" Section1
 		WriteRegStr HKCR "MtpTargetReplayFile" "" "Mtp-Target Replay File"
 		WriteRegStr HKCR "MtpTargetReplayFile\shell" "" "open"
 		WriteRegStr HKCR "MtpTargetReplayFile\DefaultIcon" "" "$INSTDIR\client\mtp-target.exe,0"
-	;"${Index}-Skip:"
+	"${Index}-Skip:"
 	;  WriteRegStr HKCR "MtpTargetReplayFile\shell\open\command" "" \
 	;    '$INSTDIR\client\mtp-target.exe "%1"'
 	;  WriteRegStr HKCR "MtpTargetReplayFile\shell\edit" "" "Edit Options File"
 	;  WriteRegStr HKCR "MtpTargetReplayFile\shell\edit\command" "" \
 	;    '$INSTDIR\client\mtp-target.exe "%1"'
 	!undef Index
-	  ; Rest of script
+	; Rest of script
 
 
 	SetOutPath "$INSTDIR\client\data"
