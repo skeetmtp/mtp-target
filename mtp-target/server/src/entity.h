@@ -69,6 +69,9 @@ public:
 
 	virtual void setForce(const NLMISC::CVector &clientForce);
 
+	void maxLinearVelocity(float maxLinVel);
+	float maxLinearVelocity();
+	
 	// accessors
 
 	uint8					 id() const { return Id; }
@@ -148,6 +151,7 @@ private:
 	uint8				 Id;
 	std::string			 Name;				// empty name mean that the client not already send login information
 	bool                 _isAdmin;
+	float				 MaxLinearVelocity;
 };
 
 

@@ -98,6 +98,7 @@ void CEntity::init ()
 	FirstStop = 0;
 	Spectator = true;
 	_isAdmin = false;
+	MaxLinearVelocity = 0;
 
 	nlassert(World);
 
@@ -234,7 +235,7 @@ void CEntity::update()
 		CLuaEngine::instance().entityEntityCollideEvent(this,*eit);	
 	collideEntity.clear();
 
-	if(collideWater)
+	if(collideWater && !spectator())
 		CLuaEngine::instance().entityWaterCollideEvent(this);	
 	collideWater = false;
 	
@@ -348,6 +349,17 @@ void CEntity::position(NLMISC::CVector pos)
 	dBodySetPosition(Body, Pos.x, Pos.y, Pos.z);
 	dGeomSetPosition(Geom, Pos.x, Pos.y, Pos.z);
 	resumePhysics();
+}
+
+
+void CEntity::maxLinearVelocity(float maxLinVel)
+{
+	MaxLinearVelocity = maxLinVel;
+}
+
+float CEntity::maxLinearVelocity()
+{
+	return MaxLinearVelocity;
 }
 
 //
