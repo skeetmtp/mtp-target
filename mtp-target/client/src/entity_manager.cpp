@@ -236,6 +236,7 @@ CEntity &CEntityManager::operator [](uint8 eid)
 	return *entities()[eid]; //todo prevent external code to access entites without using accessor
 }
 
+
 void CEntityManager::getEIdSortedByScore(vector<uint8> &eids) 
 {
 	eids.clear();

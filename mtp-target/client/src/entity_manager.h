@@ -104,7 +104,7 @@ public:
 	void	load3d();
 
 	CEntity &operator [](uint8 eid);
-
+	
 	void	getEIdSortedByScore(std::vector<uint8> &eids) ;
 
 	uint8	findFirstEId() ;
