@@ -1,8 +1,6 @@
 <?php
 //compatibility
-  $compSummary_Hardware = "Here are the list of hardware tested with Mtp Target
-                          If your hardware is not in the list and you experience
-                          problems <a href=\"?page=compatibility-submit.php&lang=en\">submit it</a>, so we could update this page.";
+  $compSummary_Hardware = "Here are the list of hardware tested with Mtp Target.";
 
   $compSummary_Software = "Here are the list of software tested with Mtp Target";
 

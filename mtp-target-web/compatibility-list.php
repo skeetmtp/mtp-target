@@ -12,7 +12,7 @@ if($logged)
 
 
 
-<b><a href="?page=compatibility-submit.php">Send Feedback.</a></b>
+<!--<b><a href="?page=compatibility-submit.php">Send Feedback.</a></b>-->
 
 <p><?php echo $compSummary_Hardware ?></p>
 
@@ -49,7 +49,7 @@ if($logged)
 </table>
 
 
-<p>Here are the list of software tested with Mtp Target</p>
+<p><?php echo $compSummary_Software ?></p>
 
 <p></p>
 <table width="75%" border="0">
