@@ -170,15 +170,10 @@ void CBot::loadBotReplay()
 			if(string(cmd) == "PO")
 			{
 				fscanf(fp, "%f %f %f %f %f %f", &force.x, &force.y, &force.z, &pos.x, &pos.y, &pos.z);
-				/*
-				if(eid==4)
-					nlinfo("adding update pos (eid = %d , time = %f) force = %f %f %f, pos = %f %f %f",eid,t,force.x, force.y, force.z, pos.x, pos.y, pos.z);
-				*/
 				Commands.push_back(CCommand(t, force, pos));
 			}
 			else if(string(cmd) == "OC")
 			{
-				//nlinfo("bot adding update openc (eid = %d)",eid);
 				Commands.push_back(CCommand(t, pos));
 			}
 			else if(string(cmd) == "AU")
@@ -187,16 +182,13 @@ void CBot::loadBotReplay()
 				sint score;
 				uint32 argCount = 0;
 				argCount = fscanf(fp, "%s %d", &name, &score);
-				if(argCount)
-					validFile = true;
-				else
-					nlwarning("Bad argument count(%d) for AU command",argCount);
-				//nlinfo("score = %s %d ",name,score);
+				validFile = true;
+				break;
 			}
 			else
 			{
 				nlwarning("Unknown command '%s' for user %hu", cmd, (uint16)eid);
-				//break;
+				break;
 			}
 		}
 		fclose(fp);
