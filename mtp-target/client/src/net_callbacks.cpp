@@ -81,12 +81,14 @@ static void cbLogin(CNetMessage &msgin)
 	string name;
 	sint32 totalScore;
 	CRGBA color;
+	string texture;
 	bool spec;
 
-	msgin.serial(self, eid, name, totalScore, color, spec);
+	msgin.serial(self, eid, name, totalScore);
+	msgin.serial(color, texture, spec);
 	nlinfo("cbLogin : Adding player %hu(%s) , list.size = %d", (uint16)eid,name.c_str(),CEntityManager::instance().size());
 	
-	CEntityManager::instance().add(eid, name, totalScore, color, spec, self);
+	CEntityManager::instance().add(eid, name, totalScore, color, texture, spec, self);
 
 	if(self)
 	{

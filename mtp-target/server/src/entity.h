@@ -98,8 +98,10 @@ public:
 
 	// ugly public variables
 
+	// entity customization
 	NLMISC::CRGBA		 Color;
-	
+	std::string			 Texture;
+
 	sint32				 CurrentScore;		// the current score of the current session
 	sint32				 Score;				// the total score off all session
 	float				 ArrivalTime;				// time in second before total stop

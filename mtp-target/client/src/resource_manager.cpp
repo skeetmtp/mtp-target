@@ -230,7 +230,15 @@ void CResourceManager::refresh(const string &filename)
 
 string CResourceManager::get(const string &filename)
 {
-		string unk;
+	bool ok;
+	return get(filename, ok);
+}
+
+string CResourceManager::get(const string &filename, bool &ok)
+{
+	string unk;
+	ok = false;
+
 	if(filename.empty())
 		return unk;
 
@@ -312,6 +320,7 @@ string CResourceManager::get(const string &filename)
 			//nlinfo("CRCUpToDate");
 			loadChildren(path);
 			// we already have the file on local
+			ok = true;
 			return path;
 		}
 	}
@@ -415,5 +424,6 @@ string CResourceManager::get(const string &filename)
 	CRCCheckTimes.insert(filename2LastCRCCheckTime::value_type(fn,currentTime));
 				
 	// need to download the file
+	ok = true;
 	return destfn;
 }

@@ -53,21 +53,21 @@ public:
 		color = NLMISC::CRGBA(255,255,255,255);
 		spectator = false;
 		isLocal = false;
-		
 	}
 
-	CEntityInitData(uint8 _eid, const std::string &_name, sint32 _totalScore, NLMISC::CRGBA &_color, bool _spectator, bool _isLocal):eid(_eid),name(_name),totalScore(_totalScore),color(_color),spectator(_spectator),isLocal(_isLocal)
+	CEntityInitData(uint8 _eid, const std::string &_name, sint32 _totalScore, NLMISC::CRGBA &_color, const std::string &_texture, bool _spectator, bool _isLocal):eid(_eid),name(_name),totalScore(_totalScore),color(_color),texture(_texture),spectator(_spectator),isLocal(_isLocal)
 	{
 	}
 
-	CEntityInitData(const CEntityInitData &e) : eid(e.eid),name(e.name),totalScore(e.totalScore),color(e.color),spectator(e.spectator),isLocal(e.isLocal)
+	CEntityInitData(const CEntityInitData &e) : eid(e.eid),name(e.name),totalScore(e.totalScore),color(e.color),texture(e.texture),spectator(e.spectator),isLocal(e.isLocal)
 	{
-	};
+	}
 
 	uint8 eid;
 	std::string name;
 	sint32 totalScore;
 	NLMISC::CRGBA color;
+	std::string texture;
 	bool spectator;
 	bool isLocal;
 };
@@ -86,7 +86,7 @@ public:
 	void renderNames();
 	virtual std::string name() { return "CEntityManager"; }
 
-	void	add(uint8 eid, const std::string &name, sint32 totalScore, NLMISC::CRGBA &color, bool spectator, bool isLocal);
+	void	add(uint8 eid, const std::string &name, sint32 totalScore, NLMISC::CRGBA &color, const std::string &texture, bool spectator, bool isLocal);
 	void	remove(uint8 eid);
 	void	flushAddRemoveList();
 	void	_add(std::list<CEntityInitData> &addList);

@@ -382,6 +382,7 @@ void CEntityManager::login(CEntity *e)
 		msgout.serial(n);
 		msgout.serial(e->Score);
 		msgout.serial(e->Color);
+		msgout.serial(e->Texture);
 		bool s = e->spectator();
 		msgout.serial(s);
 		CNetwork::instance().sendAllExcept(nid, msgout);
@@ -397,6 +398,7 @@ void CEntityManager::login(CEntity *e)
 		msgout.serial(n);
 		msgout.serial(e->Score);
 		msgout.serial(e->Color);
+		msgout.serial(e->Texture);
 		bool s = e->spectator();
 		msgout.serial(s);
 		string CurrentLevel;
@@ -442,6 +444,7 @@ void CEntityManager::login(CEntity *e)
 					msgout.serial(name);
 					msgout.serial((*it)->Score);
 					msgout.serial((*it)->Color);
+					msgout.serial((*it)->Texture);
 					bool s = e->spectator();
 					msgout.serial(s);
 					CNetwork::instance().send(nid, msgout);

@@ -72,6 +72,7 @@ public:
 	NL3D::UInstance     levelParticle()  { return LevelParticle;};
 
 	void				clearColor(NLMISC::CRGBA color);
+
 private:
 	
 	NL3D::UDriver			*Driver;

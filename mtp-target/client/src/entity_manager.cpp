@@ -109,13 +109,13 @@ void CEntityManager::update()
 	}
 }
 
-void CEntityManager::add(uint8 eid, const std::string &name, sint32 totalScore, CRGBA &color, bool spectator, bool isLocal)
+void CEntityManager::add(uint8 eid, const std::string &name, sint32 totalScore, CRGBA &color, const string &texture, bool spectator, bool isLocal)
 {
 	nlassert(!exist(eid));
 	uint tid = getThreadId();
 	nlassert(tid==TaskManagerThreadId || tid==NetworkThreadId);
 	
-	CEntityInitData entityToAdd(eid,name,totalScore,color,spectator,isLocal);
+	CEntityInitData entityToAdd(eid,name,totalScore,color,texture,spectator,isLocal);
 	std::list<CEntityInitData> *ClientToAddList;
 	if(tid==TaskManagerThreadId)
 		ClientToAddList = &ClientToAddTaskManagerThread;
@@ -166,7 +166,7 @@ void CEntityManager::_add(std::list<CEntityInitData> &addList)
 	{
 		CEntityInitData e = *it2;
 		nlassert(!exist(e.eid));
-		entities()[e.eid]->init(CEntity::Player, e.name, e.totalScore, e.color, "pingoo", e.spectator,e.isLocal);
+		entities()[e.eid]->init(CEntity::Player, e.name, e.totalScore, e.color, e.texture, "pingoo", e.spectator,e.isLocal);
 		nlinfo("CEntityManager::add(%d,%s)",e.eid,e.name.c_str());
 	}
 	addList.clear();	

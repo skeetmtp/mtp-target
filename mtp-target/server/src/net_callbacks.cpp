@@ -104,17 +104,16 @@ static void cbLogin(CClient *c, CNetMessage &msgin)
 	string login, password;
 	sint32 score;
 	CRGBA color;
+	string texture;
 	uint32 networkVersion = MTPT_NETWORK_VERSION;
-	
+
 	nlinfo("New client login");
 
-	msgin.serial(cookie, login, password, color,networkVersion);
+	// first, check the password
 
-	keepValidChar(login);
-	keepValidChar(password);
-	
+	msgin.serial(networkVersion); 
 
-	if(networkVersion!=MTPT_NETWORK_VERSION)
+	if(networkVersion != MTPT_NETWORK_VERSION)
 	{
 		string reason = toString("'%s' login failed: bad client version(%d)! Get latest one on Mtp Target web site", login.c_str(), networkVersion);
 		CNetMessage msgout(CNetMessage::Error);
@@ -122,8 +121,14 @@ static void cbLogin(CClient *c, CNetMessage &msgin)
 		CNetwork::instance().send(c->id(), msgout);
 		return;
 	}
+
+	// now we know the version is compatible, get them
+
+	msgin.serial(cookie, login, password, color, texture);
 	
-	
+	keepValidChar(login);
+	keepValidChar(password);
+
 	string res;
 	if(cookie.empty())
 	{
@@ -151,6 +156,7 @@ static void cbLogin(CClient *c, CNetMessage &msgin)
 		c->Cookie = cookie;
 		c->Score = score;
 		c->Color = color;
+		c->Texture = texture;
 		CEntityManager::instance().login(c);
 	}
 	else
@@ -236,7 +242,6 @@ static void cbReady(CClient *c, CNetMessage &msgin)
 
 static void cbRequestCRCKey(CClient *c, CNetMessage &msgin)
 {
-	nlinfo("cbRequestCRCKey from %s",c->name().c_str());
 	c->WaitingReadyTimeoutStart = CTime::getLocalTime();
 	CNetMessage msgout(CNetMessage::RequestCRCKey);
 
@@ -244,6 +249,8 @@ static void cbRequestCRCKey(CClient *c, CNetMessage &msgin)
 	msgin.serial(fn);
 	CHashKey hashKey;
 	msgin.serial(hashKey);
+
+	nlinfo("cbRequestCRCKey from '%s' for the file '%s'", c->name().c_str(), fn.c_str());
 
 	string fns = CFile::getFilename(fn);
 	string path = CPath::lookup(fns, false, false);
@@ -268,12 +275,14 @@ static void cbRequestCRCKey(CClient *c, CNetMessage &msgin)
 	
 static void cbRequestDownload(CClient *c, CNetMessage &msgin)
 {
-	nlinfo("cbRequestDownload from %s",c->name().c_str());
 	c->WaitingReadyTimeoutStart = CTime::getLocalTime();
 	CNetMessage msgout(CNetMessage::RequestDownload);
 
 	string fn;
 	msgin.serial(fn);
+
+	nlinfo("cbRequestDownload from '%s' for the file '%s'", c->name().c_str(), fn.c_str());
+	
 	string fns = CFile::getFilename(fn);
 	string path = CPath::lookup(fns, false, false);
 	string packedPath = CPath::lookup(CFile::getFilename(path)+".gz", false, false);

@@ -216,7 +216,6 @@ CLevel::CLevel(const string &filename)
 	luaGetGlobalVariable(LuaState, cameraMinDistFromStartPointToMove);
 	CMtpTarget::instance().controler().Camera.minDistFromStartPointToMove(cameraMinDistFromStartPointToMove);
 	
-
 	CLuaRGBA sunAmbientColor(82, 100, 133, 255);
 	luaGetGlobalVariable(LuaState, sunAmbientColor);
 	nlinfo("sunAmbientColor = %d %d %d %d", sunAmbientColor.R, sunAmbientColor.G, sunAmbientColor.B, sunAmbientColor.A);

@@ -257,6 +257,7 @@ void CEntity::reset()
 	Type = Unknown;
 	Name.clear();
 	Color.set(255,255,255);
+	Texture = "";
 	CurrentScore = 0;
 	TotalScore = 0;
 	Ping = 0;
@@ -268,7 +269,7 @@ void CEntity::reset()
 	Ready = false;
 }
 
-void CEntity::init(TEntity type, const std::string &name, sint32 totalScore, CRGBA &color, const std::string &meshname, bool spectator, bool isLocal)
+void CEntity::init(TEntity type, const std::string &name, sint32 totalScore, CRGBA &color, const std::string &texture, const std::string &meshname, bool spectator, bool isLocal)
 {
 	nlassert(type != Unknown);
 
@@ -276,18 +277,26 @@ void CEntity::init(TEntity type, const std::string &name, sint32 totalScore, CRG
 	Name = name;
 	TotalScore = totalScore;
 	Color = color;
+	Texture = texture;
 	MeshName = meshname;
 	Spectator = spectator;
 	Ready = false;
 	interpolator().reset();
 	setIsLocal(isLocal);
-	
-	CSoundManager::instance().registerEntity(SoundsDescriptor);
 
+	CSoundManager::instance().registerEntity(SoundsDescriptor);
 }
 
 void CEntity::load3d()
 {
+	string TextureFilename;
+	bool ok;
+	if(!Texture.empty())
+	{
+		TextureFilename = CResourceManager::instance().get("ping_ball_"+Texture+".tga", ok);
+		if(!ok) TextureFilename = "";
+	}
+
 	if(CloseMesh.empty())
 	{
 		string res = CResourceManager::instance().get("entity_"+MeshName+"_close.shape");
@@ -298,9 +307,11 @@ void CEntity::load3d()
 		{
 			CloseMesh.getMaterial(i).setDiffuse(Color);
 			CloseMesh.getMaterial(i).setAmbient(Color);
+			if(!TextureFilename.empty())
+				CloseMesh.getMaterial(i).setTextureFileName(TextureFilename);
 		}
 	}
-	
+
 	if(OpenMesh.empty())
 	{
 		string res = CResourceManager::instance().get("entity_"+MeshName+"_open.shape");
@@ -312,9 +323,11 @@ void CEntity::load3d()
 		{
 			OpenMesh.getMaterial(i).setDiffuse(Color);
 			OpenMesh.getMaterial(i).setAmbient(Color);
+			if(!TextureFilename.empty())
+				OpenMesh.getMaterial(i).setTextureFileName(TextureFilename);
 		}
 	}
-	
+
 	if(TraceParticle.empty() && CConfigFileTask::instance().configFile().getVar("DisplayParticle").asInt() == 1)
 	{
 		string res = CResourceManager::instance().get("trace.ps");

@@ -55,6 +55,10 @@ public:
 	
 	// return empty string it a problem occurs or the full path of the file
 	std::string get(const std::string &filename);
+	
+	// ok is true if the file is found, false is not
+	std::string get(const std::string &filename, bool &ok);
+
 	void refresh(const  std::string &filename);
 		
 	bool waitNetworkMessage(bool stopFlag,bool &received, bool displayBackground=true);

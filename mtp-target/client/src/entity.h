@@ -100,6 +100,7 @@ public:
 	sint32				 totalScore() const { return TotalScore; }
 	void				 totalScore(sint32 score) { TotalScore = score; }
 	const NLMISC::CRGBA	&color() const { return Color; }
+	const std::string	&texture() const { return Texture; }
 	uint16				 ping() const { return Ping; }
 	void				 ping(uint16 ping) { Ping = ping; }
 	
@@ -135,6 +136,7 @@ private:
 	std::string		Name;
 	std::string		MeshName;
 	NLMISC::CRGBA	Color;
+	std::string		Texture;
 	sint32			CurrentScore;
 	sint32			TotalScore;
 	uint16			Ping;
@@ -147,7 +149,7 @@ private:
 	virtual ~CEntity() { delete _interpolator; _interpolator = NULL; }
 
 	void reset();
-	void init(TEntity type, const std::string &name, sint32 totalScore, NLMISC::CRGBA &color, const std::string &meshname, bool spectator, bool isLocal);
+	void init(TEntity type, const std::string &name, sint32 totalScore, NLMISC::CRGBA &color, const std::string &texture, const std::string &meshname, bool spectator, bool isLocal);
 	void id(uint8 nid);
 	void fadeParticleColorUpdate();
 	

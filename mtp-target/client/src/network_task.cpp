@@ -98,7 +98,14 @@ public:
 				switch(res)
 				{
 				case NLNET::CSock::Ok:
-					netCallbacksHandler(msg);
+					try
+					{
+						netCallbacksHandler(msg);
+					}
+					catch(Exception &e)
+					{
+						nlwarning("Malformed Message type '%u' : %s", msg.Type, e.what());
+					}
 					break;
 				case NLNET::CSock::ConnectionClosed:
 				default:
@@ -188,9 +195,10 @@ string CNetworkTask::connect(CInetAddress *ip)
 		CNetMessage msgout(CNetMessage::Login);
 		Login = CConfigFileTask::instance().configFile().getVar("Login").asString();
 		string password = CConfigFileTask::instance().configFile().getVar("Password").asString();
-		CRGBA color(CConfigFileTask::instance().configFile().getVar("Color").asInt(0), CConfigFileTask::instance().configFile().getVar("Color").asInt(1), CConfigFileTask::instance().configFile().getVar("Color").asInt(2));
+		CRGBA color(CConfigFileTask::instance().configFile().getVar("EntityColor").asInt(0), CConfigFileTask::instance().configFile().getVar("EntityColor").asInt(1), CConfigFileTask::instance().configFile().getVar("EntityColor").asInt(2));
+		string texture = CConfigFileTask::instance().configFile().getVar("EntityTexture").asString();
 		uint32 networkVersion = MTPT_NETWORK_VERSION;
-		msgout.serial(Cookie, Login, password, color,networkVersion);
+		msgout.serial(networkVersion, Cookie, Login, password, color, texture);
 		CNetworkTask::instance().send(msgout);
 	}
 	catch (Exception &e)

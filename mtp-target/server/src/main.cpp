@@ -99,10 +99,11 @@ public:
 		}
 #endif
 
+		CPath::addSearchPath("user_texture", false, true);
 		CPath::remapExtension("dds", "tga", true);
 
 		initVariables();
-		
+
 		srand(CTime::getSecondsSince1970());
 
 		initPhysics();
@@ -133,7 +134,6 @@ public:
 		checkServicePaused();
 		CEntityManager::instance().flushAddRemoveList();
 
-
 		return true;
 	}
 
@@ -150,28 +150,9 @@ public:
  
 NLNET_SERVICE_MAIN(CMtpTargetService, "MTS", "mtp_target_service", 0, EmptyCallbackArray, "", "");
 
-
 //
-// Commands
+// Functions
 //
-
-NLMISC_COMMAND(broadcast, "send a message to everybody", "<string>")
-{
-	if(args.size() == 0)
-		return false;
-
-	string msg;
-	
-	for(uint i = 0; i < args.size(); i++)
-		msg += args[i]+" ";
-
-	CNetwork::instance().sendChat(msg);
-	
-	return true;
-}
-
-NLMISC_VARIABLE(uint32, UpdatePacketSize, "update packet size");
-
 
 void checkServicePaused()
 {
@@ -316,3 +297,23 @@ void resumeAllThread()
 }
 
 
+//
+// Commands
+//
+
+NLMISC_COMMAND(broadcast, "send a message to everybody", "<string>")
+{
+	if(args.size() == 0)
+		return false;
+	
+	string msg;
+	
+	for(uint i = 0; i < args.size(); i++)
+		msg += args[i]+" ";
+	
+	CNetwork::instance().sendChat(msg);
+	
+	return true;
+}
+
+NLMISC_VARIABLE(uint32, UpdatePacketSize, "update packet size");

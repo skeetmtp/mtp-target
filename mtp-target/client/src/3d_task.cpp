@@ -280,6 +280,7 @@ void C3DTask::clearColor(CRGBA color)
 {
 	ClearColor = color;
 }
+
 void C3DTask::captureCursor(bool b)
 {
 	CGuiObjectManager::instance().mouseListener().captureCursor(b);
