@@ -140,7 +140,7 @@ void CNetworkTask::run()
 				nlassert(*it);
 				CClient *c = (CClient *)(*it);
 				
-				if((*it)->type() != CEntity::Client)
+				if((*it)->type() != CEntity::Client || CEntityManager::instance().inRemoveList(c->id()))
 					continue;
 
 				nlassert(c->sock());
@@ -162,11 +162,8 @@ void CNetworkTask::run()
 					CEntityManager::instance().remove(c->id());
 					break;
 				default:
-					if(!CEntityManager::instance().inRemoveList(c->id()))
-					{
-						nlwarning("Received failed from client eid %hu : %s (code %u)", (uint16)c->id(), NLNET::CSock::errorString(NLNET::CSock::getLastError()).c_str(), NLNET::CSock::getLastError());
-						CEntityManager::instance().remove(c->id());
-					}
+					nlwarning("Received failed from client eid %hu : %s (code %u)", (uint16)c->id(), NLNET::CSock::errorString(NLNET::CSock::getLastError()).c_str(), NLNET::CSock::getLastError());
+					CEntityManager::instance().remove(c->id());
 					break;
 				}
 			}
