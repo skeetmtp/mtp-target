@@ -386,7 +386,7 @@ void CEntity::init(TEntity type, const std::string &name, sint32 totalScore, CRG
 	setIsLocal(isLocal);
 	this->totalScore(totalScore);
 	
-	nlinfo("CEntity::init() , texture=%s",Texture.c_str());
+	//nlinfo("CEntity::init() , texture=%s",Texture.c_str());
 	CSoundManager::instance().registerEntity(SoundsDescriptor);
 }
 

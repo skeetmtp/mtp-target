@@ -102,12 +102,8 @@ void cbLSChooseShard (CMessage &msgin, const std::string &serviceName, uint16 si
 	msgin.serial(cookie, userName, totalScore);
 	if(msgin.getPos() < (sint32)msgin.length())
 	{
-		nlinfo("LS sent texture : %s",userTexture.c_str());
+		//nlinfo("LS sent texture : %s",userTexture.c_str());
 		msgin.serial(userTexture);
-	}
-	else
-	{
-		nlinfo("LS have not sent texture (%d/%d)",msgin.getPos(),(sint32)msgin.length());
 	}
 
 	// always accept clients
