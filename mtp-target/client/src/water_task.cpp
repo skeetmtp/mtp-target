@@ -136,7 +136,8 @@ void CWaterTask::init()
 	{
 		string res;
 		static std::string shapeName("water_quad.shape");
-		CSceneUser *su = dynamic_cast<CSceneUser *>(&C3DTask::instance().scene());
+//		CSceneUser *su = dynamic_cast<CSceneUser *>(&C3DTask::instance().scene());
+		CSceneUser *su = dynamic_cast<CSceneUser *>(nelWaterScene);
 		CScene		&scene = su->getScene ();
 
 		// load textures
@@ -223,12 +224,14 @@ void CWaterTask::init()
 
 void CWaterTask::update()
 {
+	/*
 	CMatrix waterCameraMatrix;
 	waterCameraMatrix.identity();
 	waterCameraMatrix = C3DTask::instance().scene().getCam()->getMatrix();
 	waterCameraMatrix.setPos(CVector::Null);
+	*/
 	
-	nelWaterScene->getCam()->setMatrix(waterCameraMatrix);
+	nelWaterScene->getCam()->setMatrix(C3DTask::instance().scene().getCam()->getMatrix());
 	
 	nelWaterScene->animate (CTimeTask::instance().time());
 	
