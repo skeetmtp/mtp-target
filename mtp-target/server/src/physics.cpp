@@ -410,7 +410,7 @@ static void nearCallback(void *data, dGeomID o1, dGeomID o2)
 				//}
 				
 
-				if(entity->OpenClose)
+				if(entity->OpenClose && entity->EnableCrashInFly)
 				{
 					if(!entity->FreezeCommand)
 					{

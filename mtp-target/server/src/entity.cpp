@@ -84,6 +84,7 @@ void CEntity::init ()
 	Ready = false;
 	WaitingReady = false;
 	EnableOpenCloseCommand = true;
+	EnableCrashInFly = true;
 	LastVelPos = 0;
 	StartingPointId = 255;
 	OnTheWater = false;
@@ -272,6 +273,7 @@ void CEntity::reset()
 	DefaultFriction = 0;
 	MaxLinearVelocity = 0;
 	EnableOpenCloseCommand = true;
+	EnableCrashInFly = true;
 	SendCollideWhenFly = false;
 	CollideWhenFlyPos = CVector(0,0,0);
 	ForceReceived = true;
@@ -494,6 +496,11 @@ void CEntity::defaultAccel(float a)
 void CEntity::enableOpenCloseCommand(bool e)
 {
 	EnableOpenCloseCommand = e;
+}
+
+void CEntity::enableCrashInFly(bool e)
+{
+	EnableCrashInFly = e;
 }
 
 string CEntity::team()

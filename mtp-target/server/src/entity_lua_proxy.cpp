@@ -51,6 +51,7 @@ Lunar<CEntityProxy>::RegType CEntityProxy::methods[] =
 		bind_method(CEntityProxy, setUserData),	
 		bind_method(CEntityProxy, getName),	
 		bind_method(CEntityProxy, enableOpenCloseCommand),	
+		bind_method(CEntityProxy, enableCrashInFly),	
 		bind_method(CEntityProxy, getOpenCloseCount),	
 		bind_method(CEntityProxy, setOpenCloseCount),	
 		bind_method(CEntityProxy, getOpenCloseMax),	
@@ -76,7 +77,9 @@ Lunar<CEntityProxy>::RegType CEntityProxy::methods[] =
 		bind_method(CEntityProxy, getDefaultFriction),	
 		bind_method(CEntityProxy, setFreezCommand),	
 		bind_method(CEntityProxy, setArrivalTime),	
+		bind_method(CEntityProxy, getArrivalTime),	
 		bind_method(CEntityProxy, getTeam),	
+		bind_method(CEntityProxy, getMeanVelocity),	
 	{0,0}
 };
 
@@ -331,10 +334,20 @@ int CEntityProxy::getDefaultFriction(lua_State *luaSession)
 	return 1;	
 }
 
+int CEntityProxy::getArrivalTime(lua_State *luaSession)
+{
+	lua_Number res  = 0;
+	res = _entity->ArrivalTime;
+	lua_pushnumber(luaSession, res); 
+	return 1;	
+}
+
 int CEntityProxy::setArrivalTime(lua_State *luaSession)
 {
 	TTime currentTime = CTime::getLocalTime();
-	_entity->ArrivalTime =(float)(currentTime - CSessionManager::instance().startTime())/1000.0f;
+	lua_Number newVal = (currentTime - CSessionManager::instance().startTime())/1000.0f;
+	newVal = luaL_optnumber(luaSession,1,newVal);
+	_entity->ArrivalTime =(float)newVal;
 	return 0;	
 }
 
@@ -345,12 +358,27 @@ int CEntityProxy::enableOpenCloseCommand(lua_State *luaSession)
 	return 0;	
 }
 
+int CEntityProxy::enableCrashInFly(lua_State *luaSession)
+{
+	bool e = luaL_checknumber(luaSession,1)==1;
+	_entity->enableCrashInFly(e);
+	return 0;	
+}
+
 int CEntityProxy::getTeam(lua_State *luaSession)
 {
 	uint teamCount = (uint)luaL_checknumber(luaSession,1);
 	lua_Number res = 0;
 	uint teamId = CEntityManager::instance().getTeam(_entity->id(),teamCount);
 	res = teamId;
+	lua_pushnumber(luaSession, res); 
+	return 1;	
+}
+
+
+int CEntityProxy::getMeanVelocity(lua_State *luaSession)
+{
+	lua_Number res = _entity->meanVelocity();
 	lua_pushnumber(luaSession, res); 
 	return 1;	
 }

@@ -79,6 +79,7 @@ public:
 	float defaultAccel();
 	void defaultAccel(float a);
 	void enableOpenCloseCommand(bool e);
+	void enableCrashInFly(bool e);
 	
 	// accessors
 
@@ -159,6 +160,7 @@ public:
 	float				 DefaultAccel;
 	float				 DefaultFriction;
 	bool				 EnableOpenCloseCommand;
+	bool				 EnableCrashInFly;
 	bool				 ForceReceived;
 	uint32				 AfkCount;
 	

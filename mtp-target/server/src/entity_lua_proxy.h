@@ -53,6 +53,7 @@ public:
 	int getIsOpen(lua_State *luaSession);
 	int setIsOpen(lua_State *luaSession);
 	int enableOpenCloseCommand(lua_State *luaSession);
+	int enableCrashInFly(lua_State *luaSession);
 	int getOpenCloseCount(lua_State *luaSession);
 	int setOpenCloseCount(lua_State *luaSession);
 	int getOpenCloseMax(lua_State *luaSession);
@@ -77,7 +78,9 @@ public:
 	int getDefaultFriction(lua_State *luaSession);
 	int setFreezCommand(lua_State *luaSession);
 	int setArrivalTime(lua_State *luaSession);
+	int getArrivalTime(lua_State *luaSession);
 	int getTeam(lua_State *luaSession);
+	int getMeanVelocity(lua_State *luaSession);
 	
 	static const char className[];	
 	static Lunar<CEntityProxy>::RegType methods[];	
