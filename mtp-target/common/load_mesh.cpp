@@ -104,7 +104,6 @@ uint32 loadMesh(const std::string &meshFileName, std::vector<NLMISC::CVector> &v
 		tmat.scale(gscale);
 	}
 	
-	
 
 #ifdef NL_INDEX_BUFFER_H //new 3d
 
@@ -128,24 +127,27 @@ uint32 loadMesh(const std::string &meshFileName, std::vector<NLMISC::CVector> &v
 			}
 		}
 	}
+	
 
-	const CVertexBuffer &vb = mg.getVertexBuffer();
-	CVertexBufferRead vba;
-    vb.lock (vba);
-	uint32 nbv = vb.getNumVertices();
-	for(uint i = 0; i < nbv; i++)
 	{
-		const void *vv = vba.getVertexCoordPointer(i);
-		CVector v = *(CVector*)vv;
-		const void *nn = vba.getNormalCoordPointer(i);
-		CVector n = *(CVector*)nn;
-//		uint j;
-//		for(j = 0; j < vertices.c_str(); j++)
-//		{
+		const CVertexBuffer &vb = mg.getVertexBuffer();
+		CVertexBufferRead vba;
+		vb.lock (vba);
+		uint32 nbv = vb.getNumVertices();
+		for(uint i = 0; i < nbv; i++)
+		{
+			const void *vv = vba.getVertexCoordPointer(i);
+			CVector v = *(CVector*)vv;
+			const void *nn = vba.getNormalCoordPointer(i);
+			CVector n = *(CVector*)nn;
+			//		uint j;
+			//		for(j = 0; j < vertices.c_str(); j++)
+			//		{
 			vertices.push_back(tmat * v);
 			normals.push_back(n);
-//		}
-//		if(j)
+			//		}
+			//		if(j)
+		}
 	}
 
 #else //old 3d
@@ -186,6 +188,7 @@ uint32 loadMesh(const std::string &meshFileName, std::vector<NLMISC::CVector> &v
 		//		if(j)
 	}
 #endif
-//	delete m;
+
+	delete m;
 	return nbFaces;
 }
