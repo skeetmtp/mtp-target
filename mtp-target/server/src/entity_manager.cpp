@@ -1077,6 +1077,7 @@ bool CEntityManager::nameExist(std::string name)
 
 void CEntityManager::saveAllValidReplay()
 {
+	nlinfo("CEntityManager::saveAllValidReplay()");
 	CEntityManager::EntityConstIt it;
 	// close all replay file
 	for(it = entities().begin(); it != entities().end(); it++)
@@ -1100,6 +1101,7 @@ void CEntityManager::saveAllValidReplay()
 
 void CEntityManager::checkAfkClient()
 {
+	nlinfo("CEntityManager::checkAfkClient()");
 	if(IService::getInstance()->ConfigFile.getVar("CheckAfk").asInt()==0)
 		return;
 	

@@ -104,6 +104,7 @@ void CRunningSessionState::update()
 			CLuaEngine::instance().levelEndSession();
 			CEntityManager::instance().checkAfkClient();//kick away client
 
+			nlinfo("compute best tit");
 			CEntityManager::EntityConstIt  bestit1 = CEntityManager::instance().entities().end();
 			CEntityManager::EntityConstIt  bestit2 = CEntityManager::instance().entities().end();
 			CEntityManager::EntityConstIt  bestit3 = CEntityManager::instance().entities().end();
@@ -122,6 +123,7 @@ void CRunningSessionState::update()
 					bestit3 = it;
 				}
 			}
+			nlinfo("compute bonus time");
 			if(CLevelManager::instance().bonusTime())
 			{
 				switch(CEntityManager::instance().entities().size())
@@ -144,7 +146,8 @@ void CRunningSessionState::update()
 				}
 			}
 
-//			CMessage msgout("END_SESSION");
+			nlinfo("send CNetMessage::EndSession to clients");
+			//			CMessage msgout("END_SESSION");
 			CNetMessage msgout(CNetMessage::EndSession);
 //			uint8 nb = CEntityManager::instance().entities().size();
 //			msgout.serial(nb);
@@ -184,7 +187,8 @@ void CRunningSessionState::update()
 				dBodySetAngularVel((*it)->Body, 0.0f, 0.0f, 0.0f);
 				(*it)->Force = CVector::Null;
 			}
-			
+
+			nlinfo("save config file");
 			// now save scores
 			IService::getInstance()->ConfigFile.save();
 			
@@ -198,7 +202,9 @@ void CRunningSessionState::update()
 
 
 			CEntityManager::instance().saveAllValidReplay();
+			nlinfo("replay saved");
 			changeState(CEndingSessionState::instance());
+			nlinfo("reset CRunningSessionState variables");
 			CSessionManager::instance().endTime(currentTime);
 			CSessionManager::instance().forceEnding(false);
 		}

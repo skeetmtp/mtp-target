@@ -366,6 +366,7 @@ void CLuaEngine::levelPostUpdate()
 
 void CLuaEngine::levelEndSession()
 {
+	nlinfo("CLuaEngine::levelEndSession()");
 	if(!session())
 		return;
 	int res ;
