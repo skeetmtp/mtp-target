@@ -43,7 +43,8 @@
 class CEntityManager : public CSingleton<CEntityManager>, public ITask
 {
 public:
-	typedef NLMISC::CRWSynchronized <std::vector <CEntity *> >	CEntities;
+//	typedef NLMISC::CRWSynchronized <std::vector <CEntity *> >	CEntities;
+	typedef std::vector <CEntity *> CEntities;
 	
 	virtual void init();
 	virtual void update();
@@ -77,7 +78,7 @@ public:
 	uint8	size();
 
 	std::list <uint8 > updateListId;
-	CEntities *entities() { return &Entities; }
+	CEntities &entities() { return Entities; }
 
 	friend class CSingleton<CEntityManager>;
 protected:

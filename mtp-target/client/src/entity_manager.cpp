@@ -47,21 +47,19 @@ using namespace NLMISC;
 //
 CEntityManager::CEntityManager()
 {
-	CEntities::CWriteAccessor acces(entities());
-	acces.value().clear();
+	entities().clear();
 	for(uint i = 0; i < 256; i++)
 	{
-		acces.value().push_back(new CEntity);
+		entities().push_back(new CEntity);
 	}
 }
 
 void CEntityManager::init()
 {
-	CEntities::CReadAccessor acces(entities());
 	for(uint i = 0; i < 256; i++)
 	{
-		acces.value()[i]->id(i);
-		acces.value()[i]->reset();
+		entities()[i]->id(i);
+		entities()[i]->reset();
 	}
 	updateListId.clear();
 }
@@ -69,26 +67,24 @@ void CEntityManager::init()
 void CEntityManager::update()
 {
 	// do some security check
-	CEntities::CReadAccessor acces(entities());
 	for(uint i = 0; i < 256; i++)
 	{
-		nlassert(acces.value()[i]->Id == i);
+		nlassert(entities()[i]->Id == i);
 	}
-	nlassert(acces.value()[255]->Type == CEntity::Unknown);
+	nlassert(entities()[255]->Type == CEntity::Unknown);
 
 	for(uint i = 0; i < 256; i++)
 	{
-		if(acces.value()[i]->type() != CEntity::Unknown)
-			acces.value()[i]->update();
+		if(entities()[i]->type() != CEntity::Unknown)
+			entities()[i]->update();
 	}
 }
 
 void CEntityManager::add(uint8 eid, const std::string &name, sint32 totalScore, CRGBA &color, bool spectator)
 {
-	CEntities::CWriteAccessor acces(entities());
 	nlassert(!exist(eid));
 
-	acces.value()[eid]->init (CEntity::Player, name, totalScore, color, "pingoo", spectator);
+	entities()[eid]->init (CEntity::Player, name, totalScore, color, "pingoo", spectator);
 	nlinfo("CEntityManager::add(%d,%s)",eid,name.c_str());
 }
 
@@ -99,32 +95,28 @@ void CEntityManager::remove(uint8 eid)
 	if(CMtpTarget::instance().controler().Camera.getFollowedEntity() == eid)
 		CMtpTarget::instance().controler().Camera.setFollowedEntity(255);
 
-	CEntities::CWriteAccessor acces(entities());
-	acces.value()[eid]->reset();
+	entities()[eid]->reset();
 }
 
 bool CEntityManager::exist(uint8 eid)
 {
 	nlassert(eid != 255);
-	CEntities::CReadAccessor acces(entities());
-	return acces.value()[eid]->Type != CEntity::Unknown;
+	return entities()[eid]->Type != CEntity::Unknown;
 }
 
 CEntity &CEntityManager::operator [](uint8 eid)
 {
 	nlassert(exist(eid));
-	CEntities::CReadAccessor acces(entities());
-	return *acces.value()[eid]; //todo prevent external code to access entites without using accessor
+	return *entities()[eid]; //todo prevent external code to access entites without using accessor
 }
 
 void CEntityManager::getEIdSortedByScore(vector<uint8> &eids) 
 {
 	eids.clear();
 
-	CEntities::CReadAccessor acces(entities());
 	for (uint i = 0; i < 255; i++)
 	{
-		if (acces.value()[i]->type() == CEntity::Unknown)
+		if (entities()[i]->type() == CEntity::Unknown)
 			continue;
 
 		eids.push_back(i);
@@ -139,79 +131,72 @@ uint8 CEntityManager::findFirstEId()
 
 uint8 CEntityManager::findNextEId(uint8 eid) 
 {
-	CEntities::CReadAccessor acces(entities());
 	uint8 neid = eid;
 	while(++neid != eid)
-		if(acces.value()[neid]->type() != CEntity::Unknown)
+		if(entities()[neid]->type() != CEntity::Unknown)
 			return neid;
 	return eid;
 }
 
 uint8 CEntityManager::findPreviousEId(uint8 eid) 
 {
-	CEntities::CReadAccessor acces(entities());
 	uint8 neid = eid;
 	while(--neid != eid)
-		if(acces.value()[neid]->type() != CEntity::Unknown)
+		if(entities()[neid]->type() != CEntity::Unknown)
 			return neid;
 	return 255;
 }
 
 void CEntityManager::startSession()
 {
-	CEntities::CReadAccessor acces(entities());
 	for(uint i = 0; i < 256; i++)
 	{
-		if(acces.value()[i]->type() != CEntity::Unknown)
+		if(entities()[i]->type() != CEntity::Unknown)
 		{
-			acces.value()[i]->close();
+			entities()[i]->close();
 		}
 	}
 }
 
 void CEntityManager::reset()
 {
-	CEntities::CReadAccessor acces(entities());
 	for(uint i = 0; i < 256; i++)
 	{
-		if(acces.value()[i]->type() != CEntity::Unknown)
+		if(entities()[i]->type() != CEntity::Unknown)
 		{
-			acces.value()[i]->interpolator().reset();
+			entities()[i]->interpolator().reset();
 		}
 	}
 }
 
 void CEntityManager::resetSpectator()
 {
-	CEntities::CReadAccessor acces(entities());
 	for(uint i = 0; i < 256; i++)
 	{
-		if(acces.value()[i]->type() != CEntity::Unknown)
+		if(entities()[i]->type() != CEntity::Unknown)
 		{
-			acces.value()[i]->spectator(false);
+			entities()[i]->spectator(false);
 		}
 	}
 }
 
 void CEntityManager::resetReady()
 {
-	CEntities::CReadAccessor acces(entities());
 	for(uint i = 0; i < 256; i++)
 	{
-		if(acces.value()[i]->type() != CEntity::Unknown)
+		if(entities()[i]->type() != CEntity::Unknown)
 		{
-			acces.value()[i]->ready(false);
+			entities()[i]->ready(false);
 		}
 	}
 }
 
 uint8 CEntityManager::size()
 {
-	CEntities::CReadAccessor acces(entities());
 	uint8 nb = 0;
 	for(uint i = 0; i < 256; i++)
 	{
-		if(acces.value()[i]->type() != CEntity::Unknown)
+		if(entities()[i]->type() != CEntity::Unknown)
 		{
 			nb++;
 		}
@@ -221,11 +206,10 @@ uint8 CEntityManager::size()
 
 void CEntityManager::renderNames()
 {
-	CEntities::CReadAccessor acces(entities());
 	for(uint i = 0; i < 256; i++)
 	{
-		if(acces.value()[i]->type() != CEntity::Unknown)
-			acces.value()[i]->renderName();
+		if(entities()[i]->type() != CEntity::Unknown)
+			entities()[i]->renderName();
 	}	
 }
 
@@ -235,11 +219,10 @@ void CEntityManager::render()
 
 void CEntityManager::load3d()
 {
-	CEntities::CReadAccessor acces(entities());
 	for(uint i = 0; i < 256; i++)
 	{
-		if(acces.value()[i]->type() != CEntity::Unknown && !acces.value()[i]->spectator())
-			acces.value()[i]->load3d();
+		if(entities()[i]->type() != CEntity::Unknown && !entities()[i]->spectator())
+			entities()[i]->load3d();
 	}
 }
 
