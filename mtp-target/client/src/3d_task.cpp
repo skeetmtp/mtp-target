@@ -32,6 +32,7 @@
 	extern HINSTANCE ghInstance;
 #endif
 
+#include "task_manager.h"
 #include "3d_task.h"
 #include "editor_task.h"
 #include "time_task.h"
@@ -215,6 +216,9 @@ void C3DTask::init()
 
 void C3DTask::update()
 {
+	if(!Driver->isActive())
+		CTaskManager::instance().exit();
+		//exit(0);
 	Scene->animate(CTimeTask::instance().time());
 	Driver->EventServer.pump();
 
@@ -227,10 +231,12 @@ void C3DTask::update()
 
 void C3DTask::render()
 {
+//	nlinfo("C3DTask::render():begin render");
 	Driver->enableFog(true);
 	Scene->render();
 	Driver->enableFog(false);
 	CEntityManager::instance().renderNames();
+//	nlinfo("C3DTask::render():end render");
 }
 
 void C3DTask::release()
