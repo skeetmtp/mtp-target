@@ -834,7 +834,7 @@ string CEntityManager::check(const string &login, const string &password, bool d
 			}
 			else
 			{
-				return "Bad password";
+				return "Bad password, may be this login has already been created by someone else";
 			}
 		}
 	}
