@@ -31,6 +31,7 @@
 #include "main.h"
 #include "entity.h"
 #include "client.h"
+#include "command.h"
 #include "network.h"
 #include "welcome.h"
 #include "variables.h"
@@ -872,6 +873,19 @@ string CEntityManager::check(const string &login, const string &password, bool d
 	return "";
 }
 
+CEntity *getByString(std::string ident)
+{
+	CEntity *res = NULL;
+
+	uint8 val = atoi(ident.c_str());
+	if(val>0)
+		res = CEntityManager::instance().getById(val);
+	else
+		res = CEntityManager::instance().getByName(ident);
+
+	return res;
+}
+
 
 //
 // Commands
@@ -901,16 +915,12 @@ NLMISC_COMMAND(kick, "kick a client from the server", "[<eid>|<name>]")
 	
 	nlinfo("kick %s", args[0].c_str());
 	
-	uint8 val = atoi(args[0].c_str());
-	CEntity *e = NULL;
-	if(val>0)
-		e = CEntityManager::instance().getById(val);
-	else
-		e = CEntityManager::instance().getByName(args[0]);
+	CEntity *e = getByString(args[0]);
 
 	if(e==NULL)
 		return true;
 	
+	uint8 eid = e->id();
 	if(e->isAdmin() || e->isModerator())
 		return true;
 
@@ -919,12 +929,66 @@ NLMISC_COMMAND(kick, "kick a client from the server", "[<eid>|<name>]")
 		string reason = toString("You have been kicked !");
 		CNetMessage msgout(CNetMessage::Error);
 		msgout.serial(reason);
-		CNetwork::instance().send(val, msgout);
+		CNetwork::instance().send(eid, msgout);
 	}
 	
-	val = e->id();
-	CEntityManager::instance().remove(val);
+	CEntityManager::instance().remove(eid);
 	
+	return true;
+}
+
+NLMISC_COMMAND(chat, "switch client chat on/off", "[<eid>|<name>]")
+{
+	if(args.size() != 1) return false;
+	
+	nlinfo("ban %s", args[0].c_str());
+	
+	CEntity *e = getByString(args[0]);
+
+	if(e==NULL)
+		return true;
+
+	e->canSpeak(!e->canSpeak());
+	CNetwork::instance().sendChat(toString("%s chat is now %s",e->name().c_str(),e->canSpeak()?"on":"off"));
+	
+	return true;
+}
+
+MTPT_COMMAND(ban, "ban a client from the server", "[<eid>|<name>] [duration]")
+{
+	if(args.size() != 2 && args.size() != 1) return false;
+	
+	CEntity *e = getByString(args[0]);
+
+	if(e==NULL)
+		return true;
+
+	CClient *c = NULL;
+	if(e->type()!=e->Client)
+		return true;
+
+	c = (CClient *)e;
+
+	CMessage msgout("BC");
+
+	string ip = c->sock()->asString();
+	string userName = c->name();
+	string kickerName = entity->name();
+	uint32 duration = 60;
+	msgout.serial(ip, userName, kickerName, duration);
+	
+	nlinfo("%s bans %s %s %d",entity->name().c_str(), userName.c_str(),ip.c_str(),duration);
+	CUnifiedNetwork::getInstance()->send("LS", msgout);
+	
+	//TODO
+	
+	return true;
+}
+
+
+NLMISC_CATEGORISED_COMMAND(commands,bof, "watch a client", "[<eid>]")
+{
+
 	return true;
 }
 
