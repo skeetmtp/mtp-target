@@ -48,7 +48,7 @@ TARGETS		= login_service
 # The default build rule
 all:			$(TARGETS)
 
-OBJS  = connection_client.o  connection_web.o  connection_ws.o  login_service.o
+OBJS  = connection_client.o connection_ws.o  login_service.o
 
 login_service: $(OBJS)
 	$(CXX) -o $@ $(OBJS) $(LDFLAGS)

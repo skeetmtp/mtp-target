@@ -55,7 +55,7 @@ public:
 	virtual bool			forceReceived();
 
 	sint32 uid() const { return UId; }
-	void uid(sint32) { UId = uid; }
+	void uid(sint32 uid) { UId = uid; }
 
 public:
 

@@ -3,7 +3,7 @@
 $uploaddir = '/home/ace/cvs/mtp-target/user_texture/';
 $uploadfilename = strtolower($_FILES['userfile']['name']);
 $uploadfile = $uploaddir . $uploadfilename;
-$maxfilesize = 262188;
+$maxfilesize = 300000; // some tga are bigger because they add some dumb extra infos
 
 if($_FILES['userfile']['size'] > $maxfilesize)
 {
