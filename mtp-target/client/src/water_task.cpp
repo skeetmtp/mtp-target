@@ -149,6 +149,9 @@ void CWaterTask::init()
 		ITexture *heightMap  = new CTextureFile(res);
 		res = CResourceManager::instance().get(heightMap1Name());
 		ITexture *heightMap2 = new CTextureFile(res);
+
+		res = CResourceManager::instance().get("colormap.tga");
+		ITexture *colorMap = new CTextureFile(res);
 		
 		WaterShape = new CWaterShape;
 		WaterShape->setEnvMap(0, envMap1);
@@ -156,6 +159,8 @@ void CWaterTask::init()
 		
 		WaterShape->setHeightMap(0, heightMap);
 		WaterShape->setHeightMap(1, heightMap2);
+
+		WaterShape->setColorMap(colorMap);
 
 		WaterShape->setWaterPoolID(0);
 
@@ -234,7 +239,7 @@ void CWaterTask::render()
 	nelWaterScene->render ();
 	
 	// Must clear ZBuffer For incoming rendering.
-	//C3DTask::instance().driver().clearZBuffer();
+	C3DTask::instance().driver().clearZBuffer();
 }
 
 void CWaterTask::release()

@@ -221,7 +221,7 @@ CLevel::CLevel(const string &filename)
 	luaGetGlobalVariable(LuaState, skyHeightMap1Name);
 	nlinfo("skyHeightMap1Name '%s'", skyHeightMap1Name.c_str());
 	CWaterTask::instance().heightMap1Name(skyHeightMap1Name);
-	CTaskManager::instance().add(CWaterTask::instance(), 99);
+	CTaskManager::instance().add(CWaterTask::instance(), 101);
 	
 
 	CTaskManager::instance().add(CLensFlareTask::instance(), 140);
