@@ -222,6 +222,14 @@ void CEntity::reset()
 
 void CEntity::update() 
 {
+	if(spectator())
+	{
+		collideModules.clear();
+		collideEntity.clear();
+		collideWater = false;
+		return;
+	}
+	
 	if(luaProxy)
 		luaProxy->call("preUpdate");
 
@@ -236,7 +244,7 @@ void CEntity::update()
 		CLuaEngine::instance().entityEntityCollideEvent(this,*eit);	
 	collideEntity.clear();
 
-	if(collideWater && !spectator())
+	if(collideWater)
 		CLuaEngine::instance().entityWaterCollideEvent(this);	
 	collideWater = false;
 	

@@ -247,7 +247,7 @@ CStartPoint *CLevel::getStartPoint(uint32 id)
 {
 	if(id>=getStartPointCount())
 	{
-		nlwarning("id>=getStartPointCount():%d>=%d",id,getStartPointCount());
+		//nlwarning("id>=getStartPointCount():%d>=%d",id,getStartPointCount());
 		return StartPoints[0];
 	}
 	return StartPoints[id];
