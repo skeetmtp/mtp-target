@@ -284,7 +284,7 @@ static void cbWSClientConnected (CMessage &msgin, const std::string &serviceName
 	{
 		// new client on the shard
 
-		reason = sqlQuery("update user set State='Online', where UId="+toString(Id), nbrow2, row2, result2);
+		reason = sqlQuery("update user set State='Online' where UId="+toString(Id), nbrow2, row2, result2);
 		if(!reason.empty()) return;
 
 		reason = sqlQuery("update shard set NbPlayers=NbPlayers+1 where ShardId="+string(row[3]), nbrow2, row2, result2);
