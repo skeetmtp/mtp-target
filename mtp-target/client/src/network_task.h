@@ -46,7 +46,7 @@
 // Constants
 //
 
-static const float NetVirtualFrameDuration = 1.0f / 50.0f;
+static const float NetVirtualFrameDuration = MT_NETWORK_MY_UPDATE_PERIODE;
 
 
 //
