@@ -15,7 +15,9 @@
 <h3>Games statistics</h3>
 <ul>
 <li><a href="?page=stat_global.php">Mtp Target games stats</a></li>
-<li><a href="?page=stat_ranking.php">Ranking</a></li>
+<li><a href="?page=stat_ranking.php">Total score ranking</a></li>
+<li><a href="?page=stat_ranking_of_the_day.php">Today score ranking</a></li>
+<li><a href="?page=stat_ranking_per_score_of_the_day.php">Score of the day ranking</a></li>
 <li><a href="?page=logged.php">Players online</a></li>
 </ul>
 

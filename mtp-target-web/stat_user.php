@@ -17,9 +17,6 @@ include_once("stat_map_graph_display.php");
 		include($cacheFileName);
 		return;
 	}
-	
-	
-	
 	$html_fp = fopen($cacheFileName, "wt");
 
 	$totalScore = 1;
