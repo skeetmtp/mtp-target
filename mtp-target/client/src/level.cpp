@@ -196,7 +196,7 @@ CLevel::CLevel(const string &filename)
 	if(C3DTask::instance().levelParticle()!=0)
 		C3DTask::instance().levelParticle()->show();
 
-	float cameraMinDistFromStartPointToMove = 0.01f;
+	float cameraMinDistFromStartPointToMove = 1.0f;
 	luaGetGlobalVariable(LuaState, cameraMinDistFromStartPointToMove);
 	CMtpTarget::instance().controler().Camera.minDistFromStartPointToMove(cameraMinDistFromStartPointToMove);
 	
