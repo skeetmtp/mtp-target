@@ -25,5 +25,7 @@ NEL_SOURCE      = $(HOME)/cvs/code/nel/src
 STLPORT_INCLUDE = /usr/include/stlport
 LIBXML2_INCLUDE = /usr/include/libxml2
 LUA_INCLUDE	= /usr/include/lua50
+
+# comment this 2 lines above if you don't want sound support
 FMOD_CXXFLAGS  = -DUSE_FMOD -I$(HOME)/external/fmodapi372linux/api/inc
 FMOD_LDFLAGS   = -L$(HOME)/external/fmodapi372linux/api -lfmod-3.72
