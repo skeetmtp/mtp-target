@@ -74,7 +74,7 @@
         <td align="center"><div id="menu">
         <?php
         
-		if($html_fp = cache2Html("ingame_stats_menu.php.html",1))
+		if($html_fp = cache2Html($cache_dir."/ingame_stats_menu.html",1))
 		{
 			getStats($nbop, $nbrp, $nbs);
 			fprintf($html_fp,$menuStat, $nbrp, $nbop, $nbs);
