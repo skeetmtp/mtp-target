@@ -36,16 +36,16 @@
 #include <3d/shape.h>
 #include <3d/material.h>
 #include <3d/register_3d.h>
-	
 
-#include "task_manager.h"
-#include "3d_task.h"
-#include "editor_task.h"
-#include "time_task.h"
-#include "config_file_task.h"
-#include "resource_manager.h"
-#include "entity_manager.h"
 #include "gui.h"
+#include "3d_task.h"
+#include "time_task.h"
+#include "editor_task.h"
+#include "task_manager.h"
+#include "entity_manager.h"
+#include "config_file_task.h"
+#include "level_manager.h"
+#include "resource_manager.h"
 	
 
 //
@@ -117,6 +117,8 @@ void C3DTask::init()
 {
 	ScreenWidth = CConfigFileTask::instance().configFile().getVar("ScreenWidth").asInt();
 	ScreenHeight = CConfigFileTask::instance().configFile().getVar("ScreenHeight").asInt();
+
+	EnableExternalCamera = false;
 
 	CConfigFile::CVar v;
 	v = CConfigFileTask::instance().configFile().getVar("AmbientColor");
@@ -226,12 +228,40 @@ void C3DTask::update()
 
 void C3DTask::render()
 {
-//	nlinfo("C3DTask::render():begin render");
-	C3DTask::instance().driver().enableFog(true);
+	CViewport vp;
+	CScissor s;
+	
+	Driver->enableFog(true);
 	Scene->render();
+
+	if(EnableExternalCamera && CLevelManager::instance().currentLevel().ExternalCameras.size() > 0)
+	{
+		CMatrix oldmat = C3DTask::instance().scene().getCam().getMatrix();
+		
+		vp.init(0.69f,0.55f,0.3f,0.3f);
+		s.init(0.69f,0.55f,0.3f,0.3f);
+
+		CMatrix m;
+		m.identity();
+		m.setPos(CLevelManager::instance().currentLevel().ExternalCameras[0].first);
+		m.setRot(CLevelManager::instance().currentLevel().ExternalCameras[0].second);
+		C3DTask::instance().scene().getCam().setMatrix(m);
+		Scene->setViewport(vp);
+		Driver->setViewport(vp);
+		Driver->setScissor(s);
+		Driver->clearBuffers();
+		Scene->render();
+
+		vp.init(0,0,1,1);
+		s.init(0,0,1,1);
+		Scene->setViewport(vp);
+		Driver->setViewport(vp);
+		Driver->setScissor(s);
+		C3DTask::instance().scene().getCam().setMatrix(oldmat);
+	}
+	
 	C3DTask::instance().driver().enableFog(false);
 	CEntityManager::instance().renderNames();
-//	nlinfo("C3DTask::render():end render");
 }
 
 void C3DTask::release()

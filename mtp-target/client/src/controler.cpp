@@ -177,7 +177,7 @@ void CControler::update()
 			ControlerCamMatrix.rotateZ(mouseX);
 			ControlerCamMatrix.rotateX(mouseY);
 //			nlinfo("set camera matrix");
-			C3DTask::instance().scene().getCam().setMatrix(ControlerCamMatrix);			
+			C3DTask::instance().scene().getCam().setMatrix(ControlerCamMatrix);
 		}
 		else
 		{
@@ -342,6 +342,18 @@ void CControler::update()
 		if (C3DTask::instance().kbPressed(KeyF11))
 		{
 			CMtpTarget::instance().resetFollowedEntity();
+		}
+
+		if (C3DTask::instance().kbPressed(KeyF12))
+		{
+			UCamera c = C3DTask::instance().scene().getCam();
+			CVector v = c.getMatrix().getPos();
+			CQuat q;
+			c.getMatrix().getRot(q);
+			
+			nlinfo("Add this in the '%s', in the ExternalCamera section:", CLevelManager::instance().currentLevel().filename().c_str());
+			nlinfo("\t{ Position = CVector(%f, %f, %f), Rotation = CAngleAxis(%f, %f, %f, %f) },",
+				v.x, v.y, v.z, q.x, q.y, q.z, q.w);
 		}
 
 		if (C3DTask::instance().kbPressed(KeyLCONTROL) || C3DTask::instance().kbPressed(KeyRCONTROL) || C3DTask::instance().kbPressed(KeyCONTROL))

@@ -114,7 +114,6 @@ void CFontManager::init()
 	BigTextContext->setFontSize (BigFontSize);
 	BigTextContext->setShaded(true);
 	
-	
 	GUIFontSize = CConfigFileTask::instance().configFile().getVar("GUIFontSize").asInt();
 	GUITextContext = C3DTask::instance().driver().createTextContext (CPath::lookup(CConfigFileTask::instance().configFile().getVar("GUIFont").asString()));
 	nlassert(GUITextContext != 0);

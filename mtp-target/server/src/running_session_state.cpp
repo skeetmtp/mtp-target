@@ -82,7 +82,13 @@ void CRunningSessionState::update()
 						if(c->ArrivalTime == 0)
 						{
 							c->ArrivalTime =(float)(currentTime - CSessionManager::instance().startTime())/1000.0f;
-							//nlinfo("setting time %s %f",(*it)->Name.c_str(),(*it)->Time);
+nlinfo("*** ARRIVAL TIME '%s' %f",c->name().c_str(),c->ArrivalTime);
+
+							CNetMessage msgout(CNetMessage::TimeArrival);
+							uint8 eid = c->id();
+							msgout.serial(eid);
+							msgout.serial(c->ArrivalTime);
+							CNetwork::instance().send(msgout);
 						}
 					}
 				}

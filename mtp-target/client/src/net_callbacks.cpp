@@ -34,13 +34,14 @@
 
 #include <nel/misc/path.h>
 
-#include "chat_task.h"
+#include "3d_task.h"
 #include "hud_task.h"
+#include "chat_task.h"
 #include "mtp_target.h"
 #include "network_task.h"
 #include "net_callbacks.h"
-#include "entity_manager.h"
 #include "level_manager.h"
+#include "entity_manager.h"
 #include "resource_manager.h"
 #include "config_file_task.h"
 #include "../../common/custom_floating_point.h"
@@ -572,8 +573,11 @@ static void cbStartSession(CNetMessage &msgin)
 	nlassert(ranks.size()==eids.size());
 
 	for(uint32 i=0;i<eids.size();i++)
-		CEntityManager::instance()[eids[i]].rank(ranks[i]);
-	
+	{
+		if(CEntityManager::instance().exist(eids[i]))
+			CEntityManager::instance()[eids[i]].rank(ranks[i]);
+	}
+
 	CMtpTarget::instance().startSession(timebeforestart / 1000.0f, timeout / 1000.0f, levelName, str1, str2);
 
 	/*
@@ -646,9 +650,32 @@ static void cbCollideWhenFly(CNetMessage &msgin)
 	// check if the player exists
 	if(!CEntityManager::instance().exist(eid)) { nlwarning("The eid doesn't exist"); return; }
 
+	if(CMtpTarget::instance().controler().getControledEntity()==eid)
+	{
+		// it's my collide when fly
+		C3DTask::instance().EnableExternalCamera = true;
+	}
+
 	CEntityManager::instance()[eid].addCrashEventKey = CCrashEvent(true,pos);
 	if(SessionFile) 
 		fprintf(SessionFile, "%hu CE %f %f %f\n", (uint16)eid,pos.x,pos.y,pos.z);
+}
+
+static void cbTimeArrival(CNetMessage &msgin)
+{
+	uint8 eid;
+	float time;
+	msgin.serial(eid, time);
+	nlinfo("NET: cbTimeArrival eid=%hu, time=%f", (uint16)eid, time);
+	
+	// check if the player exists
+	if(!CEntityManager::instance().exist(eid)) { nlwarning("The eid doesn't exist"); return; }
+	
+	if(CMtpTarget::instance().controler().getControledEntity()==eid)
+	{
+		// it's my arrival
+		C3DTask::instance().EnableExternalCamera = true;
+	}
 }
 
 //
@@ -684,6 +711,7 @@ void netCallbacksHandler(CNetMessage &msgin)
 	SWITCH_CASE(EnableElement);
 	SWITCH_CASE(ExecLua);
 	SWITCH_CASE(CollideWhenFly);
+	SWITCH_CASE(TimeArrival);
 	
 	default: nlwarning("Received an unknown message type %hu", (uint16)msgin.type()); break;
 	}

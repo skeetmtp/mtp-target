@@ -71,3 +71,7 @@ Modules =
 Particles =
 {
 }
+
+ExternalCameras =
+{
+}

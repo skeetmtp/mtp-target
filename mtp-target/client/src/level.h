@@ -69,12 +69,12 @@ public:
 	void			reset();
 	bool			changed() {return _changed;}
 	void			changed(bool c) {_changed = c;}
-	
+
 	NLMISC::CVector startPosition(uint32 id);
 
 	NLMISC::CVector cameraPosition(uint32 id);
 	uint32 getCameraCount();
-	
+
 	CModule *getModule(uint32 id);
 	CModule *getModule(std::string &name);
 	uint32 getModuleCount();
@@ -83,27 +83,26 @@ public:
 	CParticles *getParticles(uint32 id);
 	CParticles *getParticles(std::string &name);
 	uint32 getParticlesCount();
-		
+
 	CStartPoint *getStartPoint(uint32 id);
 	uint32 getStartPointCount();
 	void updateStartPoint(uint32 id, const NLMISC::CVector &pos, const NLMISC::CVector &rot,uint32 selectedBy);
 
-
 	bool execLuaCode(std::string code);
 	lua_State						*luaState() {return LuaState;}
-
 
 	static int getEntityByName(lua_State *L);
 	static int getModuleByName(lua_State *L);
 	static int getParticlesByName(lua_State *L);
-	
+
 	static int getEntityById(lua_State *L);
 	static int getModuleById(lua_State *L);
 	static int getParticlesById(lua_State *L);
-	
-	
+
+	std::vector<std::pair<NLMISC::CVector, NLMISC::CQuat> >		ExternalCameras;
+
 private:
-	
+
 	lua_State						*LuaState;
 
 	// Level name
@@ -120,7 +119,7 @@ private:
 	std::vector<CParticles *>		Particles;
 	std::vector<CLuaVector>			Cameras;
 	//	std::vector<NL3D::UInstance *>	StartPositions;
-	std::vector<CStartPoint *>	StartPoints;
+	std::vector<CStartPoint *>		StartPoints;
 	
 	bool							DisplayStartPositions;
 	bool							DisplayLevel;

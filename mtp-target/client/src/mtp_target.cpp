@@ -253,7 +253,7 @@ void CMtpTarget::_error()
 	CLevelManager::instance().release();
 	DoError = false;
 }
-	
+
 void CMtpTarget::update()
 {
 	if(DoError)
@@ -752,6 +752,7 @@ void mtpTarget::endSession()
 {
 	// end of a session
 	CMtpTarget::instance().State = CMtpTarget::eEndSession;
+	C3DTask::instance().EnableExternalCamera = false;
 	CHudTask::instance().messages.clear();
 }
 

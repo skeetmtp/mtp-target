@@ -71,6 +71,8 @@ public:
 
 	void				clearColor(NLMISC::CRGBA color);
 
+	bool EnableExternalCamera;
+
 private:
 	
 	NL3D::UDriver			*Driver;
