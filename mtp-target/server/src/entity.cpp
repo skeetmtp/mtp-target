@@ -89,7 +89,7 @@ void CEntity::init ()
 	LastSentSX = 0;
 	Friction = 0.0f;
 	LuaInit = false;
-	Pos = CVector::Null;
+	Pos = CVector(Id,0,0);//CVector::Null;
 	Force = CVector::Null;
 	for(uint i = 0; i < 10; i++) LastVel[i] = 0.0f;
 	Spectator = true;
