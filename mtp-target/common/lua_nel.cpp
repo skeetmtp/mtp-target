@@ -59,3 +59,10 @@ Luna<CLuaAngleAxis>::RegType CLuaAngleAxis::methods[] = {
 };
 
 
+const char CLuaRGBA::className[] = "CRGBA";
+
+Luna<CLuaRGBA>::RegType CLuaRGBA::methods[] = {
+	{0,0}
+};
+
+

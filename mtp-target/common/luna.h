@@ -67,7 +67,11 @@ public:
   static T *check(lua_State *L, int narg) {
     userdataType *ud =
       static_cast<userdataType*>(luaL_checkudata(L, narg, T::className));
-    if(!ud) luaL_typerror(L, narg, T::className);
+    if(!ud) 
+	{
+		nlwarning("lua error getting %s variable",T::className);
+		luaL_typerror(L, narg, T::className);
+	}
     return ud->pT;  // pointer to T object
   }
 

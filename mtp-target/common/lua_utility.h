@@ -59,9 +59,35 @@ void luaClose(lua_State *&L);
 //  luaGetGlobalVariable(L,LevelName);
 //
 
-#define luaGetGlobalVariable(_l,_varname) lua_getglobal(_l, #_varname),luaGetVariable(_l, _varname)
-#define luaGetGlobalVector(_l,_varname) lua_getglobal(_l, #_varname),luaGetVector(_l, _varname)
-#define luaGetGlobalVectorWithName(_l,_var,_varname) lua_getglobal(_l, _varname),luaGetVector(_l, _var)
+#define luaGetGlobalVariable(_l,_varname)                   \
+lua_getglobal(_l, #_varname);                               \
+if (lua_isnil(_l, -1))                                      \
+{                                                           \
+	nlwarning("luaGetGlobal : %s not found",#_varname);     \
+	lua_pop(_l, 1);                                         \
+}                                                           \
+else                                                        \
+	luaGetVariable(_l, _varname);
+
+#define luaGetGlobalVector(_l,_varname)                     \
+lua_getglobal(_l, #_varname);                               \
+if (lua_isnil(_l, -1))                                      \
+{                                                           \
+	nlwarning("luaGetGlobal : %s not found",#_varname);     \
+	lua_pop(_l, 1);                                         \
+}                                                           \
+else                                                        \
+	luaGetVector(_l, _varname);
+
+#define luaGetGlobalVectorWithName(_l,_var,_varname)        \
+lua_getglobal(_l, _varname);                                \
+if (lua_isnil(_l, -1))                                      \
+{                                                           \
+	nlwarning("luaGetGlobal : %s not found",#_varname);     \
+	lua_pop(_l, 1);                                         \
+}                                                           \
+else                                                        \
+	luaGetVector(_l, _var);
 
 
 // Initialize a C variable with the lua variable on top of the stack

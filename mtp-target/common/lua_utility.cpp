@@ -155,6 +155,7 @@ lua_State *luaOpen()
 
 	Luna<CLuaVector>::Register(L);
 	Luna<CLuaAngleAxis>::Register(L);
+	Luna<CLuaRGBA>::Register(L);
 	
 	return L;
 }
