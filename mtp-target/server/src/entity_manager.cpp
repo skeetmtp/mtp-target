@@ -69,13 +69,10 @@ static uint8 WatchingId = 0;
 void CEntityManager::init()
 {
 	IdUpdateList.clear();
-	EntitiesToAdd.clear();
-	IdToRemove.clear();
 }
 
 void CEntityManager::update()
 {
-	flushAddRemoveList();
 	checkForcedClientCount();
 	{
 		EntityConstIt it;
@@ -85,6 +82,111 @@ void CEntityManager::update()
 		}
 	}
 }
+
+void CEntityManager::add(CEntity *entity)
+{
+	uint tid = getThreadId();
+	nlassert(tid==MainThreadId || tid==NetworkThreadId);
+	if(tid==MainThreadId)
+		ClientToAddMainThread.push_back(entity);
+	else
+		ClientToAddNetworkThread.push_back(entity);
+}
+
+void CEntityManager::remove(uint8 eid)
+{
+	uint tid = getThreadId();
+	nlassert(tid==MainThreadId || tid==NetworkThreadId);
+	if(tid==MainThreadId)
+		ClientToRemoveMainThread.push_back(eid);
+	else
+		ClientToRemoveNetworkThread.push_back(eid);
+}
+
+void CEntityManager::_add(std::list<CEntity *> &addList)
+{
+	list<CEntity *>::iterator it2;
+	for(it2=addList.begin(); it2!=addList.end();it2++)
+	{
+		CEntity *e = *it2;
+		entities().push_back(e);
+	}
+	addList.clear();	
+	
+}
+
+void CEntityManager::_remove(std::list<uint8> &removeList)
+{
+	list<uint8>::iterator it1;
+	for(it1=removeList.begin(); it1!=removeList.end();it1++)
+	{
+		uint8 eid = *it1;
+		if(eid == 255)
+			nlwarning("Can't remove client because eid 255 is not valid");
+		
+		CEntity *c = 0;
+		
+		{
+			EntityIt it;
+			for( it = entities().begin(); it != entities().end(); it++)
+			{
+				if((*it)->id() == eid)
+				{
+					// only unlink the client from the list
+					c = (*it);
+					entities().erase(it);
+					break;
+				}
+			}
+		}
+		
+		if(!c)
+		{
+			nlwarning("Can't remove client because eid %hu is not found", (uint16)eid);
+			return;
+		}
+		
+		nlinfo("Removing client eid %hu name '%s'", (uint16)c->id(), c->name().c_str());
+		CSessionManager::instance().editMode(0);
+		
+		// TODO clientConnected(c->Cookie, false);
+		
+		CNetMessage msgout(CNetMessage::Logout);
+		msgout.serial(eid);
+		CNetwork::instance().send(msgout);		
+		delete c;
+	}
+	removeList.clear();
+	
+}
+
+
+
+
+void CEntityManager::flushAddRemoveList()
+{
+	bool paused = pauseAllThread();
+	if(!paused)
+		return;
+
+	uint tid = getThreadId();
+	nlassert(tid==MainThreadId || tid==NetworkThreadId);
+	
+	if(tid==MainThreadId)
+	{
+		_add(ClientToAddMainThread);
+		_remove(ClientToRemoveMainThread);
+	}
+	else
+	{
+		_add(ClientToAddNetworkThread);
+		_remove(ClientToRemoveNetworkThread);
+	}		
+	updateIdUpdateList();
+	resumeAllThread();
+	
+}
+
 
 void CEntityManager::reset()
 {
@@ -151,14 +253,6 @@ void CEntityManager::addClient(NLNET::CTcpSock *sock)
 	add(e);
 }
 
-
-void CEntityManager::add(CEntity *entity)
-{
-	pauseAllThread();
-	entities().push_back(entity);
-	resumeAllThread();
-	updateIdUpdateList();
-}
 
 void CEntityManager::updateIdUpdateList()
 {
@@ -336,52 +430,6 @@ CEntity *CEntityManager::getById(uint8 eid)
 	nlwarning("Can't find client eid %hu ", (uint16)eid);
 	return NULL;
 	
-}
-
-void CEntityManager::remove(uint8 eid)
-{
-	if(eid == 255)
-	{
-		nlwarning("Can't remove client because eid 255 is not valid");
-		return;
-	}
-
-	CEntity *c = 0;
-
-	{
-		EntityIt it;
-		pauseAllThread();
-		for( it = entities().begin(); it != entities().end(); it++)
-		{
-			if((*it)->id() == eid)
-			{
-				// only unlink the client from the list
-				c = (*it);
-				entities().erase(it);
-				break;
-			}
-		}
-		resumeAllThread();
-	}
-	
-	if(!c)
-	{
-		nlwarning("Can't remove client because eid %hu is not found", (uint16)eid);
-		return;
-	}
-
-	nlinfo("Removing client eid %hu name '%s'", (uint16)c->id(), c->name().c_str());
-	CSessionManager::instance().editMode(0);
-	
-	// TODO clientConnected(c->Cookie, false);
-
-	CNetMessage msgout(CNetMessage::Logout);
-	msgout.serial(eid);
-	CNetwork::instance().send(msgout);
-	updateIdUpdateList();
-	
-	delete c;
-
 }
 
 void CEntityManager::removeBot()
@@ -776,34 +824,6 @@ uint CEntityManager::humanClientCount()
 }
 
 
-void CEntityManager::addClientToRemoveList(CClient *c)
-{
-	c->networkReady(false);
-	IdToRemove.push_back(c->id());	
-}
-
-void CEntityManager::addClientToAddList(CClient *c)
-{
-	EntitiesToAdd.push_back(c);	
-}
-
-void CEntityManager::flushAddRemoveList()
-{
-	list<uint8>::iterator it1;
-	for(it1=IdToRemove.begin(); it1!=IdToRemove.end();it1++)
-	{
-		CEntityManager::instance().remove(*it1);
-	}
-	IdToRemove.clear();
-
-	list<CEntity *>::iterator it2;
-	for(it2=EntitiesToAdd.begin(); it2!=EntitiesToAdd.end();it2++)
-	{
-		CEntity *e = *it2;
-		CEntityManager::instance().add(e);
-	}
-	EntitiesToAdd.clear();	
-}
 
 bool CEntityManager::nameExist(std::string name)
 {

@@ -65,7 +65,8 @@ static void cbCommand(CClient *c, CNetMessage &msgin)
 
 	if(c->isAdmin())
 	{
-		CNetwork::instance().networkTask().addCommand(cmd);
+		//CNetwork::instance().networkTask().addCommand(cmd);
+		ICommand::execute(cmd, *InfoLog);
 		CNetwork::instance().sendChat(c->name()+" executed: "+cmd);
 	}
 	else

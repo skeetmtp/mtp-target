@@ -48,13 +48,10 @@ public:
 	CNetworkTask();
 
 	virtual void run();
-	void addCommand(std::string &command);
 
 private:
-	void fludhCommand();
 	
 	NLNET::CListenSock ListenSock;
-	std::list<std::string> commands;
 };
 
 

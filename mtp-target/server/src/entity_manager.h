@@ -59,10 +59,7 @@ public:
 
 	void login(CEntity *c);
 
-	void addClientToRemoveList(CClient *c);
-	void addClientToAddList(CClient *c);
-	void flushAddRemoveList();
-
+	void add(CEntity *entity);
 	void remove(uint8 eid);
 	void remove(const std::string &name);
 	CEntity *getByName(const std::string &name);
@@ -84,21 +81,25 @@ public:
 	CEntity *getById(uint8 eid);
 		
 	float slowerVelocity();
+	void flushAddRemoveList();
 		
 		
 	std::list<uint8> IdUpdateList;
 private:
-
+	void _add(std::list<CEntity *> &addList);
+	void _remove(std::list<uint8> &removeList);
+	
 	std::list <CEntity*> Entities;
 
-	void add(CEntity *entity);
 	uint8		findNewId();
 	void		checkForcedClientCount();
 	void		updateIdUpdateList();
 		
 
-	std::list<uint8> IdToRemove;
-	std::list<CEntity *> EntitiesToAdd;
+	std::list<CEntity *> ClientToAddMainThread;
+	std::list<CEntity *> ClientToAddNetworkThread;
+	std::list<uint8> ClientToRemoveMainThread;
+	std::list<uint8> ClientToRemoveNetworkThread;
 	
 		
 };

@@ -58,7 +58,6 @@ void checkNetworkPaused();
 
 CNetworkTask::CNetworkTask()
 {
-	commands.clear();
 	ListenSock.init(NLNET::IService::getInstance()->ConfigFile.getVar("TcpPort").asInt());
 
 #if defined NL_OS_UNIX
@@ -120,7 +119,8 @@ void CNetworkTask::run()
 		}
 
 		checkNetworkPaused();
-
+		CEntityManager::instance().flushAddRemoveList();
+		
 		if(FD_ISSET(ListenSock.descriptor(), &readers) != 0)
 		{
 			nlinfo("New client connected");
@@ -132,7 +132,6 @@ void CNetworkTask::run()
 			CEntityManager::instance().addClient(sock);
 		}
 		
-		vector<uint8> IdToRemove;
 
 		{
 			for(CEntityManager::EntityConstIt it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
@@ -159,40 +158,21 @@ void CNetworkTask::run()
 					break;
 				case NLNET::CSock::ConnectionClosed:
 					nlinfo("Lost client eid %hu", (uint16)c->id());
-					IdToRemove.push_back(c->id());
+					CEntityManager::instance().remove(c->id());
 					break;
 				default:
 					nlwarning("Received failed from client eid %hu : %s (code %u)", (uint16)c->id(), NLNET::CSock::errorString(NLNET::CSock::getLastError()).c_str(), NLNET::CSock::getLastError());
-					IdToRemove.push_back(c->id());
+					CEntityManager::instance().remove(c->id());
 					break;
 				}
 			}
 		}
 
-		for(uint i = 0; i < IdToRemove.size(); i++)
-		{
-			CEntityManager::instance().remove(IdToRemove[i]);
-		}
-		IdToRemove.clear();
-		fludhCommand();
 
 	}
 }
 
 
-void CNetworkTask::addCommand(std::string &command)
-{
-	commands.push_back(command);
-}
-
-void CNetworkTask::fludhCommand()
-{
-	list<string>::iterator it;
-	for(it=commands.begin();it!=commands.end();it++)
-		ICommand::execute(*it, *InfoLog);
-	
-	commands.clear();
-}
 	
 
 //
@@ -458,7 +438,7 @@ void CNetwork::send(uint8 eid, CNetMessage &msg, bool checkReady)
 			{
 				bool sok = msg.send(c->sock());
 				if(!sok)
-					CEntityManager::instance().addClientToRemoveList(c);
+					CEntityManager::instance().remove(c->id());
 			}
 		}
 	}
@@ -475,7 +455,7 @@ void CNetwork::send(CNetMessage &msg)
 			{
 				bool sok = msg.send(c->sock());
 				if(!sok)
-					CEntityManager::instance().addClientToRemoveList(c);
+					CEntityManager::instance().remove(c->id());
 			}
 		}
 	}
@@ -492,7 +472,7 @@ void CNetwork::sendAllExcept(uint8 eid, CNetMessage &msg)
 			{
 				bool sok = msg.send(c->sock());
 				if(!sok)
-					CEntityManager::instance().addClientToRemoveList(c);
+					CEntityManager::instance().remove(c->id());
 			}
 		}
 	}

@@ -131,6 +131,8 @@ public:
 		CLevelManager::instance().update();
 
 		checkServicePaused();
+		CEntityManager::instance().flushAddRemoveList();
+
 
 		return true;
 	}
@@ -304,7 +306,6 @@ bool pauseAllThread()
 
 void resumeAllThread()
 {
-	uint tid = getThreadId();
 	resumeService();
 	resumePhysics();
 	resumeNetwork();	
@@ -313,3 +314,5 @@ void resumeAllThread()
 		acces.value().pauseCount = 0;
 	}
 }
+
+
