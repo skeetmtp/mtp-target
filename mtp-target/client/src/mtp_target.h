@@ -25,6 +25,9 @@
 #ifndef MTP_TARGET_H
 #define MTP_TARGET_H
 
+#define MTPT_RELEASE_VERSION_NUMBER "1.0.1"
+#define MTPT_RELEASE_VERSION_NAME ""
+
 
 //
 // Includes
@@ -33,6 +36,7 @@
 #include <nel/misc/config_file.h>
 #include <nel/misc/vector.h>
 #include <nel/misc/matrix.h>
+#include <nel/misc/reader_writer.h>
 
 #include "global.h"
 #include "controler.h"
@@ -64,6 +68,9 @@ public:
 	virtual void render() { }
 	virtual void release() { }
 
+	void reset();
+	void error();
+	
 	virtual std::string name() { return "CMtpTarget"; }
 
 	CControler		&controler() const { nlassert(Controler); return *Controler; }
@@ -90,7 +97,9 @@ private:
 	float			TimeBeforeSessionStart;
 	float			TimeBeforeTimeout;
 	std::string		NewLevelName;
+	bool			DoError;
 	
+	void _error();
 };
 
 

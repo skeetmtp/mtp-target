@@ -45,6 +45,7 @@
 #include "gui_task.h"
 #include "3d_task.h"
 #include "time_task.h"
+#include "game_task.h"
 #include "mtp_target.h"
 #include "intro_task.h"
 #include "editor_task.h"
@@ -55,11 +56,11 @@
 #include "sound_manager.h"
 #include "level_manager.h"
 #include "entity_manager.h"
+#include "entity_manager.h"
 #include "lens_flare_task.h"
 #include "background_task.h"
 #include "resource_manager.h"
 #include "config_file_task.h"
-
 
 //
 // Namespaces
@@ -97,6 +98,7 @@ const char *mtpTargetConfigFilename = "mtp_target.cfg";
 
 void CMtpTarget::init()
 {
+	DoError = false;
 	// setup default task
 	CTaskManager::instance().add(CConfigFileTask::instance(), 10);
 	CTaskManager::instance().add(CTimeTask::instance(), 20);
@@ -118,15 +120,43 @@ void CMtpTarget::init()
 	// start with intro task
 	CTaskManager::instance().add(CIntroTask::instance(), 60);
 
+	reset();
+}
+
+void CMtpTarget::error()
+{
+	DoError = true;
+}
+
+void CMtpTarget::reset()
+{
+	CEntityManager::instance().reset();
+	controler().reset();
 	NewSession = false;
 	TimeBeforeSessionStart = 0.0f;
 	TimeBeforeTimeout = 0.0f;
-
 	State = CMtpTarget::eBeforeFirstSession;
 }
 
+void CMtpTarget::_error()
+{
+	reset();
+	CGameTask::instance().stop();
+	CEditorTask::instance().stop();
+	CEditorTask::instance().enable(false);
+	CBackgroundTask::instance().restart();
+	//CIntroTask::instance().reset();
+	CIntroTask::instance().error(string("Server lost !"));
+	CIntroTask::instance().restart();
+	CLevelManager::instance().release();
+	DoError = false;
+}
+	
 void CMtpTarget::update()
 {
+	if(DoError)
+		_error();
+
 	if(NewSession)
 		loadNewSession();
 
