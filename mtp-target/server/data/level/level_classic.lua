@@ -19,7 +19,6 @@ Cameras =
 	CVector(0, 3, 10),
 	CVector(0, 3, 10),
 	CVector(0, 3, 10),
-	CVector(0, 3, 10),
 	CVector(0, 3, 10)
 }
 
