@@ -1,11 +1,15 @@
 
 all:
-	make -C client
-	make -C server
-	#make -C login_service
+	make -C client all
+	make -C server all
 
 clean:
 	-rm *~
+	-rm *.log
+	-rm core*
 	-make -C client clean
 	-make -C server clean
-	#-make -C login_service clean
+
+update:
+	-make -C client update
+	-make -C server update

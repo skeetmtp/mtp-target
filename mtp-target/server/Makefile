@@ -1,7 +1,10 @@
 
 all:
-	make -C src
+	make -C src all
 
 clean:
 	-rm *.log *~ .#*
 	-make -C src clean
+
+update:
+	make -C src update
