@@ -101,7 +101,7 @@ class CLensFlare
 		~_CFlare()
 		{
 			C3DTask::instance().driver().deleteMaterial(Material);
-			Material.detach();
+			//Material.detach();
 		}
 	};
 

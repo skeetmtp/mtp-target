@@ -240,7 +240,7 @@ void CEntity::reset()
 	if(!TraceParticle.empty())
 	{
 		C3DTask::instance().scene().deleteInstance(TraceParticle);
-		TraceParticle.detach();
+		//TraceParticle.detach();
 	}
 	if(!CloseMesh.empty())
 	{

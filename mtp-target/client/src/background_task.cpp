@@ -128,6 +128,6 @@ void CBackgroundTask::release()
 	if(!LogoParticle.empty())
 	{
 		C3DTask::instance().scene().deleteInstance(LogoParticle);
-		LogoParticle.detach();
+		//LogoParticle.detach();
 	}
 }

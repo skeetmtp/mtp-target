@@ -156,7 +156,7 @@ void CSkyTask::release()
 	if(!nelSkyMesh.empty())
 	{
 		nelSkyScene->deleteInstance(nelSkyMesh);
-		nelSkyMesh.detach();
+		//nelSkyMesh.detach();
 	}
 
 	if(nelCloudScape)
