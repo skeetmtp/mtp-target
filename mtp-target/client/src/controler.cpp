@@ -85,7 +85,7 @@ uint8 CControler::getControledEntity() const
 
 void CControler::swapOpenClose()
 {
-	CVector dir = CEntityManager::instance()[EId].interpolator().direction();
+	CVector dir = CEntityManager::instance()[EId].interpolator().currentDirection();
 	dir.z = 0;
 	dir.normalize();
 	
@@ -115,7 +115,7 @@ void CControler::update()
 	CVector	deltaDirection(CVector::Null);
 	float	deltaPique = 0.0f;
 	float	deltaRot = 0.0f;
-	float	speed = CEntityManager::instance()[EId].interpolator().speed().norm();
+	float	speed = CEntityManager::instance()[EId].interpolator().currentSpeed().norm();
 	float	speedRatio = 2.0f;
 	{
 		CMatrix *mat = Camera.getMatrix();

@@ -78,9 +78,9 @@ CEntity::CEntity()
 	StartPointId = 255;
 	LastSent2MePos = CVector::Null;
 	LastSent2OthersPos = CVector::Null;
-	_interpolator = 0;
+	Interpolator = 0;
 	Ready = false;
-	luaProxy = 0;
+	LuaProxy = 0;
 	showCollideWhenFly = false;
 	showCollideWhenFlyPos = CVector(0,0,0);
 	addOpenCloseKey = false;
@@ -124,8 +124,8 @@ void CEntity::swapOpenClose()
 
 CExtendedInterpolator &CEntity::interpolator() const
 {
-	nlassert(_interpolator);
-	return *_interpolator;
+	nlassert(Interpolator);
+	return *Interpolator;
 }
 
 void CEntity::close()
@@ -143,13 +143,13 @@ void CEntity::update()
 {
 	interpolator().update();
 
-	if(interpolator().openCloseEvent())
+	if(interpolator().currentOpenCloseEvent())
 		swapOpenClose();
 
-	CCrashEvent ce = interpolator().crashEvent();
-	if(ce.crash)
+	CCrashEvent ce = interpolator().currentCrashEvent();
+	if(ce.Crash)
 	{
-		collideWhenFly(ce.pos);		
+		collideWhenFly(ce.Position);		
 	}
 	
 
@@ -209,7 +209,7 @@ void CEntity::update()
 	
 	if(!TraceParticle.empty())
 	{
-		TraceParticle.setPos(interpolator().position());
+		TraceParticle.setPos(interpolator().currentPosition());
 		
 		// we activate
 		if (ParticuleActivated != -1 && TraceParticle.isSystemPresent())
@@ -235,10 +235,10 @@ void CEntity::update()
 
 void CEntity::collisionWithWater(bool col)
 {
-	if(col && interpolator().onWater())
+	if(col && interpolator().currentOnWater())
 		return;
 
-	if(col && !interpolator().onWater())
+	if(col && !interpolator().currentOnWater())
 	{
 		// launch the splatch sound
 		SoundsDescriptor.play(CSoundManager::CEntitySoundsDescriptor::Splash);
@@ -261,7 +261,7 @@ bool CEntity::namePosOnScreen(CVector &res)
 {
 	if(CMtpTarget::instance().controler().getControledEntity() != id() || !ReplayFile.empty())
 	{
-		CVector p = interpolator().position();
+		CVector p = interpolator().currentPosition();
 		CVector dpos = p - CMtpTarget::instance().controler().Camera.getMatrix()->getPos();
 		CMatrix cameraMatrix = C3DTask::instance().scene().getCam().getMatrix();
 		if(dpos.norm()>1) return false;
@@ -289,7 +289,7 @@ void CEntity::renderName() const
 	// display name of other people than me
 	if(CMtpTarget::instance().controler().getControledEntity() != id() || !ReplayFile.empty())
 	{
-		CVector pos = interpolator().position();
+		const CVector &pos = interpolator().currentPosition();
 		CVector dpos = pos - CMtpTarget::instance().controler().Camera.getMatrix()->getPos();
 		if(dpos.norm()<1)
 			CFontManager::instance().printf3D(color(),pos,0.01f, name().c_str());
@@ -298,8 +298,8 @@ void CEntity::renderName() const
 
 void CEntity::id(uint8 nid) 
 { 
-	nlassert(!_interpolator);
-	_interpolator = new CExtendedInterpolator(MT_NETWORK_UPDATE_PERIODE);
+	nlassert(!Interpolator);
+	Interpolator = new CExtendedInterpolator(MT_NETWORK_UPDATE_PERIODE);
 	Id = nid;
 }
 
@@ -390,15 +390,15 @@ void CEntity::init(TEntity type, const std::string &name, sint32 totalScore, CRG
 
 void CEntity::luaInit()
 {
-	if(luaProxy)
+	if(LuaProxy)
 	{
-		delete luaProxy;
-		luaProxy = 0;
+		delete LuaProxy;
+		LuaProxy = 0;
 	}
 	if(CLevelManager::instance().levelPresent())
 	{
-		luaProxy = new CEntityProxy(CLevelManager::instance().currentLevel().luaState(),this);	
-		nlinfo("CEntity::luaInit(), luaState=0x%p , proxy = 0x%p",CLevelManager::instance().currentLevel().luaState(),luaProxy);
+		LuaProxy = new CEntityProxy(CLevelManager::instance().currentLevel().luaState(),this);	
+		nlinfo("CEntity::luaInit(), luaState=0x%p , proxy = 0x%p",CLevelManager::instance().currentLevel().luaState(),LuaProxy);
 	}
 	else
 		nlwarning("lua init : no level loaded");

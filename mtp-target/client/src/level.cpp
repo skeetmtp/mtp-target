@@ -441,8 +441,6 @@ CLevel::~CLevel()
 		luaClose(LuaState);
 
 	// removing all stuffs
-
-
 	for(uint i = 0; i < Modules.size(); i++)
 	{
 		delete Modules[i];
@@ -466,12 +464,14 @@ CLevel::~CLevel()
 CVector CLevel::startPosition(uint32 id)
 {
 	if(StartPoints.size()==0) return CVector::Null;
+	if(id >= StartPoints.size()) id = 0;
 	return StartPoints[id]->position();
 }
 
 CVector CLevel::cameraPosition(uint32 id)
 {
 	if(Cameras.size()==0) return CVector::Null;
+	if(id >= Cameras.size()) id = 0;
 	return Cameras[id];
 }
 
@@ -732,14 +732,14 @@ int CLevel::getEntityByName(lua_State *L)
 	string name(entityName);
 	CEntity *e = CEntityManager::instance().getByName(name);
 	if(e)
-		nlinfo("Lua(0x%p) : getEntityByName(%s))=0x%p(0x%p)",L,name.c_str(),e,e->luaProxy);
+		nlinfo("Lua(0x%p) : getEntityByName(%s))=0x%p(0x%p)",L,name.c_str(),e,e->LuaProxy);
 	if(e==0)
 	{
 		nlwarning("getEntityByName(%s)==0",name.c_str());
 		return 0;
 	}
 	else
-		Lunar<CEntityProxy>::push(L, e->luaProxy);
+		Lunar<CEntityProxy>::push(L, e->LuaProxy);
 	return 1;
 }
 
@@ -753,13 +753,13 @@ int CLevel::getModuleByName(lua_State *L)
 	if(CLevelManager::instance().levelPresent())
 		m = CLevelManager::instance().currentLevel().getModule(name);
 	if(m)
-		nlinfo("Lua(0x%p) : getModuleById(%s))=0x%p(0x%p)",L,name.c_str(),m,m->luaProxy);
+		nlinfo("Lua(0x%p) : getModuleById(%s))=0x%p(0x%p)",L,name.c_str(),m,m->LuaProxy);
 	if(m==0)
 	{
 		nlwarning("getModuleById(%s)==0",name.c_str());
 		return 0;
 	}
-	Lunar<CModuleProxy>::push(L, m->luaProxy);
+	Lunar<CModuleProxy>::push(L, m->LuaProxy);
 	return 1;
 }
 
@@ -773,13 +773,13 @@ int CLevel::getParticlesByName(lua_State *L)
 	if(CLevelManager::instance().levelPresent())
 		p = CLevelManager::instance().currentLevel().getParticles(name);
 	if(p)
-		nlinfo("Lua(0x%p) : getParticlesByName(%s))=0x%p(0x%p)",L,name.c_str(),p,p->luaProxy);
+		nlinfo("Lua(0x%p) : getParticlesByName(%s))=0x%p(0x%p)",L,name.c_str(),p,p->LuaProxy);
 	if(p==0)
 	{
 		nlwarning("getParticlesByName(%s)==0",name.c_str());
 		return 0;
 	}
-	Lunar<CParticlesProxy>::push(L, p->luaProxy);
+	Lunar<CParticlesProxy>::push(L, p->LuaProxy);
 	return 1;
 }
 
@@ -789,14 +789,14 @@ int CLevel::getEntityById(lua_State *L)
 	uint8 id = (uint8 )luaL_checknumber(L,1);
 	CEntity *e = CEntityManager::instance().getById(id);
 	if(e)
-		nlinfo("Lua(0x%p) : getEntityById(%d))=0x%p(0x%p)",L,id,e,e->luaProxy);
+		nlinfo("Lua(0x%p) : getEntityById(%d))=0x%p(0x%p)",L,id,e,e->LuaProxy);
 	if(e==0)
 	{
 		nlwarning("getEntityById(%d)==0",id);
 		return 0;
 	}
 	else
-		Lunar<CEntityProxy>::push(L, e->luaProxy);
+		Lunar<CEntityProxy>::push(L, e->LuaProxy);
 	return 1;
 }
 
@@ -808,13 +808,13 @@ int CLevel::getModuleById(lua_State *L)
 	if(CLevelManager::instance().levelPresent())
 		m = CLevelManager::instance().currentLevel().getModule(id);
 	if(m)
-		nlinfo("Lua(0x%p) : getModuleById(%d))=0x%p(0x%p)",L,id,m,m->luaProxy);
+		nlinfo("Lua(0x%p) : getModuleById(%d))=0x%p(0x%p)",L,id,m,m->LuaProxy);
 	if(m==0)
 	{
 		nlwarning("getModuleById(%d)==0",id);
 		return 0;
 	}
-	Lunar<CModuleProxy>::push(L, m->luaProxy);
+	Lunar<CModuleProxy>::push(L, m->LuaProxy);
 	return 1;
 }
 
@@ -826,13 +826,13 @@ int CLevel::getParticlesById(lua_State *L)
 	if(CLevelManager::instance().levelPresent())
 		p = CLevelManager::instance().currentLevel().getParticles(id);
 	if(p)
-		nlinfo("Lua(0x%p) : getParticlesById(%d))=0x%p(0x%p)",L,id,p,p->luaProxy);
+		nlinfo("Lua(0x%p) : getParticlesById(%d))=0x%p(0x%p)",L,id,p,p->LuaProxy);
 	if(p==0)
 	{
 		nlwarning("getParticlesById(%d)==0",id);
 		return 0;
 	}
-	Lunar<CParticlesProxy>::push(L, p->luaProxy);
+	Lunar<CParticlesProxy>::push(L, p->LuaProxy);
 	return 1;
 }
 

@@ -163,8 +163,8 @@ void CCamera::setFollowedEntity(uint8 eid)
 	{
 		if(CEntityManager::instance()[EId].interpolator().available())
 		{
-			Position = CEntityManager::instance()[EId].interpolator().position() + CVector(0.0f, 50.0f*GScale, 100.0f*GScale);
-			CurrentLookAt = CEntityManager::instance()[EId].interpolator().position();
+			Position = CEntityManager::instance()[EId].interpolator().currentPosition() + CVector(0.0f, 50.0f*GScale, 100.0f*GScale);
+			CurrentLookAt = CEntityManager::instance()[EId].interpolator().currentPosition();
 		}
 		else
 		{
@@ -214,7 +214,7 @@ void CCamera::update()
 	bool updated;
 	if(EId == 255) return;
 
-	float heightSpeed = 1.0f * CEntityManager::instance()[EId].interpolator().smoothDirection().z / 0.5f;
+	float heightSpeed = 1.0f * CEntityManager::instance()[EId].interpolator().currentSmoothDirection().z / 0.5f;
 	if(heightSpeed > 0.0f)
 		heightSpeed = 0.0f;
 	
@@ -260,7 +260,7 @@ bool CCamera::updateRampe(float backDist,float height,float targetBackDist,float
 
 	CVector distFromStart = CVector::Null;
 	if(CEntityManager::instance()[EId].startPointId()!=255 && CLevelManager::instance().levelPresent())
-		distFromStart = CEntityManager::instance()[EId].interpolator().position() - CLevelManager::instance().currentLevel().startPosition(CEntityManager::instance()[EId].startPointId());
+		distFromStart = CEntityManager::instance()[EId].interpolator().currentPosition() - CLevelManager::instance().currentLevel().startPosition(CEntityManager::instance()[EId].startPointId());
 	float facing;
 	if(distFromStart.norm()>MinDistFromStartPointToMove)
 		facing = rotLerp(Facing, (float)CEntityManager::instance()[EId].interpolator().facing(), (float)lpos);
@@ -315,8 +315,8 @@ bool CCamera::updateRampe(float backDist,float height,float targetBackDist,float
 		*/
 	}
 	
-	Position = CEntityManager::instance()[EId].interpolator().position() + CurrentHeight * CVector(0,0,1) + CurrentBackDist * (rotMat * CVector(0,1,0));
-	CurrentLookAt = CEntityManager::instance()[EId].interpolator().position() + CurrentTargetHeight * CVector(0,0,1)  + CurrentTargetBackDist * (rotMat * CVector(0,1,0));
+	Position = CEntityManager::instance()[EId].interpolator().currentPosition() + CurrentHeight * CVector(0,0,1) + CurrentBackDist * (rotMat * CVector(0,1,0));
+	CurrentLookAt = CEntityManager::instance()[EId].interpolator().currentPosition() + CurrentTargetHeight * CVector(0,0,1)  + CurrentTargetBackDist * (rotMat * CVector(0,1,0));
 	return res;
 }
 

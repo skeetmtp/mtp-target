@@ -95,7 +95,7 @@ public:
 	
 	void luaInit();
 
-	CParticlesProxy *luaProxy;
+	CParticlesProxy *LuaProxy;
 	
 private:
 	NL3D::UParticleSystemInstance Particle;

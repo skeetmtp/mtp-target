@@ -71,7 +71,7 @@ void CHudTask::update()
 {
 	// update altimeter value
 	uint8 eid = CMtpTarget::instance().controler().getControledEntity();
-	AltimeterValue = ((eid != 255) ? CEntityManager::instance()[eid].interpolator().position().z : AltimeterMinValue);
+	AltimeterValue = ((eid != 255) ? CEntityManager::instance()[eid].interpolator().currentPosition().z : AltimeterMinValue);
 	AltimeterValue = min(AltimeterValue, AltimeterMaxValue);
 	AltimeterValue = max(AltimeterValue, AltimeterMinValue);
 }

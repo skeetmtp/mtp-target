@@ -37,81 +37,78 @@
 
 
 //
-// Namespaces
-//
-
-using NLMISC::CVector;
-using NLMISC::CMatrix;
-
-
-//
 // Classes
 //
 
-class CCrashEvent
+struct CCrashEvent
 {
-public:
 	CCrashEvent()
 	{
-		crash = false;
-		pos = CVector::Null;
+		Crash = false;
+		Position = NLMISC::CVector::Null;
 	}
-	CCrashEvent(bool crash,CVector pos)
-	{
-		this->crash = crash;
-		this->pos = pos;
-	}
-	bool crash;
-	CVector pos;
 
-	CCrashEvent operator+( const CCrashEvent &other ) const;
+	CCrashEvent(bool c, const NLMISC::CVector &pos)
+	{
+		Crash = c;
+		Position = pos;
+	}
 	
+	bool			Crash;
+	NLMISC::CVector	Position;
+
+	CCrashEvent operator+ (const CCrashEvent &other) const;
 };
 
-class CEntityState
+struct CEntityState
 {
-public:
 	CEntityState();
-	CEntityState(const CVector &position, bool onWater, bool openClose, CCrashEvent crashEvent);
-	CVector position;
-	bool    onWater;
-	bool    openCloseEvent;
-	CCrashEvent    crashEvent;
-	CEntityState operator+( const CEntityState &other ) const;
-	friend CEntityState operator*( double coef, CEntityState &value );
-	friend CEntityState operator*( CEntityState &value, double coef );
-protected:
-private:
+	CEntityState(const NLMISC::CVector &position, bool onWater, bool openClose, const CCrashEvent &crashEvent);
+	
+	NLMISC::CVector Position;
+	bool			OnWater;
+	bool			OpenCloseEvent;
+	CCrashEvent		CrashEvent;
+
+	CEntityState operator+(const CEntityState &other) const;
+
+	friend CEntityState operator*(double coef, const CEntityState &value);
+	friend CEntityState operator*(const CEntityState &value, double coef);
 };
 
 template <class T> class CInterpolatorKey
 {
 public:
-	CInterpolatorKey(T value,double time)
-	{
-		_value = value;
-		_serverTime = time;
-	}
-	~CInterpolatorKey(){};
 
-	T      value() 
+	CInterpolatorKey(const T &val, double time)
 	{
-		return _value;
+		Value = val;
+		ServerTime = time;
 	}
-	double  serverTime()
+
+	virtual ~CInterpolatorKey() { };
+
+	T value() const
 	{
-		return _serverTime;
+		return Value;
 	}
 	
-	
-	static T Lerp(T a,T b,double pos)
+	double serverTime() const
+	{
+		return ServerTime;
+	}
+
+	static T lerp(const T &a, const T &b, double pos)
 	{
 		return a * (1.0 - pos) + b * pos;
 	}
-friend class CInterpolator;
+
 protected:
-	double		_serverTime;
-	T			_value;	
+
+	double		ServerTime;
+	T			Value;	
+
+	friend class CInterpolator;
 };
 
 typedef CInterpolatorKey<CEntityState> CEntityInterpolatorKey;
@@ -121,121 +118,121 @@ class CEntity;
 class CInterpolator
 {
 public:
+
 	CInterpolator(double dt);
+
 	virtual ~CInterpolator();
+
 	virtual void update();
-
-	CCrashEvent    crashEvent();
-	bool    openCloseEvent();
-	CVector	position() const;
-	CVector	speed() const;
-	CVector direction() const;
-	CVector smoothDirection() const;
-	bool    onWater() const;
-	double  lct() const;
-
-	void    lct(double lct) const;
-
-	bool available() const { return _available; };
-	void addKey(CEntityInterpolatorKey key);
-	bool outOfKey();
-	double localTime() const;
-
-	void dt(float ndt) {_dt = ndt;}
-	
 	virtual void reset();
-	void entity(CEntity *entity);
-	
+
+	CCrashEvent		currentCrashEvent();
+	bool			currentOpenCloseEvent();
+	bool			currentOnWater() const { return CurrentOnWater; }
+
+	const NLMISC::CVector	&currentPosition() const { return CurrentPosition; }
+	const NLMISC::CVector	&currentSpeed() const { return CurrentSpeed; }
+	const NLMISC::CVector	&currentDirection() const { return CurrentDirection; }
+	const NLMISC::CVector	&currentSmoothDirection() const { return CurrentDirection; }
+
+	bool			available() const { return Available; }
+	void			addKey(const CEntityInterpolatorKey &key);
+	bool			outOfKey() const;
+	double			localTime() const { return LocalTime; }
+
+	void			dt(double ndt) { DT = ndt; }
+	void			entity(CEntity *entity);
+
 protected:
-	virtual CCrashEvent _crashEvent(double time);
-	virtual bool _openCloseEvent(double time);
-	virtual CVector _position(double time);
-	virtual CVector _speed(double time);
-	virtual CVector _direction(double time);
-	virtual void _autoAdjustLct();
-	
-	std::deque<CEntityInterpolatorKey> _keys;
-	double  _startTime;
-	double  _serverTime;
-	double  _localTime;
-	double  _deltaTime;
-	double  _lastUpdateTime;
-	double  _addKeyTime;
-	double  _maxKeyDiffTime;
-	double  _meanKeyDiffTime;
-	bool    _available;
-	int     _outOfKeyCount;
 
-	CVector _currentPosition;
-	CVector _currentSpeed;
-	CVector _currentDirection;
-	CVector _currentSmoothDirection;
-	bool    _currentOnWater;
+	virtual CCrashEvent		crashEvent(double time);
+	virtual bool			openCloseEvent(double time) const;
+	virtual NLMISC::CVector	position(double time);
+	virtual NLMISC::CVector	speed(double time);
+	virtual NLMISC::CVector	direction(double time);
+	virtual void			autoAdjustLct();
 	
-	static double  _lct;
-	double  _dt;
-	float   _maxDistBetween2Keys;
-	static const double _minLct;
-	static const double _maxLct;
+	std::deque<CEntityInterpolatorKey> Keys;
+	double  StartTime;
+	double  ServerTime;
+	double  LocalTime;
+	double  DeltaTime;
+	double  LastUpdateTime;
+	double  AddKeyTime;
+	double  MaxKeyDiffTime;
+	double  MeanKeyDiffTime;
+	bool    Available;
+	int     OutOfKeyCount;
+	double	DT;
+	float	MaxDistBetween2Keys;
 
-	bool _lastOpenClose;
-	bool _currentOpenCloseEvent;
+	NLMISC::CVector CurrentPosition;
+	NLMISC::CVector CurrentSpeed;
+	NLMISC::CVector CurrentDirection;
+	NLMISC::CVector CurrentSmoothDirection;
+	bool			CurrentOnWater;
+	bool			CurrentOpenCloseEvent;
+
+	bool LastOpenClose;
 	
-	CCrashEvent _lastCrash;
-	CCrashEvent _currentCrashEvent;
+	CCrashEvent LastCrash;
+	CCrashEvent CurrentCrashEvent;
 	
-	CEntity *_entity;
-private:
+	CEntity		*Entity;
+
+	static double		LCT;
+	static const double MinLct;
+	static const double MaxLct;
 };
 
 
 class CLinearInterpolator : public CInterpolator
 {
 public:
+
 	CLinearInterpolator(double dt);
+
 	virtual ~CLinearInterpolator();
+
 protected:
-	virtual CCrashEvent _crashEvent(double time);
-	virtual bool _openCloseEvent(double time);
-	virtual CVector _position(double time);
-	virtual CVector _speed(double time);
-	virtual CVector _direction(double time);
-	virtual void _autoAdjustLct();
-private:
+
+	virtual CCrashEvent		crashEvent(double time);
+	virtual bool			openCloseEvent(double time) const;
+	virtual NLMISC::CVector position(double time);
+	virtual NLMISC::CVector speed(double time);
+	virtual NLMISC::CVector direction(double time);
+	virtual void			autoAdjustLct();
 };
 
 
 class CExtendedInterpolator : public CLinearInterpolator
 {
 public:
-	CExtendedInterpolator(double dt);
-	virtual ~CExtendedInterpolator();
-	void update();
 
-	CVector	rotation() const;
-	CVector right() const;
-	double  facing() const;
-	CMatrix getMatrix() const;
-	
-	void rotation(const CVector &rotation);
+	CExtendedInterpolator(double dt);
+
+	virtual ~CExtendedInterpolator();
+	virtual void update();
+
+	NLMISC::CVector	rotation() const;
+	NLMISC::CVector right() const;
+	double			facing() const;
+	NLMISC::CMatrix getMatrix() const;
+	void			rotation(const NLMISC::CVector &rotation);
 	
 	void reset();
-	
 
-	static double RotLerp(double rsrc,double rdst,double pos);
-	
+	static double rotLerp(double rsrc,double rdst,double pos);
+
 private:
 	
-	CVector	_rotation(double deltaTime);
+	NLMISC::CVector	rotation(double deltaTime);
 
-	CVector _currentRotation;
-	CMatrix _currentMatrix;
-	double  _currentFacing;
-	double  _lastRotationTime;
+	NLMISC::CVector	CurrentRotation;
+	NLMISC::CMatrix	CurrentMatrix;
+	double			CurrentFacing;
+	double			LastRotationTime;
 
 };
-
-//#include "extrapolator.tpl"
-
 
 #endif

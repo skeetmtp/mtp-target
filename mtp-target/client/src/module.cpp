@@ -79,7 +79,7 @@ using namespace NL3D;
 CModule::CModule() : CModuleCommon()
 {
 	mat = C3DTask::instance().createMaterial();
-	luaProxy = 0;
+	LuaProxy = 0;
 }
 
 
@@ -123,15 +123,15 @@ void CModule::init(const string &name, const std::string &shapeName, uint8 id, c
 
 void CModule::luaInit()
 {
-	if(luaProxy)
+	if(LuaProxy)
 	{
-		delete luaProxy;
-		luaProxy = 0;
+		delete LuaProxy;
+		LuaProxy = 0;
 	}
 	if(CLevelManager::instance().levelPresent())
 	{
-		luaProxy = new CModuleProxy(CLevelManager::instance().currentLevel().luaState(),this);	
-		nlinfo("CModule::luaInit(), luaState=0x%p , proxy = 0x%p",CLevelManager::instance().currentLevel().luaState(),luaProxy);
+		LuaProxy = new CModuleProxy(CLevelManager::instance().currentLevel().luaState(),this);	
+		nlinfo("CModule::luaInit(), luaState=0x%p , proxy = 0x%p",CLevelManager::instance().currentLevel().luaState(),LuaProxy);
 	}
 	else
 		nlwarning("lua init : no level loaded");

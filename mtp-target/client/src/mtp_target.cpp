@@ -180,15 +180,15 @@ void CMtpTarget::init()
 							oc = true;
 						}
 						CCrashEvent ce(false,CVector::Null);
-						if(CEntityManager::instance()[eid].addCrashEventKey.crash)
+						if(CEntityManager::instance()[eid].addCrashEventKey.Crash)
 						{
 							ce = CEntityManager::instance()[eid].addCrashEventKey;
-							CEntityManager::instance()[eid].addCrashEventKey.crash = false;
+							CEntityManager::instance()[eid].addCrashEventKey.Crash = false;
 						}
 						CEntityManager::instance()[eid].interpolator().addKey(CEntityInterpolatorKey(CEntityState(v,false,oc,ce),t));//.position(v,t, false); //put the entity in the good position
 					}
 					else
-						nlwarning ("%d introuvable", eid);
+						nlwarning ("%d not found", eid);
 				}
 				else if (string(cmd) == "OC")
 				{

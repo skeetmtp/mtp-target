@@ -79,7 +79,7 @@ using namespace NL3D;
 CParticles::CParticles() : CParticlesCommon()
 {
 	mat = C3DTask::instance().createMaterial();
-	luaProxy = 0;
+	LuaProxy = 0;
 }
 
 
@@ -122,15 +122,15 @@ void CParticles::init(const string &name, const std::string &fileName, uint8 id,
 
 void CParticles::luaInit()
 {
-	if(luaProxy)
+	if(LuaProxy)
 	{
-		delete luaProxy;
-		luaProxy = 0;
+		delete LuaProxy;
+		LuaProxy = 0;
 	}
 	if(CLevelManager::instance().levelPresent())
 	{
-		luaProxy = new CParticlesProxy(CLevelManager::instance().currentLevel().luaState(),this);	
-		nlinfo("CParticles::luaInit(), luaState=0x%p , proxy = 0x%p",CLevelManager::instance().currentLevel().luaState(),luaProxy);
+		LuaProxy = new CParticlesProxy(CLevelManager::instance().currentLevel().luaState(),this);	
+		nlinfo("CParticles::luaInit(), luaState=0x%p , proxy = 0x%p",CLevelManager::instance().currentLevel().luaState(),LuaProxy);
 	}
 	else
 		nlwarning("lua init : no level loaded");

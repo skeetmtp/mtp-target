@@ -95,7 +95,7 @@ public:
 	void  color(const NLMISC::CRGBA &col);
 	void luaInit();
 	
-	CModuleProxy *luaProxy;
+	CModuleProxy *LuaProxy;
 private:
 	NLMISC::CRGBA	Color;
 };

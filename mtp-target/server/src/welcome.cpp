@@ -211,9 +211,14 @@ static CSynchronized<vector<pair<uint32, uint8> > > ConnectedClients("ConnectedC
 void initWelcome()
 {
 	ThreadId = getThreadId();
-	
-	if(IService::getInstance()->ConfigFile.getVar("DontUseLS").asInt() == 1)
+
+	if(IService::getInstance()->ConfigFile.getVar("ShardId").asInt() == 0)
+	{
+		nlinfo("Running server in LAN mode");
 		return;
+	}
+
+	nlinfo("Running server in Internet mode");
 
 	for(sint i = 0; i < IService::getInstance()->ConfigFile.getVar("LSHost").size(); i++)
 	{

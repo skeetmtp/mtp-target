@@ -122,10 +122,9 @@ public:
 	uint8				 startPointId() const { return StartPointId; }
 	void				 startPointId(uint8 spid);
 	bool				 namePosOnScreen(CVector &res);
-		
-	
-	NL3D::UInstance CloseMesh, OpenMesh;
-	CEntityProxy		*luaProxy;
+
+	NL3D::UInstance		CloseMesh, OpenMesh;
+	CEntityProxy		*LuaProxy;
 	
 	NL3D::UParticleSystemInstance TraceParticle;
 	NL3D::UParticleSystemInstance ImpactParticle;
@@ -159,11 +158,11 @@ private:
 	NLMISC::CVector	showCollideWhenFlyPos;
 	
 	CMatrix			ObjMatrix;
-	CExtendedInterpolator *_interpolator;
+	CExtendedInterpolator *Interpolator;
 	
 	// private ctor because only CEntityManager can create a CEntity
 	CEntity();
-	virtual ~CEntity() { delete _interpolator; _interpolator = 0; }
+	virtual ~CEntity() { delete Interpolator; Interpolator = 0; }
 
 	void reset();
 	void sessionReset();

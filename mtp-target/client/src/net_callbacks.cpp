@@ -263,10 +263,10 @@ static void cbUpdate(CNetMessage &msgin)
 					oc = true;
 				}
 				CCrashEvent ce(false,CVector::Null);
-				if(CEntityManager::instance()[eid].addCrashEventKey.crash)
+				if(CEntityManager::instance()[eid].addCrashEventKey.Crash)
 				{
 					ce = CEntityManager::instance()[eid].addCrashEventKey;
-					CEntityManager::instance()[eid].addCrashEventKey.crash = false;
+					CEntityManager::instance()[eid].addCrashEventKey.Crash = false;
 				}
 				CEntityManager::instance()[eid].interpolator().addKey(CEntityInterpolatorKey(CEntityState(pos,false,oc,ce),rsxTime));
 				//CEntityManager::instance()[eid].ping(ping);
@@ -357,10 +357,10 @@ static void cbUpdateOne(CNetMessage &msgin)
 				oc = true;
 			}
 			CCrashEvent ce(false,CVector::Null);
-			if(CEntityManager::instance()[eid].addCrashEventKey.crash)
+			if(CEntityManager::instance()[eid].addCrashEventKey.Crash)
 			{
 				ce = CEntityManager::instance()[eid].addCrashEventKey;
-				CEntityManager::instance()[eid].addCrashEventKey.crash = false;
+				CEntityManager::instance()[eid].addCrashEventKey.Crash = false;
 			}
 			CEntityManager::instance()[eid].interpolator().addKey(CEntityInterpolatorKey(CEntityState(pos,false,oc,ce),rsxTime));
 			//CEntityManager::instance()[eid].ping(ping);
@@ -417,10 +417,10 @@ static void cbFullUpdate(CNetMessage &msgin)
 				oc = true;
 			}
 			CCrashEvent ce(false,CVector::Null);
-			if(CEntityManager::instance()[eid].addCrashEventKey.crash)
+			if(CEntityManager::instance()[eid].addCrashEventKey.Crash)
 			{
 				ce = CEntityManager::instance()[eid].addCrashEventKey;
-				CEntityManager::instance()[eid].addCrashEventKey.crash = false;
+				CEntityManager::instance()[eid].addCrashEventKey.Crash = false;
 			}
 			CEntityManager::instance()[eid].interpolator().addKey(CEntityInterpolatorKey(CEntityState(pos,false,oc,ce),rsxTime));
 			CEntityManager::instance()[eid].ping(ping);

@@ -147,9 +147,12 @@ static void cbLogin(CClient *c, CNetMessage &msgin)
 	// init() must be after the check() call
 	c->init(login,texture,color);
 	c->Cookie = cookie;
-	CLoginCookie lc;
-	lc.setFromString(cookie);
-	c->uid(lc.getUserId());
+	if(!cookie.empty())
+	{
+		CLoginCookie lc;
+		lc.setFromString(cookie);
+		c->uid(lc.getUserId());
+	}
 
 	if(error.empty())
 	{
