@@ -30,5 +30,7 @@ function updateMapListDb($silent)
 		}
 	}
 }
+
+	updateMapListDb(false);
 	
 ?>
