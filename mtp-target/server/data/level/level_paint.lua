@@ -3,8 +3,7 @@ Author = "Skeet"
 ServerLua = "level_paint_server.lua"
 ReleaseLevel = 2
 
-skyShapeFileName = "sky.shape"
-
+skyShapeFileName = "sky.shape";
 sunAmbientColor = CRGBA(82, 100, 133, 255);
 sunDiffuseColor = CRGBA(255, 255, 255, 255);
 sunSpecularColor = CRGBA(255, 255, 255, 255);
@@ -21,51 +20,76 @@ cameraMinDistFromStartPointToMove = 1.0;
 Cameras =
 {
 	CVector(0, 3, 10),
-	CVector(0, -3, 10),
 	CVector(0, 3, 10),
-	CVector(0, -3, 10),
 	CVector(0, 3, 10),
-	CVector(0, -3, 10),
 	CVector(0, 3, 10),
-	CVector(0, -3, 10),
 	CVector(0, 3, 10),
-	CVector(0, -3, 10),
 	CVector(0, 3, 10),
-	CVector(0, -3, 10),
 	CVector(0, 3, 10),
-	CVector(0, -3, 10),
 	CVector(0, 3, 10),
-	CVector(0, -3, 10)
+	CVector(0, 3, 10),
+	CVector(0, 3, 10),
+	CVector(0, 3, 10),
+	CVector(0, 3, 10),
+	CVector(0, 3, 10),
+	CVector(0, 3, 10),
+	CVector(0, 3, 10),
+	CVector(0, 3, 10)
 }
 
 StartPoints =
 {
-	CVector(0.092517,-0.235331,0.616442),
-	CVector(0.235167,0.187477,0.616442),
-	CVector(-0.130000,0.206845,0.616442),
-	CVector(0.209573,-0.224778,0.616442),
-	CVector(-0.005987,-0.232316,0.616442),
-	CVector(0.215419,-0.141065,0.616442),
-	CVector(0.226817,-0.031980,0.616442),
-	CVector(0.230909,0.061545,0.616442),
-	CVector(0.126736,0.199527,0.616442),
-	CVector(-0.008141,0.204887,0.616442),
-	CVector(-0.210000,0.008517,0.616442),
-	CVector(-0.209013,-0.145247,0.616442),
-	CVector(-0.092250,-0.225863,0.616442),
-	CVector(-0.168845,-0.211155,0.616442),
-	CVector(-0.215316,0.101510,0.616442),
-	CVector(-0.219723,0.205184,0.616442),
+	CVector(-0.098865,1.563970,9.689780),
+	CVector(-0.251090,1.565340,9.689780),
+	CVector(-0.411029,1.558670,9.689780),
+	CVector(-0.570633,1.552030,9.689780),
+	CVector(0.073347,1.569500,9.689780),
+	CVector(0.225997,1.562820,9.689780),
+	CVector(0.394393,1.556160,9.689780),
+	CVector(0.554403,1.549530,9.689780),
+	CVector(-0.178982,1.380600,9.689780),
+	CVector(-0.331207,1.381970,9.689780),
+	CVector(-0.491146,1.375310,9.689780),
+	CVector(-0.650750,1.368660,9.689780),
+	CVector(-0.006771,1.386140,9.689780),
+	CVector(0.145880,1.379460,9.689780),
+	CVector(0.314275,1.372800,9.689780),
+	CVector(0.474286,1.366160,9.689780),
 
 }
 
 Modules =
 {
-	{ Position = CVector(0.000000,0.000000,0.500000), Scale = CVector(1, 1, 1), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="paint_bloc", Shape="arena" },
+	{ Position = CVector(10.000000,-25.000000,3.500000), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_island", Shape="snow_island" },
+	{ Position = CVector(6.000000,-14.000000,2.800000), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_island2", Shape="snow_island2" },
+	{ Position = CVector(-3.800000,-17.000000,2.000000), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_island3", Shape="snow_island3" },
+	{ Position = CVector(0.000000,0.000000,5.000000), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_ramp", Shape="snow_ramp" },
 
+	{ Position = CVector(0.000000,-15.00,2), Scale = CVector(2.000000, 2.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="paint_bloc", Shape="box_sol" },
+	{ Position = CVector(0.040000,-15.00,2), Scale = CVector(2.000000, 2.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="paint_bloc", Shape="box_sol" },
+	{ Position = CVector(0.080000,-15.00,2), Scale = CVector(2.000000, 2.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="paint_bloc", Shape="box_sol" },
+	{ Position = CVector(0.120000,-15.00,2), Scale = CVector(2.000000, 2.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="paint_bloc", Shape="box_sol" },
+
+	{ Position = CVector(0.000000,-15.04,2), Scale = CVector(2.000000, 2.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="paint_bloc", Shape="box_sol" },
+	{ Position = CVector(0.040000,-15.04,2), Scale = CVector(2.000000, 2.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="paint_bloc", Shape="box_sol" },
+	{ Position = CVector(0.080000,-15.04,2), Scale = CVector(2.000000, 2.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="paint_bloc", Shape="box_sol" },
+	{ Position = CVector(0.120000,-15.04,2), Scale = CVector(2.000000, 2.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="paint_bloc", Shape="box_sol" },
+
+	{ Position = CVector(0.000000,-15.08,2), Scale = CVector(2.000000, 2.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="paint_bloc", Shape="box_sol" },
+	{ Position = CVector(0.040000,-15.08,2), Scale = CVector(2.000000, 2.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="paint_bloc", Shape="box_sol" },
+	{ Position = CVector(0.080000,-15.08,2), Scale = CVector(2.000000, 2.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="paint_bloc", Shape="box_sol" },
+	{ Position = CVector(0.120000,-15.08,2), Scale = CVector(2.000000, 2.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="paint_bloc", Shape="box_sol" },
+
+	{ Position = CVector(0.000000,-15.12,2), Scale = CVector(2.000000, 2.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="paint_bloc", Shape="box_sol" },
+	{ Position = CVector(0.040000,-15.12,2), Scale = CVector(2.000000, 2.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="paint_bloc", Shape="box_sol" },
+	{ Position = CVector(0.080000,-15.12,2), Scale = CVector(2.000000, 2.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="paint_bloc", Shape="box_sol" },
+	{ Position = CVector(0.120000,-15.12,2), Scale = CVector(2.000000, 2.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="paint_bloc", Shape="box_sol" },
 }
 
 
 Particles =
 {
 }
+
+
+

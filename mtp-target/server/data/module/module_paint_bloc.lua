@@ -1,7 +1,7 @@
 module:setBounce(0);
 module:setScore(0);
 module:setAccel(0.00001);
-module:setFriction(1.0);
+module:setFriction(10.0);
 
 CModulePaintBloc = {}
 CModulePaintBloc_mt = {}
@@ -34,6 +34,13 @@ function CModulePaintBloc:onCollide( entity )
   if(self.touchEntityId~=entity:getEid()) then
     self.touchEntityId=entity:getEid();
     self.touchCount = self.touchCount + 1;
+  end
+end
+
+function CModulePaintBloc:finalScore()
+  if(self.touchCount == 1) then
+    local score = getEntityById(self.touchEntityId):getCurrentScore();
+    getEntityById(self.touchEntityId):setCurrentScore(score + 100);
   end
 end
 

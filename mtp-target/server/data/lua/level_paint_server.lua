@@ -9,7 +9,7 @@ function Entity:init()
   self:setCurrentScore(0);
   self:setStartPointId(clientId+getSessionId()*2);
   clientId = clientId + 1;
-  self:setMaxLinearVelocity(0.2);
+  --self:setMaxLinearVelocity(0.2);
 end
 
 function Entity:preUpdate()
@@ -28,7 +28,7 @@ end
 
 function entityWaterCollideEvent ( entity )
   pos = entity:getStartPointPos();
-  entity:setPos(pos);
+  --entity:setPos(pos);
   --entity:setOpenCloseCount(0);
 end
 
@@ -44,14 +44,27 @@ end
 function levelPreUpdate()
   local moduleCount = getModuleCount();
   for i=0,moduleCount-1 do
-    getModule(i):parent():preUdate();
+    if(getModule(i):parent()) then
+      getModule(i):parent():preUdate();
+    end
   end
 end
 
 function levelPostUpdate()
   local moduleCount = getModuleCount();
   for i=0,moduleCount-1 do
-    getModule(i):parent():postUdate();
+    if(getModule(i):parent()) then
+      getModule(i):parent():postUdate();
+    end
+  end
+end
+
+function levelEndSession()
+  local moduleCount = getModuleCount();
+  for i=0,moduleCount-1 do
+    if(getModule(i):parent()) then
+      getModule(i):parent():finalScore();
+    end
   end
 end
 
