@@ -31,6 +31,7 @@
 #include "main.h"
 #include "client.h"
 #include "network.h"
+#include "welcome.h"
 #include "variables.h"
 #include "lua_engine.h"
 #include "level_manager.h"
@@ -211,8 +212,6 @@ void CEntityManager::_remove(std::list<uint8> &removeList)
 			CLuaEngine::instance().entityLeaveEvent(c);
 			CSessionManager::instance().editMode(0);
 
-			// TODO clientConnected(c->Cookie, false);
-
 			if(c->type() == CEntity::Client)
 			{
 				char d[80];
@@ -232,6 +231,8 @@ void CEntityManager::_remove(std::list<uint8> &removeList)
 					fprintf(fp, "%u %s c %d\n", ltime, d, humanClientCount());
 					fclose(fp);
 				}
+
+				clientConnected(dynamic_cast<CClient*>(c)->Cookie, false);
 			}
 
 			CNetMessage msgout(CNetMessage::Logout);
@@ -452,8 +453,6 @@ void CEntityManager::login(CEntity *e)
 	uint8 nid = e->id();
 	string n = e->name();
 	
-	// TODO clientConnected(c->Cookie, true);
-	
 	{
 		// send info about the new client to everybody but not the new client
 		CNetMessage msgout(CNetMessage::Login);
@@ -471,6 +470,8 @@ void CEntityManager::login(CEntity *e)
 
 	if(e->type() == CEntity::Client)
 	{
+		clientConnected(dynamic_cast<CClient*>(e)->Cookie, true);
+
 		// send the new id for the new client
 		CNetMessage msgout(CNetMessage::Login);
 		self = true;
