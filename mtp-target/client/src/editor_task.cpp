@@ -232,10 +232,10 @@ void CEditorTask::update()
 		dv /= 4.0f;
 		
 		if (C3DTask::instance().kbDown(KeySHIFT))
-			dv *= 13.0f;
+			dv *= 0.1f;
 		
 		if (C3DTask::instance().kbDown(KeyCONTROL))
-			dv *= 40.0f;
+			dv *= 20.0f;
 		
 		dv *= (float)CTimeTask::instance().deltaTime();
 

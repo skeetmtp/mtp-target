@@ -42,6 +42,8 @@ public:
 
 	CLevel &currentLevel() { nlassert(CurrentLevel); return *CurrentLevel; }
 
+	bool levelPresent() {return CurrentLevel!=NULL;	}
+
 	virtual void init();
 	virtual void update() { }
 	virtual void render() { }

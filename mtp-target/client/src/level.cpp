@@ -285,6 +285,7 @@ CLevel::CLevel(const string &filename)
 
 CLevel::~CLevel()
 {
+	nlinfo("delete level");
 	CTaskManager::instance().remove(CWaterTask::instance());
 	CTaskManager::instance().remove(CSkyTask::instance());
 	CTaskManager::instance().remove(CLensFlareTask::instance());

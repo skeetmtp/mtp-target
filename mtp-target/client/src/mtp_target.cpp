@@ -665,7 +665,10 @@ void mtpTarget::everybodyReady()
 {
 	// everybody is ok, let s count down
 	CMtpTarget::instance().State = CMtpTarget::eReady;
-	CLevelManager::instance().currentLevel().reset();
+	if(CLevelManager::instance().levelPresent())
+		CLevelManager::instance().currentLevel().reset();
+	else
+		nlwarning("mtpTarget::everybodyReady() but there is no level");
 	CEntityManager::instance().everybodyReady(true);
 }
 	
