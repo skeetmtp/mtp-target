@@ -245,7 +245,7 @@ void CModule::update(CVector pos,CVector rot)
 
 void CModule::save(FILE *fp)
 {
-	fprintf(fp,"{ Position = CVector(%f,%f,%f), Name=\"%s\" }",Position.x,Position.y,Position.z,Name);
+	fprintf(fp,"{ Position = CVector(%f,%f,%f),Rotation = CAngleAxis(%f,%f,%f,%f), Name=\"%s\" }",Position.x,Position.y,Position.z,Rotation.Axis.x,Rotation.Axis.y,Rotation.Axis.z,Rotation.Angle,Name);
 }
 
 bool CModule::changed()

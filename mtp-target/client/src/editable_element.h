@@ -77,10 +77,10 @@ public:
 	CEditableElement(const std::string &name,uint8 id, NLMISC::CVector position, NLMISC::CAngleAxis rotation);
 	virtual ~CEditableElement();
 	
-	virtual bool intersect(NLMISC::CVector rayStart,NLMISC::CVector rayDir,NLMISC::CVector &rayHit);
+	virtual bool intersect(NLMISC::CVector rayStart,NLMISC::CVector rayEnd,NLMISC::CVector &rayHit);
 
 	NL3D::UInstance *mesh();
-	void renderBBox();
+	virtual void renderSelection();
 
 	void show();
 	void hide();

@@ -78,6 +78,19 @@ void loadMesh(const std::string &meshFileName, std::vector<NLMISC::CVector> &ver
 	CMesh *m = (CMesh*)ss.getShapePointer();
 	const CMeshGeom &mg = m->getMeshGeom();
 
+	CMatrix tmat;
+	tmat.identity();
+
+	CVector gpos = dynamic_cast<const CAnimatedValueVector &>(m->getDefaultPos()->getValue()).Value;
+	CQuat grot = dynamic_cast<const CAnimatedValueBlendable<CQuat> &>(m->getDefaultRotQuat()->getValue()).Value;
+	CVector gscale = dynamic_cast<const CAnimatedValueVector &>(m->getDefaultScale()->getValue()).Value;
+	
+	tmat.setPos(gpos);
+	tmat.setRot(grot);
+	tmat.scale(gscale);
+	
+	
+
 	uint nbmb = mg.getNbMatrixBlock();
 	for(uint i = 0; i < nbmb; i++)
 	{
@@ -106,7 +119,7 @@ void loadMesh(const std::string &meshFileName, std::vector<NLMISC::CVector> &ver
 //		uint j;
 //		for(j = 0; j < vertices.c_str(); j++)
 //		{
-			vertices.push_back(v);
+			vertices.push_back(tmat * v);
 //		}
 //		if(j)
 	}

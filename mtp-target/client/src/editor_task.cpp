@@ -110,8 +110,8 @@ void CEditorTask::_mouseSelectModule()
 				{
 					nearestModuleDist = dist;
 					nearestModule = module;
-					//nlinfo("tri intersect %s 0x%p dist = %f (%f %f %f)",nearestModule->name().c_str(),nearestModule,nearestModuleDist,rayHit.x,rayHit.y,rayHit.z);
 				}
+				nlinfo("tri intersect %s 0x%p dist = %f (%f %f %f)",nearestModule->name().c_str(),nearestModule,nearestModuleDist,rayHit.x,rayHit.y,rayHit.z);
 			}
 		}
 		if(nearestModule)
@@ -232,7 +232,7 @@ void CEditorTask::render()
 	C3DTask::instance().driver().setMatrixMode3D(*C3DTask::instance().scene().getCam());
 	if(_selectedModule)
 	{
-		_selectedModule->renderBBox();
+		_selectedModule->renderSelection();
 	}
 }
 

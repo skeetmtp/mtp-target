@@ -99,7 +99,7 @@ CEditableElement::CEditableElement(const string &name,uint8 id, CVector position
 }
 
 
-bool CEditableElement::intersect(NLMISC::CVector rayStart,NLMISC::CVector rayDir,NLMISC::CVector &rayHit)
+bool CEditableElement::intersect(NLMISC::CVector rayStart,NLMISC::CVector rayEnd,NLMISC::CVector &rayHit)
 {
 	return true;
 }
@@ -120,7 +120,7 @@ CEditableElement::~CEditableElement()
 
 
 
-void CEditableElement::renderBBox()
+void CEditableElement::renderSelection()
 {
 	mat->setColor(CRGBA(255,255,255,255));
 	mat->setZWrite(true);

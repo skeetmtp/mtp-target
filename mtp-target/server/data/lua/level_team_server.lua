@@ -17,6 +17,14 @@ CEntity_mt.__index = CEntity
 
 local clientId = 0;
 
+function CEntity:printTeam()
+  if(self.team==0) then
+	print("red");
+  else
+	print("blue");
+  end;
+end
+
 function CEntity:getTeam()
   return self.team;
 end
@@ -35,9 +43,17 @@ function Entity:init()
   clientId = clientId + 1;
   local t = math.mod(clientId,2);
 
+  if(t==0) then
+  	self:displayText(0,5,1,255,0,0,"You are in RED team",15);
+  	self:displayText(0,6,1,255,0,0,"Land on RED target !",20);
+  else
+  	self:displayText(0,5,1,100,100,255,"You are in BLUE team",15);
+  	self:displayText(0,6,1,100,100,255,"Land on BLUE target !",20);
+  end
+
   parent:setTeam(t);
   print(self:getName());
-  print(parent:getTeam());
+  parent:printTeam();
 end
 
 function Entity:update()
@@ -54,9 +70,39 @@ end
 function entityWaterCollideEvent ( entity )
 end
 
+---------------------- Module ----------------------
+CModule = {}
+CModule_mt = {}
+function CModule:new(t)
+  return setmetatable({ team = t or 0, id = 0 }, CModule_mt)
+end
+
+function CModule:getTeam()
+  return self.team;
+end
+
+function CModule:setTeam( t )
+  self.team = t;
+end
+
+
+CModule_mt.__index = CModule
+
+
+
+function Module:parent()
+  return self:getUserData();
+end
+
+
 function Module:collide( entity )
-  print(entity:getName());
-  print(entity:parent():getTeam());
+  if(self:parent():getTeam() == entity:parent():getTeam()) then
+    entity:setCurrentScore(self:getScore())
+  else
+    entity:setCurrentScore(-self:getScore())
+  end
+  --print(entity:getName());
+  --print(entity:parent():getTeam());
   --entity:setCurrentScore(self:getScore());
 end
 
