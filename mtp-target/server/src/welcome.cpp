@@ -97,7 +97,7 @@ void cbLSChooseShard (CMessage &msgin, const std::string &serviceName, uint16 si
 
 	string cookie, userName;
 	sint32 totalScore;
-	string userTexture = "";
+	string userTexture = "fireglace2";
 
 	msgin.serial(cookie, userName, totalScore);
 	if(msgin.getPos() < (sint32)msgin.length())
