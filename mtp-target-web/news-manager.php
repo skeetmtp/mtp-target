@@ -38,7 +38,7 @@ function confirmLink(theLink)
 </script>
 
 <?php
-     printf("<b><a href=\"?page=change-log-parser.php\">%s</a></b>",$news_ChangeLog);
+     //printf("<b><a href=\"?page=change-log-parser.php\">%s</a></b>",$news_ChangeLog);
 
      //include("news-header.php");
 ?>
