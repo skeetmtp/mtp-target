@@ -225,7 +225,6 @@ end
 
 function levelEndSession()
   local entityCount = getEntityCount();
-  
   for i=0,entityCount do
     getEntity(i):parent():setFinalScore();
   end
