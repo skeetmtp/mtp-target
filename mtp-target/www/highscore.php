@@ -10,9 +10,24 @@
 
 <?php
 
-	echo "<h2>Official Server High Scores</h2>\n";
+	if(!isset($server)) $server = "easy";
 
-	$filename = "/home/ace/cvs/mtp-target/server/mtp_target_service.cfg";
+	if($server == "easy")
+	{
+	    $filename = "/home/ace/cvs/mtp-target/server/mtp_target_service.cfg";
+		$servername = "easy";
+	}
+	else if($server == "adv")
+	{
+    	$filename = "/home/ace/cvs/mtp-target/adv_server/mtp_target_service.cfg";
+		$servername = "advanced";
+	}
+	else
+	{
+		die("ERROR: Unknown server $server");
+	}
+
+	echo "<h2>Official $servername server high scores</h2>\n";
 
 	$fp = fopen ($filename, "rb");
 	if (!$fp)
@@ -44,6 +59,9 @@
 			{
 				$my1[$p] = strtr($arr[$i],"\""," ");
 				$my2[$p] = (int)(strtr($arr[$i+2],"\""," "));
+
+				// uncomment this line for debug 
+				//echo $my1[$p]." ".$my2[$p]."<br>\n";
 
 				$b = strpos($my1[$p],'[');
 				$e = strpos($my1[$p],']');
