@@ -5,7 +5,7 @@ $cache2HtmlFilename[0] = "";
 function cache2Html($cacheFileName,$cacheDurationInSecond)
 {
 	global $cache2HtmlFilename;
-	if(isCacheFileUpToDate($cacheFileName,$cacheDurationInSecond))
+	if(isCacheFileUpToDateDuration($cacheFileName,$cacheDurationInSecond))
 	{
 		include($cacheFileName);
 		return 0;
