@@ -292,7 +292,12 @@ void CEntity::renderName() const
 	if(CMtpTarget::instance().controler().getControledEntity() != id() || !ReplayFile.empty())
 	{
 		const CVector &pos = interpolator().currentPosition();
-		CVector dpos = pos - CMtpTarget::instance().controler().Camera.getMatrix()->getPos();
+		CVector camPos;
+		if(CMtpTarget::instance().isSpectatorOnly())
+			camPos = ControlerFreeLookPos;
+		else
+			camPos = CMtpTarget::instance().controler().Camera.getMatrix()->getPos();
+		CVector dpos = pos - camPos;
 		if(dpos.norm()<1)
 			CFontManager::instance().printf3D(color(),pos,0.01f, name().c_str());
 	}
