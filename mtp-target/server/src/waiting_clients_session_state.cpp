@@ -97,6 +97,7 @@ void CWaitingClientsSessionState::update()
 			(*it)->InGame = false;
 			(*it)->Ready = false;
 			(*it)->WaitingReady = true;
+			(*it)->WaitingReadyTimeoutStart = CTime::getLocalTime();
 			(*it)->ArrivalTime = 0.0f;
 			(*it)->OnTheWater = false;
 			(*it)->spectator(false);

@@ -871,19 +871,47 @@ void CEntityManager::saveAllValidReplay()
 
 bool CEntityManager::everyBodyReady()
 {
-	CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
-	CEntityManager::EntityConstIt it;
-	
-	bool allReady = true;
-	// send the message to all entities
-	for(it = acces.value().begin(); it != acces.value().end(); it++)
+	bool res = true;
+	vector<uint8> IdToRemove;
+	vector<string> msgs;
 	{
-		if((*it)->type()==CEntity::Client && (*it)->WaitingReady && !(*it)->Ready )
+		CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
+		CEntityManager::EntityConstIt it;
+		
+		bool allReady = true;
+		// send the message to all entities
+		for(it = acces.value().begin(); it != acces.value().end(); it++)
 		{
-			return false;
-		}
-	}	
-	return true;
+			if((*it)->type()==CEntity::Client && (*it)->WaitingReady && !(*it)->Ready )
+			{
+				if( (float)(CTime::getLocalTime() - (*it)->WaitingReadyTimeoutStart)/1000.0f > 20) //timeout
+				{
+					IdToRemove.push_back((*it)->id());
+					string timeoutMsg = toString("%s : wait for ready timeout",(*it)->name().c_str());
+					msgs.push_back(timeoutMsg);
+				}
+				res = false;
+				break;
+			}
+		}	
+	}
+	for(uint i = 0; i < IdToRemove.size(); i++)
+	{
+		string reason = "waiting for ready has timed out";
+		CNetMessage msgout(CNetMessage::Error);
+		msgout.serial(reason);
+		CNetwork::instance().send(IdToRemove[i], msgout);
+
+		CEntityManager::instance().remove(IdToRemove[i]);
+	}
+	IdToRemove.clear();
+	for(uint i = 0; i < msgs.size(); i++)
+	{
+		CNetwork::instance().sendChat(msgs[i]);
+	}
+	msgs.clear();
+	
+	return res;
 }
 
 

@@ -217,6 +217,7 @@ static void cbReady(CClient *c, CNetMessage &msgin)
 static void cbRequestCRCKey(CClient *c, CNetMessage &msgin)
 {
 	nlinfo("cbRequestCRCKey from %s",c->name().c_str());
+	c->WaitingReadyTimeoutStart = CTime::getLocalTime();
 	CNetMessage msgout(CNetMessage::RequestCRCKey);
 
 	string fn;
@@ -248,6 +249,7 @@ static void cbRequestCRCKey(CClient *c, CNetMessage &msgin)
 static void cbRequestDownload(CClient *c, CNetMessage &msgin)
 {
 	nlinfo("cbRequestDownload from %s",c->name().c_str());
+	c->WaitingReadyTimeoutStart = CTime::getLocalTime();
 	CNetMessage msgout(CNetMessage::RequestDownload);
 
 	string fn;

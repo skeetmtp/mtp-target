@@ -121,6 +121,7 @@ public:
 	bool				 InGame;
 	bool				 Ready;
 	bool				 WaitingReady;
+	NLMISC::TTime		 WaitingReadyTimeoutStart;
 	//	bool jointed;
 	float				 Accel;
 	float				 Friction;
