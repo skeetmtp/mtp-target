@@ -54,127 +54,135 @@ using namespace NLMISC;
 // Thread
 //
 
-class CNetworkTask : public NLMISC::IRunnable
+CNetworkTask::CNetworkTask()
 {
-public:
-	
-	CNetworkTask()
-	{
-		ListenSock.init(NLNET::IService::getInstance()->ConfigFile.getVar("TcpPort").asInt());
+	commands.clear();
+	ListenSock.init(NLNET::IService::getInstance()->ConfigFile.getVar("TcpPort").asInt());
 
 #if defined NL_OS_UNIX
-		nice(2);
+	nice(2);
 #endif // NL_OS_UNIX
-	}
+}
 
-	virtual void run()
+void CNetworkTask::run()
+{
+	NLNET::SOCKET descmax;
+	fd_set readers;
+	timeval tv;
+
+	while(true)
 	{
-		NLNET::SOCKET descmax;
-		fd_set readers;
-		timeval tv;
+		descmax = ListenSock.descriptor();
+		FD_ZERO(&readers);
+		FD_SET(ListenSock.descriptor(), &readers);
 
-		while(true)
 		{
-			descmax = ListenSock.descriptor();
-			FD_ZERO(&readers);
-			FD_SET(ListenSock.descriptor(), &readers);
-
+			CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
+			for(CEntityManager::EntityConstIt it = acces.value().begin(); it != acces.value().end(); it++)
 			{
-				CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
-				for(CEntityManager::EntityConstIt it = acces.value().begin(); it != acces.value().end(); it++)
-				{
-					nlassert(*it);
-					if((*it)->type() != CEntity::Client)
-						continue;
-
-					CClient *c = (CClient *)(*it);
-
-					nlassert(c->sock());
-					FD_SET(c->sock()->descriptor(), &readers);
-					descmax = std::max(descmax, c->sock()->descriptor());
-				}
-			}
-
-			tv.tv_sec = 3600;		// 1 hour
-			tv.tv_usec = 0;
-
-			int res = ::select(descmax+1, &readers, 0, 0, &tv);
-			
-			switch(res)
-			{
-			case  0 : continue; // time-out expired, no results
-			case -1 :
-				if(NLNET::CSock::getLastError() == 4)
-				{
-					// we ignore the message(Interrupted system call) caused by a CTRL-C
-					nldebug("Select failed: %s (code %u) but IGNORED", NLNET::CSock::errorString(NLNET::CSock::getLastError()).c_str(), NLNET::CSock::getLastError());
+				nlassert(*it);
+				if((*it)->type() != CEntity::Client)
 					continue;
-				}
-				nlerror("Select failed: %s (code %u)", NLNET::CSock::errorString(NLNET::CSock::getLastError()).c_str(), NLNET::CSock::getLastError());
+
+				CClient *c = (CClient *)(*it);
+
+				nlassert(c->sock());
+				FD_SET(c->sock()->descriptor(), &readers);
+				descmax = std::max(descmax, c->sock()->descriptor());
 			}
-
-			if(FD_ISSET(ListenSock.descriptor(), &readers) != 0)
-			{
-				nlinfo("New client connected");
-
-				NLNET::CTcpSock *sock = ListenSock.accept();
-				sock->setNoDelay(true);
-				sock->setNonBlockingMode(false);
-
-				CEntityManager::instance().addClient(sock);
-			}
-
-			vector<uint8> IdToRemove;
-
-			{
-				CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
-				for(CEntityManager::EntityConstIt it = acces.value().begin(); it != acces.value().end(); it++)
-				{
-					nlassert(*it);
-					CClient *c = (CClient *)(*it);
-					
-					if((*it)->type() != CEntity::Client)
-						continue;
-
-					nlassert(c->sock());
-
-					if(FD_ISSET(c->sock()->descriptor(), &readers) == 0)
-						continue;
-
-					CNetMessage msg(CNetMessage::Unknown, true);
-					
-					NLNET::CSock::TSockResult res = msg.receive(c->sock());
-
-					switch(res)
-					{
-					case NLNET::CSock::Ok:
-						netCallbacksHandler(c, msg);
-						break;
-					case NLNET::CSock::ConnectionClosed:
-						nlinfo("Lost client eid %hu", (uint16)c->id());
-						IdToRemove.push_back(c->id());
-						break;
-					default:
-						nlwarning("Received failed from client eid %hu : %s (code %u)", (uint16)c->id(), NLNET::CSock::errorString(NLNET::CSock::getLastError()).c_str(), NLNET::CSock::getLastError());
-						IdToRemove.push_back(c->id());
-						break;
-					}
-				}
-			}
-
-			for(uint i = 0; i < IdToRemove.size(); i++)
-			{
-				CEntityManager::instance().remove(IdToRemove[i]);
-			}
-			IdToRemove.clear();
 		}
+
+		tv.tv_sec = 3600;		// 1 hour
+		tv.tv_usec = 0;
+
+		int res = ::select(descmax+1, &readers, 0, 0, &tv);
+		
+		switch(res)
+		{
+		case  0 : continue; // time-out expired, no results
+		case -1 :
+			if(NLNET::CSock::getLastError() == 4)
+			{
+				// we ignore the message(Interrupted system call) caused by a CTRL-C
+				nldebug("Select failed: %s (code %u) but IGNORED", NLNET::CSock::errorString(NLNET::CSock::getLastError()).c_str(), NLNET::CSock::getLastError());
+				continue;
+			}
+			nlerror("Select failed: %s (code %u)", NLNET::CSock::errorString(NLNET::CSock::getLastError()).c_str(), NLNET::CSock::getLastError());
+		}
+
+		if(FD_ISSET(ListenSock.descriptor(), &readers) != 0)
+		{
+			nlinfo("New client connected");
+
+			NLNET::CTcpSock *sock = ListenSock.accept();
+			sock->setNoDelay(true);
+			sock->setNonBlockingMode(false);
+
+			CEntityManager::instance().addClient(sock);
+		}
+
+		vector<uint8> IdToRemove;
+
+		{
+			CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
+			for(CEntityManager::EntityConstIt it = acces.value().begin(); it != acces.value().end(); it++)
+			{
+				nlassert(*it);
+				CClient *c = (CClient *)(*it);
+				
+				if((*it)->type() != CEntity::Client)
+					continue;
+
+				nlassert(c->sock());
+
+				if(FD_ISSET(c->sock()->descriptor(), &readers) == 0)
+					continue;
+
+				CNetMessage msg(CNetMessage::Unknown, true);
+				
+				NLNET::CSock::TSockResult res = msg.receive(c->sock());
+
+				switch(res)
+				{
+				case NLNET::CSock::Ok:
+					netCallbacksHandler(c, msg);
+					break;
+				case NLNET::CSock::ConnectionClosed:
+					nlinfo("Lost client eid %hu", (uint16)c->id());
+					IdToRemove.push_back(c->id());
+					break;
+				default:
+					nlwarning("Received failed from client eid %hu : %s (code %u)", (uint16)c->id(), NLNET::CSock::errorString(NLNET::CSock::getLastError()).c_str(), NLNET::CSock::getLastError());
+					IdToRemove.push_back(c->id());
+					break;
+				}
+			}
+		}
+
+		for(uint i = 0; i < IdToRemove.size(); i++)
+		{
+			CEntityManager::instance().remove(IdToRemove[i]);
+		}
+		IdToRemove.clear();
+		fludhCommand();
 	}
+}
 
-private:
 
-	NLNET::CListenSock ListenSock;
-};
+void CNetworkTask::addCommand(std::string &command)
+{
+	commands.push_back(command);
+}
 
+void CNetworkTask::fludhCommand()
+{
+	list<string>::iterator it;
+	for(it=commands.begin();it!=commands.end();it++)
+		ICommand::execute(*it, *InfoLog);
+	
+	commands.clear();
+}
+	
 
 //
 // Variables

@@ -41,6 +41,23 @@
 
 class CNetworkTask;
 
+class CNetworkTask : public NLMISC::IRunnable
+{
+public:
+	
+	CNetworkTask();
+
+	virtual void run();
+	void addCommand(std::string &command);
+
+private:
+	void fludhCommand();
+	
+	NLNET::CListenSock ListenSock;
+	std::list<std::string> commands;
+};
+
+
 class CNetwork : public CSingleton<CNetwork>
 {
 public:
@@ -63,6 +80,7 @@ public:
 	// send a message to all connected clients
 	void sendChat(const std::string &msg);
 
+	CNetworkTask &networkTask() {return *NetworkTask;};
 
 private:
 
