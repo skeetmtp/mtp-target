@@ -1,9 +1,8 @@
 
-Prerequis
----------
+External libs required
+----------------------
 
-Pour compiler Mtp Target, il vous faut les librairies suivantes. Entre
-parenthèses sont les noms des packages debian (apt-get install <package>):
+To compile Mtp Target, you needs followings libraries : 
 
 - libxml2 (libxml2-dev)
 - freetype (libfreetype6-dev)
@@ -11,24 +10,17 @@ parenthèses sont les noms des packages debian (apt-get install <package>):
 - STLport 4.5 (libstlport4.5-dev)
 - lua (liblua50-dev)
 
-Il est facile de les recuperer avec des packages, par exemple
-sous Debian: apt-get install <nom du module>
+On Debian you can easily get package : apt-get install <module name>
+You will need some other library : 
+- NeL : see http://mtp-target.dyndns.org/wiki/index.php for more information
+- fmod (optionnal) : http://www.fmod.org/
+- ODE 0.039(not the cvs version) : http://ode.org/
 
-Les librairies ci dessous sont pre-compilé dans external.tgz
-
-- NeL
-- fmod (optionnel)
-- ODE 0.039
-
-* Editez les fichiers Client/Src/Makefile et changez les paths pour
-les librairies externes
-
-* Editez les fichiers Server/Src/Makefile et changez les paths pour
-les librairies externes
+* Edit client/src/Makefile to change external library paths and includes
+* Edit server/src/Makefile to change external library paths and includes
 
 * make
 
-* il faut que les lib dynamiques soient dans la variable
-LD_LIBRARY_PATH:
+* Dynamic libraries needs to be in LD_LIBRARY_PATH variable :
+  export LD_LIBRARY_PATH=$(HOME)/external/nel/lib
 
-export LD_LIBRARY_PATH=$(HOME)/external/nel/lib
