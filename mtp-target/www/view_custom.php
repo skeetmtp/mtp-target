@@ -57,9 +57,15 @@
 					$moddate = date("D M j G:i:s T Y",$modified[9]);
 					printf("<tr>");
 					$entryjpg = str_replace(".tga", ".jpg", $entry);
+					$cfgEntry = strstr($entry,"ping_ball_");
+					$cfgEntry = substr($cfgEntry,strlen($cfgEntry)-4);
 					printf("<td><a href=\"../user_texture/$entry\"><img src=\"../user_texture/$entryjpg\" ALT=\"file\"></a></td>");
-					echo "<td><table><tr><td>Name: $entry</td></tr>";
-					echo "<tr><td>Uploaded: $moddate</td></tr></table>";
+					echo "<td><table>";
+					echo "<tr><td>Name: $entry</td></tr>";
+					echo "<tr><td>Uploaded: $moddate</td></tr>
+					echo "<tr><td>Add in C:\Program Files\mtp-target\client\mtp_target.cfg</td></tr>";
+					echo "<tr><td>EntityTexture = \"$cfgEntry\";</td></tr>";
+					echo "</table>";
 					printf("</td></tr>");
 					printf("\n");
 				}
