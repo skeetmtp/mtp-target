@@ -109,17 +109,26 @@ static void cbLogin(CNetMessage &msgin)
 	CRGBA color;
 	string texture;
 	bool spec;
-	bool oc;
+	bool oc = false;
+	string trace = "trace";
 
 	msgin.serial(self, eid, name, totalScore);
 	msgin.serial(color, texture, spec);
-	msgin.serial(oc);
-	nlinfo("NET: cbLogin self=%d eid=%hu name='%s' totalScore='%d' color=(%d,%d,%d) texture='%s' spec=%d oc=%d", 
-		self, (uint16)eid, name.c_str(), totalScore, color.R, color.G, color.B, texture.c_str(), spec, oc);
+	//TODO remove size test when server version will be 6
+	if(msgin.getPos() < (sint32)msgin.length())
+	{
+		msgin.serial(oc);
+	}
+	if(msgin.getPos() < (sint32)msgin.length())
+	{
+		msgin.serial(trace);
+	}
+	nlinfo("NET: cbLogin self=%d eid=%hu name='%s' totalScore='%d' color=(%d,%d,%d) texture='%s' spec=%d oc=%d trace='%s", 
+		self, (uint16)eid, name.c_str(), totalScore, color.R, color.G, color.B, texture.c_str(), spec, oc, trace.c_str());
 		
 	nldebug("player list.size = %d", CEntityManager::instance().size());
 
-	CEntityManager::instance().add(eid, name, totalScore, color, texture, spec, self);
+	CEntityManager::instance().add(eid, name, totalScore, color, texture, spec, self, trace);
 
 	if(oc)
 		CEntityManager::instance()[eid].swapOpenClose();

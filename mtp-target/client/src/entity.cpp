@@ -344,6 +344,7 @@ void CEntity::reset()
 	Name.clear();
 	Color.set(255,255,255);
 	Texture = "";
+	Trace = "";
 	CurrentScore = 0;
 	TotalScore = 0;
 	Ping = 0;
@@ -377,7 +378,7 @@ void CEntity::sessionReset()
 	}
 }
 	
-void CEntity::init(TEntity type, const std::string &name, sint32 totalScore, CRGBA &color, const std::string &texture, const std::string &meshname, bool spectator, bool isLocal)
+void CEntity::init(TEntity type, const std::string &name, sint32 totalScore, CRGBA &color, const std::string &texture, const std::string &meshname, bool spectator, bool isLocal, const string &trace)
 {
 	nlassert(type != Unknown);
 
@@ -385,6 +386,7 @@ void CEntity::init(TEntity type, const std::string &name, sint32 totalScore, CRG
 	Name = name;
 	Color = color;
 	Texture = texture;
+	Trace = trace;
 	MeshName = meshname;
 	Spectator = spectator;
 	Ready = false;
@@ -463,7 +465,10 @@ void CEntity::load3d()
 
 	if(TraceParticle.empty() && CConfigFileTask::instance().configFile().getVar("DisplayParticle").asInt() == 1)
 	{
-		string res = CResourceManager::instance().get("trace.ps");
+		string TraceFilename = "trace.ps";
+		if(!Trace.empty())
+			TraceFilename = Trace+".ps";
+		string res = CResourceManager::instance().get(TraceFilename);
 		TraceParticle.cast(C3DTask::instance().scene().createInstance(res));
 		TraceParticle.setTransformMode (UTransformable::RotQuat);
 		TraceParticle.setOrderingLayer(2);

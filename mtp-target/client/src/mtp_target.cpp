@@ -149,12 +149,14 @@ void CMtpTarget::init()
 			for(uint i = 0; i < nbplayer; i++)
 			{
 				strcpy(texture,"");
+				//TODO manage trace in replay
 				fscanf (fp, "%d %s %d %d %d %s", &eid, &name, &self, &currentScore, &totalScore, &texture);
 				
 				CRGBA col(255,255,255);
 				string textureName = texture;
+				string traceName = "trace";
 				textureName = textureName.substr(1,textureName.size()-2);
-				CEntityManager::instance().add(eid, name, totalScore, col, textureName, false,self!=0);
+				CEntityManager::instance().add(eid, name, totalScore, col, textureName, false,self!=0, traceName);
 				
 				//CEntity *entity = new CEntity(CRGBA(255,255,255));
 				//entity->setId(eid);

@@ -148,6 +148,7 @@ private:
 	uint8			Rank;
 	std::string		Name;
 	std::string		MeshName;
+	std::string		Trace;
 	NLMISC::CRGBA	Color;
 	std::string		Texture;
 	sint32			CurrentScore;
@@ -168,7 +169,7 @@ private:
 	void reset();
 	void sessionReset();
 	void luaInit();
-	void init(TEntity type, const std::string &name, sint32 totalScore, NLMISC::CRGBA &color, const std::string &texture, const std::string &meshname, bool spectator, bool isLocal);
+	void init(TEntity type, const std::string &name, sint32 totalScore, NLMISC::CRGBA &color, const std::string &texture, const std::string &meshname, bool spectator, bool isLocal, const std::string &trace);
 	void id(uint8 nid);
 	void fadeParticleColorUpdate();
 	
