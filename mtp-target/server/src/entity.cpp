@@ -160,11 +160,12 @@ CEntity::CEntity(uint8 eid, const std::string &name) : Ping(50)
 	_luaInit();
 }
 
-void CEntity::init(std::string &name,std::string &texture, NLMISC::CRGBA &color)
+void CEntity::init(std::string &name,std::string &texture, NLMISC::CRGBA &color,std::string &trace)
 {
 	this->name(name);
 	this->Color = color;
 	this->Texture = texture;
+	this->Trace = trace;
 	
 	ForceReceived = true;
 	AfkCount = 0;

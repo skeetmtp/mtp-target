@@ -60,13 +60,38 @@ using namespace NLNET;
 //
 
 /// association between cookie in string and username
-static map<string, pair<string, pair<string, sint32> > > UserIdNameAssociations;
+
+class CUserInformation
+{
+public:
+
+	CUserInformation(const string &name,sint32 totalScore,const string &texture, uint32 color,const string &trace)
+	{
+		this->name		 = name;
+		this->totalScore = totalScore;
+		this->texture	 = texture;
+		this->color.setPacked(color);
+		this->trace		 = trace;
+	}
+
+	string name;
+	sint32 totalScore;
+	string texture;
+	CRGBA  color;
+	string trace;
+protected:
+private:
+};
+
+//static map<string, pair<string, pair<string, sint32> > > UserIdNameAssociations;
+static map<string, CUserInformation > UserIdNameAssociations;
 
 static string ListenAddr;
 
-string getUserFromCookie(const string &cookie, sint32 &totalScore,string &userTexture)
+string getUserFromCookie(const string &cookie, sint32 &totalScore,string &userTexture, CRGBA &color ,string &userTrace)
 {
-	map<string, pair<string, pair<string, sint32> > >::iterator it = UserIdNameAssociations.find(cookie);
+	//map<string, pair<string, pair<string, sint32> > >::iterator it = UserIdNameAssociations.find(cookie);
+	map<string, CUserInformation >::iterator it = UserIdNameAssociations.find(cookie);
 	if(it == UserIdNameAssociations.end())
 	{
 		totalScore = 0;
@@ -74,9 +99,11 @@ string getUserFromCookie(const string &cookie, sint32 &totalScore,string &userTe
 	}
 	else
 	{
-		totalScore = (*it).second.second.second;
-		userTexture = (*it).second.second.first;
-		return (*it).second.first;
+		totalScore	= (*it).second.totalScore;
+		userTexture = (*it).second.texture;
+		color		= (*it).second.color;
+		userTrace	= (*it).second.trace;
+		return (*it).second.name;
 	}
 }
 
@@ -98,14 +125,26 @@ void cbLSChooseShard (CMessage &msgin, const std::string &serviceName, uint16 si
 	string cookie, userName;
 	sint32 totalScore;
 	string userTexture = "";
+	string userTrace = "";
+	uint32 userColor = 0xffffffff;
 
 	msgin.serial(cookie, userName, totalScore);
 	if(msgin.getPos() < (sint32)msgin.length())
 	{
-		//nlinfo("LS sent texture : %s",userTexture.c_str());
 		msgin.serial(userTexture);
+		//nlinfo("LS sent texture : %s",userTexture.c_str());
 	}
-
+	if(msgin.getPos() < (sint32)msgin.length())
+	{
+		msgin.serial(userColor);
+		nlinfo("LS sent user color : %d",userColor);
+	}
+	if(msgin.getPos() < (sint32)msgin.length())
+	{
+		msgin.serial(userTrace);
+		nlinfo("LS sent user trace: %s",userTrace.c_str());
+	}
+	
 	// always accept clients
 	string reason = "";
 
@@ -123,7 +162,8 @@ void cbLSChooseShard (CMessage &msgin, const std::string &serviceName, uint16 si
 
 	CUnifiedNetwork::getInstance()->send("LS", msgout);
 
-	UserIdNameAssociations.insert(make_pair(cookie, make_pair(userName,make_pair(userTexture,totalScore))));
+	//UserIdNameAssociations.insert(make_pair(cookie, make_pair(userName,make_pair(userTexture,totalScore))));
+	UserIdNameAssociations.insert(make_pair(cookie, CUserInformation(userName,totalScore,userTexture,userColor,userTrace)));
 
 	nlinfo("Client %s will come with cookie %s to ip '%s' with total score %d userTexture '%s'", userName.c_str(), cookie.c_str(), ListenAddr.c_str(), totalScore,userTexture.c_str());
 }

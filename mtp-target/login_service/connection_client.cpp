@@ -344,6 +344,10 @@ static void cbClientChooseShard(CMessage &msgin, TSockId from, CCallbackNetBase 
 		msgout.serial(totalScore);
 		string userTexture = row[8];
 		msgout.serial(userTexture);
+		uint32 userColor = atoi(row2[9]);
+		msgout.serial(userColor);
+		string userTrace = row[10];
+		msgout.serial(userTrace);
 		CUnifiedNetwork::getInstance()->send(sid, msgout);
 
 		CMysqlResult result3;

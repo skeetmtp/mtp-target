@@ -56,7 +56,7 @@ public:
 	virtual ~CEntity();
 
 	void _luaInit();
-	void init(std::string &name,std::string &texture, NLMISC::CRGBA &color);
+	void init(std::string &name,std::string &texture, NLMISC::CRGBA &color,std::string &trace);
 
 	// switch the open close status of the entity
 	// return true if the switch really occurs
@@ -117,6 +117,7 @@ public:
 	// entity customization
 	NLMISC::CRGBA		 Color;
 	std::string			 Texture;
+	std::string			 Trace;
 
 	sint32				 CurrentScore;		// the current score of the current session
 	sint32				 Score;				// the total score off all session

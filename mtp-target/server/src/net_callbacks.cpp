@@ -120,6 +120,7 @@ static void cbLogin(CClient *c, CNetMessage &msgin)
 	string login, password;
 	CRGBA color;
 	string texture;
+	string trace;
 	uint32 networkVersion = CNetwork::instance().version();
 	string error;
 
@@ -162,7 +163,7 @@ static void cbLogin(CClient *c, CNetMessage &msgin)
 		{
 			// already checks in LS
 			nlinfo("Receive a client with cookie %s", cookie.c_str());
-			login = getUserFromCookie(cookie, c->Score, texture);
+			login = getUserFromCookie(cookie, c->Score, texture, color, trace);
 			nlinfo("score = %d , texture = %s", c->Score, texture.c_str());
 			if(login.empty())
 			{
@@ -178,7 +179,7 @@ static void cbLogin(CClient *c, CNetMessage &msgin)
 	if(error.empty())
 	{
 		// init() must be after the check() call
-		c->init(login,texture,color);
+		c->init(login,texture,color,trace);
 		c->Cookie = cookie;
 		if(!cookie.empty())
 		{

@@ -26,6 +26,7 @@
 //
 
 #include <string>
+#include <nel/misc/rgba.h>
 
 
 //
@@ -37,6 +38,6 @@ void initWelcome();
 void clientConnected(const std::string &cookie, bool connected);
 void updateConnectedClients();
 
-std::string getUserFromCookie(const std::string &cookie, sint32 &totalScore,std::string &userTexture);
+std::string getUserFromCookie(const std::string &cookie, sint32 &totalScore,std::string &userTexture, NLMISC::CRGBA &color ,std::string &userTrace);
 
 #endif

@@ -290,6 +290,7 @@ void CEntityManager::login(CEntity *e)
 		msgout.serial(s);
 		bool oc  = e->isOpen();
 		msgout.serial(oc);
+		msgout.serial(e->Trace);
 		CNetwork::instance().sendAllExcept(nid, msgout);
 
 		if(e->type() == CEntity::Client)
@@ -319,6 +320,7 @@ void CEntityManager::login(CEntity *e)
 		msgout.serial(s);
 		bool oc  = e->isOpen();
 		msgout.serial(oc);
+		msgout.serial(e->Trace);
 
 		string CurrentLevel="";
 		// version 5 client can't handle startsession on login 
@@ -375,6 +377,7 @@ void CEntityManager::login(CEntity *e)
 					msgout.serial(s);
 					bool oc  = (*it)->isOpen();
 					msgout.serial(oc);
+					msgout.serial((*it)->Trace);
 					CNetwork::instance().send(nid, msgout);
 				}
 			}
