@@ -48,19 +48,19 @@ public:
 	virtual void release() = 0;
 	virtual std::string name() = 0;
 
-	void stop()
+	virtual void stop()
 	{
 		nlinfo("Task %s is now stopped", name().c_str());
 		Execute = false;
 	}
 
-	void restart()
+	virtual void restart()
 	{
 		nlinfo("Task %s is restarted", name().c_str());
 		Execute = true;
 	}
 
-	void remove()
+	virtual void remove()
 	{
 		nlinfo("Task %s need to be remove", name().c_str());
 		NeedRemove = true;
