@@ -24,6 +24,14 @@
 
 #include "stdpch.h"
 
+#include <nel/misc/types_nl.h>
+
+#ifdef NL_OS_WINDOWS
+#	include <windows.h>
+#	undef min
+#	undef max
+#endif
+
 #include <nel/misc/path.h>
 
 #include "chat_task.h"
@@ -74,6 +82,18 @@ static void cbError(CNetMessage &msgin)
 	msgin.serial(msg);
 	nlinfo("NET: cbError msg='%s'", msg.c_str());
 	
+#ifdef NL_OS_WINDOWS
+	if(msg.find("bad client version") != string::npos)
+	{
+		// the client is not up to date, ask the user to update
+		if(MessageBox(NULL, "Your client is not up to date. You *must* download a new version from the mtp target web site.\r\nDo you want to automatically quit and go to the download page?", "Warning", MB_ICONWARNING|MB_YESNO) == IDYES)
+		{
+			openURL("http://mtptarget.free.fr/download.php");
+			exit(0);
+		}
+	}
+#endif
+
 	CMtpTarget::instance().error(msg);	
 }
 
