@@ -1,7 +1,7 @@
 Name = "Team All on one"
 Author = "Skeet"
 ServerLua = "level_team_all_on_one_server.lua"
-ReleaseLevel = 4
+ReleaseLevel = 2
 
 skyShapeFileName = "sky.shape";
 sunAmbientColor = CRGBA(82, 100, 133, 255);
