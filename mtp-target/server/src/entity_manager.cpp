@@ -711,7 +711,7 @@ bool CEntityManager::connected(const std::string &name)
 	return false;
 }
 
-string CEntityManager::check(const string &login, const string &password, bool dontCheck, sint32 &score)
+string CEntityManager::check(const string &login, const string &password, bool dontCheck, sint32 &score, bool isAdmin)
 {
 	score = 0;
 
@@ -783,7 +783,7 @@ string CEntityManager::check(const string &login, const string &password, bool d
 				score = accounts.asInt(i+2);
 
 				sint32 maxScore = IService::getInstance()->ConfigFile.getVar("MaxScore").asInt();
-				if(maxScore != -1 && score >= maxScore)
+				if(!isAdmin && maxScore != -1 && score >= maxScore)
 				{
 					return toString("Your score (%d) is now too high for this server (limited to %d). Try a more difficult server", score, maxScore);
 				}

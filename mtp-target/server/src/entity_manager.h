@@ -50,7 +50,7 @@ public:
 	
 	std::list <CEntity*> &entities() { return Entities; }
 
-	std::string check (const std::string &login, const std::string &password, bool dontCheck, sint32 &score);
+	std::string check (const std::string &login, const std::string &password, bool dontCheck, sint32 &score, bool isAdmin);
 
 	// this add is to add a client
 	void addClient(NLNET::CTcpSock *sock);

@@ -144,6 +144,4 @@ void CGuiProgressBar::init(CGuiXml *xml,xmlNodePtr node)
 	CGuiScale::init(node);
 }
 
-
-
 #endif

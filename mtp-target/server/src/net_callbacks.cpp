@@ -123,7 +123,7 @@ static void cbLogin(CClient *c, CNetMessage &msgin)
 		if(cookie.empty())
 		{
 			// check in normal way
-			error = CEntityManager::instance().check(login, password, false, c->Score);
+			error = CEntityManager::instance().check(login, password, false, c->Score, c->isAdmin());
 		}
 		else
 		{
