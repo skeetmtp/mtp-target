@@ -91,6 +91,7 @@ CEntity::CEntity()
 	FadeOpenParticleStartTime = 0.0f;
 	FadeCloseParticleDuration = 1.0f;
 	FadeCloseParticleStartTime = 0.0f;
+	OriginalColor = CRGBA(255,255,255,255);
 }
 
 void CEntity::swapOpenClose()
@@ -383,6 +384,11 @@ void CEntity::reset()
 	}
 }
 
+void CEntity::sessionStart()
+{
+	color(OriginalColor);
+}
+
 void CEntity::sessionReset()
 {
 	if(ReplayFile.empty())
@@ -409,6 +415,7 @@ void CEntity::init(TEntity type, const std::string &name, sint32 totalScore, CRG
 
 	Type = type;
 	Name = name;
+	OriginalColor = color;
 	Color = color;
 	Texture = texture;
 	Trace = trace;
