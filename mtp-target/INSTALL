@@ -15,6 +15,7 @@ You will need some other library :
 - NeL : see http://www.nevrax.org for more information
 - fmod (optionnal) : http://www.fmod.org/
 - ODE 0.05(not the cvs version) : http://ode.org/
+- Lua script engine : http://www.lua.org/
 
 * Edit Variables.mk to change external library paths and includes
 
