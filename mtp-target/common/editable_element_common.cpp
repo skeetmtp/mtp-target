@@ -17,55 +17,63 @@
  * MA 02111-1307, USA.
  */
 
-#ifndef MTPT_MODULE
-#define MTPT_MODULE
-
 
 //
 // Includes
 //
 
-#include <vector>
-#include <ode/ode.h>
+#include "stdpch.h"
 
-#include "../../common/module_common.h"
+#include <nel/misc/path.h>
 
-class CModuleProxy;
+#include "editable_element_common.h"
+#include "lua_utility.h"
 
 //
-// Classes
+// Namespaces
 //
 
-class CModule : public CModuleCommon
+using namespace std;
+using namespace NLMISC;
+
+
+//
+// Types
+//
+
+
+//
+// Declarations
+//
+
+
+//
+// Variables
+//
+
+
+//
+// Functions
+//
+
+CEditableElementCommon::CEditableElementCommon()
 {
-public:
+	_type = Unknown;
+	_changed = false;
+}
 
-	CModule();
-	CModule(const std::string &name, const NLMISC::CVector &position, const NLMISC::CAngleAxis &rotation, uint8 id);
+CEditableElementCommon::~CEditableElementCommon()
+{
 	
-	virtual ~CModule();
-
-	void initBeforeStartLevel();
-		
-	virtual void update(NLMISC::CVector pos,NLMISC::CVector rot);
-	void update();
-	
-
-	CModuleProxy		*luaProxy;
-private:
-
-	virtual void init();
-	void _luaInit();
-
-	std::vector<dReal>	OdeVertices;	// 3 entries for one vertex (x,y,z)
-	
-	dGeomID				Geom;
-	lua_State			*LuaState;
-};
+}
 
 
+bool CEditableElementCommon::changed()
+{
+	return _changed;
+}
 
-
-
-
-#endif
+bool CEditableElementCommon::isKindOf(TType type)
+{
+	return _type == type;
+}

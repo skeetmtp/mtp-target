@@ -221,14 +221,50 @@ SOURCE=.\Src\network.h
 # Begin Group "level"
 
 # PROP Default_Filter ""
+# Begin Group "editableElement"
+
+# PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=.\src\editable_element.cpp
+SOURCE=..\common\editable_element_common.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\src\editable_element.h
+SOURCE=..\common\editable_element_common.h
 # End Source File
+# Begin Source File
+
+SOURCE=.\src\module.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\src\module.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\common\module_common.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\common\module_common.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\src\start_point.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\src\start_point.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\common\start_point_common.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\common\start_point_common.h
+# End Source File
+# End Group
 # Begin Source File
 
 SOURCE=.\Src\level.cpp
@@ -255,19 +291,11 @@ SOURCE=.\Src\level_manager.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\Src\load_mesh.cpp
+SOURCE=..\common\load_mesh.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\Src\load_mesh.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\Src\module.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\Src\module.h
+SOURCE=..\common\load_mesh.h
 # End Source File
 # Begin Source File
 
@@ -276,14 +304,6 @@ SOURCE=.\Src\module_lua_proxy.cpp
 # Begin Source File
 
 SOURCE=.\Src\module_lua_proxy.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\src\start_point.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\src\start_point.h
 # End Source File
 # End Group
 # Begin Group "lua"

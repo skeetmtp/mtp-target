@@ -193,7 +193,7 @@ static void cbUpdateElement(CClient *c, CNetMessage &msgin)
 
 		if(CSessionManager::instance().editMode()==0)
 			CSessionManager::instance().editMode(1);
-		if(elementType==CEditableElement::Module)
+		if(elementType==CEditableElementCommon::Module)
 			CLevelManager::instance().currentLevel().updateModule(elementId,pos,eulerRot);
 	}
 	

@@ -28,7 +28,7 @@
 
 #include "module.h"
 #include "physics.h"
-#include "load_mesh.h"
+#include "../../common/load_mesh.h"
 #include "../../common/lua_utility.h"
 #include "lua_engine.h"
 
@@ -75,58 +75,36 @@ static int _dTriRayCallback(dGeomID TriMesh, dGeomID Ray, int TriangleIndex, dRe
 
 void CModule::init()
 {
+	CModuleCommon::init();
 	Geom = 0;
-	Bounce = true;
-	Score = 0;
-	Accel = 0.0001f;
-	Friction = 5.0f;
-	LuaFunctionName = "";
 	luaProxy = NULL;
-
-	_type = Module;
 }
 
-CModule::CModule() : CEditableElement()
+CModule::CModule() : CModuleCommon()
 { 
 	init(); 
 }
 
-CModule::CModule(const std::string &name, const CVector &position, const CAngleAxis &rotation, uint8 id) : CEditableElement()
+CModule::CModule(const std::string &name, const CVector &position, const CAngleAxis &rotation, uint8 id) : CModuleCommon(name, position, rotation, id)
 {
 	nlinfo("Adding module '%s' at position %f %f %f", name.c_str(), position.x, position.y, position.z);
 	pausePhysics();
-	_id = id;
 	init();
-	ShapeName = name+".shape";
-	Name = name;
-	Position = position;
-	Rotation = rotation;
 	_luaInit();
 	
-	// Get collision faces
-	vector<CVector> vertices;
-	vector<int> indices;
-//	loadMesh(name+".shape", vertices, indices);
-	loadMesh(ShapeName, vertices, indices);
-	
 	// vertices must be multiple of 3
-	Vertices.resize(vertices.size()*3);
-	for(uint i = 0; i < vertices.size(); i++)
+	OdeVertices.resize(Vertices.size()*3);
+	for(uint i = 0; i < Vertices.size(); i++)
 	{
-		Vertices[i*3+0] = vertices[i].x /** triColl.scaleX*/;
-		Vertices[i*3+1] = vertices[i].y /** triColl.scaleY*/;
-		Vertices[i*3+2] = vertices[i].z /** triColl.scaleZ*/;
+		OdeVertices[i*3+0] = Vertices[i].x /** triColl.scaleX*/;
+		OdeVertices[i*3+1] = Vertices[i].y /** triColl.scaleY*/;
+		OdeVertices[i*3+2] = Vertices[i].z /** triColl.scaleZ*/;
 //		nlinfo("%d %f %f %f", i, Vertices[i*3+0], Vertices[i*3+1], Vertices[i*3+2]);
 	}
-	Indices.resize(indices.size());
-	for(uint i = 0; i < indices.size(); i++)
-	{
-		Indices[i] = indices[i];
-//		nlinfo("%d %d", i, Indices[i]);
-	}
 	dTriMeshDataID data = dGeomTriMeshDataCreate();
-//	dGeomTriMeshDataBuildSingle(data, &Vertices[0], 3*sizeof(dReal), Vertices.size()/3, &Indices[0], Indices.size(), 3*sizeof(int));
-	dGeomTriMeshDataBuild(data, &Vertices[0], 3*sizeof(dReal), Vertices.size()/3, &Indices[0], Indices.size(), 3*sizeof(int));
+
+//	dGeomTriMeshDataBuildSingle(data, &OdeVertices[0], 3*sizeof(dReal), OdeVertices.size()/3, &Indices[0], Indices.size(), 3*sizeof(int));
+	dGeomTriMeshDataBuild(data, &OdeVertices[0], 3*sizeof(dReal), OdeVertices.size()/3, &Indices[0], Indices.size(), 3*sizeof(int));
 
 	{
 		CSynchronized<dSpaceID>::CAccessor acces(&Space);
@@ -218,18 +196,7 @@ NLMISC::CVector CModule::position() const
 }
 
 */
-void CModule::display(CLog *log) const
-{
-	CVector pos = position();
-	log->displayNL("  name '%s' pos (%.2g, %.2g, %.2g) col: %d vertices %d faces", name().c_str(), pos.x, pos.y, pos.z, Vertices.size()/3, Indices.size()/3);
-	log->displayNL("  score %d accel %g friction %g %sbounce", score(), accel(), friction(), (bounce()?"":"no "));
-}
 
-
-void CModule::bounce(bool b) 
-{
-	Bounce = b; 
-}
 
 void CModule::update() 
 {
@@ -253,11 +220,6 @@ void CModule::update(CVector pos,CVector rot)
 	_changed = true;
 }
 
-
-string &CModule::toLuaString()
-{
-	return toString("{ Position = CVector(%f,%f,%f),Rotation = CAngleAxis(%f,%f,%f,%f), Name=\"%s\" }",Position.x,Position.y,Position.z,Rotation.Axis.x,Rotation.Axis.y,Rotation.Axis.z,Rotation.Angle,Name.c_str());
-}
 
 
 //

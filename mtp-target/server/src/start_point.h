@@ -28,25 +28,19 @@
 #include <vector>
 #include <ode/ode.h>
 
-#include "../../common/lua_utility.h"
-#include "../../common/lua_nel.h"
-#include "../../common/lunar.h"
-
-#include "editable_element.h"
+#include "../../common/start_point_common.h"
 
 //
 // Classes
 //
 
-class CStartPoint : public CEditableElement
+class CStartPoint : public CStartPointCommon
 {
 public:
 	CStartPoint();
 	CStartPoint(const std::string &name, const NLMISC::CVector &position, const NLMISC::CAngleAxis &rotation, uint8 id);
 	virtual ~CStartPoint();
 
-	virtual void update(NLMISC::CVector pos,NLMISC::CVector rot);
-	virtual std::string &toLuaString();
 	
 	
 };

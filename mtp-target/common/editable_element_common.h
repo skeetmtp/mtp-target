@@ -17,61 +17,60 @@
  * MA 02111-1307, USA.
  */
 
+#ifndef MTPT_EDITABLE_ELEMENT_COMMON
+#define MTPT_EDITABLE_ELEMENT_COMMON
+
 
 //
 // Includes
 //
 
-#include "stdpch.h"
+#include <vector>
+#include <ode/ode.h>
 
-#include <nel/misc/path.h>
-
-#include "editable_element.h"
-#include "physics.h"
-#include "load_mesh.h"
-#include "../../common/lua_utility.h"
-#include "lua_engine.h"
-
-//
-// Namespaces
-//
-
-using namespace std;
-using namespace NLMISC;
+#include "lua_utility.h"
+#include "lua_nel.h"
+#include "lunar.h"
 
 
 //
-// Types
+// Classes
 //
 
-
-//
-// Declarations
-//
-
-
-//
-// Variables
-//
-
-
-//
-// Functions
-//
-
-CEditableElement::CEditableElement()
+class CEditableElementCommon
 {
-	_type = Unknown;
-	_changed = false;
-}
-
-CEditableElement::~CEditableElement()
-{
+public:
+	enum TType
+	{
+		Unknown = 0,
+		Module,
+		StartPosition,
+	};		
 	
-}
+	CEditableElementCommon();
+	
+	virtual ~CEditableElementCommon();
+
+	bool changed();
+	TType type() { return _type;}
+	NLMISC::CVector position() const {return Position;}
+
+	virtual void update(NLMISC::CVector pos,NLMISC::CVector rot) = 0;
+	virtual std::string toLuaString() = 0;
+
+	bool isKindOf(TType type);
+protected:
+	
+	NLMISC::CVector		Position;
+	NLMISC::CAngleAxis	Rotation;
+	bool				_changed;	
+	TType _type;
+	
+};
 
 
-bool CEditableElement::changed()
-{
-	return _changed;
-}
+
+
+
+
+#endif

@@ -162,6 +162,7 @@ void CWaitingClientsSessionState::update()
 //		}
 
 		dWorldSetGravity(World, 0.0f, 0.0f, 0.0f);
+		nlinfo("set gravity : off");
 		CSessionManager::instance().forceEnding(false);
 	}	
 }

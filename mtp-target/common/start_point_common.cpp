@@ -17,55 +17,71 @@
  * MA 02111-1307, USA.
  */
 
-#ifndef MTPT_MODULE
-#define MTPT_MODULE
-
 
 //
 // Includes
 //
 
-#include <vector>
-#include <ode/ode.h>
+#include "stdpch.h"
 
-#include "../../common/module_common.h"
+#include <nel/misc/path.h>
 
-class CModuleProxy;
+#include "start_point_common.h"
+#include "lua_utility.h"
 
 //
-// Classes
+// Namespaces
 //
 
-class CModule : public CModuleCommon
+using namespace std;
+using namespace NLMISC;
+
+
+//
+// Types
+//
+
+
+//
+// Declarations
+//
+
+
+//
+// Variables
+//
+
+
+//
+// Functions
+//
+
+CStartPointCommon::CStartPointCommon() : CEditableElementCommon()
 {
-public:
+	_type = StartPosition;
+}
 
-	CModule();
-	CModule(const std::string &name, const NLMISC::CVector &position, const NLMISC::CAngleAxis &rotation, uint8 id);
+CStartPointCommon::CStartPointCommon(const std::string &name, const CVector &position, const CAngleAxis &rotation, uint8 id) : CEditableElementCommon()
+{
+	_type = StartPosition;	
+	Position = position;
+}
+
+CStartPointCommon::~CStartPointCommon()
+{
 	
-	virtual ~CModule();
-
-	void initBeforeStartLevel();
-		
-	virtual void update(NLMISC::CVector pos,NLMISC::CVector rot);
-	void update();
-	
-
-	CModuleProxy		*luaProxy;
-private:
-
-	virtual void init();
-	void _luaInit();
-
-	std::vector<dReal>	OdeVertices;	// 3 entries for one vertex (x,y,z)
-	
-	dGeomID				Geom;
-	lua_State			*LuaState;
-};
+}
 
 
+void CStartPointCommon::update(NLMISC::CVector pos,NLMISC::CVector rot)
+{
+	Position = pos;
+	_changed = true;
+}
 
 
+string CStartPointCommon::toLuaString()
+{
+	return toString("CVector(%f,%f,%f)",Position.x,Position.y,Position.z);
+}
 
-
-#endif

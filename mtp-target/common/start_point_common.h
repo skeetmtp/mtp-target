@@ -17,8 +17,8 @@
  * MA 02111-1307, USA.
  */
 
-#ifndef MTPT_EDITABLE_ELEMENT
-#define MTPT_EDITABLE_ELEMENT
+#ifndef MTPT_START_POINT_COMMON
+#define MTPT_START_POINT_COMMON
 
 
 //
@@ -28,41 +28,26 @@
 #include <vector>
 #include <ode/ode.h>
 
-#include "../../common/lua_utility.h"
-#include "../../common/lua_nel.h"
-#include "../../common/lunar.h"
+#include "lua_utility.h"
+#include "lua_nel.h"
+#include "lunar.h"
 
+#include "editable_element_common.h"
 
 //
 // Classes
 //
 
-class CEditableElement
+class CStartPointCommon : public CEditableElementCommon
 {
 public:
-	enum TType
-	{
-		Unknown = 0,
-		Module,
-		StartPosition,
-	};		
-	
-	CEditableElement();
-	
-	virtual ~CEditableElement();
+	CStartPointCommon();
+	CStartPointCommon(const std::string &name, const NLMISC::CVector &position, const NLMISC::CAngleAxis &rotation, uint8 id);
+	virtual ~CStartPointCommon();
 
-	bool changed();
-	TType type() { return _type;}
-	NLMISC::CVector position() const {return Position;}
-
-	virtual void update(NLMISC::CVector pos,NLMISC::CVector rot) = 0;
-	virtual std::string &toLuaString() = 0;
-protected:
+	virtual void update(NLMISC::CVector pos,NLMISC::CVector rot);
+	virtual std::string toLuaString();
 	
-	NLMISC::CVector		Position;
-	NLMISC::CAngleAxis	Rotation;
-	bool				_changed;	
-	TType _type;
 	
 };
 

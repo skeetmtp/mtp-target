@@ -28,7 +28,7 @@
 
 #include "start_point.h"
 #include "physics.h"
-#include "load_mesh.h"
+#include "../../common/load_mesh.h"
 #include "../../common/lua_utility.h"
 #include "lua_engine.h"
 
@@ -59,15 +59,12 @@ using namespace NLMISC;
 // Functions
 //
 
-CStartPoint::CStartPoint() : CEditableElement()
+CStartPoint::CStartPoint() : CStartPointCommon()
 {
-	_type = StartPosition;
 }
 
-CStartPoint::CStartPoint(const std::string &name, const CVector &position, const CAngleAxis &rotation, uint8 id) : CEditableElement()
+CStartPoint::CStartPoint(const std::string &name, const CVector &position, const CAngleAxis &rotation, uint8 id) : CStartPointCommon(name, position, rotation, id)
 {
-	_type = StartPosition;	
-	Position = position;
 }
 
 CStartPoint::~CStartPoint()
@@ -76,15 +73,4 @@ CStartPoint::~CStartPoint()
 }
 
 
-void CStartPoint::update(NLMISC::CVector pos,NLMISC::CVector rot)
-{
-	Position = pos;
-	_changed = true;
-}
-
-
-string &CStartPoint::toLuaString()
-{
-	return toString("CVector(%f,%f,%f)",Position.x,Position.y,Position.z);
-}
 

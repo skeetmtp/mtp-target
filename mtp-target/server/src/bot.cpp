@@ -147,7 +147,7 @@ void CBot::loadBotReplay()
 		return;
 	}
 	
-	char cmd[10];
+	char cmd[10]="deadbeef";
 	float t;
 	CVector force, pos;
 

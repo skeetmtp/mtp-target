@@ -34,13 +34,14 @@
 #include <3d/material.h>
 #include <3d/register_3d.h>
 
+/*
 #include "bot.h"
 #include "main.h"
 #include "entity.h"
 #include "physics.h"
 #include "variables.h"
 #include "entity_manager.h"
-
+*/
 
 //
 // Namespaces

@@ -60,6 +60,7 @@ void CWaitingStartSessionState::update()
 
 		// set gravity if the game started
 		dWorldSetGravity(World, 0.0f, 0.0f, Gravity);
+		nlinfo("set gravity : on");
 
 		CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
 		CEntityManager::EntityConstIt it;
