@@ -342,9 +342,9 @@ static void cbClientChooseShard(CMessage &msgin, TSockId from, CCallbackNetBase 
 		msgout.serial(name);
 		sint32 totalScore = atoi(row[6]);
 		msgout.serial(totalScore);
-		CUnifiedNetwork::getInstance()->send(sid, msgout);
 		string userTexture = row[8];
 		msgout.serial(userTexture);
+		CUnifiedNetwork::getInstance()->send(sid, msgout);
 
 		return;
 	}
