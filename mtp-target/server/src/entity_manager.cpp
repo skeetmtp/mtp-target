@@ -318,6 +318,14 @@ void CEntityManager::addBot(const string &name, bool isAutomaticBot)
 
 	nlinfo("Adding bot eid %hu name '%s'", (uint16)e->id(), e->name().c_str());
 
+	uint8 nbc = nbEntities();
+	if(nbc > NbMaxClients)
+	{
+		nlinfo("cannot add bot , too much client(%d)",nbc);
+		return;
+	}
+		
+	
 	add(e);
 
 	login(e);
