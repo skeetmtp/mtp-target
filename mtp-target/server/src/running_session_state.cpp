@@ -102,6 +102,7 @@ void CRunningSessionState::update()
 		{
 
 			CLuaEngine::instance().levelEndSession();
+			CLuaEngine::instance().release();
 			CEntityManager::instance().checkAfkClient();//kick away client
 
 			nlinfo("compute best tit");
