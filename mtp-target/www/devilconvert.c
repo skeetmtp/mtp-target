@@ -14,14 +14,14 @@ int main(int argc, char *argv[]) {
     ilLoadImage(argv[1]);
     i = ilGetError();
     if(i != IL_NO_ERROR) {
-        printf("%s\n",iluErrorString(i));
+        printf("load error : %s\n",iluErrorString(i));
         exit(1);
     }
         
     ilSaveImage(argv[2]);
     i = ilGetError();
     if(i != IL_NO_ERROR) {
-        printf("%s\n",iluErrorString(i));
+        printf("save error : %s\n",iluErrorString(i));
         exit(1);
     }
 }

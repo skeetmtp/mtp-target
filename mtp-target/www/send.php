@@ -31,7 +31,8 @@ function textureName2Id($texture_name)
 if(!isset($user_login) || !validInput($user_login))
 	$user_login = "Anonymous";
 
-$uploaddir = '/home/ace/cvs/mtp-target/user_texture/';
+$uploaddir = '/home/skeet/cvs/code/mtp-target/user_texture/';
+$webdir = '/var/www/';
 $uploadfilename = strtolower($_FILES['userfile']['name']);
 $uploadcrcflagname = 'update_crc_flag.txt';
 $uploadcrcflagfilename = $uploaddir.$uploadcrcflagname;
@@ -55,7 +56,10 @@ if(!ereg("ping_ball_([[:alnum:]]+).tga", $uploadfilename, $regs))
 
 if (move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile))
 {
-   system("convert ".$uploaddir."ping_ball_".$regs[1].".tga ".$uploaddir."ping_ball_".$regs[1].".jpg");
+   system("chmod 644 ".$uploaddir."ping_ball_".$regs[1].".tga");
+   system("convert ".$uploaddir."ping_ball_".$regs[1].".tga ".$webdir."user_texture/ping_ball_".$regs[1].".jpg");
+   system($webdir."/mtp-target/devilconvert ".$uploaddir."ping_ball_".$regs[1].".tga ".$uploaddir."ping_ball_".$regs[1].".dds");
+
    $fp = fopen($uploadcrcflagfilename,"at");
    if(!$fp)
 	   echo "<p>cannot open ".$uploadcrcflagname;
