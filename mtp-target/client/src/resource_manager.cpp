@@ -358,6 +358,9 @@ string CResourceManager::get(const string &filename, bool &ok)
 
 	if(updatingMessage)
 		updatingMessage->text = "Please wait while dowloading : ";
+
+	if(CFile::fileExists(packedfn))
+		CFile::deleteFile(packedfn);
 	
 	while(!Eof)
 	{
@@ -370,7 +373,15 @@ string CResourceManager::get(const string &filename, bool &ok)
 		string str = toString("Please wait while downloading '%s' part %d", fn.c_str(), part);
 
 		bool messageReceived;
-		while(waitNetworkMessage(Received,messageReceived));
+		uint tid = getThreadId();
+		nlassert(tid==TaskManagerThreadId || tid==NetworkThreadId);
+		if(tid==TaskManagerThreadId)
+		{
+			while(waitNetworkMessage(Received,messageReceived))
+				checkTaskManagerPaused();
+		}
+		else
+			while(waitNetworkMessage(Received,messageReceived));
 		if(!messageReceived)
 		{
 			CFile::deleteFile(packedfn);
@@ -402,6 +413,11 @@ string CResourceManager::get(const string &filename, bool &ok)
 		part += Buffer.size();
 		if(FileSize)
 			updatePercent = ((float)part) / FileSize;
+		if(part>FileSize)
+		{
+			nlwarning("CResourceManager::get() received more data than expected");
+			break;
+		}
 	}
 
 	string destfn = CacheDirectory + ReceivedFilename;
@@ -414,13 +430,16 @@ string CResourceManager::get(const string &filename, bool &ok)
 	{
 		FILE *fp = fopen(destfn.c_str(), "wb");
 		gzFile gzfp = gzopen(packedfn.c_str(), "rb");
-		while (!gzeof(gzfp)) 
+		if(fp && gzfp)
 		{
-			uint32 res = gzread(gzfp, ptr, 8000);
-			fwrite(ptr,1,res,fp);
+			while (!gzeof(gzfp)) 
+			{
+				uint32 res = gzread(gzfp, ptr, 8000);
+				fwrite(ptr,1,res,fp);
+			}
+			fclose(fp);
+			gzclose(gzfp);
 		}
-		fclose(fp);
-		gzclose(gzfp);
 		CFile::deleteFile(packedfn);		
 	}
 	
