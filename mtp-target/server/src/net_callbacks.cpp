@@ -33,6 +33,7 @@
 
 #include <nel/net/login_cookie.h>
 
+#include "command.h"
 #include "network.h"
 #include "welcome.h"
 #include "level_manager.h"
@@ -58,7 +59,10 @@ static void cbChat(CClient *c, CNetMessage &msgin)
 {
 	string msg;
 	msgin.serial(msg);
-	CNetwork::instance().sendChat("<"+c->name()+"> "+msg);
+	if(c->canSpeak())
+		CNetwork::instance().sendChat("<"+c->name()+"> "+msg);
+	else
+		CNetwork::instance().sendChat(c->id(),"<"+c->name()+"> "+msg);
 }
 
 static void cbCommand(CClient *c, CNetMessage &msgin)
@@ -101,7 +105,7 @@ static void cbCommand(CClient *c, CNetMessage &msgin)
 	else if(c->isAdmin() || c->isModerator())
 	{
 		//CNetwork::instance().networkTask().addCommand(cmd);
-		ICommand::execute(cmd, *InfoLog);
+		CCommand::execute(c, cmd, *InfoLog);
 		CNetwork::instance().sendChat(c->name()+" executed: /"+cmd);
 	}
 	else
