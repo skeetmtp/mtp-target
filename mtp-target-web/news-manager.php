@@ -75,6 +75,7 @@ while ($ligne = mysql_fetch_array($resultat))
 
 
 <!-- SiteSearch Google -->
+<!-- disabled by ace
 <form method="get" action="http://www.google.com/custom" target="_top">
 <table border="0" CELLPADDING=2 CELLSPACING=2>
 <tr><td nowrap="nowrap" valign="top" align="left" height="32">
@@ -110,11 +111,14 @@ border="0" alt="Google"></img></a>
 
 </td></tr></table>
 </form>
+-->
 <!-- SiteSearch Google -->
 
 
-
-<script type="text/javascript"><!--
+<!-- disabled by ace
+<script type="text/javascript">
+-->
+<!--
 google_ad_client = "pub-6761473150430697";
 google_ad_width = 160;
 google_ad_height = 600;
@@ -125,14 +129,20 @@ google_color_bg = "FFEEDD";
 google_color_link = "CC0000";
 google_color_url = "CC0000";
 google_color_text = "000000";
-//--></script>
+//-->
+<!-- disabled by ace
+</script>
+-->
+
+<!-- disabled by ace
 <script type="text/javascript"
   src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 </script>
+-->
+
 
     </td>
 </tr>
 </table>
-
 
 
