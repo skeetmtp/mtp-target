@@ -792,7 +792,14 @@ string CEntityManager::check(const string &login, const string &password, bool d
 	}
 
 	// unknown user, add it
-	accounts.setAsString(login, accounts.size());
+	if(accounts.size() == 0)
+	{
+		accounts.forceAsString(login);
+	}
+	else
+	{
+		accounts.setAsString(login, accounts.size());
+	}
 	accounts.setAsString(password, accounts.size());
 	accounts.setAsString("0", accounts.size());
 	IService::getInstance()->ConfigFile.save();
