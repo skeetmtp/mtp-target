@@ -436,7 +436,7 @@ void CNetwork::send(uint8 eid, CNetMessage &msg, bool checkReady)
 			{
 				bool sok = msg.send(c->sock());
 				if(!sok)
-					CEntityManager::instance().addIdToRemoveList(c->id());
+					CEntityManager::instance().addClientToRemoveList(c);
 			}
 		}
 	}
@@ -454,7 +454,7 @@ void CNetwork::send(CNetMessage &msg)
 			{
 				bool sok = msg.send(c->sock());
 				if(!sok)
-					CEntityManager::instance().addIdToRemoveList(c->id());
+					CEntityManager::instance().addClientToRemoveList(c);
 			}
 		}
 	}
@@ -472,7 +472,7 @@ void CNetwork::sendAllExcept(uint8 eid, CNetMessage &msg)
 			{
 				bool sok = msg.send(c->sock());
 				if(!sok)
-					CEntityManager::instance().addIdToRemoveList(c->id());
+					CEntityManager::instance().addClientToRemoveList(c);
 			}
 		}
 	}

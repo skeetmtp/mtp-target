@@ -740,9 +740,10 @@ uint CEntityManager::humanClientCount()
 }
 
 
-void CEntityManager::addIdToRemoveList(uint8 eid)
+void CEntityManager::addClientToRemoveList(CClient *c)
 {
-	IdToRemove.push_back(eid);	
+	c->networkReady(false);
+	IdToRemove.push_back(c->id());	
 }
 
 void CEntityManager::flushRemoveList()

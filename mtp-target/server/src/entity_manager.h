@@ -28,6 +28,7 @@
 #include <nel/misc/reader_writer.h>
 
 #include "entity.h"
+#include "client.h"
 
 
 //
@@ -58,7 +59,7 @@ public:
 
 	void login(CEntity *c);
 
-	void addIdToRemoveList(uint8 eid);
+	void addClientToRemoveList(CClient *c);
 	void flushRemoveList();
 	void remove(uint8 eid);
 	void remove(const std::string &name);
