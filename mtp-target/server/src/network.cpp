@@ -55,151 +55,19 @@ using namespace NLMISC;
 // Variables
 //
 
-#if OLD_NETWORK
-CSynchronized<PauseFlags> networkPauseFlags("networkPauseFlags");
-void checkNetworkPaused();
-#endif // OLD_NETWORK
-
-
 //
 // Thread
 //
-
-#if OLD_NETWORK
-CNetworkTask::CNetworkTask()
-{
-	ListenSock.init(NLNET::IService::getInstance()->ConfigFile.getVar("TcpPort").asInt());
-
-#if defined NL_OS_UNIX
-	nice(2);
-#endif // NL_OS_UNIX
-}
-
-void CNetworkTask::run()
-{
-	NLNET::SOCKET descmax;
-	fd_set readers;
-	timeval tv;
-
-	NetworkThreadId = myGetThreadId();
-	while(true)
-	{
-		{
-			CSynchronized<PauseFlags>::CAccessor acces(&networkPauseFlags);
-			acces.value().ackPaused = true;
-		}
-		
-		descmax = ListenSock.descriptor();
-		FD_ZERO(&readers);
-		FD_SET(ListenSock.descriptor(), &readers);
-
-		{
-			for(CEntityManager::EntityConstIt it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
-			{
-				nlassert(*it);
-				if((*it)->type() != CEntity::Client)
-					continue;
-
-				CClient *c = (CClient *)(*it);
-
-				nlassert(c->sock());
-				FD_SET(c->sock()->descriptor(), &readers);
-				descmax = std::max(descmax, c->sock()->descriptor());
-			}
-		}
-
-		tv.tv_sec = 3600;		// 1 hour
-		tv.tv_usec = 0;
-
-
-		int res = ::select(descmax+1, &readers, 0, 0, &tv);
-		
-		
-		switch(res)
-		{
-		case  0 : continue; // time-out expired, no results
-		case -1 :
-			if(NLNET::CSock::getLastError() == 4)
-			{
-				// we ignore the message(Interrupted system call) caused by a CTRL-C
-				nldebug("Select failed: %s (code %u) but IGNORED", NLNET::CSock::errorString(NLNET::CSock::getLastError()).c_str(), NLNET::CSock::getLastError());
-				continue;
-			}
-			nlerror("Select failed: %s (code %u)", NLNET::CSock::errorString(NLNET::CSock::getLastError()).c_str(), NLNET::CSock::getLastError());
-		}
-
-		checkNetworkPaused();
-		
-		if(FD_ISSET(ListenSock.descriptor(), &readers) != 0)
-		{
-			nlinfo("New client connected");
-
-			NLNET::CTcpSock *sock = ListenSock.accept();
-			sock->setNoDelay(true);
-			sock->setNonBlockingMode(false);
-
-			CEntityManager::instance().addClient(sock);
-			//we must flush list now to be ready to receive incoming message from this client
-			CEntityManager::instance().flushAddRemoveList();
-		}
-		
-
-		{
-			for(CEntityManager::EntityConstIt it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
-			{
-				nlassert(*it);
-				CClient *c = (CClient *)(*it);
-				
-				if((*it)->type() != CEntity::Client || CEntityManager::instance().inRemoveList(c->id()))
-					continue;
-
-				nlassert(c->sock());
-
-				if(FD_ISSET(c->sock()->descriptor(), &readers) == 0)
-					continue;
-
-				CNetMessage msg(CNetMessage::Unknown, true);
-				
-				NLNET::CSock::TSockResult res = msg.receive(c->sock());
-
-				switch(res)
-				{
-				case NLNET::CSock::Ok:
-					netCallbacksHandler(c, msg);
-					break;
-				case NLNET::CSock::ConnectionClosed:
-					nlinfo("Lost client eid %hu", (uint16)c->id());
-					CEntityManager::instance().remove(c->id());
-					break;
-				default:
-					nlwarning("Received failed from client eid %hu : %s (code %u)", (uint16)c->id(), NLNET::CSock::errorString(NLNET::CSock::getLastError()).c_str(), NLNET::CSock::getLastError());
-					CEntityManager::instance().remove(c->id());
-					break;
-				}
-			}
-		}
-
-		//TODO SKEET : check why we cannot let only main thread loop do the flush job ?
-		//CEntityManager::instance().flushAddRemoveList();
-		
-	}
-}
-#endif // OLD_NETWORK
-
-
-	
 
 //
 // Variables
 //
 
-
-
 //
 // Functions
 //
 
-void cbDisconnection(TSockId from, void *arg)
+static void cbDisconnection(TSockId from, void *arg)
 {
 	for(CEntityManager::EntityConstIt it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
 	{
@@ -216,47 +84,25 @@ void cbDisconnection(TSockId from, void *arg)
 	}
 }
 
-void cbConnection(TSockId from, void *arg)
+static void cbConnection(TSockId from, void *arg)
 {
 	// new player comes in
 	CEntityManager::instance().addClient(from);
-#if OLD_NETWORK
-	//we must flush list now to be ready to receive incoming message from this client
-	CEntityManager::instance().flushAddRemoveList();
-#endif // OLD_NETWORK
 }
 
-CNetwork::CNetwork() :
-#if OLD_NETWORK
-	NetworkTask(0), NetworkThread(0)
-#else
-	BufServer(0)
-#endif // OLD_NETWORK
+CNetwork::CNetwork() : BufServer(0)
 {
 	Version = 0;
 }
 
 void CNetwork::init()
 {
-#if OLD_NETWORK
-	nlassert(!NetworkTask);
-	nlassert(!NetworkThread);
-
-	NetworkTask = new CNetworkTask();
-	nlassert(NetworkTask);
-
-	NetworkThread = NLMISC::IThread::create(NetworkTask);
-	nlassert(NetworkThread);
-
-	NetworkThread->start();
-#else
 	nlassert(!BufServer);
 
 	BufServer = new CBufServer();
 	BufServer->init(NLNET::IService::getInstance()->ConfigFile.getVar("TcpPort").asInt());
 	BufServer->setConnectionCallback(cbConnection, 0);
 	BufServer->setDisconnectionCallback(cbDisconnection, 0);
-#endif // OLD_NETWORK
 
 	updateCount = 0;
 
@@ -279,16 +125,6 @@ void CNetwork::reset()
 void CNetwork::update()
 {
 	static uint8 pingnb = 0;
-
-#if OLD_NETWORK
-	if(CEntityManager::instance().humanClientCount()==0) return;
-	//	if(updateCount2==0)
-	//	{
-	//		fp = fopen("net.data","wb");
-	//		rpos = 0;//rand()%10;
-	//	}
-	//	updateCount2++;
-#endif // OLD_NETWORK
 
 	{
 		{
@@ -537,13 +373,8 @@ void CNetwork::sleep(TTime timeout)
 						nlassert(*it);
 						CClient *c = (CClient *)(*it);
 						
-#if OLD_NETWORK
-						if((*it)->type() != CEntity::Client || CEntityManager::instance().inRemoveList(c->id()))
-							continue;
-#else
 						if((*it)->type() != CEntity::Client)
 							continue;
-#endif // OLD_NETWORK
 						
 						nlassert(c->sock());
 						
@@ -592,22 +423,11 @@ void CNetwork::release()
 {
 //	if(fp)
 //		fclose(fp);
-#if OLD_NETWORK
-	if(!NetworkThread || !NetworkTask)
-		return;
-
-	NetworkThread->terminate();
-	delete NetworkThread;
-	NetworkThread = 0;
-	delete NetworkTask;
-	NetworkTask = 0;
-#else
 	if(BufServer)
 	{
 		delete BufServer;
 		BufServer = 0;
 	}
-#endif // OLD_NETWORK
 	CNetwork::uninstance();
 }
 
@@ -678,92 +498,4 @@ void CNetwork::sendChat(uint8 eid,const string &msg)
 	CNetMessage msgout(CNetMessage::Chat);
 	msgout.serial(const_cast<string&>(msg));
 	CNetwork::instance().send(eid,msgout);
-}
-
-
-void checkNetworkPaused()
-{
-#if OLD_NETWORK
-	{
-		bool pause;
-		{
-			CSynchronized<PauseFlags>::CAccessor acces(&networkPauseFlags);
-			pause = acces.value().pauseCount>0;
-			if(pause)
-				acces.value().ackPaused = true;
-		}
-		while (pause) 
-		{
-			nlSleep(10);
-			{
-				CSynchronized<PauseFlags>::CAccessor acces(&networkPauseFlags);
-				pause = acces.value().pauseCount>0;
-				if(pause)
-					acces.value().ackPaused = true;
-			}
-		}
-	}
-	{
-		CSynchronized<PauseFlags>::CAccessor acces(&networkPauseFlags);
-		acces.value().ackPaused = false;
-	}	
-#endif // OLD_NETWORK
-}
-
-bool pauseNetwork(bool waitAck)
-{
-#if OLD_NETWORK
-	bool pause;
-	{
-		CSynchronized<PauseFlags>::CAccessor acces(&networkPauseFlags);
-		pause = acces.value().pauseCount>0;
-	}
-	if(!pause) 
-	{
-		bool ackPaused;
-		{
-			CSynchronized<PauseFlags>::CAccessor acces(&networkPauseFlags);
-			ackPaused = false;
-			acces.value().pauseCount++;
-		}
-		if(!waitAck) return true;
-		while(!ackPaused)
-		{
-			nlSleep(10);
-			{
-				CSynchronized<PauseFlags>::CAccessor acces(&networkPauseFlags);
-				ackPaused = acces.value().ackPaused;
-			}
-		}
-	}
-	else
-		return false;
-#endif // OLD_NETWORK
-	return true;
-}
-
-bool isNetworkPaused()
-{
-#if OLD_NETWORK
-	bool ackPaused;
-	{
-		CSynchronized<PauseFlags>::CAccessor acces(&networkPauseFlags);
-		ackPaused = acces.value().ackPaused;
-	}
-	return ackPaused;
-#else
-	return true;
-#endif // OLD_NETWORK
-}
-
-void resumeNetwork()
-{
-#if OLD_NETWORK
-	CSynchronized<PauseFlags>::CAccessor acces(&networkPauseFlags);
-	if(acces.value().pauseCount>0) 
-	{
-		acces.value().pauseCount--;
-		nlassert(acces.value().pauseCount>=0);
-	}	
-#endif // OLD_NETWORK
 }

@@ -47,12 +47,7 @@ using namespace NLMISC;
 // Functions
 //
 
-#if OLD_NETWORK
-CClient::CClient(uint8 eid, NLNET::CTcpSock *sock)
-#else
-CClient::CClient(uint8 eid, NLNET::TSockId sock)
-#endif
-	: CEntity(eid)
+CClient::CClient(uint8 eid, NLNET::TSockId sock) : CEntity(eid)
 {
 	nlassert(sock);
 	Sock = sock;

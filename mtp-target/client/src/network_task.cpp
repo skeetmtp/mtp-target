@@ -75,67 +75,9 @@ void checkNetworkPaused();
 // Thread
 //
 
-#if OLD_NETWORK
-class CNetworkRunnable : public NLMISC::IRunnable
-{
-public:
-	
-	CNetworkRunnable()
-	{
-	}
-
-	virtual void run()
-	{
-		NetworkThreadId = getThreadId();
-		stopNetwork = false;
-		while(!stopNetwork)
-		{
-			if (CNetworkTask::instance().sock().connected())
-			{
-				CNetMessage msg(CNetMessage::Unknown, true);
-				
-				NLNET::CSock::TSockResult res = msg.receive(&CNetworkTask::instance().sock());
-				
-				switch(res)
-				{
-				case NLNET::CSock::Ok:
-					try
-					{
-						netCallbacksHandler(msg);
-					}
-					catch(Exception &e)
-					{
-						nlwarning("Malformed Message type '%hu' : %s", (uint16)msg.type(), e.what());
-					}
-					break;
-				case NLNET::CSock::ConnectionClosed:
-				default:
-					nlinfo("Lost the server");
-					//nlerror("Received failed: %s (code %u)", NLNET::CSock::errorString(NLNET::CSock::getLastError()).c_str(), NLNET::CSock::getLastError());
-					CMtpTarget::instance().error(string("Server lost !"));
-					stopNetwork = true;
-					break;
-				}
-			}
-			else
-			{
-				nlSleep(100);
-			}
-			checkNetworkPaused();
-			CEntityManager::instance().flushAddRemoveList();
-		}
-	}
-
-private:
-	bool stopNetwork;
-};
-#endif // OLD_NETWORK
-
-
 //
 // Variables
 //
-
 
 //
 // Functions
@@ -143,27 +85,17 @@ private:
 
 void CNetworkTask::init()
 {
-#if OLD_NETWORK
-	NetworkRunnable = new CNetworkRunnable();
-	nlassert(NetworkRunnable);
-	
-	NetworkThread = NLMISC::IThread::create(NetworkRunnable);
-	nlassert(NetworkThread);
-	
-	NetworkThread->start();
-#endif // OLD_NETWORK
 }
 
 void CNetworkTask::update()
 {
-#if !OLD_NETWORK
-H_BEFORE(SockUpdate);
+	H_BEFORE(SockUpdate);
 	Sock.update();
-H_AFTER(SockUpdate);
+	H_AFTER(SockUpdate);
 
-//	nlinfo("Calling update %"NL_I64"u", CTime::getLocalTime());
+	//	nlinfo("Calling update %"NL_I64"u", CTime::getLocalTime());
 
-H_BEFORE(NTLoop);
+	H_BEFORE(NTLoop);
 	while(Sock.dataAvailable())
 	{
 		H_AUTO(NTLoopOnce);
@@ -193,26 +125,22 @@ H_BEFORE(NTLoop);
 			nlwarning("Malformed Message type '%u' : %s", msg.Type, e.what());
 		}
 	}
-H_AFTER(NTLoop);
-#endif // OLD_NETWORK
+	H_AFTER(NTLoop);
 }
 
 void CNetworkTask::release()
 {
-#if OLD_NETWORK
-	if(!NetworkThread || !NetworkRunnable)
-		return;
-	//NetworkThread->terminate();
-	delete NetworkThread;
-	NetworkThread = 0;
-	delete NetworkRunnable;
-	NetworkRunnable = 0;
-#endif // OLD_NETWORK
 }
 
 bool CNetworkTask::connected()
 {
 	return Sock.connected();
+}
+
+static void cbDisconnect(TSockId from, void *arg)
+{
+	// we lost the connection to the server
+	CMtpTarget::instance().error(string("Server lost !"));
 }
 
 string CNetworkTask::connect(const CInetAddress &ip, const string &cookie)
@@ -225,8 +153,7 @@ string CNetworkTask::connect(const CInetAddress &ip, const string &cookie)
 		nlinfo ("Connection to the TCP address: %s", ip.asString().c_str());
 
 		Sock.connect(ip);
-//		Sock.setNoDelay(true);
-//		Sock.setNonBlockingMode(false);
+		Sock.setDisconnectionCallback(cbDisconnect, 0);
 
 		CNetMessage msgout(CNetMessage::Login);
 		string login = CConfigFileTask::instance().configFile().getVar("Login").asString();
@@ -340,97 +267,4 @@ void CNetworkTask::setEditMode(uint8 editMode)
 
 void CNetworkTask::stop()
 {
-#if OLD_NETWORK
-	NetworkThread->terminate();
-#endif // OLD_NETWORK
 }
-
-
-
-void checkNetworkPaused()
-{
-#if OLD_NETWORK
-	{
-		bool pause;
-		{
-			CSynchronized<PauseFlags>::CAccessor acces(&networkPauseFlags);
-			pause = acces.value().pauseCount>0;
-			if(pause)
-				acces.value().ackPaused = true;
-		}
-		while (pause) 
-		{
-			nlSleep(10);
-			{
-				CSynchronized<PauseFlags>::CAccessor acces(&networkPauseFlags);
-				pause = acces.value().pauseCount>0;
-				if(pause)
-					acces.value().ackPaused = true;
-			}
-		}
-	}
-	{
-		CSynchronized<PauseFlags>::CAccessor acces(&networkPauseFlags);
-		acces.value().ackPaused = false;
-	}	
-#endif // OLD_NETWORK
-}
-
-bool pauseNetwork(bool waitAck)
-{
-#if OLD_NETWORK
-	bool pause;
-	{
-		CSynchronized<PauseFlags>::CAccessor acces(&networkPauseFlags);
-		pause = acces.value().pauseCount>0;
-	}
-	if(!pause) 
-	{
-		bool ackPaused;
-		{
-			CSynchronized<PauseFlags>::CAccessor acces(&networkPauseFlags);
-			ackPaused = false;
-			acces.value().pauseCount++;
-		}
-		if(!waitAck) return true;
-		while(!ackPaused)
-		{
-			nlSleep(10);
-			{
-				CSynchronized<PauseFlags>::CAccessor acces(&networkPauseFlags);
-				ackPaused = acces.value().ackPaused;
-			}
-		}
-	}
-	else
-		return false;
-#endif // OLD_NETWORK
-	return true;
-}
-
-bool isNetworkPaused()
-{
-#if OLD_NETWORK
-	bool ackPaused;
-	{
-		CSynchronized<PauseFlags>::CAccessor acces(&networkPauseFlags);
-		ackPaused = acces.value().ackPaused;
-	}
-	return ackPaused;
-#else
-	return true;
-#endif // OLD_NETWORK
-}
-
-void resumeNetwork()
-{
-#if OLD_NETWORK
-	CSynchronized<PauseFlags>::CAccessor acces(&networkPauseFlags);
-	if(acces.value().pauseCount>0) 
-	{
-		acces.value().pauseCount--;
-		nlassert(acces.value().pauseCount>=0);
-	}	
-#endif // OLD_NETWORK
-}
-

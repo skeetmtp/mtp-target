@@ -133,10 +133,6 @@ static void cbLogin(CNetMessage &msgin)
 		else
 			CMtpTarget::instance().timeBeforeTimeout(timeBeforeTimeout/1000.0f);
 	}
-	else
-	{
-		CChatTask::instance().addLine(toString("%s comes in !", name.c_str()));
-	}
 }
 
 static void cbLogout(CNetMessage &msgin)
@@ -153,10 +149,6 @@ static void cbLogout(CNetMessage &msgin)
 	{
 		CMtpTarget::instance().error("You have been kicked");
 		//nlerror("You have been kicked");
-	}
-	else
-	{
-		CChatTask::instance().addLine(toString("%s leaves !", CEntityManager::instance()[eid].name().c_str()));
 	}
 
 	CEntityManager::instance().remove(eid);
@@ -192,7 +184,7 @@ static void cbUpdate(CNetMessage &msgin)
 	msgin.serial(pingnb);
 	CNetMessage msgout(CNetMessage::Update);
 	msgout.serial(pingnb);
-	nlinfo("*********** send the pong %u %"NL_I64"u", pingnb, CTime::getLocalTime());
+//	nlinfo("*********** send the pong %u %"NL_I64"u", pingnb, CTime::getLocalTime());
 	CNetworkTask::instance().send(msgout);
 	
 	//msgin.serial (rsxTime);

@@ -58,39 +58,17 @@ void CNetMessage::setHeader(TType type)
 }
 
 
-#if OLD_NETWORK
-bool CNetMessage::send(NLNET::CTcpSock *sock)
-#else
 #ifdef MTPT_SERVER
 bool CNetMessage::send (NLNET::CBufServer *sock, NLNET::TSockId id)
 #else
 bool CNetMessage::send (NLNET::CBufClient *sock)
 #endif // MTPT_SERVER
-#endif // OLD_NETWORK
 {
 	nlassert(sock);
-
-	// put the size in the begin of the message, size is without the header size
-#if OLD_NETWORK
-	uint32 len = length();
-	nlassert(len-3<(1<<16));
-	uint16 size = (uint16)len-3;
-	poke(size, 0);
-#endif // OLD_NETWORK
 
 //	nlinfo("real send %"NL_I64"d", CTime::getLocalTime());
 //	nldebug("NET: Send a message type %hu size %u", (uint16)buffer()[4], this->length());
 
-#if OLD_NETWORK
-	NLNET::CSock::TSockResult res = sock->send(buffer(), len, false);
-	if(res != NLNET::CSock::Ok)
-	{
-		nlwarning("Send failed: %s (code %u)", NLNET::CSock::errorString(NLNET::CSock::getLastError()).c_str(), NLNET::CSock::getLastError());
-		//sock->close();
-		//sock->disconnect();
-		return false;
-	}
-#else
 #ifdef MTPT_SERVER
 	sock->send(*this, id);
 	sock->flush(id);
@@ -98,46 +76,6 @@ bool CNetMessage::send (NLNET::CBufClient *sock)
 	sock->send(*this);
 	sock->flush();
 #endif // MTPT_SERVER
-#endif // OLD_NETWORK
 
 	return true;
 }
-
-#if OLD_NETWORK
-NLNET::CSock::TSockResult CNetMessage::receive(NLNET::CTcpSock *sock)
-{
-	nlassert (sock);
-
-	uint16 buffer[1];
-	uint32 len = 2;
-
-	// receive the size
-
-	NLNET::CSock::TSockResult res = sock->receive((uint8*)buffer, len, false);
-
-	if(res != NLNET::CSock::Ok)
-		return res;
-
-//	nldebug("received size %hu", (uint16)buffer[0]);
-
-	// receive the message
-
-	len = buffer[0] + 1;
-
-	uint8 *buf = bufferToFill(len);
-
-	res = sock->receive(buf, len, false);
-
-	if(res != NLNET::CSock::Ok)
-		return res;
-
-	uint8 t = 0;
-	serial(t);
-	Type = (TType)t;
-
-//	nlinfo("real send %"NL_I64"d", CTime::getLocalTime());
-//	nldebug("received message %hu", (uint16)Type);
-
-	return NLNET::CSock::Ok;
-}
-#endif // OLD_NETWORK

@@ -168,10 +168,6 @@ void CMtpTarget::init()
 				}
 				*/
 			}
-			//we can call this function safely since there no other thread in replay mode
-#if OLD_NETWORK
-			CEntityManager::instance().flushAddRemoveList();
-#endif // OLD_NETWORK
 			
 			char cmd[10];
 			float t =0;

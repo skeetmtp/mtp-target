@@ -53,8 +53,6 @@ static const float NetVirtualFrameDuration = MT_NETWORK_MY_UPDATE_PERIODE;
 // Classes
 //
 
-class CNetworkRunnable;
-
 class CNetworkTask : public CSingleton<CNetworkTask>, public ITask
 {
 public:
@@ -82,31 +80,11 @@ public:
 		
 	bool connected();
 
-#if OLD_NETWORK
-	NLNET::CTcpSock &sock() { return Sock; }
-#else
 	NLNET::CBufClient &sock() { return Sock; }
-#endif // OLD_NETWORK
 
 private:
 	
-#if OLD_NETWORK
-	CNetworkRunnable	*NetworkRunnable;
-	NLMISC::IThread		*NetworkThread;
-	NLNET::CTcpSock		 Sock;
-#else
 	NLNET::CBufClient	Sock;
-#endif // OLD_NETWORK
-
-	friend class CNetworkRunnable;
-
-
-	/// NEW
-
 };
-
-bool pauseNetwork(bool waitAck=true);
-bool isNetworkPaused();
-void resumeNetwork();
 
 #endif

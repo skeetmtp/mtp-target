@@ -86,13 +86,6 @@ void CEntityManager::init()
 		entities()[i]->reset();
 	}
 	updateListId.clear();
-
-#if OLD_NETWORK
-	ClientToAddTaskManagerThread.clear();
-	ClientToAddNetworkThread.clear();
-	ClientToRemoveTaskManagerThread.clear();
-	ClientToRemoveNetworkThread.clear();
-#endif // OLD_NETWORK
 }
 
 void CEntityManager::update()
@@ -115,130 +108,18 @@ void CEntityManager::add(uint8 eid, const std::string &name, sint32 totalScore, 
 {
 	nlinfo("CEntityManager::add(%d:%s)",eid,name.c_str());
 	nlassert(!exist(eid));
-#if OLD_NETWORK
-	uint tid = getThreadId();
-	nlassert(tid==TaskManagerThreadId || tid==NetworkThreadId);
-	
-	CEntityInitData entityToAdd(eid,name,totalScore,color,texture,spectator,isLocal);
-	std::list<CEntityInitData> *ClientToAddList;
-	if(tid==TaskManagerThreadId)
-		ClientToAddList = &ClientToAddTaskManagerThread;
-	else
-		ClientToAddList = &ClientToAddNetworkThread;
-
-	list<CEntityInitData>::iterator it2;
-	for(it2=ClientToAddList->begin(); it2!=ClientToAddList->end();it2++)
-	{
-		CEntityInitData e = *it2;
-		if(e.eid==eid)
-		{
-			nlwarning("client %d %s still in add list",eid,name.c_str());
-			return;
-		}
-	}
-	ClientToAddList->push_back(entityToAdd);
-#else
 	entities()[eid]->init(CEntity::Player, name, totalScore, color, texture, "pingoo", spectator, isLocal);
-#endif // OLD_NETWORK
 }
 
 void CEntityManager::remove(uint8 eid)
 {
 	nlinfo("CEntityManager::remove(%d)",eid);
 	nlassert(exist(eid));
-#if OLD_NETWORK
-	uint tid = getThreadId();
-	nlassert(tid==TaskManagerThreadId || tid==NetworkThreadId);
-	std::list<uint8> *ClientToRemoveList;
-	if(tid==TaskManagerThreadId)
-		ClientToRemoveList = &ClientToRemoveTaskManagerThread;
-	else
-		ClientToRemoveList = &ClientToRemoveNetworkThread;
-
-	list<uint8>::iterator it1;
-	for(it1=ClientToRemoveList->begin(); it1!=ClientToRemoveList->end();it1++)
-	{
-		uint8 iteid = *it1;
-		if(iteid==eid)
-		{
-			nlwarning("client %d still in remove list",eid);
-			return;
-		}
-	}
-	ClientToRemoveList->push_back(eid);
-#else
 	if(CMtpTarget::instance().controler().Camera.getFollowedEntity() == eid)
 		CMtpTarget::instance().controler().Camera.setFollowedEntity(255);
 	
 	entities()[eid]->reset();
-#endif // OLD_NETWORK
 }
-
-#if OLD_NETWORK
-void CEntityManager::_add(std::list<CEntityInitData> &addList)
-{
-	list<CEntityInitData>::iterator it2;
-	for(it2=addList.begin(); it2!=addList.end();it2++)
-	{
-		CEntityInitData e = *it2;
-		nlassert(!exist(e.eid));
-		entities()[e.eid]->init(CEntity::Player, e.name, e.totalScore, e.color, e.texture, "pingoo", e.spectator,e.isLocal);
-		nlinfo("CEntityManager::_add(%d,%s)",e.eid,e.name.c_str());
-	}
-	addList.clear();	
-}
-
-void CEntityManager::_remove(std::list<uint8> &removeList)
-{
-	list<uint8>::iterator it1;
-	for(it1=removeList.begin(); it1!=removeList.end();it1++)
-	{
-		uint8 eid = *it1;
-		if(eid == 255)
-			nlwarning("Can't remove client because eid 255 is not valid");
-
-		nlassert(exist(eid));
-		nlinfo("CEntityManager::_remove(%d)",eid);
-		if(CMtpTarget::instance().controler().Camera.getFollowedEntity() == eid)
-			CMtpTarget::instance().controler().Camera.setFollowedEntity(255);
-		
-		entities()[eid]->reset();
-	}
-	removeList.clear();
-
-}
-
-void CEntityManager::flushAddRemoveList()
-{
-	uint tid = getThreadId();
-	nlassert(tid==TaskManagerThreadId || tid==NetworkThreadId);
-
-	if(tid==TaskManagerThreadId)
-	{
-		if(ClientToAddTaskManagerThread.size()==0 && ClientToRemoveTaskManagerThread.size()==0)
-			return;
-		bool paused = pauseAllThread();
-		if(!paused)
-			return;
-		_add(ClientToAddTaskManagerThread);
-		_remove(ClientToRemoveTaskManagerThread);
-		resumeAllThread();
-	}
-	else
-	{
-		if(ClientToAddNetworkThread.size()==0 && ClientToRemoveNetworkThread.size()==0)
-			return;
-		bool paused = pauseAllThread();
-		if(!paused)
-			return;
-		_add(ClientToAddNetworkThread);
-		_remove(ClientToRemoveNetworkThread);
-		resumeAllThread();
-	}
-}
-#endif // OLD_NETWORK
-
-
 
 bool CEntityManager::exist(uint8 eid)
 {
@@ -251,7 +132,6 @@ CEntity &CEntityManager::operator [](uint8 eid)
 	nlassert(exist(eid));
 	return *entities()[eid]; //todo prevent external code to access entites without using accessor
 }
-
 
 void CEntityManager::getEIdSortedByScore(vector<uint8> &eids) 
 {

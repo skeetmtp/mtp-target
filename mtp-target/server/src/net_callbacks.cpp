@@ -156,18 +156,18 @@ static void cbLogin(CClient *c, CNetMessage &msgin)
 		}
 	}
 
-	// init() must be after the check() call
-	c->init(login,texture,color);
-	c->Cookie = cookie;
-	if(!cookie.empty())
-	{
-		CLoginCookie lc;
-		lc.setFromString(cookie);
-		c->uid(lc.getUserId());
-	}
-
 	if(error.empty())
 	{
+		// init() must be after the check() call
+		c->init(login,texture,color);
+		c->Cookie = cookie;
+		if(!cookie.empty())
+		{
+			CLoginCookie lc;
+			lc.setFromString(cookie);
+			c->uid(lc.getUserId());
+		}
+	
 		CEntityManager::instance().login(c);
 	}
 	else
@@ -190,11 +190,7 @@ static void cbLogin(CClient *c, CNetMessage &msgin)
 			fprintf(fp, "%u %s", ltime, d);
 			fprintf(fp, " %c", (error.empty()?'+':'?'));
 			fprintf(fp, " '%s' '%s'", login.c_str(), texture.c_str());
-#if OLD_NETWORK
-			fprintf(fp, " '%s'", (c->sock()?c->sock()->remoteAddr().ipAddress().c_str():"unknown"));
-#else
 			fprintf(fp, " '%p'", c->sock());
-#endif // OLD_NETWORK
 			if(!error.empty()) fprintf(fp, " '%s'", error.c_str());
 			fprintf(fp, "\n");
 			fclose(fp);

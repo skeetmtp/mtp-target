@@ -39,25 +39,10 @@
 // Classes
 //
 
-#if OLD_NETWORK
-class CNetworkTask : public NLMISC::IRunnable
-{
-public:
-	
-	CNetworkTask();
-
-	virtual void run();
-
-private:
-	
-	NLNET::CListenSock ListenSock;
-};
-#endif // OLD_NETWORK
-
 class CNetwork : public CSingleton<CNetwork>
 {
 public:
-	
+
 	void init();
 	void update();
 	void release();
@@ -80,21 +65,12 @@ public:
 	
 	// send a message to 1 client
 	void sendChat(uint8 eid, const std::string &msg);
-	
-#if OLD_NETWORK
-	CNetworkTask &networkTask() { return *NetworkTask; }
-#endif // OLD_NETWORK
 
 	uint32 version() { return Version; }
 
 private:
 
-#if OLD_NETWORK
-	CNetworkTask		*NetworkTask;
-	NLMISC::IThread		*NetworkThread;
-#else
 	NLNET::CBufServer	*BufServer;
-#endif // OLD_NETWORK
 
 	CNetwork();
 
@@ -107,9 +83,5 @@ private:
 
 	NLMISC::TTime NextUpdateTime;
 };
-
-bool pauseNetwork(bool waitAck=true);
-bool isNetworkPaused();
-void resumeNetwork();
 
 #endif

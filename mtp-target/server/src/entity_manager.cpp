@@ -89,60 +89,12 @@ void CEntityManager::update()
 void CEntityManager::add(CEntity *entity)
 {
 	nlinfo("CEntityManager::add(0x%p,%d:%s)",entity,entity->id(),entity->name().c_str());
-#if OLD_NETWORK
-	uint tid = myGetThreadId();
-	nlassert(tid==MainThreadId || tid==NetworkThreadId);
-	std::list<CEntity *> *ClientToAddList;
-	
-	if(tid==MainThreadId)
-		ClientToAddList = &ClientToAddMainThread;
-	else
-		ClientToAddList = &ClientToAddNetworkThread;
-	
-	list<CEntity *>::iterator it2;
-	for(it2=ClientToAddList->begin(); it2!=ClientToAddList->end();it2++)
-	{
-		CEntity *e = *it2;
-		if(e==entity)
-		{
-			nlwarning("client 0x%p %d %s still in add list",e,e->id(),e->name().c_str());
-			return;
-		}
-	}
-	
-	ClientToAddList->push_back(entity);
-#else
 	entities().push_back(entity);
-#endif // OLD_NETWORK
 }
 
 void CEntityManager::remove(uint8 eid)
 {
 	nlinfo("CEntityManager::remove(%d)",eid);
-#if OLD_NETWORK
-	uint tid = myGetThreadId();
-	nlassert(tid==MainThreadId || tid==NetworkThreadId);
-	std::list<uint8> *ClientToRemoveList;
-
-	if(tid==MainThreadId)
-		ClientToRemoveList = &ClientToRemoveMainThread;
-	else
-		ClientToRemoveList = &ClientToRemoveNetworkThread;
-
-	list<uint8>::iterator it1;
-	for(it1=ClientToRemoveList->begin(); it1!=ClientToRemoveList->end();it1++)
-	{
-		uint8 iteid = *it1;
-		if(iteid==eid)
-		{
-			nlwarning("client %d still in remove list",eid);
-			return;			
-		}
-
-	}
-	
-	ClientToRemoveList->push_back(eid);
-#else
 	CEntity *c = 0;
 	
 	{
@@ -158,7 +110,7 @@ void CEntityManager::remove(uint8 eid)
 			}
 		}
 	}
-	
+
 	if(!c)
 	{
 		nlwarning("Can't remove client because eid %hu is not found", (uint16)eid);
@@ -168,7 +120,7 @@ void CEntityManager::remove(uint8 eid)
 		nlinfo("Removing client eid %hu name '%s'", (uint16)c->id(), c->name().c_str());
 		CLuaEngine::instance().entityLeaveEvent(c);
 		CSessionManager::instance().editMode(0);
-		
+
 		if(c->type() == CEntity::Client)
 		{
 			char d[80];
@@ -188,189 +140,25 @@ void CEntityManager::remove(uint8 eid)
 				fprintf(fp, "%u %s c %d\n", ltime, d, humanClientCount());
 				fclose(fp);
 			}
-			
+
 			clientConnected(dynamic_cast<CClient*>(c)->Cookie, false);
 		}
-		
-		CNetMessage msgout(CNetMessage::Logout);
-		msgout.serial(eid);
-		CNetwork::instance().send(msgout);		
-		delete c;
-	}
-#endif // OLD_NETWORK
-}
 
-#if OLD_NETWORK
-bool CEntityManager::inRemoveList(uint8 eid)
-{
-	uint tid = myGetThreadId();
-	nlassert(tid==MainThreadId || tid==NetworkThreadId);
-	std::list<uint8> *ClientToRemoveList;
-	
-	if(tid==MainThreadId)
-		ClientToRemoveList = &ClientToRemoveMainThread;
-	else
-		ClientToRemoveList = &ClientToRemoveNetworkThread;
-	
-	list<uint8>::iterator it1;
-	for(it1=ClientToRemoveList->begin(); it1!=ClientToRemoveList->end();it1++)
-	{
-		uint8 iteid = *it1;
-		if(iteid==eid)
+		if(!c->name().empty())
 		{
-			return true;			
-		}
-		
-	}
-	return false;
-}
-
-void CEntityManager::_add(std::list<CEntity *> &addList)
-{
-	list<CEntity *>::iterator it2;
-	for(it2=addList.begin(); it2!=addList.end();it2++)
-	{
-		CEntity *e = *it2;
-		nlinfo("CEntityManager::_add(0x%p,%d,%s)",e,e->id(),e->name().c_str());
-		entities().push_back(e);
-	}
-	addList.clear();	
-	
-}
-
-void CEntityManager::_remove(std::list<uint8> &removeList)
-{
-	list<uint8>::iterator it1;
-	for(it1=removeList.begin(); it1!=removeList.end();it1++)
-	{
-		uint8 eid = *it1;
-		if(eid == 255)
-			nlwarning("Can't remove client because eid 255 is not valid");
-		nlinfo("CEntityManager::_remove(%d)",eid);
-		
-		CEntity *c = 0;
-		
-		{
-			EntityIt it;
-			for( it = entities().begin(); it != entities().end(); it++)
-			{
-				if((*it)->id() == eid)
-				{
-					// only unlink the client from the list
-					c = (*it);
-					entities().erase(it);
-					break;
-				}
-			}
-		}
-		
-		if(!c)
-		{
-			nlwarning("Can't remove client because eid %hu is not found", (uint16)eid);
-		}
-		else
-		{
-			nlinfo("Removing client eid %hu name '%s'", (uint16)c->id(), c->name().c_str());
-			CLuaEngine::instance().entityLeaveEvent(c);
-			CSessionManager::instance().editMode(0);
-
-			if(c->type() == CEntity::Client)
-			{
-				char d[80];
-				time_t ltime;
-				time(&ltime);
-				struct tm *today = localtime(&ltime);
-				strftime(d, 80, "%Y %m %d %H %M %S", today);
-				FILE *fp = fopen("connection.stat", "ab");
-				if(fp)
-				{
-					fprintf(fp, "%u %s - '%s' '%s'\n", ltime, d, c->name().c_str(),CLevelManager::instance().haveCurrentLevel()?CLevelManager::instance().currentLevel().name().c_str():"");
-					fclose(fp);
-				}
-				fp = fopen("clients_count.stat", "ab");
-				if(fp)
-				{
-					fprintf(fp, "%u %s c %d\n", ltime, d, humanClientCount());
-					fclose(fp);
-				}
-
-				clientConnected(dynamic_cast<CClient*>(c)->Cookie, false);
-			}
-
 			CNetMessage msgout(CNetMessage::Logout);
 			msgout.serial(eid);
 			CNetwork::instance().send(msgout);		
-			delete c;
+			
+			if(c->type() == CEntity::Client)
+			{
+				CNetwork::instance().sendChat(c->name()+" leaves !");
+			}
 		}
-		
-	}
-	removeList.clear();
-	
-}
 
-/* old code
-void CEntityManager::flushAddRemoveList()
-{
-	uint tid = myGetThreadId();
-	nlassert(tid==MainThreadId || tid==NetworkThreadId);
-	
-	if(tid==MainThreadId)
-	{
-		if(ClientToAddMainThread.size()==0 && ClientToRemoveMainThread.size()==0)
-			return;
-		bool paused = pauseAllThread();
-		if(!paused)
-			return;
-		_add(ClientToAddMainThread);
-		_remove(ClientToRemoveMainThread);
-		updateIdUpdateList();
-		resumeAllThread();
+		delete c;
 	}
-	else
-	{
-		if(ClientToAddNetworkThread.size()==0 && ClientToRemoveNetworkThread.size()==0)
-			return;
-		bool paused = pauseAllThread();
-		if(!paused)
-			return;
-		_add(ClientToAddNetworkThread);
-		_remove(ClientToRemoveNetworkThread);
-		updateIdUpdateList();
-		resumeAllThread();
-	}		
-	
 }
-*/
-
-void CEntityManager::flushAddRemoveList()
-{
-	if(ClientToAddMainThread.size() || ClientToRemoveMainThread.size())
-	{
-		nlinfo("flushing main thread add/remove list");
-		bool paused = pauseAllThread();
-		if(paused)
-		{
-			_add(ClientToAddMainThread);
-			_remove(ClientToRemoveMainThread);
-			updateIdUpdateList();
-			resumeAllThread();
-		}
-	}
-	if(ClientToAddNetworkThread.size() || ClientToRemoveNetworkThread.size())
-	{
-		nlinfo("flushing network thread add/remove list");
-		bool paused = pauseAllThread();
-		if(paused)
-		{
-			_add(ClientToAddNetworkThread);
-			_remove(ClientToRemoveNetworkThread);
-			updateIdUpdateList();
-			resumeAllThread();
-		}
-	}		
-	
-}
-#endif // OLD_NETWORK
 
 void CEntityManager::reset()
 {
@@ -389,49 +177,6 @@ void CEntityManager::release()
 uint8 CEntityManager::findNewId()
 {
 	uint8 ni = 0;
-#if OLD_NETWORK
-	uint8 baseId = 0;
-	uint tid = myGetThreadId();
-	nlassert(tid==MainThreadId || tid==NetworkThreadId);
-
-	if(tid==NetworkThreadId)
-		baseId=128;
-
-	bool nidFound = false;
-	for(ni=baseId;ni<baseId+127;ni++)
-	{
-		bool nidOk = true;
-		EntityConstIt it;
-		for(it = entities().begin(); it != entities().end() && nidOk; it++)
-		{
-			if((*it)->id() == ni)
-				nidOk = false;
-		}
-		if(tid==MainThreadId)
-		{
-			list<CEntity *>::iterator it2;
-			for(it2=ClientToAddMainThread.begin(); it2!=ClientToAddMainThread.end() && nidOk;it2++)
-			{
-				CEntity *e = *it2;
-				if(e->id()==ni)
-					nidOk = false;
-			}
-		}
-		else
-		{
-			list<CEntity *>::iterator it2;
-			for(it2=ClientToAddNetworkThread.begin(); it2!=ClientToAddNetworkThread.end() && nidOk;it2++)
-			{
-				CEntity *e = *it2;
-				if(e->id()==ni)
-					nidOk = false;
-			}			
-		}
-		if(nidOk)
-			return ni;
-	}
-	nlerror("More than 127 entities, can't add a new one");
-#else
 	while(true)
 	{
 		EntityConstIt it;
@@ -448,7 +193,6 @@ uint8 CEntityManager::findNewId()
 			nlerror("More than 254 entities, can't add a new one");
 		}	
 	}
-#endif // OLD_NETWORK
 	return 255;
 }
 
@@ -473,13 +217,7 @@ void CEntityManager::addBot(const string &name, bool isAutomaticBot)
 	login(e);
 }
 
-
-
-#if OLD_NETWORK
-void CEntityManager::addClient(NLNET::CTcpSock *sock)
-#else
 void CEntityManager::addClient(NLNET::TSockId sock)
-#endif // OLD_NETWORK
 {
 	nlassert(sock);
 
@@ -495,7 +233,6 @@ void CEntityManager::addClient(NLNET::TSockId sock)
 	add(e);
 }
 
-
 void CEntityManager::updateIdUpdateList()
 {
 	int minId = 0;
@@ -510,7 +247,6 @@ void CEntityManager::updateIdUpdateList()
 		}			
 	}
 }
-
 
 void CEntityManager::login(CEntity *e)
 {
@@ -531,6 +267,15 @@ void CEntityManager::login(CEntity *e)
 		bool s = e->spectator();
 		msgout.serial(s);
 		CNetwork::instance().sendAllExcept(nid, msgout);
+
+		if(e->type() == CEntity::Client)
+		{
+			// only warn players when real players comes
+			CNetMessage msgout2(CNetMessage::Chat);
+			string str = n + " comes in !";
+			msgout2.serial(str);
+			CNetwork::instance().sendAllExcept(nid, msgout2);
+		}
 	}
 
 	if(e->type() == CEntity::Client)

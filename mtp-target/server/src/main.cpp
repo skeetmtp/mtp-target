@@ -150,10 +150,6 @@ public:
 		CLuaEngine::instance().levelPostUpdate();
 		
 		checkServicePaused();
-#if OLD_NETWORK
-		CEntityManager::instance().flushAddRemoveList();
-#endif // OLD_NETWORK
-
 		updateConnectedClients();
 
 		CNetwork::instance().sleep(MT_NETWORK_MY_UPDATE_PERIODE_MS);
@@ -185,7 +181,6 @@ uint myGetThreadId()
 	return getThreadId();
 #endif
 }
-
 
 void checkServicePaused()
 {
@@ -280,7 +275,7 @@ bool pauseAllThread()
 	{
 		CSynchronized<PauseFlags>::CAccessor acces(&pauseAllFlags);
 		acces.value().pauseCount = 0;
-		return false;		
+		return false;
 	}
 	allOk = allOk && pausePhysics(false);
 	if(!allOk)
@@ -288,21 +283,20 @@ bool pauseAllThread()
 		resumeService();
 		CSynchronized<PauseFlags>::CAccessor acces(&pauseAllFlags);
 		acces.value().pauseCount = 0;
-		return false;		
+		return false;
 	}
-	allOk = allOk && pauseNetwork(false);
+	allOk = allOk && true;
 	if(!allOk)
 	{
 		resumeService();
 		resumePhysics();
 		CSynchronized<PauseFlags>::CAccessor acces(&pauseAllFlags);
 		acces.value().pauseCount = 0;
-		return false;		
+		return false;
 	}
-	
 
 	uint i = 0;
-	uint maxLoopCount = 100; //wait one seconde max
+	uint maxLoopCount = 100; //wait one second max
 	for(i=0;i<maxLoopCount;i++)
 	{
 		int threadPausedCount = 0;
@@ -310,7 +304,7 @@ bool pauseAllThread()
 			threadPausedCount++;
 		if(isPhysicsPaused())
 			threadPausedCount++;
-		if(isNetworkPaused())
+		if(true)
 			threadPausedCount++;
 		if(threadPausedCount==2)
 			break;
@@ -328,12 +322,10 @@ bool pauseAllThread()
 			nlwarning("pauseAllThread() called(%d) in PhysicThreadId(%d)",tid,PhysicThreadId);
 		nlwarning("isServicePaused()=%s",isServicePaused()?"true":"false");
 		nlwarning("isPhysicsPaused()=%s",isPhysicsPaused()?"true":"false");
-		nlwarning("isNetworkPaused()=%s",isNetworkPaused()?"true":"false");
 		nlwarning("resuming paused thread ...");
 		resumeAllThread();
 		return false;
 	}
-	
 	return true;
 }
 
@@ -341,13 +333,11 @@ void resumeAllThread()
 {
 	resumeService();
 	resumePhysics();
-	resumeNetwork();	
 	{
 		CSynchronized<PauseFlags>::CAccessor acces(&pauseAllFlags);
 		acces.value().pauseCount = 0;
 	}
 }
-
 
 void reparsePath()
 {
@@ -361,7 +351,6 @@ void reparsePath()
 	}
 	CPath::addSearchPath(IService::getInstance()->ConfigFile.getVar("UserTexture").asString(), false, true);
 }
-
 
 
 //

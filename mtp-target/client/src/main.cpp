@@ -148,40 +148,32 @@ bool pauseAllThread()
 		acces.value().pauseCount = 0;
 		return false;		
 	}
-	allOk = allOk && pauseNetwork(false);
+	allOk = allOk && true;
 	if(!allOk)
 	{
 		resumeTaskManager();
 		CSynchronized<PauseFlags>::CAccessor acces(&pauseAllFlags);
 		acces.value().pauseCount = 0;
-		return false;		
+		return false;
 	}
-	
-	
+
 	while(true)
 	{
 		int threadPausedCount = 0;
-		if(isTaskManagerPaused())
-			threadPausedCount++;
-		if(isNetworkPaused())
-			threadPausedCount++;
-		if(threadPausedCount==1)
-			break;
+		if(isTaskManagerPaused()) threadPausedCount++;
+		if(true) threadPausedCount++;
+		if(threadPausedCount==1) break;
 		nlSleep(10);
 	}
-	
+
 	return true;
 }
 
 void resumeAllThread()
 {
 	resumeTaskManager();
-	resumeNetwork();	
 	{
 		CSynchronized<PauseFlags>::CAccessor acces(&pauseAllFlags);
 		acces.value().pauseCount = 0;
 	}
 }
-
-
-
