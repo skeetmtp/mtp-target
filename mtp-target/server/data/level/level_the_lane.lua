@@ -1,7 +1,7 @@
 Name = "The Lan"
 Author = "Skeet"
 ServerLua = "level_default_server.lua"
-ReleaseLevel = 1
+ReleaseLevel = 4
 
 skyShapeFileName = "sky.shape";
 sunAmbientColor = CRGBA(82, 100, 133, 255);

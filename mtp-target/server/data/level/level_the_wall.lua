@@ -15,6 +15,10 @@ fogDistMin = 0;
 fogDistMax = 150;
 fogColor = clearColor;
 
+ClientBounce = 1;
+ClientBounceCoef = 0;
+ClientBounceVel = 1;
+
 cameraMinDistFromStartPointToMove = 1.0;
 
 Cameras =
@@ -60,12 +64,12 @@ StartPoints =
 
 Modules =
 {
-	{ Position = CVector(0.003322,-15.228691,3.223083), Scale = CVector(30.000000, 1.000000, 30.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Color = CRGBA(254,254,254,255), Lua="box_sol", Shape="box_sol" },
+	{ Position = CVector(0.003322,-15.076703,3.223083), Scale = CVector(30.000000, 1.000000, 50.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Color = CRGBA(254,254,254,255), Lua="wall_wall", Shape="box_sol" },
 	{ Position = CVector(0.000899,-15.084286,2.989382), Scale = CVector(30.000000, 30.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,-0.050000), Color = CRGBA(254,254,254,255), Lua="box_sol", Shape="box_sol" },
 	{ Position = CVector(0.000000,0.000000,5.000000), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Color = CRGBA(255,255,255,255), Lua="snow_ramp", Shape="snow_ramp" },
-	{ Position = CVector(0.000000,-14.840000,3.000000), Scale = CVector(3.000000, 6.000000, 0.500000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Color = CRGBA(0,255,0,255), Lua="lane_target_50", Shape="box_sol" },
-	{ Position = CVector(0.000000,-14.940000,3.000000), Scale = CVector(1.500000, 4.000000, 0.500000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Color = CRGBA(0,0,255,255), Lua="lane_target_100", Shape="box_sol" },
-	{ Position = CVector(0.000000,-15.000000,3.000000), Scale = CVector(1.500000, 2.000000, 0.500000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Color = CRGBA(255,0,0,255), Lua="lane_target_300", Shape="box_sol" },
+	{ Position = CVector(0.000000,-15.000000,3.000000), Scale = CVector(14.000000, 14.000000, 0.500000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Color = CRGBA(0,255,0,255), Lua="wall_target_50", Shape="box_sol" },
+	{ Position = CVector(0.000000,-15.020846,3.008959), Scale = CVector(7.000000, 7.000000, 0.500000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Color = CRGBA(0,0,255,255), Lua="wall_target_100", Shape="box_sol" },
+	{ Position = CVector(0.000000,-15.038935,3.017261), Scale = CVector(3.000000, 3.000000, 0.500000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Color = CRGBA(255,0,0,255), Lua="wall_target_300", Shape="box_sol" },
 
 }
 
@@ -76,5 +80,5 @@ Particles =
 
 ExternalCameras =
 {
-	{ Position = CVector(0.007927, -15.196621, 3.059711), Rotation = CAngleAxis(-0.102049, -0.007446, 0.072386, 0.992114) },
+	{ Position = CVector(-0.238540, -14.858599, 3.179905), Rotation = CAngleAxis(-0.107183, 0.165332, -0.822650, 0.533314) },
 }
