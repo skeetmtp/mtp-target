@@ -15,6 +15,7 @@ fogDistMin = 0;
 fogDistMax = 150;
 fogColor = clearColor;
 
+cameraMinDistFromStartPointToMove = 1.0;
 
 
 Cameras =
