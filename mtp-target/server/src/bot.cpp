@@ -112,76 +112,103 @@ void CBot::getBotDelta(NLMISC::CVector &delta)
 
 void CBot::loadBotReplay()
 {
-	Commands.clear();
-	vector<string> res;
-	CPath::getPathContent("./replay", false, false, true, res);
-	vector<string> levels;
-	string level;
-	string CurrentLevel = CLevelManager::instance().currentLevel().name();
-	string wantedFilename = CurrentLevel + "." + toString(StartingPointId);
-	for(uint i = 0; i < res.size(); i++)
-	{
-		if(res[i].find(wantedFilename) != string::npos)
-			levels.push_back(res[i]);
-		if(res[i].find(CurrentLevel) != string::npos)
-			level = res[i];
-	}
-				
-	if(!levels.empty())
-	{
-		level = levels[rand()%levels.size()];
-	}
-
-	if(level.empty())
-	{
-		nlwarning("There's no replay file for the start pos id %hu", (uint16)StartingPointId);
-		return;
-	}
-
-	nlinfo("Loading replay file (startposid = %d) : %s", StartingPointId, level.c_str());
+	bool validFile = false;
 	
-	FILE *fp = fopen(level.c_str(),"rt");
-	if(!fp)
-	{
-		nlwarning("Replay file '%s' can't be open", level.c_str());
-		return;
-	}
-	
-	char cmd[10]="deadbeef";
-	float t;
-	CVector force, pos;
 
-	while(!feof(fp))
+	uint32 tryCount = 0;
+	while (tryCount<10) //limit to 10 tries, prevent infinit loop and too long freez
 	{
-		uint8 eid;
-		fscanf(fp, "%d %s %f", &eid, &cmd,  &t);
-		if(string(cmd) == "PO")
+		tryCount++;
+		vector<string> res;
+		CPath::getPathContent("./replay", false, false, true, res);
+		vector<string> levels;
+		string level = "";
+		string CurrentLevel = CLevelManager::instance().currentLevel().name();
+		string wantedFilename = CurrentLevel + "." + toString(StartingPointId);
+		for(uint i = 0; i < res.size(); i++)
 		{
-			fscanf(fp, "%f %f %f %f %f %f", &force.x, &force.y, &force.z, &pos.x, &pos.y, &pos.z);
-			/*
-			if(eid==4)
-				nlinfo("adding update pos (eid = %d , time = %f) force = %f %f %f, pos = %f %f %f",eid,t,force.x, force.y, force.z, pos.x, pos.y, pos.z);
-			*/
-			Commands.push_back(CCommand(t, force, pos));
+			if(res[i].find(wantedFilename) != string::npos)
+				levels.push_back(res[i]);
+			if(res[i].find(CurrentLevel) != string::npos)
+				level = res[i];
 		}
-		else if(string(cmd) == "OC")
+
+		Commands.clear();
+					
+		if(!levels.empty())
 		{
-			//nlinfo("bot adding update openc (eid = %d)",eid);
-			Commands.push_back(CCommand(t, pos));
-		}
-		else if(string(cmd) == "AU")
-		{
-			char name[255];
-			sint score;
-			fscanf(fp, "%s %d", &name, &score);
-			//nlinfo("score = %s %d ",name,score);
+			level = levels[rand()%levels.size()];
 		}
 		else
 		{
-			nlwarning("Unknown command '%s' for user %hu", cmd, (uint16)eid);
+			nlwarning("There's no replay matching start pos id %hu trying to use default one", (uint16)StartingPointId);
 		}
+		
+		if(level.empty())
+		{
+			nlwarning("There's no replay file for the level",CurrentLevel.c_str());
+			return;
+		}
+
+		nlinfo("Loading replay file (startposid = %d) : %s", StartingPointId, level.c_str());
+		
+		FILE *fp = fopen(level.c_str(),"rt");
+		if(!fp)
+		{
+			nlwarning("Replay file '%s' can't be open", level.c_str());
+			return;
+		}
+		
+		char cmd[10]="deadbeef";
+		float t;
+		CVector force, pos;
+
+		while(!feof(fp))
+		{
+			int eid;
+			fscanf(fp, "%d %s %f", &eid, &cmd,  &t);
+			if(string(cmd) == "PO")
+			{
+				fscanf(fp, "%f %f %f %f %f %f", &force.x, &force.y, &force.z, &pos.x, &pos.y, &pos.z);
+				/*
+				if(eid==4)
+					nlinfo("adding update pos (eid = %d , time = %f) force = %f %f %f, pos = %f %f %f",eid,t,force.x, force.y, force.z, pos.x, pos.y, pos.z);
+				*/
+				Commands.push_back(CCommand(t, force, pos));
+			}
+			else if(string(cmd) == "OC")
+			{
+				//nlinfo("bot adding update openc (eid = %d)",eid);
+				Commands.push_back(CCommand(t, pos));
+			}
+			else if(string(cmd) == "AU")
+			{
+				char name[255];
+				sint score;
+				uint32 argCount = 0;
+				argCount = fscanf(fp, "%s %d", &name, &score);
+				if(argCount)
+					validFile = true;
+				else
+					nlwarning("Bad argument count(%d) for AU command",argCount);
+				//nlinfo("score = %s %d ",name,score);
+			}
+			else
+			{
+				nlwarning("Unknown command '%s' for user %hu", cmd, (uint16)eid);
+				//break;
+			}
+		}
+		fclose(fp);
+		if(!validFile) //invalid file format so delet it
+		{
+			CFile::deleteFile(level);
+			nlwarning("deleting invalid replay (bad file format): %s",level.c_str());
+		}
+		else 
+			return;
 	}
-	fclose(fp);					
+	nlwarning("Give up finding a valid replay");
 }
 
 string CBot::findNewBotName(const string &name)
