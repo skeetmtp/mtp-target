@@ -41,9 +41,16 @@ Please verify that the solution to your bug/problem is not in the ";
   $sshot_img02 = "Rampe Acceleration";
   $sshot_img03 = "Take Off";
   $sshot_img04 = "Flying";
+  $sshot_img05 = "";
+  $sshot_img06 = "";
+  $sshot_img07 = "";
   $sshot_img08 = "Approching";
   $sshot_img09 = "Landing";
   $sshot_img10 = "Custom User Texture";
+  $sshot_img11 = "";
+  $sshot_img12 = "";
+  $sshot_img13 = "water without pixel shader";
+  $sshot_img14 = "water without pixel shader";
 
 //contact
   $contact_by_forum = "Ask your questions on ";

@@ -17,6 +17,8 @@
 	echo "<a href=\"$sshot_dir/screenshot_10.jpg\"><img src=\"$sshot_dir/screenshot_10.jpg\" width=\"200\" alt=\"$sshot_img10\" title=\"$sshot_img10\"></a>\n";
 	echo "<a href=\"$sshot_dir/screenshot_11.jpg\"><img src=\"$sshot_dir/screenshot_11.jpg\" width=\"200\" alt=\"$sshot_img11\" title=\"$sshot_img11\"></a>\n";
 	echo "<a href=\"$sshot_dir/screenshot_12.jpg\"><img src=\"$sshot_dir/screenshot_12.jpg\" width=\"200\" alt=\"$sshot_img12\" title=\"$sshot_img12\"></a>\n";
+	echo "<a href=\"$sshot_dir/screenshot_12.jpg\"><img src=\"$sshot_dir/screenshot_13.jpg\" width=\"200\" alt=\"$sshot_img13\" title=\"$sshot_img13\"></a>\n";
+	echo "<a href=\"$sshot_dir/screenshot_12.jpg\"><img src=\"$sshot_dir/screenshot_14.jpg\" width=\"200\" alt=\"$sshot_img13\" title=\"$sshot_img13\"></a>\n";
 ?>
 </center>
 

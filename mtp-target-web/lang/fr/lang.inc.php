@@ -41,9 +41,15 @@
   $sshot_img02 = "Rampe d'acceleration";
   $sshot_img03 = "Décolage";
   $sshot_img04 = "Vole";
+  $sshot_img05 = "";
+  $sshot_img06 = "";
+  $sshot_img07 = "";
   $sshot_img08 = "En approche";
   $sshot_img09 = "Atterissage";
   $sshot_img10 = "Personalisation des Avatars";
+  $sshot_img11 = "";
+  $sshot_img12 = "";
+  $sshot_img13 = "l'eau sans pixel shader";
 
 
 //contact
