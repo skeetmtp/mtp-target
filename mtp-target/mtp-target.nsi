@@ -42,6 +42,10 @@ FILE "client\ReleaseDebug\mtp-target.exe"
 FILE "client\mtp_target_default.cfg"
 FILE "server\ReleaseDebug\mtp_target_service.exe"
 FILE "server\mtp_target_service_default.cfg"
+FILE "client\imagehlp.dll"
+FILE "client\fmod.dll"
+FILE "..\nel\lib\nel_drv_opengl_win_rd.dll"
+FILE "..\wpkg\bin\stlport_vc645.dll"
 SectionEnd
 Section "section_2" section_2
 SetOutPath "$INSTDIR\data"
@@ -57,8 +61,8 @@ SectionEnd
  Section "toto"
 CreateDirectory "$SMPROGRAMS\mtp-target"
 SetOutPath $INSTDIR
-CreateShortCut "$SMPROGRAMS\mtp-target\Play Mtp-Target.lnk" "$INSTDIR\mtp-target.exe" "" "$INSTDIR\client.exe" 0
-CreateShortCut "$SMPROGRAMS\mtp-target\About.lnk" "http://mtp-target.tuxfamily.org/" "" "$INSTDIR\client.exe" 0
+CreateShortCut "$SMPROGRAMS\mtp-target\Play Mtp-Target.lnk" "$INSTDIR\mtp-target.exe" "" "$INSTDIR\mtp-target.exe" 0
+CreateShortCut "$SMPROGRAMS\mtp-target\About.lnk" "http://mtp-target.tuxfamily.org/" "" "$INSTDIR\mtp-target.exe" 0
 CreateShortCut "$SMPROGRAMS\mtp-target\Launch dedicated server.lnk" "$INSTDIR\mtp_target_service.exe" "" "$INSTDIR\mtp_target_service.exe" 0
 CreateShortCut "$SMPROGRAMS\mtp-target\Uninstall Mtp-Target.lnk" "$INSTDIR\uninst.exe" "" "$INSTDIR\uninst.exe" 0
 WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\mtp-target" "DisplayName" "mtp-target (remove only)"
