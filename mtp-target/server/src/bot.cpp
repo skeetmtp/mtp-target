@@ -214,35 +214,16 @@ string CBot::findNewBotName(const string &name)
 		return name;
 	
 	string res;
-	CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
 	CConfigFile::CVar &accounts = IService::getInstance()->ConfigFile.getVar("ForcedClientName");
 	sint pos = rand() % accounts.size();
 	for(sint i = pos; i < accounts.size(); i++)
 	{
-		bool badName = false;
-		for(CEntityManager::EntityConstIt it = acces.value().begin(); it != acces.value().end(); it++)
-		{
-			if((*it)->name() == accounts.asString(i))
-			{
-				badName = true;
-				break;
-			}
-		}
-		if(!badName)
+		if(!CEntityManager::instance().nameExist(accounts.asString(i)))
 			return accounts.asString(i);
 	}
 	for(sint i = 0; i < pos; i++)
 	{
-		bool badName = false;
-		for(CEntityManager::EntityConstIt it = acces.value().begin(); it != acces.value().end(); it++)
-		{
-			if((*it)->name() == accounts.asString(i))
-			{
-				badName = true;
-				break;
-			}
-		}
-		if(!badName)
+		if(!CEntityManager::instance().nameExist(accounts.asString(i)))
 			return accounts.asString(i);
 	}
 	return "albot";

@@ -130,11 +130,6 @@ public:
 	NLMISC::CVector		 LastSent2OthersPos;
 	sint8				 LastSentSX;
 	
-	uint8				 LastTouchedClientId;
-	sint32				 PushScore;
-	sint32				 StopedScore;
-	bool				 FirstStop;
-
 	bool				 OnTheWater;
 
 	// just display the state of the last physic render (just for watch purpose)

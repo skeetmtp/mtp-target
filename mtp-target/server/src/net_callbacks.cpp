@@ -271,6 +271,7 @@ static void cbRequestDownload(CClient *c, CNetMessage &msgin)
 	if(!packedFileUpToDate)
 	{
 		CHashKey serverHashKey = getSHA1(path);
+		/*
 		CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
 		for(CEntityManager::EntityConstIt it = acces.value().begin(); it != acces.value().end(); it++)
 		{
@@ -285,6 +286,11 @@ static void cbRequestDownload(CClient *c, CNetMessage &msgin)
 			msgout.serial(serverHashKey);
 			CNetwork::instance().send(nid, msgout);
 		}
+		*/
+		CNetMessage msgout(CNetMessage::RequestCRCKey);
+		msgout.serial(fn);
+		msgout.serial(serverHashKey);
+		CNetwork::instance().sendAllExcept(c->id(), msgout);
 	}
 
 	if(packedPath.empty() || !packedFileUpToDate )

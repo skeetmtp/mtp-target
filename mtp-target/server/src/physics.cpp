@@ -245,8 +245,6 @@ static void nearCallback(void *data, dGeomID o1, dGeomID o2)
 		ct = CLIENT_CLIENT;
 		entity1 =(CEntity*) dGeomGetData(o1);
 		entity2 =(CEntity*) dGeomGetData(o2);
-		entity1->LastTouchedClientId = entity2->id();
-		entity2->LastTouchedClientId = entity1->id();
 		entity = entity1;
 	}
 	else if(b1)

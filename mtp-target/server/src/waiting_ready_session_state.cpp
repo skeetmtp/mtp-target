@@ -50,21 +50,8 @@ using namespace NLMISC;
 void CWaitingReadySessionState::update()
 {
 	TTime currentTime = CTime::getLocalTime();
-	CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
-	CEntityManager::EntityConstIt it;
 	
-	bool allReady = true;
-	// send the message to all entities
-	for(it = acces.value().begin(); it != acces.value().end(); it++)
-	{
-		if(!(*it)->Ready)
-		{
-			allReady = false;
-			break;
-		}
-	}
-	
-	if(CSessionManager::instance().forceEnding() || allReady)
+	if(CSessionManager::instance().forceEnding() || CEntityManager::instance().everyBodyReady())
 	{
 		nlinfo("Everybody ready, start session in %g seconds", TimeBeforeStart/1000.0f);
 		changeState(CWaitingStartSessionState::instance());
@@ -72,11 +59,5 @@ void CWaitingReadySessionState::update()
 		
 		CNetMessage msgout(CNetMessage::EverybodyReady);
 		CNetwork::instance().send(msgout);
-		/*
-		for(it = acces.value().begin(); it != acces.value().end(); it++)
-		{
-			(*it)->initBeforeStartLevel();
-		}
-		*/
 	}
 }

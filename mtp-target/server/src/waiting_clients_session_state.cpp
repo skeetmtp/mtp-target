@@ -51,25 +51,6 @@ using namespace NLMISC;
 
 void CWaitingClientsSessionState::update()
 {
-	/*
-	CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
-	CEntityManager::EntityConstIt it;
-
-	uint humanClientCount = 0;
-	for(it = acces.value().begin(); it != acces.value().end(); it++)
-	{
-		if((*it)->type() == CEntity::Client)
-		{
-			humanClientCount++;
-		}
-		else if ((*it)->type() == CEntity::Bot)
-		{
-			CBot *b = (CBot *)(*it);
-			if(!b->isAutomaticBot())
-				humanClientCount++;
-		}
-	}
-	*/
 	uint humanClientCount = CEntityManager::instance().humanClientCount();
 
 	if(humanClientCount >= NbWaitingClients)
@@ -116,10 +97,6 @@ void CWaitingClientsSessionState::update()
 			(*it)->InGame = false;
 			(*it)->Ready = false;
 			(*it)->Time = 0.0f;
-			(*it)->StopedScore = 0;
-			(*it)->PushScore = 0;
-			(*it)->LastTouchedClientId = 255;
-			(*it)->FirstStop = true;
 			(*it)->OnTheWater = false;
 			(*it)->spectator(false);
 

@@ -75,7 +75,11 @@ public:
 	bool connected(const std::string &name);
 	uint humanClientCount();
 	void sendUpdateList();
-	
+
+	bool nameExist(std::string name);
+	void saveAllValidReplay();
+	bool everyBodyReady();
+		
 		
 	std::vector<uint8> IdUpdateList;
 private:

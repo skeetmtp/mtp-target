@@ -756,3 +756,61 @@ void CEntityManager::flushRemoveList()
 	}
 	IdToRemove.clear();	
 }
+
+bool CEntityManager::nameExist(std::string name)
+{
+	CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
+	CEntityManager::EntityConstIt it;
+
+	for(CEntityManager::EntityConstIt it = acces.value().begin(); it != acces.value().end(); it++)
+	{
+		if((*it)->name() == name)
+		{
+			return true;
+		}
+	}
+	
+	return false;
+}
+
+void CEntityManager::saveAllValidReplay()
+{
+	CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
+	CEntityManager::EntityConstIt it;
+	// close all replay file
+	for(it = acces.value().begin(); it != acces.value().end(); it++)
+	{
+		if((*it)->type() == CEntity::Client)
+		{
+			CClient *c = (CClient *)(*it);
+			if(c->ReplayFile)
+			{
+				fprintf(c->ReplayFile, "%d AU %.1f %s %d\n", c->id(), 0.0f, c->name().c_str(), c->CurrentScore);
+				fclose(c->ReplayFile);
+				c->ReplayFile = 0;
+				if(c->CurrentScore <IService::getInstance()->ConfigFile.getVar("SavedReplayMinimumScore").asInt())
+					CFile::deleteFile(c->ReplayFilename.c_str());
+			}
+		}
+		//		else
+		//			nlinfo("bot do score = %d ",c->CurrentScore);
+	}
+}
+
+
+bool CEntityManager::everyBodyReady()
+{
+	CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
+	CEntityManager::EntityConstIt it;
+	
+	bool allReady = true;
+	// send the message to all entities
+	for(it = acces.value().begin(); it != acces.value().end(); it++)
+	{
+		if(!(*it)->Ready)
+		{
+			return false;
+		}
+	}	
+	return true;
+}

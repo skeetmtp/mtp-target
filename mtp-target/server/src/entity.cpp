@@ -92,10 +92,6 @@ void CEntity::init ()
 	Pos = CVector::Null;
 	Force = CVector::Null;
 	for(uint i = 0; i < 10; i++) LastVel[i] = 0.0f;
-	LastTouchedClientId = 0;
-	PushScore = 0;
-	StopedScore = 0;
-	FirstStop = 0;
 	Spectator = true;
 	_isAdmin = false;
 	MaxLinearVelocity = 0;

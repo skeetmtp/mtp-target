@@ -55,7 +55,6 @@ public:
 	std::string currentStateName() { nlassert(CurrentState); return CurrentState->name(); }
 
 	void reset();
-	void saveAllValidReplay(CEntityManager::CEntities::CReadAccessor &acces);
 	
 	uint8 editMode() {return _editMode;}
 	void editMode(uint8 em) {_editMode = em;}

@@ -85,33 +85,9 @@ void CRunningSessionState::update()
 					if(val>MinVelBeforeEnd) //si le client bouge
 					{
 						end = false;
-						c->FirstStop = true;
-						//c->stopedScore = c->CurrentScore;
 					}
 					else //si il est arrete
 					{
-						if(c->FirstStop)
-						{
-							//nlwarning("%s[%d] stop stopedScore=%d CurrentScore=%d lasttouchedId=%d",c->Name.c_str(),c->Id,c->stopedScore,c->CurrentScore,c->lastTouchedClientId);
-							if(c->StopedScore != 0 && c->CurrentScore != c->StopedScore) //mais k il etait arreter avant et ke maintenant il n est plus sur une platforme de point
-							{
-								nlwarning("%s[%d] has been pushed by [%d]", c->name().c_str(), c->id(), c->LastTouchedClientId);
-								for(CEntityManager::EntityConstIt it2 = acces.value().begin(); it2 != acces.value().end(); it2++)
-								{
-									CEntity *c2 = *it2;
-									if(c->LastTouchedClientId == c2->id())
-									{
-										//on donne ses point a celui ki l a pousse
-										c2->PushScore += c->StopedScore - c->CurrentScore;
-										nlwarning("%s[%d] has stole %d point from %s[%d]",c2->name().c_str(),c2->id(),c->StopedScore,c->name().c_str(),c->id());
-										break;
-									}
-								}
-							}
-						}
-						c->FirstStop = false;
-						c->StopedScore = c->CurrentScore + c->PushScore;
-						c->PushScore = 0;
 						if(c->Time == 0)
 						{
 							c->Time =(float)(currentTime - CSessionManager::instance().startTime())/1000.0f;
@@ -142,22 +118,6 @@ void CRunningSessionState::update()
 					bestit3 = it;
 				}
 			}
-/*
-			if (bestit1 != acces.value().end())
-				nlinfo ("bestit1 = %s %g", (*bestit1)->Name.c_str(), (*bestit1)->Time);
-			else
-				nlinfo ("bestit1 = NO");
-			
-			if (bestit2 != acces.value().end())
-				nlinfo ("bestit2 = %s %g", (*bestit2)->Name.c_str(), (*bestit2)->Time);
-			else
-				nlinfo ("bestit2 = NO");
-			
-			if (bestit3 != acces.value().end())
-				nlinfo ("bestit3 = %s %g", (*bestit3)->Name.c_str(), (*bestit3)->Time);
-			else
-				nlinfo ("bestit3 = NO");
-*/
 			switch(acces.value().size())
 			{
 			case 0:
@@ -228,14 +188,14 @@ void CRunningSessionState::update()
 					Server->send(msgout, (*it)->From);
 			}*/
 
-			CSessionManager::instance().saveAllValidReplay(acces);
 
 			changeState(CEndingSessionState::instance());
 			CSessionManager::instance().endTime(currentTime);
 			CSessionManager::instance().forceEnding(false);
 		}
 	}
-
+	CEntityManager::instance().saveAllValidReplay();
+	
 	// chat must be call outside the client accessor
 	for(uint i = 0; i < chat.size(); i++)
 		CNetwork::instance().sendChat(chat[i]);

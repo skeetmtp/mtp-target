@@ -91,34 +91,10 @@ void CSessionManager::changeState(CSessionState &ns)
 
 void CSessionManager::reset()
 {
-	CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
-	saveAllValidReplay(acces);
+	CEntityManager::instance().saveAllValidReplay();
 	changeState(CWaitingClientsSessionState::instance());
 	StartTime = 0;
 	EndTime = 0;
-}
-
-void CSessionManager::saveAllValidReplay(CEntityManager::CEntities::CReadAccessor &acces)
-{
-	CEntityManager::EntityConstIt it;
-	// close all replay file
-	for(it = acces.value().begin(); it != acces.value().end(); it++)
-	{
-		if((*it)->type() == CEntity::Client)
-		{
-			CClient *c = (CClient *)(*it);
-			if(c->ReplayFile)
-			{
-				fprintf(c->ReplayFile, "%d AU %.1f %s %d\n", c->id(), 0.0f, c->name().c_str(), c->CurrentScore);
-				fclose(c->ReplayFile);
-				c->ReplayFile = 0;
-				if(c->CurrentScore <IService::getInstance()->ConfigFile.getVar("SavedReplayMinimumScore").asInt())
-					CFile::deleteFile(c->ReplayFilename.c_str());
-			}
-		}
-		//		else
-		//			nlinfo("bot do score = %d ",c->CurrentScore);
-	}
 }
 
 
