@@ -1,7 +1,7 @@
 Name = "The Lan"
 Author = "Skeet"
 ServerLua = "level_default_server.lua"
-ReleaseLevel = 4
+ReleaseLevel = 1
 
 skyShapeFileName = "sky.shape";
 sunAmbientColor = CRGBA(82, 100, 133, 255);
@@ -14,6 +14,10 @@ clearColor = CRGBA(30, 45, 90, 0);
 fogDistMin = 0;
 fogDistMax = 150;
 fogColor = clearColor;
+
+ClientBounce = 1;
+ClientBounceCoef = 1;
+ClientBounceVel = 1;
 
 cameraMinDistFromStartPointToMove = 1.0;
 
