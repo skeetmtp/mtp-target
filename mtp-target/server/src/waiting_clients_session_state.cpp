@@ -70,6 +70,7 @@ void CWaitingClientsSessionState::update()
 
 
 		// reset everybody in startpos
+		nlinfo("CWaitingClientsSessionState ends : reset every body");
 		static uint st = 0;
 		uint i=st++;
 		for(it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++, i++)
@@ -116,6 +117,7 @@ void CWaitingClientsSessionState::update()
 			}
 		}
 		
+		nlinfo("sending StartSession to everybody");
 		CNetMessage msgout(CNetMessage::StartSession);
 		msgout.serial(TimeBeforeStart);
 		float ttimeout = (float)CLevelManager::instance().timeTimeout();

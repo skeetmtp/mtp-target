@@ -138,6 +138,30 @@ void CEntityManager::remove(uint8 eid)
 	ClientToRemoveList->push_back(eid);
 }
 
+bool CEntityManager::inRemoveList(uint8 eid)
+{
+	uint tid = myGetThreadId();
+	nlassert(tid==MainThreadId || tid==NetworkThreadId);
+	std::list<uint8> *ClientToRemoveList;
+	
+	if(tid==MainThreadId)
+		ClientToRemoveList = &ClientToRemoveMainThread;
+	else
+		ClientToRemoveList = &ClientToRemoveNetworkThread;
+	
+	list<uint8>::iterator it1;
+	for(it1=ClientToRemoveList->begin(); it1!=ClientToRemoveList->end();it1++)
+	{
+		uint8 iteid = *it1;
+		if(iteid==eid)
+		{
+			return true;			
+		}
+		
+	}
+	return false;
+}
+
 void CEntityManager::_add(std::list<CEntity *> &addList)
 {
 	list<CEntity *>::iterator it2;
@@ -223,7 +247,7 @@ void CEntityManager::_remove(std::list<uint8> &removeList)
 
 
 
-
+/* old code
 void CEntityManager::flushAddRemoveList()
 {
 	uint tid = myGetThreadId();
@@ -252,6 +276,36 @@ void CEntityManager::flushAddRemoveList()
 		_remove(ClientToRemoveNetworkThread);
 		updateIdUpdateList();
 		resumeAllThread();
+	}		
+	
+}
+*/
+
+void CEntityManager::flushAddRemoveList()
+{
+	if(ClientToAddMainThread.size() || ClientToRemoveMainThread.size())
+	{
+		nlinfo("flushing main thread add/remove list");
+		bool paused = pauseAllThread();
+		if(paused)
+		{
+			_add(ClientToAddMainThread);
+			_remove(ClientToRemoveMainThread);
+			updateIdUpdateList();
+			resumeAllThread();
+		}
+	}
+	if(ClientToAddNetworkThread.size() || ClientToRemoveNetworkThread.size())
+	{
+		nlinfo("flushing network thread add/remove list");
+		bool paused = pauseAllThread();
+		if(paused)
+		{
+			_add(ClientToAddNetworkThread);
+			_remove(ClientToRemoveNetworkThread);
+			updateIdUpdateList();
+			resumeAllThread();
+		}
 	}		
 	
 }
@@ -1172,6 +1226,7 @@ bool CEntityManager::everyBodyReady()
 					IdToRemove.push_back((*it)->id());
 					string timeoutMsg = toString("kick %s : wait for ready timeout",(*it)->name().c_str());
 					msgs.push_back(timeoutMsg);
+					nlinfo("%s",timeoutMsg.c_str());
 				}
 				else
 					res = false;

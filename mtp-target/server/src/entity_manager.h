@@ -60,6 +60,7 @@ public:
 	void login(CEntity *c);
 
 	void add(CEntity *entity);
+	bool inRemoveList(uint8 eid);
 	void remove(uint8 eid);
 	void remove(const std::string &name);
 	CEntity *getByName(const std::string &name);

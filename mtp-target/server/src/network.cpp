@@ -129,6 +129,8 @@ void CNetworkTask::run()
 			sock->setNonBlockingMode(false);
 
 			CEntityManager::instance().addClient(sock);
+			//we must flush list now to be ready to receive incoming message from this client
+			CEntityManager::instance().flushAddRemoveList();
 		}
 		
 
@@ -160,15 +162,18 @@ void CNetworkTask::run()
 					CEntityManager::instance().remove(c->id());
 					break;
 				default:
-					nlwarning("Received failed from client eid %hu : %s (code %u)", (uint16)c->id(), NLNET::CSock::errorString(NLNET::CSock::getLastError()).c_str(), NLNET::CSock::getLastError());
-					CEntityManager::instance().remove(c->id());
+					if(!CEntityManager::instance().inRemoveList(c->id()))
+					{
+						nlwarning("Received failed from client eid %hu : %s (code %u)", (uint16)c->id(), NLNET::CSock::errorString(NLNET::CSock::getLastError()).c_str(), NLNET::CSock::getLastError());
+						CEntityManager::instance().remove(c->id());
+					}
 					break;
 				}
 			}
 		}
 
 		//TODO SKEET : check why we cannot let only main thread loop do the flush job ?
-		CEntityManager::instance().flushAddRemoveList();
+		//CEntityManager::instance().flushAddRemoveList();
 		
 	}
 }
