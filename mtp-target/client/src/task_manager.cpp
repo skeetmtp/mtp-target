@@ -224,7 +224,7 @@ NLMISC_COMMAND(displayTasks, "display all task", "")
 	log.displayNL("Init order call:");
 	for(std::list<ITask*>::iterator it = CTaskManager::instance().Tasks.begin(); it != CTaskManager::instance().Tasks.end(); it++)
 	{
-		log.displayNL("  %s %s", (*it)->name().c_str(), ((*it)->Execute?"Running":"Stop"));
+		//log.displayNL("  %s %s", (*it)->name().c_str(), ((*it)->Execute?"Running":"Stop"));
 	}
 	log.displayNL("Update order call:");
 	for(std::list<ITask*>::iterator it = CTaskManager::instance().OrderSortedTasks.begin(); it != CTaskManager::instance().OrderSortedTasks.end(); it++)
