@@ -79,8 +79,7 @@ void CRunningSessionState::update()
 					}
 					else //si il est arrete
 					{
-						float minArrivalTime = TimeBeforeCheck/1000.0f + 1.0f;
-						if(c->ArrivalTime > minArrivalTime  && c->CurrentScore>0)
+						if(c->ArrivalTime==0 && c->CurrentScore>0)
 						{
 							c->ArrivalTime =(float)(currentTime - CSessionManager::instance().startTime())/1000.0f;
 							nlinfo("*** ARRIVAL TIME '%s' %f",c->name().c_str(),c->ArrivalTime);
@@ -111,17 +110,20 @@ void CRunningSessionState::update()
 			CEntityManager::EntityConstIt  bestit3 = CEntityManager::instance().entities().end();
 			for(it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
 			{
-				if((*it)->CurrentScore > 0 && (bestit1 == CEntityManager::instance().entities().end() || (*bestit1)->ArrivalTime >(*it)->ArrivalTime))
+				if((*it)->CurrentScore > 0 && (*it)->ArrivalTime > 11)
 				{
-					bestit1 = it;
-				}
-				else if((*it)->CurrentScore > 0 && (bestit2 == CEntityManager::instance().entities().end() || (*bestit2)->ArrivalTime >(*it)->ArrivalTime))
-				{
-					bestit2 = it;
-				}
-				else if((*it)->CurrentScore > 0 && (bestit3 == CEntityManager::instance().entities().end() || (*bestit3)->ArrivalTime > (*it)->ArrivalTime))
-				{
-					bestit3 = it;
+					if(bestit1 == CEntityManager::instance().entities().end() || (*bestit1)->ArrivalTime >(*it)->ArrivalTime)
+					{
+						bestit1 = it;
+					}
+					else if(bestit2 == CEntityManager::instance().entities().end() || (*bestit2)->ArrivalTime >(*it)->ArrivalTime)
+					{
+						bestit2 = it;
+					}
+					else if(bestit3 == CEntityManager::instance().entities().end() || (*bestit3)->ArrivalTime > (*it)->ArrivalTime)
+					{
+						bestit3 = it;
+					}
 				}
 			}
 			nlinfo("compute bonus time");

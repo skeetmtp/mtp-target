@@ -189,6 +189,7 @@ bool CLevelManager::newLevel(string &str1, string &str2)
 
 string CLevelManager::updateStats(const std::string &name, sint32 score, float time, bool &breakTime)
 {
+	float minTimeNeeded = 11.0f;
 	string res;
 	CConfigFile::CVar &stats = IService::getInstance()->ConfigFile.getVar("LevelStats");
 	nlassert(stats.size() % 5 == 0);
@@ -205,7 +206,7 @@ string CLevelManager::updateStats(const std::string &name, sint32 score, float t
 	{
 		if(stats.asString(i) == levelname)
 		{
-			if(time > 0.0f && score > 0 && int(time*100.0) < int(stats.asFloat(i+2)*100.0f))
+			if(time > minTimeNeeded && score > 0 && int(time*100.0) < int(stats.asFloat(i+2)*100.0f))
 			{
 				stats.setAsString(name, i+1);
 				stats.setAsString(toString("%.2f",time), i+2);
@@ -213,7 +214,7 @@ string CLevelManager::updateStats(const std::string &name, sint32 score, float t
 				res = toString("%s has broken the time record with %.2f seconds.", name.c_str(), time);
 				nlinfo("best time");
 			}
-			if(time > 0.0f && score > 0 && score > stats.asInt(i+4))
+			if(time > minTimeNeeded && score > 0 && score > stats.asInt(i+4))
 			{
 				stats.setAsString(name, i+3);
 				stats.setAsString(toString("%d",score), i+4);
@@ -228,7 +229,7 @@ string CLevelManager::updateStats(const std::string &name, sint32 score, float t
 	}
 
 	// stat not found for this level, add them
-	if(time > 0.0f && score > 0)
+	if(time > minTimeNeeded && score > 0)
 	  {
 	    if(stats.size() == 0)
 	      {
