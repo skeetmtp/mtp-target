@@ -466,6 +466,7 @@ void CResourceManager::update3DWhileDownloading()
 	//CBackgroundTask::instance().update();
 	CChatTask::instance().update();
 	CGuiTask::instance().update();
+	CNetworkTask::instance().update();
 	
 	if (C3DTask::instance().kbPressed(KeyESCAPE) || !C3DTask::instance().driver().isActive() || !CNetworkTask::instance().connected())
 	{
