@@ -482,12 +482,7 @@ bool CEntity::isLocal()
 void CEntity::setIsLocal(bool local)
 {
 	if(local)
-	{
 		CMtpTarget::instance().controler().setControledEntity(id());
-		interpolator().dt(MT_NETWORK_MY_UPDATE_PERIODE);
-	}
-	else
-		interpolator().dt(MT_NETWORK_UPDATE_PERIODE);
 }
 
 

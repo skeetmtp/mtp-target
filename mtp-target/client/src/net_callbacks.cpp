@@ -197,6 +197,9 @@ static void cbUpdate(CNetMessage &msgin)
 	{
 		if(CEntityManager::instance().exist(eid))
 		{
+			if(!CEntityManager::instance()[eid].isLocal())
+				CEntityManager::instance()[eid].interpolator().dt(MT_NETWORK_UPDATE_PERIODE);
+
 			if(msgin.getPos() >= (sint32)msgin.length())
 			{
 				nlwarning("cbUpdate not enough data in message (stopped at eid = %d)",eid);
