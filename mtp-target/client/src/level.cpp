@@ -223,9 +223,9 @@ CLevel::CLevel(const string &filename)
 	luaGetGlobalVariable(LuaState, clearColor);
 	C3DTask::instance().clearColor(clearColor);
 	
-	double fogDistMin = CConfigFileTask::instance().configFile().getVar("FogDistMin").asFloat();
+	float fogDistMin = CConfigFileTask::instance().configFile().getVar("FogDistMin").asFloat();
 	luaGetGlobalVariable(LuaState, fogDistMin);
-	double fogDistMax = CConfigFileTask::instance().configFile().getVar("FogDistMax").asFloat();
+	float fogDistMax = CConfigFileTask::instance().configFile().getVar("FogDistMax").asFloat();
 	luaGetGlobalVariable(LuaState, fogDistMax);
 	CLuaRGBA fogColor = clearColor;
 	luaGetGlobalVariable(LuaState, fogColor);

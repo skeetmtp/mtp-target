@@ -73,10 +73,10 @@ CEntityState operator*( CEntityState &value, double coef )
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 
-const double CInterpolator::_minLct = 2.0 * MT_NETWORK_UPDATE_PERIODE;  //less lct time doesnt improve really gameplay
-const double CInterpolator::_maxLct = 12.0 * MT_NETWORK_UPDATE_PERIODE; //if lct > _maxLct, the game become unplayable ...
+const double CInterpolator::_minLct = 2.0 * MT_NETWORK_MY_UPDATE_PERIODE;  //less lct time doesnt improve really gameplay
+const double CInterpolator::_maxLct = 12.0 * MT_NETWORK_MY_UPDATE_PERIODE; //if lct > _maxLct, the game become unplayable ...
 
-CInterpolator::CInterpolator()
+CInterpolator::CInterpolator(double dt)
 {
 	_currentPosition        = CVector::Null;
 	_currentSpeed           = CVector::Null;
@@ -84,7 +84,8 @@ CInterpolator::CInterpolator()
 	_currentSmoothDirection = CVector::Null;
 	_currentOnWater         = false;
 	
-	_entity = 0;	
+	_entity = 0;
+	_dt = dt;
 	reset();
 }
 
@@ -127,7 +128,7 @@ void CInterpolator::addKey(CEntityInterpolatorKey key)
 	}
 	else
 	{
-		_addKeyTime += MT_NETWORK_UPDATE_PERIODE; //time the key should arrived
+		_addKeyTime += _dt; //time the key should arrived
 	}
 	double localTime = time - _startTime;
 	if(_addKeyTime>localTime)
@@ -243,7 +244,7 @@ CVector CInterpolator::_speed(double time)
 	CEntityInterpolatorKey key2 = *it;
 	it++;
 	CEntityInterpolatorKey key1 = *it;
-	return (key2.value().position - key1.value().position) / MT_NETWORK_UPDATE_PERIODE;
+	return (key2.value().position - key1.value().position) / (float)_dt;
 }
 
 CVector CInterpolator::_direction(double time)
@@ -267,6 +268,11 @@ void CInterpolator::_autoAdjustLct()
 //
 ///////////////////////////////////////////////////////////////////////////////////////////
 
+CLinearInterpolator::CLinearInterpolator(double dt):CInterpolator(dt)
+{
+	
+}
+
 CLinearInterpolator::~CLinearInterpolator()
 {
 	
@@ -276,8 +282,8 @@ CLinearInterpolator::~CLinearInterpolator()
 
 CVector CLinearInterpolator::_position(double time)
 {
-	double remainder = fmod(time,MT_NETWORK_UPDATE_PERIODE);
-	double lerpPos = remainder / MT_NETWORK_UPDATE_PERIODE;
+	double remainder = fmod(time,_dt);
+	double lerpPos = remainder / _dt;
 	deque<CEntityInterpolatorKey>::reverse_iterator it;
 	CEntityInterpolatorKey nextKey = _keys.back();
 	bool nextKeySet = false;
@@ -300,8 +306,8 @@ CVector CLinearInterpolator::_position(double time)
 
 CVector CLinearInterpolator::_speed(double time)
 {
-	double remainder = fmod(time,MT_NETWORK_UPDATE_PERIODE);
-	double lerpPos = remainder / MT_NETWORK_UPDATE_PERIODE;
+	double remainder = fmod(time,_dt);
+	double lerpPos = remainder / _dt;
 	deque<CEntityInterpolatorKey>::reverse_iterator it;
 	CEntityInterpolatorKey nextKey = _keys.back();
 	bool nextKeySet = false;
@@ -312,7 +318,7 @@ CVector CLinearInterpolator::_speed(double time)
 		{
 			if(!nextKeySet)
 				break;
-			return (nextKey.value().position - key.value().position)  / MT_NETWORK_UPDATE_PERIODE;
+			return (nextKey.value().position - key.value().position)  / (float)_dt;
 		}
 		nextKey = key;
 		nextKeySet = true;
@@ -322,8 +328,8 @@ CVector CLinearInterpolator::_speed(double time)
 
 CVector CLinearInterpolator::_direction(double time)
 {
-	double remainder = fmod(time,MT_NETWORK_UPDATE_PERIODE);
-	double lerpPos = remainder / MT_NETWORK_UPDATE_PERIODE;
+	double remainder = fmod(time,_dt);
+	double lerpPos = remainder / _dt;
 	deque<CEntityInterpolatorKey>::reverse_iterator it;
 	CEntityInterpolatorKey nextKey = _keys.back();
 	bool nextKeySet = false;
@@ -349,9 +355,9 @@ void CLinearInterpolator::_autoAdjustLct()
 	lct = _meanKeyDiffTime * 4;
 	lct = max(lct,_minLct);
 	lct = min(lct,_maxLct);
-//	lct = _meanKeyDiffTime + 2 * MT_NETWORK_UPDATE_PERIODE;
+//	lct = _meanKeyDiffTime + 2 * _dt;
 	_lct = lct;
-//	_lct = 4 * MT_NETWORK_UPDATE_PERIODE;
+//	_lct = 4 * _dt;
 }
 
 
@@ -362,7 +368,7 @@ void CLinearInterpolator::_autoAdjustLct()
 //
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-CExtendedInterpolator::CExtendedInterpolator()
+CExtendedInterpolator::CExtendedInterpolator(double dt):CLinearInterpolator(dt)
 {
 	reset();
 }

@@ -119,8 +119,8 @@ public:
 	float				 LastVel[10];		// last velocity
 	uint32				 LastVelPos;		// between 0 and 9
 	uint8				 StartingPointId;
-	NLMISC::CVector		 LastSentPos;
-	NLMISC::CVector		 LastSentDPos;
+	NLMISC::CVector		 LastSent2MePos;
+	NLMISC::CVector		 LastSent2OthersPos;
 	sint8				 LastSentSX;
 	
 	uint8				 LastTouchedClientId;

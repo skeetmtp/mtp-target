@@ -105,7 +105,7 @@ public:
 
 		CSessionManager::instance().init();
 
-		setUpdateTimeout(MT_NETWORK_MY_UPDATE_FREQUENCE);
+		setUpdateTimeout(MT_NETWORK_MY_UPDATE_PERIODE_MS);
 
 		initWelcome();
 

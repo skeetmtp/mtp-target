@@ -225,7 +225,7 @@ void CMtpTarget::loadNewSession()
 	CMtpTarget::instance().controler().Camera.reset();
 	/*
 	if (CMtpTarget::instance().controler().getControledEntity() != 255)
-		CEntityManager::instance()[CMtpTarget::instance().controler().getControledEntity()].interpolator.reset();
+		CEntityManager::instance()[CMtpTarget::instance().controler().getControledEntity()].interpolator().reset();
 	*/
 	resetFollowedEntity();
 	controler().Camera.reset();
@@ -444,7 +444,7 @@ void mtpTarget::init()
 
 				if (self)
 				{
-					CMtpTarget::instance().controler().setControledEntity(eid);
+					CEntityManager::instance()[eid].setIsLocal(true);
 				}
 			}
 
@@ -460,7 +460,7 @@ void mtpTarget::init()
 					if (eid != 255)
 					  {
 					    CVector v(x, y, z);
-						CEntityManager::instance()[eid].interpolator.addKey(CEntityInterpolatorKey(CEntityState(v,false),t));//.position(v,t, false); //put the entity in the good position
+						CEntityManager::instance()[eid].interpolator().addKey(CEntityInterpolatorKey(CEntityState(v,false),t));//.position(v,t, false); //put the entity in the good position
 					  }
 					else
 						nlwarning ("%d introuvable", eid);

@@ -50,7 +50,7 @@ void CEntityManager::init()
 {
 	for(uint i = 0; i < 256; i++)
 	{
-		Entities[i].Id = i;
+		Entities[i].id(i);
 		Entities[i].reset();
 	}
 }
@@ -154,7 +154,7 @@ void CEntityManager::reset()
 	{
 		if(Entities[i].type() != CEntity::Unknown)
 		{
-			Entities[i].interpolator.reset();
+			Entities[i].interpolator().reset();
 		}
 	}
 }

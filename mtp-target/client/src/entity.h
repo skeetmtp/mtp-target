@@ -86,7 +86,8 @@ public:
 	void		collisionWithWater(bool col);
 	bool        openClose() {return OpenClose;};
 	bool		isLocal();
-
+	void		setIsLocal(bool local);
+	
 	// accessor
 
 	uint8				 id() const { return Id; }
@@ -107,14 +108,16 @@ public:
 	
 	void				 load3d();
 
+	CExtendedInterpolator &interpolator() const;
 
-	CExtendedInterpolator interpolator;
+
 	
 	NL3D::UInstance *CloseMesh, *OpenMesh;
 
 	NL3D::UParticleSystemInstance *TraceParticle;
 	
-	NLMISC::CVector		 LastSentPos;
+	NLMISC::CVector		 LastSent2MePos;
+	NLMISC::CVector		 LastSent2OthersPos;
 private:
 	
 	TEntity			Type;
@@ -128,13 +131,15 @@ private:
 	uint16			Ping;
 	bool			OpenClose; // open=true, close=false
 	CMatrix			ObjMatrix;
+	CExtendedInterpolator *_interpolator;
 	
 	// private ctor because only CEntityManager can create a CEntity
 	CEntity();
-	virtual ~CEntity() { }
+	virtual ~CEntity() { delete _interpolator; _interpolator = NULL; }
 
 	void reset();
 	void init(TEntity type, const std::string &name, sint32 totalScore, NLMISC::CRGBA &color, const std::string &meshname, bool spectator);
+	void id(uint8 nid);
 
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////

@@ -100,7 +100,7 @@ class CEntity;
 class CInterpolator
 {
 public:
-	CInterpolator();
+	CInterpolator(double dt);
 	virtual ~CInterpolator();
 	virtual void update();
 
@@ -117,6 +117,8 @@ public:
 	void addKey(CEntityInterpolatorKey key);
 	bool outOfKey();
 	double localTime() const;
+
+	void dt(float ndt) {_dt = ndt;}
 	
 	virtual void reset();
 	void entity(CEntity *entity);
@@ -146,6 +148,7 @@ protected:
 	bool    _currentOnWater;
 	
 	double  _lct;
+	double  _dt;
 	static const double _minLct;
 	static const double _maxLct;
 
@@ -157,6 +160,7 @@ private:
 class CLinearInterpolator : public CInterpolator
 {
 public:
+	CLinearInterpolator(double dt);
 	virtual ~CLinearInterpolator();
 protected:
 	virtual CVector _position(double time);
@@ -170,7 +174,7 @@ private:
 class CExtendedInterpolator : public CLinearInterpolator
 {
 public:
-	CExtendedInterpolator();
+	CExtendedInterpolator(double dt);
 	virtual ~CExtendedInterpolator();
 	void update();
 

@@ -59,6 +59,7 @@
 #include "mtp_target.h"
 #include "font_manager.h"
 #include "config_file_task.h"
+#include "../../common/constant.h"
 
 using namespace std;
 using namespace NLMISC;
@@ -73,7 +74,9 @@ CEntity::CEntity()
 	OpenMesh = 0;
 	TraceParticle = 0;
 	Rank = 255;
-	LastSentPos = CVector::Null;
+	LastSent2MePos = CVector::Null;
+	LastSent2OthersPos = CVector::Null;
+	_interpolator = NULL;
 }
 
 void CEntity::swapOpenClose()
@@ -111,6 +114,12 @@ void CEntity::swapOpenClose()
 		CMtpTarget::instance().controler().swapOpenClose();
 }
 
+CExtendedInterpolator &CEntity::interpolator() const
+{
+	nlassert(_interpolator);
+	return *_interpolator;
+}
+
 void CEntity::close()
 {
 	OpenClose = false;
@@ -124,14 +133,14 @@ void CEntity::close()
 
 void CEntity::update()
 {
-	interpolator.update();
+	interpolator().update();
 
 //	nlinfo("set matrix for %hu", (uint16)id());
 				
 	if(OpenMesh)
-		OpenMesh->setMatrix(interpolator.getMatrix());
+		OpenMesh->setMatrix(interpolator().getMatrix());
 	if(CloseMesh)
-		CloseMesh->setMatrix(interpolator.getMatrix());
+		CloseMesh->setMatrix(interpolator().getMatrix());
 	{
 
 /*ace todo		if (OnWater && WaterModel)
@@ -158,7 +167,7 @@ void CEntity::update()
 
 	if(TraceParticle != 0)
 	{
-		TraceParticle->setPos(interpolator.position());
+		TraceParticle->setPos(interpolator().position());
 		
 		// we activate
 		if (TraceParticle != 0 && ParticuleActivated != -1 && TraceParticle->isSystemPresent())
@@ -175,10 +184,10 @@ void CEntity::update()
 
 void CEntity::collisionWithWater(bool col)
 {
-	if(col && interpolator.onWater())
+	if(col && interpolator().onWater())
 		return;
 
-	if(col && !interpolator.onWater())
+	if(col && !interpolator().onWater())
 	{
 		// launch the splatch sound
 		SoundsDescriptor.play(CSoundManager::CEntitySoundsDescriptor::Splash);
@@ -202,13 +211,20 @@ void CEntity::renderName() const
 	// display name of other people than me
 	if(CMtpTarget::instance().controler().getControledEntity() != id())
 	{
-		CFontManager::instance().printf3D(color(), interpolator.position(),0.01f, name().c_str());
+		CFontManager::instance().printf3D(color(), interpolator().position(),0.01f, name().c_str());
 	}
+}
+
+void CEntity::id(uint8 nid) 
+{ 
+	nlassert(!_interpolator);
+	_interpolator = new CExtendedInterpolator(MT_NETWORK_UPDATE_PERIODE);
+	Id = nid;
 }
 
 void CEntity::reset()
 {
-	interpolator.entity(this);
+	interpolator().entity(this);
 	
 	if(TraceParticle)
 	{
@@ -251,6 +267,7 @@ void CEntity::init(TEntity type, const std::string &name, sint32 totalScore, CRG
 	Color = color;
 	MeshName = meshname;
 	Spectator = spectator;
+	setIsLocal(false);
 	
 	CSoundManager::instance().registerEntity(SoundsDescriptor);
 
@@ -302,4 +319,15 @@ void CEntity::load3d()
 bool CEntity::isLocal()
 { 
 	return CMtpTarget::instance().controler().getControledEntity() == Id;
+}
+
+void CEntity::setIsLocal(bool local)
+{
+	if(local)
+	{
+		CMtpTarget::instance().controler().setControledEntity(id());
+		interpolator().dt(MT_NETWORK_MY_UPDATE_PERIODE);
+	}
+	else
+		interpolator().dt(MT_NETWORK_UPDATE_PERIODE);
 }

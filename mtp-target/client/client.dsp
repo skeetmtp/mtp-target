@@ -583,6 +583,10 @@ SOURCE=.\Src\camera.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\common\constant.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\Src\controler.cpp
 # End Source File
 # Begin Source File
