@@ -4,7 +4,7 @@ include_once("stat_game.php");
 
 	$uid = userName2Uid($user_login);
 	//$uid = 5453;
-	$cacheFileName = $cache_dir."/".$page.".html";
+	$cacheFileName = $cache_dir."/stat_usage.html";
 	
 	/*
 	if(isCacheFileUpToDate($cacheFileName))

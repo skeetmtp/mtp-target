@@ -45,7 +45,7 @@ function isCacheFileUpToDateDuration($filename,$duration)
 
 function isCacheFileUpToDate($filename)
 {
-	return false;
+	//return false;
 	return(isCacheFileUpToDateDuration($filename,5*60));
 }
 
