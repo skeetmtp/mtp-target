@@ -237,7 +237,10 @@ void CHudTask::render()
 			string str;
 			uint32 len;
 			
-			str = "Title: " + CLevelManager::instance().currentLevel().name();
+			if(CLevelManager::instance().levelPresent())
+				str = "Title: " + CLevelManager::instance().currentLevel().name();
+			else
+				str = "Level not present";
 			len = str.size();
 			CFontManager::instance().printf(CRGBA(255, 255, 255, 255), 1 * fontWidth, 10.0f * fontHeight,1, str.c_str());
 			/*
@@ -245,7 +248,10 @@ void CHudTask::render()
 			len = str.size();
 			CFontManager::instance().printf(CRGBA(255, 255, 255, 255), 1 * fontWidth, 11.0f * fontHeight,1, str.c_str());
 			*/
-			str = "Author: " + CLevelManager::instance().currentLevel().author();
+			if(CLevelManager::instance().levelPresent())
+				str = "Author: " + CLevelManager::instance().currentLevel().author();
+			else
+				str = "Level not present";
 			len = str.size();
 			CFontManager::instance().printf(CRGBA(255, 255, 255, 255), 1 * fontWidth, 12.0f * fontHeight,1, str.c_str());
 

@@ -232,12 +232,14 @@ void CControler::update()
 			if (C3DTask::instance().kbDown(KeySHIFT))
 			{
 //				mtpTarget::instance().World.switchPhysic();
-				CLevelManager::instance().currentLevel().switchStartPositions();
+				if(CLevelManager::instance().levelPresent())
+					CLevelManager::instance().currentLevel().switchStartPositions();
 			}
 			else
 			{
 //				mtpTarget::instance().World.switchLevel();
-				CLevelManager::instance().currentLevel().switchLevel();
+				if(CLevelManager::instance().levelPresent())
+					CLevelManager::instance().currentLevel().switchLevel();
 			}
 		}
 
@@ -346,7 +348,7 @@ void CControler::update()
 		{
 			CNetworkTask::instance().openClose();
 			//if(isLocal())
-				CMtpTarget::instance().controler().swapOpenClose();
+			swapOpenClose();
 		}
 	}
 

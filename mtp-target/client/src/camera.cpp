@@ -258,7 +258,7 @@ bool CCamera::updateRampe(float backDist,float height,float targetBackDist,float
 	CurrentTargetHeight		= lerp(CurrentTargetHeight, targetHeight, (float)lpos);
 
 	CVector distFromStart = CVector::Null;
-	if(CEntityManager::instance()[EId].startPointId()!=255)
+	if(CEntityManager::instance()[EId].startPointId()!=255 && CLevelManager::instance().levelPresent())
 		distFromStart = CEntityManager::instance()[EId].interpolator().position() - CLevelManager::instance().currentLevel().startPosition(CEntityManager::instance()[EId].startPointId());
 	float facing;
 	if(distFromStart.norm()>MinDistFromStartPointToMove)

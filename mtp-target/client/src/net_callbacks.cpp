@@ -168,7 +168,8 @@ static void cbOpenClose(CNetMessage &msgin)
 	// check if the player exists
 	if(!CEntityManager::instance().exist(eid)) { nlwarning("The eid doesn't exist"); return; }
 	
-	CEntityManager::instance()[eid].addOpenCloseKey = true;
+	//CEntityManager::instance()[eid].addOpenCloseKey = true;
+	CEntityManager::instance()[eid].swapOpenClose();
 
 	if(SessionFile) fprintf(SessionFile, "%hu OC\n", (uint16)eid);
 }
@@ -465,10 +466,12 @@ static void cbUpdateElement(CNetMessage &msgin)
 	switch(elementType)
 	{
 	case CEditableElementCommon::Module:
-		CLevelManager::instance().currentLevel().updateModule(elementId,pos,eulerRot,selectedBy);
+		if(CLevelManager::instance().levelPresent())
+			CLevelManager::instance().currentLevel().updateModule(elementId,pos,eulerRot,selectedBy);
 		break;
 	case CEditableElementCommon::StartPosition:
-		CLevelManager::instance().currentLevel().updateStartPoint(elementId,pos,eulerRot,selectedBy);
+		if(CLevelManager::instance().levelPresent())
+			CLevelManager::instance().currentLevel().updateStartPoint(elementId,pos,eulerRot,selectedBy);
 		break;
 	default:
 		nlwarning("Unknown elemen type %hu", (uint16)elementType);

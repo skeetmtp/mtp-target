@@ -82,7 +82,7 @@ void CEditorTask::_mouseSelectModule()
 	bool mousePressed = CGuiObjectManager::instance().mouseListener().Pressed;
 	CVector mousePressedPos = CGuiObjectManager::instance().mouseListener().pressedPosition();
 	uint32 i;
-	if(mousePressed)
+	if(mousePressed && CLevelManager::instance().levelPresent())
 	{
 		_selectedElement = 0;
 		//nlinfo("editor ray test");
@@ -171,7 +171,7 @@ void CEditorTask::update()
 		enable(!enable());
 	}
 
-	if(_enable)
+	if(_enable && CLevelManager::instance().levelPresent())
 	{
 		_mouseSelectModule();
 
