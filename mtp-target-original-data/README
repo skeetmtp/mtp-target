@@ -1,0 +1,31 @@
+
+  ____ |\________|\_________|\____
+  \   `|   /\__     __/\_____    /
+ _/  \  /  \__/     \_ /_   /   /
+ \____\/    /\___    / _/   ___/
+%%%%%%/____/[SnS]|__/%%\_____/%%%%%
+    
+            presents
+
+  
+           MTP TARGET
+
+Code            :  Ace, Muf, Skeet
+Gfx 3D          :  9dan, paul, Kaiser Foufou
+Music           :  Hulud/Digital Murder
+SFX             :  Garou
+
+       www.melting-pot.org
+
+
+Introduction
+============
+
+This module 'mtp-target-original-data' contains all the data necessary to
+generate the final NeL binary data.
+It uses the same directory architecture and same filename. If you want to
+find the original data for data/shape/entity_pingoo_close.shape then you'll
+find it in the original_data/shape/entity_pingoo_close.max
+
+The goal of this module is to give to us and everybody to modify and or
+export again the original data with new/last NeL plugins.
