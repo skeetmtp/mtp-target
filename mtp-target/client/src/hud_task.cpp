@@ -62,6 +62,9 @@ void CHudTask::init()
 {
 	AltimeterMinValue = CConfigFileTask::instance().configFile().getVar("AltimeterMinValue").asFloat();
 	AltimeterMaxValue = CConfigFileTask::instance().configFile().getVar("AltimeterMaxValue").asFloat();
+	pressControlMessageAdded = false;
+	landClosedMessageAdded = false;
+	landClosedMessageAdded2 = false;
 }
 
 void CHudTask::update()
@@ -95,6 +98,9 @@ void CHudTask::render()
 	}
 	if(CMtpTarget::instance().State == CMtpTarget::eReady)
 	{
+		pressControlMessageAdded = false;
+		landClosedMessageAdded = false;
+		landClosedMessageAdded2 = false;
 		displaySessionInfo = true;
 		if (partTime > 5.0f)
 			str = "Ready ?";
@@ -325,7 +331,25 @@ void CHudTask::render()
 	
 	CFontManager::instance().printf(CRGBA(255,255,255,255),(C3DTask::instance().screenWidth() - _viewedName.size() * CFontManager::instance().fontWidth()) / 2.0f,float(C3DTask::instance().screenHeight() - 2 * CFontManager::instance().fontHeight()),1,_viewedName.c_str());
 
-
+	if(CMtpTarget::instance().State == CMtpTarget::eGame && CMtpTarget::instance().displayTutorialInfo())
+	{
+		if(43<TimeBeforeTimeout && TimeBeforeTimeout<53 && !pressControlMessageAdded)
+		{
+			pressControlMessageAdded = true;
+			addMessage(CHudMessage(5,15,1,string("press control to fly"),CRGBA(255,255,0,255),5));
+		}
+		if(33<TimeBeforeTimeout && TimeBeforeTimeout<43 && !landClosedMessageAdded)
+		{
+			landClosedMessageAdded = true;
+			addMessage(CHudMessage(5,15,1,string("press control to roll"),CRGBA(255,255,0,255),5));
+		}
+		if(23<TimeBeforeTimeout && TimeBeforeTimeout<33 && !landClosedMessageAdded2)
+		{
+			landClosedMessageAdded2 = true;
+			addMessage(CHudMessage(0,15,1,string("don't touch anything when you fly"),CRGBA(255,255,0,255),5));
+		}
+	}
+	
 	/*
 	//updateChat();
 	
@@ -368,5 +392,27 @@ void CHudTask::release()
 void CHudTask::setDisplayViewedName(const string &name)
 {
 	_viewedName = name;
+}
+
+void CHudTask::addMessage(CHudMessage &newm)
+{
+	list<CHudMessage>::iterator it;
+	list<CHudMessage>::iterator it2delete;
+	for(it=messages.begin();it!=messages.end();)
+	{
+		CHudMessage m = *it;
+		if(m.x == newm.x && m.y==newm.y)
+		{
+			it2delete = it;
+			it++;
+			messages.erase(it2delete);
+		}
+		else
+		{
+			it++;
+		}
+	}
+
+	messages.push_back(newm);
 }
 

@@ -100,7 +100,7 @@ public:
 	sint32				 currentScore() const { return CurrentScore; }
 	void				 currentScore(sint32 score) { CurrentScore = score; }
 	sint32				 totalScore() const { return TotalScore; }
-	void				 totalScore(sint32 score) { TotalScore = score; }
+	void				 totalScore(sint32 score);
 	const NLMISC::CRGBA	&color() const { return Color; }
 	void  color(const NLMISC::CRGBA &col);
 	const std::string	&texture() const { return Texture; }

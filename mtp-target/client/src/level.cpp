@@ -372,6 +372,12 @@ CLevel::~CLevel()
 	}
 	Modules.clear();
 
+	for(uint i = 0; i < Particles.size(); i++)
+	{
+		delete Particles[i];
+	}
+	Particles.clear();
+	
 	for(uint j = 0; j < StartPoints.size(); j++)
 	{
 		delete StartPoints[j];

@@ -77,6 +77,8 @@ public:
 	virtual std::string name() { return "CHudTask"; }
 
 	void setDisplayViewedName(const std::string &name);
+	void CHudTask::addMessage(CHudMessage &message);
+
 	std::list<CHudMessage> messages;
 private:
 	std::string _viewedName;
@@ -85,6 +87,10 @@ private:
 	float AltimeterMaxValue;
 	float AltimeterValue;
 
+	bool pressControlMessageAdded;
+	bool landClosedMessageAdded;
+	bool landClosedMessageAdded2;
+	
 };
 
 #endif

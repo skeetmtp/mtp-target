@@ -88,6 +88,9 @@ public:
 	enum TState { eLoginPassword, eConnect, eBeforeFirstSession, eStartSession, eReady, eGame, eEndSession };
 	
 	TState State;
+
+	void displayTutorialInfo(bool b);
+	bool displayTutorialInfo();
 	
 private:
 
@@ -101,6 +104,7 @@ private:
 	
 	void _error();
 	std::string		ErrorReason;
+	bool			DisplayTutorialInfo;
 };
 
 

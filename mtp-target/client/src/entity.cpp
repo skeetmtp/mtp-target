@@ -425,3 +425,12 @@ void  CEntity::color(const NLMISC::CRGBA &col)
 	}
 	
 }
+
+void CEntity::totalScore(sint32 score) 
+{ 
+	if(isLocal())
+	{
+		CMtpTarget::instance().displayTutorialInfo(score<=CConfigFileTask::instance().configFile().getVar("MinTotalScoreToHideTutorial").asInt());
+	}
+	TotalScore = score; 
+}

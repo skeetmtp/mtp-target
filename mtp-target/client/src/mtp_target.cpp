@@ -137,6 +137,7 @@ void CMtpTarget::reset()
 	TimeBeforeSessionStart = 0.0f;
 	TimeBeforeTimeout = 0.0f;
 	State = CMtpTarget::eBeforeFirstSession;
+	DisplayTutorialInfo = false;
 }
 
 void CMtpTarget::_error()
@@ -194,6 +195,16 @@ void CMtpTarget::update()
 		TimeBeforeSessionStart += (float)CTimeTask::instance().deltaTime();
 		TimeBeforeTimeout -= (float)CTimeTask::instance().deltaTime();
 	}
+}
+
+void CMtpTarget::displayTutorialInfo(bool b)
+{
+	DisplayTutorialInfo = b;
+}
+
+bool CMtpTarget::displayTutorialInfo()
+{
+	return DisplayTutorialInfo;
 }
 
 void CMtpTarget::loadNewSession()
@@ -695,3 +706,4 @@ void CMtpTarget::resetFollowedEntity()
 //	}
 }
 */
+

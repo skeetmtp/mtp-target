@@ -34,6 +34,7 @@
 #include "entity_manager.h"
 #include "level_manager.h"
 #include "resource_manager.h"
+#include "config_file_task.h"
 #include "../../common/custom_floating_point.h"
 
 
@@ -93,6 +94,8 @@ static void cbLogin(CNetMessage &msgin)
 	if(self)
 	{
 		nlinfo("I'm the player number %hu, my name is '%s' and my score is %d", (uint16)eid, name.c_str(), totalScore);
+	
+		CMtpTarget::instance().displayTutorialInfo(totalScore<=CConfigFileTask::instance().configFile().getVar("MinTotalScoreToHideTutorial").asInt());
 		
 		try
 		{
@@ -496,26 +499,8 @@ static void cbDisplayText(CNetMessage &msgin)
 	msgin.serial(col);
 	msgin.serial(duration);
 
-	CHudMessage newm = CHudMessage(x,y,s,message,col,duration);
+	CHudTask::instance().addMessage(CHudMessage(x,y,s,message,col,duration));
 
-	list<CHudMessage>::iterator it;
-	list<CHudMessage>::iterator it2delete;
-	for(it=CHudTask::instance().messages.begin();it!=CHudTask::instance().messages.end();)
-	{
-		CHudMessage m = *it;
-		if(m.x == newm.x && m.y==newm.y)
-		{
-			it2delete = it;
-			it++;
-			CHudTask::instance().messages.erase(it2delete);
-		}
-		else
-		{
-			it++;
-		}
-	}
-	
-	CHudTask::instance().messages.push_back(newm);
 	nlinfo("display text(during %f sec) : %s",duration,message.c_str());
 	
 }
