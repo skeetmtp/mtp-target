@@ -49,6 +49,10 @@ Lunar<CParticlesProxy>::RegType CParticlesProxy::methods[] =
 		bind_method(CParticlesProxy, getName),	
 		bind_method(CParticlesProxy, getPos),	
 		bind_method(CParticlesProxy, setPos),	
+		bind_method(CParticlesProxy, show),	
+		bind_method(CParticlesProxy, hide),	
+		bind_method(CParticlesProxy, start),	
+		bind_method(CParticlesProxy, stop),	
 	{0,0}
 };
 
@@ -122,4 +126,29 @@ int CParticlesProxy::setPos(lua_State *luaSession)
 	_particles->position(pos);
 	return 0;
 }
+
+int CParticlesProxy::show(lua_State *luaSession)
+{
+	_particles->particle().show();
+	return 0;
+}
+
+int CParticlesProxy::hide(lua_State *luaSession)
+{
+	_particles->particle().hide();
+	return 0;
+}
+
+int CParticlesProxy::start(lua_State *luaSession)
+{
+	_particles->particle().activateEmitters(true);
+	return 0;
+}
+
+int CParticlesProxy::stop(lua_State *luaSession)
+{
+	_particles->particle().activateEmitters(false);
+	return 0;
+}
+
 

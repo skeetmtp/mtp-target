@@ -45,7 +45,7 @@ public:
 	
 	virtual ~CParticlesCommon();
 
-	virtual void init(const std::string &name, const std::string &fileName, uint8 id, NLMISC::CVector position, NLMISC::CVector scale, NLMISC::CAngleAxis rotation);
+	void init(const std::string &name, const std::string &fileName, uint8 id, NLMISC::CVector position, NLMISC::CVector scale, NLMISC::CAngleAxis rotation, bool show, bool started);
 	void display(NLMISC::CLog *log = NLMISC::InfoLog) const;
 		
 	virtual bool	enabled() const { return Enabled; }
@@ -61,6 +61,8 @@ public:
 protected:
 	bool				Enabled;
 	std::string			LuaShapeName;
+	bool				LuaShow;
+	bool				LuaStarted;
 private:
 	
 };

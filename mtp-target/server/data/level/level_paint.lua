@@ -89,6 +89,7 @@ Modules =
 
 Particles =
 {
+--	{ Position = CVector(0.000000,0.000000,0.790971), Scale = CVector(10.000000, 30.000000, 10.000000), Rotation = CAngleAxis(0.000000,0.000000,1.000000,0.000000), Show = 1, Started = 1, Name = "toto", FileName = "logo" },
 }
 
 

@@ -92,9 +92,9 @@ CParticles::~CParticles()
 }
 
 
-void CParticles::init(const string &name, const std::string &fileName, uint8 id, const CVector &position, const CVector &scale, const CAngleAxis &rotation)
+void CParticles::init(const string &name, const std::string &fileName, uint8 id, const CVector &position, const CVector &scale, const CAngleAxis &rotation, bool show, bool started)
 {
-	CParticlesCommon::init(name, fileName, id, position, scale, rotation); 
+	CParticlesCommon::init(name, fileName, id, position, scale, rotation,show,started); 
 
 	// Get collision faces
 //	loadMesh(ShapeName, Vertices, Normals, Indices,false);
@@ -110,8 +110,11 @@ void CParticles::init(const string &name, const std::string &fileName, uint8 id,
 	Particle.cast(Mesh);
 	Particle.setTransformMode (UTransformable::RotQuat);
 	Particle.setOrderingLayer(2);
-	Particle.activateEmitters(true);
-	Particle.show();
+	Particle.activateEmitters(started);
+	if(show)
+		Particle.show();
+	else
+		Particle.hide();
 	Particle.setPos(position);
 
 	

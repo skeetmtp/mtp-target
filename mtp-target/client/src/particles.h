@@ -84,12 +84,14 @@ public:
 	
 	virtual void enabled(bool b);
 
-	virtual void init(const std::string &name, const std::string &fileName, uint8 id, const NLMISC::CVector &position, const NLMISC::CVector &scale, const NLMISC::CAngleAxis &rotation);
+	virtual void init(const std::string &name, const std::string &fileName, uint8 id, const NLMISC::CVector &position, const NLMISC::CVector &scale, const NLMISC::CAngleAxis &rotation, bool show, bool started);
 	virtual void renderSelection();
 	virtual void update(const NLMISC::CVector &pos, const NLMISC::CVector &rot);
 	
 	virtual void position(const NLMISC::CVector &pos);
 	virtual NLMISC::CVector position() {return CEditableElementCommon::position();}
+
+	NL3D::UParticleSystemInstance &particle() {return Particle;}
 	
 	void luaInit();
 

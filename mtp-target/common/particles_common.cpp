@@ -79,10 +79,12 @@ CParticlesCommon::~CParticlesCommon()
 {
 }
 
-void CParticlesCommon::init(const string &name, const std::string &fileName, uint8 id, CVector position, CVector scale, CAngleAxis rotation)
+void CParticlesCommon::init(const string &name, const std::string &fileName, uint8 id, CVector position, CVector scale, CAngleAxis rotation, bool show, bool started)
 {
+	LuaShow = show;
+	LuaStarted = started;
 	CEditableElementCommon::init(name,fileName,id,position,scale,rotation);
-	nlinfo("Adding CParticlesCommon '%s'(%s) at position %f %f %f , scale : %f %f %f", name.c_str(), fileName.c_str(), position.x, position.y, position.z, scale.x, scale.y, scale.z);
+	nlinfo("Adding CParticlesCommon '%s'(%s) at position %f %f %f , scale : %f %f %f , show=%d, started=%d", name.c_str(), fileName.c_str(), position.x, position.y, position.z, scale.x, scale.y, scale.z,show,started);
 	ShapeName = fileName+".ps";
 	LuaShapeName = fileName;
 }
@@ -102,7 +104,7 @@ void CParticlesCommon::enabled(bool e)
 
 string CParticlesCommon::toLuaString()
 {
-	return toString("{ Position = CVector(%f,%f,%f), Scale = CVector(%f, %f, %f), Rotation = CAngleAxis(%f,%f,%f,%f), Lua=\"%s\", Shape=\"%s\" }",Position.x,Position.y,Position.z,Scale.x,Scale.y,Scale.z,Rotation.Axis.x,Rotation.Axis.y,Rotation.Axis.z,Rotation.Angle,Name.c_str(),LuaShapeName.c_str());
+	return toString("{ Position = CVector(%f,%f,%f), Scale = CVector(%f, %f, %f), Rotation = CAngleAxis(%f,%f,%f,%f), Show = %d, Started = %d, Lua=\"%s\", Shape=\"%s\" }",Position.x,Position.y,Position.z,Scale.x,Scale.y,Scale.z,Rotation.Axis.x,Rotation.Axis.y,Rotation.Axis.z,Rotation.Angle,LuaShow,LuaStarted,Name.c_str(),LuaShapeName.c_str());
 }
 
 

@@ -59,6 +59,10 @@ public:
 	int getName(lua_State *luaSession);
 	int getPos(lua_State *luaSession);
 	int setPos(lua_State *luaSession);
+	int show(lua_State *luaSession);
+	int hide(lua_State *luaSession);
+	int start(lua_State *luaSession);
+	int stop(lua_State *luaSession);
 	
 	
 	static const char className[];	

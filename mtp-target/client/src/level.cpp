@@ -178,7 +178,20 @@ CLevel::CLevel(const string &filename)
 		nlinfo("rot %g %g %g %g", Rotation.Axis.x , Rotation.Axis.y, Rotation.Axis.z, Rotation.Angle);
 		lua_pop(LuaState, 1);  // removes `value'; keeps `key' for next iteration
 		
-
+		uint32 Show;
+		lua_pushstring(LuaState,"Show");
+		lua_gettable(LuaState, -2);
+		Show = (uint32)lua_tonumber(LuaState, -1);
+		nlinfo("Show = %d",Show);
+		lua_pop(LuaState, 1);  // removes `value'; keeps `key' for next iteration
+		
+		uint32 Started;
+		lua_pushstring(LuaState,"Started");
+		lua_gettable(LuaState, -2);
+		Started = (uint32)lua_tonumber(LuaState, -1);
+		nlinfo("Started = %d",Started);
+		lua_pop(LuaState, 1);  // removes `value'; keeps `key' for next iteration
+		
 		// Get particles Name
 		string Name;
 		lua_pushstring(LuaState,"Name");
@@ -196,7 +209,7 @@ CLevel::CLevel(const string &filename)
 		lua_pop(LuaState, 1);  // removes `value'; keeps `key' for next iteration
 
 		CParticles *particles = new CParticles();
-		particles->init(Name,FileName,particlesId,Position,Scale,Rotation);
+		particles->init(Name,FileName,particlesId,Position,Scale,Rotation,Show!=0,Started!=0);
 		particlesId++;
 		if(!DisplayLevel)
 			particles->hide();
