@@ -1,7 +1,7 @@
 Name = "Snow team mirror"
 Author = "Skeet"
 ServerLua = "level_team_server.lua"
-ReleaseLevel = 3
+ReleaseLevel = 4
 
 skyShapeFileName = "sky.shape"
 
@@ -62,12 +62,12 @@ Modules =
 	{ Position = CVector(10.000000,-10.000000,3.500000), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Color = CRGBA(255,255,255,255), Lua="snow_island", Shape="snow_island" },
 	{ Position = CVector(6.000000,1.000000,2.800000), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Color = CRGBA(255,255,255,255), Lua="snow_island2", Shape="snow_island2" },
 	{ Position = CVector(-3.800000,-2.000000,2.000000), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Color = CRGBA(255,255,255,255), Lua="snow_island3", Shape="snow_island3" },
-	{ Position = CVector(0.4000,-0.369995,3.000000), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Color = CRGBA(255,255,255,255), Lua="team_target_300_red", Shape="team_target_300_red" },
-	{ Position = CVector(0.400000,-0.445013,3.000000), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Color = CRGBA(255,255,255,255), Lua="team_target_300_blue", Shape="team_target_300_blue" },
-	{ Position = CVector(0.400000,-0.257897,3.0), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Color = CRGBA(255,255,255,255), Lua="team_target_100_red", Shape="team_target_100_red" },
-	{ Position = CVector(0.40,-0.556818,3.0), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Color = CRGBA(255,255,255,255), Lua="team_target_100_blue", Shape="team_target_100_blue" },
-	{ Position = CVector(0.40,-0.033376,3.0), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Color = CRGBA(255,255,255,255), Lua="team_target_50_red", Shape="team_target_50_red" },
-	{ Position = CVector(0.400000,-0.781666,3.0), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Color = CRGBA(255,255,255,255), Lua="team_target_50_blue", Shape="team_target_50_blue" },
+	{ Position = CVector(0.400000,-0.393851,3.000000), Scale = CVector(3.000000, 3.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Color = CRGBA(255,0,0,255), Lua="team_target_300_red", Shape="box_sol" },
+	{ Position = CVector(0.400000,-0.453794,3.000000), Scale = CVector(3.000000, 3.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Color = CRGBA(0,0,255,255), Lua="team_target_300_blue", Shape="box_sol" },
+	{ Position = CVector(0.400000,-0.304152,3.000000), Scale = CVector(6.000000, 6.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Color = CRGBA(255,100,100,255), Lua="team_target_100_red", Shape="box_sol" },
+	{ Position = CVector(0.400000,-0.543383,3.000000), Scale = CVector(6.000000, 6.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Color = CRGBA(100,100,255,255), Lua="team_target_100_blue", Shape="box_sol" },
+	{ Position = CVector(0.400000,-0.166551,3.000000), Scale = CVector(8.000000, 8.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Color = CRGBA(255,200,200,255), Lua="team_target_50_red", Shape="box_sol" },
+	{ Position = CVector(0.400000,-0.681852,3.000000), Scale = CVector(8.000000, 8.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Color = CRGBA(200,200,255,255), Lua="team_target_50_blue", Shape="box_sol" },
 	{ Position = CVector(0.000000,15.000000,5.000000), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Color = CRGBA(255,255,255,255), Lua="snow_ramp", Shape="snow_ramp" },
 	{ Position = CVector(0.000000,-15.000000,5.000000), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(0.000000,0.000000,1.000000,3.141500), Color = CRGBA(255,255,255,255), Lua="snow_ramp", Shape="snow_ramp" },
 

@@ -115,9 +115,11 @@ function Entity:init()
 
   self:displayText(0,5,1,255,255,255,"warning : Team share the score",10);
   if(t==0) then
+  execLuaOnAllClient("getEntityByName(\""..self:getName().."\"):setColor(255,0,0,255);");
   	self:displayText(0,6,1,255,0,0,"You are in RED team",15);
   	self:displayText(0,7,1,255,0,0,"Land on RED target !",20);
   else
+  execLuaOnAllClient("getEntityByName(\""..self:getName().."\"):setColor(0,0,255,255);");
   	self:displayText(0,6,1,100,100,255,"You are in BLUE team",15);
   	self:displayText(0,7,1,100,100,255,"Land on BLUE target !",20);
   end
@@ -239,6 +241,8 @@ function levelEndSession()
   for i=0,entityCount do
     getEntity(i):parent():setFinalScore();
   end
+    --TODO we can remove the following line when version >= 1.2.2 is out
+    execLuaOnAllClient("getEntityByName(\""..entity:getName().."\"):setColor(255,255,255,255);");
 
 end
 
