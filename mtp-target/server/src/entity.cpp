@@ -84,6 +84,8 @@ void CEntity::init ()
 	StartingPointId = 255;
 	OnTheWater = false;
 	Accel = 0.0f;
+	DefaultAccel = 0;
+	DefaultFriction = 0;
 	LastSent2MePos = CVector::Null;
 	LastSent2OthersPos = CVector::Null;
 	LastSentSX = 0;
@@ -211,6 +213,13 @@ void CEntity::reset()
 	collideEntity.clear();
 	collideWater = false;
 	MaxLinearVelocity = 0;
+	MaxOpenClose = (uint32)DefaultMaxOpenClose;
+	dMass m;
+	dReal radius = 0.01f;
+	dMassSetSphere(&m, SphereDensity, radius);
+    dBodySetMass(Body, &m);
+	DefaultAccel = 0;
+	DefaultFriction = 0;
 }
 
 void CEntity::update() 
@@ -341,7 +350,7 @@ void CEntity::setForce(const CVector &clientForce)
 		//nlinfo("clientForce ( %f %f %f )", clientForce.x, clientForce.y, clientForce.z);
 		//nlinfo("Force = %f %f %f (%f * %f)", Force.x, Force.y, Force.z, CloseAccelCoef,Accel);
 	}
-	Accel = 0.0f;
+	Accel = DefaultAccel;
 }
 
 void CEntity::position(NLMISC::CVector pos)
@@ -382,6 +391,18 @@ float CEntity::meanVelocity()
 	}
 	return res;
 }	
+
+float CEntity::defaultAccel()
+{
+	return DefaultAccel;
+}
+
+void CEntity::defaultAccel(float a)
+{
+	DefaultAccel = a;
+}
+
+
 //
 // Commands
 //

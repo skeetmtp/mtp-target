@@ -72,7 +72,10 @@ public:
 	void maxLinearVelocity(float maxLinVel);
 	float maxLinearVelocity();
 	float meanVelocity();
-		
+
+	float defaultAccel();
+	void defaultAccel(float a);
+	
 	// accessors
 
 	uint8					 id() const { return Id; }
@@ -142,6 +145,8 @@ public:
 
 	// lua
 	bool				 LuaInit;
+	float				 DefaultAccel;
+	float				 DefaultFriction;
 	
 private:
 
