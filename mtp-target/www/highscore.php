@@ -64,7 +64,7 @@
 			echo "<h3>Registered:</h3>";
 			echo sizeof($my1)." players</p>";
 
-			echo "<h3>Player Highscores:</h3>";
+			echo "<h3>10 best players high scores :</h3>";
 			for ($i = 0; $i < 1; $i++)
 				echo "<font style=\"color:red\"><b>$my1[$i]</b> : $my2[$i]</font><br>";
 
@@ -74,7 +74,7 @@
 			for (; $i < 10; $i++)
 				echo "$my1[$i] : $my2[$i]<br>";
 
-                        echo "<h3>Team Highscores:</h3>";
+                        echo "<h3>3 best teams high scores :</h3>";
 			$i = 0;	
 			while (list($key, $val) = each($team_score))
 			{
