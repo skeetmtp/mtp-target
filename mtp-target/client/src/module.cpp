@@ -84,14 +84,16 @@ CModule::CModule(const std::string &name,uint8 id, CVector position, CAngleAxis 
 	indices.clear();
 	
 	NbFaces = 0;
-	CShapeStream ss;
 	NLMISC::CIFile i(CPath::lookup(MeshName, false).c_str());
+	CShapeStream ss;
 	i.serial(ss);
 	i.close();
 	
+
+
 	CMesh *m = (CMesh*)ss.getShapePointer();
 	const CMeshGeom &mg = m->getMeshGeom();
-	
+
 	uint nbmb = mg.getNbMatrixBlock();
 	for(uint i = 0; i < nbmb; i++)
 	{
@@ -116,12 +118,15 @@ CModule::CModule(const std::string &name,uint8 id, CVector position, CAngleAxis 
 	uint32 nbv = vb.getNumVertices();
 	for(uint i = 0; i < nbv; i++)
 	{
+		const void *nn = vb.getNormalCoordPointer(i);
+		CVector n = *(CVector*)nn;
 		const void *vv = vb.getVertexCoordPointer(i);
 		CVector v = *(CVector*)vv;
 		//		uint j;
 		//		for(j = 0; j < vertices.c_str(); j++)
 		//		{
 		vertices.push_back(v);
+		normals.push_back(n);
 		//		}
 		//		if(j)
 	}
@@ -150,30 +155,30 @@ CModule::~CModule()
 
 
 
-bool CModule::intersect(NLMISC::CVector rayStart,NLMISC::CVector rayDir,NLMISC::CVector &rayHit)
+bool CModule::intersect(NLMISC::CVector rayStart,NLMISC::CVector rayEnd,NLMISC::CVector &rayHit)
 {
+	//return true;
 	CMatrix mat = mesh()->getMatrix();
 	CMatrix imat = mat;
 	imat.invert();
-	CVector rayEnd = rayStart + rayDir * 1000;
-	rayEnd = imat * rayEnd;
-	rayStart = imat * rayStart;
+	//rayEnd = imat * rayEnd;
+	//rayStart = imat * rayStart;
 	
 	uint32 i;
 	for(i = 0; i<NbFaces; i++)
 	{
 		CTriangle tri;
-		tri.V0 = vertices[indices[i*3+0]];
-		tri.V1 = vertices[indices[i*3+1]];
-		tri.V2 = vertices[indices[i*3+2]];
+		tri.V0 = mat * vertices[indices[i*3+0]];
+		tri.V1 = mat * vertices[indices[i*3+1]];
+		tri.V2 = mat * vertices[indices[i*3+2]];
 
 		CPlane p;
 		p.make(tri.V0,tri.V1,tri.V2);
 		CVector hit;
-		bool res = tri.intersect(rayStart,rayEnd,rayHit,p);
+		bool res = tri.intersect(rayStart,rayEnd,hit,p);
 		if(res)
 		{
-			rayHit = mat * rayHit;
+			rayHit = hit;
 			return true;
 		}
 	}
@@ -184,3 +189,38 @@ bool CModule::intersect(NLMISC::CVector rayStart,NLMISC::CVector rayDir,NLMISC::
 
 
 
+
+void CModule::renderSelection()
+{
+	mat->setColor(CRGBA(255,255,255,200));
+	mat->setZWrite(true);
+	mat->setZFunc(UMaterial::always);
+	mat->setBlend(true);
+	mat->setBlendFunc(UMaterial::srcalpha,UMaterial::invsrcalpha);
+	
+	CMatrix matrix = mesh()->getMatrix();
+
+	float grow = 0.001f; 
+	uint i;
+	for(i = 0; i<NbFaces; i++)
+	{
+		CTriangle tri;
+		tri.V0 = matrix * (vertices[indices[i*3+0]] + grow * normals[indices[i*3+0]]);
+		tri.V1 = matrix * (vertices[indices[i*3+1]] + grow * normals[indices[i*3+1]]);
+		tri.V2 = matrix * (vertices[indices[i*3+2]] + grow * normals[indices[i*3+2]]);
+
+#if 0
+		C3DTask::instance().driver().drawTriangle(tri,*mat);
+#else
+		CLine line1(tri.V0,tri.V1);
+		CLine line2(tri.V1,tri.V2);
+		CLine line3(tri.V2,tri.V0);
+		
+		C3DTask::instance().driver().drawLine(line1,*mat);
+		C3DTask::instance().driver().drawLine(line2,*mat);
+		C3DTask::instance().driver().drawLine(line3,*mat);
+#endif
+		
+	}
+	
+}
