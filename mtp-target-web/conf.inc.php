@@ -37,7 +37,8 @@
      $default_later = "news-manager.php";
 
 //email
-     $contact_email = "mailto:lecroart@noos.fr?subject=mtp target";
+     //$contact_email = "mailto:lecroart@noos.fr?subject=mtp target";
+     $contact_email = "mailto:ace@free.fr?subject=mtp target";
      
 //special link
      $user_texture = "http://mtp-target.dyndns.org/mtp-target/";
