@@ -72,6 +72,7 @@ Lunar<CEntityProxy>::RegType CEntityProxy::methods[] =
 		bind_method(CEntityProxy, getDefaultAccel),	
 		bind_method(CEntityProxy, setDefaultFriction),	
 		bind_method(CEntityProxy, getDefaultFriction),	
+		bind_method(CEntityProxy, setFreezCommand),	
 	{0,0}
 };
 
@@ -157,6 +158,13 @@ int CEntityProxy::setOpenCloseCount(lua_State *luaSession)
 {
 	uint32 noc = (uint32)luaL_checknumber(luaSession,1);
 	_entity->NbOpenClose = noc;
+	return 0;
+}
+
+int CEntityProxy::setFreezCommand(lua_State *luaSession)
+{
+	bool freez = luaL_checknumber(luaSession,1)==1;
+	_entity->FreezeCommand = freez;
 	return 0;
 }
 

@@ -74,6 +74,7 @@ public:
 	int getDefaultAccel(lua_State *luaSession);
 	int setDefaultFriction(lua_State *luaSession);
 	int getDefaultFriction(lua_State *luaSession);
+	int setFreezCommand(lua_State *luaSession);
 	
 	static const char className[];	
 	static Lunar<CEntityProxy>::RegType methods[];	
