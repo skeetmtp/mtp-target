@@ -91,7 +91,7 @@
 		printf("%s day(s) %s<br>\n",date("z",$serverUptime),date("H:i:s",$serverUptime));
 	else
 		printf("%s<br>\n",date("H:i:s",$serverUptime));
-	printf("Courrent logged user : %d<br>\n",$playerCount);
+	printf("Current logged user : %d<br>\n",$playerCount);
 	
 ?>
 
