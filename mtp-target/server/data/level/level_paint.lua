@@ -1,7 +1,7 @@
 Name = "Paint"
 Author = "Skeet"
 ServerLua = "level_paint_server.lua"
-ReleaseLevel = 3
+ReleaseLevel = 2
 
 skyShapeFileName = "sky.shape";
 sunAmbientColor = CRGBA(82, 100, 133, 255);
