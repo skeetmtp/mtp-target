@@ -9,7 +9,7 @@ include_once("stat_game.php");
 	
 	printf("<center><b>Online server list</b></center><br>\n");
 	
-	if(isCacheFileUpToDate($cacheFileName))
+	if(isCacheFileUpToDateDuration($cacheFileName,30))
 	{
 		include($cacheFileName);
 		return;

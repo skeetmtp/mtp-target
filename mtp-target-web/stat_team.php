@@ -8,7 +8,7 @@ include_once("stat_game.php");
 	else
 		exit();
 
-	$cacheFileName = $cache_dir."/stat_teal_".$team.".html";
+	$cacheFileName = $cache_dir."/stat_team_".$team.".html";
 	
 	if(isCacheFileUpToDate($cacheFileName))
 	{
