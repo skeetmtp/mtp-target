@@ -230,8 +230,7 @@ void cbLSChooseShard (CMessage &msgin, const std::string &serviceName, uint16 si
 	// S07: receive the "CS" message from LS and send the "CS" message to the selected FES
 	//
 
-	CLoginCookie cookie;
-	string userName;
+	string cookie, userName;
 
 	msgin.serial(cookie);
 	msgin.serial(userName);
@@ -253,9 +252,9 @@ void cbLSChooseShard (CMessage &msgin, const std::string &serviceName, uint16 si
 
 	CUnifiedNetwork::getInstance()->send("LS", msgout);
 
-	UserIdNameAssociations.insert(make_pair(cookie.setToString(), userName));
+	UserIdNameAssociations.insert(make_pair(cookie, userName));
 
-	nlinfo("Client %s will come with cookie %s to ip '%s'", userName.c_str(), cookie.toString().c_str(), ListenAddr.c_str());
+	nlinfo("Client %s will come with cookie %s to ip '%s'", userName.c_str(), cookie.c_str(), ListenAddr.c_str());
 }
 
 void cbFailed(CMessage &msgin, const std::string &serviceName, uint16 sid)

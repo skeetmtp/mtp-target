@@ -81,7 +81,7 @@ public:
 
 	/** Try to connect to the shard and return a TCP connection to the shard.
 	 */
-	static std::string connectToShard (uint32 shardListIndex, NLNET::CInetAddress &ip, NLNET::CLoginCookie &cookie);
+	static std::string connectToShard (uint32 shardListIndex, NLNET::CInetAddress &ip, std::string &cookie);
 
 	static TShardList ShardList;
 

@@ -94,7 +94,7 @@ void cbVerifyLoginPassword (CMessage &msgin, TSockId from, CCallbackNetBase &net
 bool ShardChooseShard;
 string ShardChooseShardReason;
 string ShardChooseShardAddr;
-CLoginCookie ShardChooseShardCookie;
+string ShardChooseShardCookie;
 void cbShardChooseShard (CMessage &msgin, TSockId from, CCallbackNetBase &netbase)
 {
 	//
@@ -236,12 +236,12 @@ string CLoginClientMtp::confirmConnection (uint32 shardListIndex)
 
 	// ok, we can try to connect to the good front end
 
-	nlinfo("addr: '%s' cookie: %s", ShardChooseShardAddr.c_str(), ShardChooseShardCookie.toString().c_str());
+	nlinfo("addr: '%s' cookie: %s", ShardChooseShardAddr.c_str(), ShardChooseShardCookie.c_str());
 
 	return "";
 }
 
-string CLoginClientMtp::connectToShard (uint32 shardListIndex, CInetAddress &ip, CLoginCookie &cookie)
+string CLoginClientMtp::connectToShard (uint32 shardListIndex, CInetAddress &ip, string &cookie)
 {
 	string res = confirmConnection (shardListIndex);
 	if (!res.empty()) return res;

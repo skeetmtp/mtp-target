@@ -110,22 +110,22 @@ static void cbWSDisconnection (const std::string &serviceName, uint16 sid, void 
 	MYSQL_RES *result;
 	MYSQL_ROW row;
 	sint32 nbrow;
-	
+
 	reason = sqlQuery("select * from shard where InternalId="+toString(sid), nbrow, row, result);
 	if(!reason.empty()) return;
 
-	if(nbrow != 0)
+	if(nbrow != 1)
 	{
-		nlwarning("disconnection of a shard that have %hu entries online", sid);
+		nlwarning("disconnection of a shard that have %hu entries online", nbrow);
 		return;
 	}
 
 	// shard disconnected
 	nlinfo("ShardId %s with IP '%s' is offline!", row[0], ia.asString().c_str());
 	nlinfo("*** ShardId %3s NbPlayers %3s -> %3d", row[0], row[2], 0);
-			
+
 	sqlQuery("update shard set State='Offline', InternalId=0, NbPlayers=0 where ShardId="+string(row[0]), nbrow, row, result);
-	
+
 	// put users connected on this shard offline
 	sqlQuery("update user set State='Offline', ShardId=-1, Cookie='' where ShardId="+string(row[0]), nbrow, row, result);
 }
@@ -315,24 +315,26 @@ static void cbWSShardChooseShard(CMessage &msgin, const std::string &serviceName
 	//
 	
 	CMessage msgout("SCS");
-	
+
 	string reason;
 	msgin.serial(reason);
 	msgout.serial(reason);
 	
-	CLoginCookie cookie;
+	string cookie;
 	msgin.serial(cookie);
 	
 	if (reason.empty())
 	{
 		msgout.serial(cookie);
-		
+
 		string addr;
 		msgin.serial(addr);
 		msgout.serial(addr);
 	}
 	
-	sendToClient(msgout, (TSockId)cookie.getUserAddr());
+	CLoginCookie lc;
+	lc.setFromString(cookie);
+	sendToClient(msgout, (TSockId)lc.getUserAddr());
 }
 
 static const TUnifiedCallbackItem WSCallbackArray[] =

@@ -351,7 +351,6 @@ void CIntroTask::updateServerList()
 	}
 }
 
-/* old login system
 void CIntroTask::updateConnectionOnLine()
 {
 	if(State!=eConnectionOnline) return;
@@ -359,54 +358,7 @@ void CIntroTask::updateConnectionOnLine()
 	CGuiObjectManager::instance().objects.clear();
 	
 	CInetAddress ip;
-	CLoginCookie cookie;
-	string reason = CLoginClientMtp::connectToShard(ServerId,ip,cookie); // i = index dans le vector de server a parti de 0
-	
-	if(!reason.empty())
-	{
-		_autoLogin = 0;
-		error(reason);
-		CGuiObjectManager::instance().objects.push_back(loginFrame);
-		State = eLoginOnline;
-		return;
-	}
-	
-	// try to connect
-	string res = CNetworkTask::instance().connect(&ip);
-	if(res.empty())
-	{
-		_autoLogin = 0;//autologin only once
-		stop();
-		// stop the background
-		CBackgroundTask::instance().stop();
-		// go to the game task
-		CTaskManager::instance().add(CGameTask::instance(), 60);
-	
-		CGuiObjectManager::instance().objects.clear();
-		State = eNone;
-		return;		
-	}
-	else
-	{
-		_autoLogin = 0;
-		error(res);
-		CGuiObjectManager::instance().objects.push_back(loginFrame);
-		State = eLoginOnline;
-		return;
-	}
-
-	nlassert(false);
-}
-*/
-
-void CIntroTask::updateConnectionOnLine()
-{
-	if(State!=eConnectionOnline) return;
-	
-	CGuiObjectManager::instance().objects.clear();
-	
-	CInetAddress ip;
-	CLoginCookie cookie;
+	string cookie;
 	string reason = CLoginClientMtp::connectToShard(ServerId,ip,cookie);
 	if(!reason.empty())
 	{
@@ -417,7 +369,7 @@ void CIntroTask::updateConnectionOnLine()
 		return;
 	}
 
-	reason = CNetworkTask::instance().connect(ip, cookie.setToString());
+	reason = CNetworkTask::instance().connect(ip, cookie);
 	if(!reason.empty())
 	{
 		_autoLogin = 0;
