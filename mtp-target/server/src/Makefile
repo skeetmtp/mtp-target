@@ -40,9 +40,8 @@ LDFLAGS        = -L$(HOME)/install/$(DIR_DBG_$(DBG))/lib \
 		-lcrypt \
 		-ljpeg \
 		-llualib50 \
-		-lode \
-		-lopcode
-
+		-lode 
+		
 #############################################################################
 
 TARGET		= mtp_target_service
