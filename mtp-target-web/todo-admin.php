@@ -11,6 +11,7 @@ include_once("login.php");
 <form method="post" action="todo-modify.php" name="modifyForm">
 <table width="75%" border="0">
 	<tr>
+		<td bgcolor="#dddddd"><b>&nbsp;Priority&nbsp;</b></td>
 		<td bgcolor="#dddddd"><b>&nbsp;Status&nbsp;</b></td>
 		<td bgcolor="#dddddd"><b>&nbsp;Type&nbsp;</b></td>
 		<td bgcolor="#dddddd"><b>&nbsp;Title&nbsp;</b></td>
@@ -22,6 +23,20 @@ include_once("login.php");
       <input type="hidden" name="id" value="<?php echo $ligne[0]; ?>" />
       <input type="hidden" name="opendate" value="<?php echo $ligne[5]; ?>" />
       <input type="hidden" name="closedate" value="<?php echo $ligne[6]; ?>" />
+      <td bgcolor="#eeeeee">
+        <select name="priority" dir="ltr">
+        <?php 
+          for($i=0;$i<6;$i++)
+          {
+          	printf("<option value=\"%d\" ",$i);
+          	if($i==$ligne[9])
+          	  printf(" selected");
+          	printf(">%d</option>",$i);
+          }
+          //<option value="1" <?php if($ligne[9]==1) echo "selected"; ?>>1</option>
+        ?>
+        </select>
+      </td>
       <td bgcolor="#eeeeee">
         <select name="status" dir="ltr">
           <option value="waiting" <?php if(strcmp($ligne[1],"waiting")==0) echo "selected"; ?>>waiting</option>

@@ -43,6 +43,7 @@ function confirmLink(theLink)
 <table width="100%" border="0">
 	<tr  align="center">
     <?php
+  		printf("<td width=\"5%%\" bgcolor=\"%s\"><b>&nbsp;Priority&nbsp;</b></td>\n",$table_todo_head_color);
   		printf("<td width=\"5%%\" bgcolor=\"%s\"><b>&nbsp;<a href=\"%s&order=%s&descCount=%s\">Status</a>&nbsp;</b></td>\n",$table_todo_head_color,$thisPage,"status",$order=="status"?($descCount+1):$descCount);
         printf("<td width=\"5%%\" bgcolor=\"%s\"><b>&nbsp;<a href=\"%s&order=%s&descCount=%s\">Type</a>&nbsp;</b></td>\n",$table_todo_head_color,$thisPage,"type",$order=="type"?($descCount+1):$descCount);
   		printf("<td width=\"60%%\" bgcolor=\"%s\"><b>&nbsp;<a href=\"%s&order=%s&descCount=%s\">Title</a>&nbsp;</b></td>\n",$table_todo_head_color,$thisPage,"title",$order=="title"?($descCount+1):$descCount);
@@ -58,11 +59,12 @@ function confirmLink(theLink)
                 $desc = " DESC";
             else
                 $desc = "";
-            $requete = sprintf("SELECT * FROM todo ORDER BY %s%s ,closedate DESC, opendate DESC;",$order,$desc);
+            $requete = sprintf("SELECT * FROM todo ORDER BY %s%s ,closedate DESC, priority DESC, opendate DESC;",$order,$desc);
             $resultat = exec_requete($requete);
             $count = 0;
             while ($ligne = mysql_fetch_array($resultat))
             {
+            	  $priority = $ligne[9];
                   $status = $ligne[1];
                   $kind = $ligne[7];
                   printf("<tr>");
@@ -98,6 +100,7 @@ function confirmLink(theLink)
                   }
                   if($kind=="release")
                            $color =$table_todo_release_color;
+                  printf("<td bgcolor=\"%s\">&nbsp;%d&nbsp;</td>",$color,$priority);
                   printf("<td bgcolor=\"%s\">&nbsp;%s&nbsp;</td>",$color,$status);
                   printf("<td bgcolor=\"%s\">&nbsp;%s&nbsp;</td>",$color,$ligne[7]);
                   printf("<td bgcolor=\"%s\">&nbsp;<a href=\"%s&id=%s&order=%s\">%s</a>&nbsp;</td>",$color,$thisPage,$ligne[0],$order,$ligne[8]);
@@ -120,7 +123,7 @@ function confirmLink(theLink)
                   if(isset($id) && $id==$ligne[0])
                   {
                     printf("<tr>");
-                    printf("<td colspan=7 bgcolor=\"%s\">&nbsp;%s&nbsp;</td>",$table_todo_select_color,$ligne[2]);
+                    printf("<td colspan=9 bgcolor=\"%s\">&nbsp;%s&nbsp;</td>",$table_todo_select_color,$ligne[2]);
                     printf("</td>");
 }
              $count++;
