@@ -194,7 +194,7 @@ function userOverallStat($uid,&$totalScore,&$currentScore,&$totalSession,&$sessi
 		$totalScore = $ligne[0];
 		$registrationDate = $ligne[1];
 	}
-	$requete = sprintf("SELECT SUM(Score), COUNT(*), SUM(Duration) FROM user_session WHERE UId='%d';",$uid);
+	$requete = sprintf("SELECT SUM(user_session.Score), COUNT(*), SUM(session.Duration) FROM user_session,session WHERE session.Id=user_session.SessionId AND user_session.UId='%d';",$uid);
 	$resultat=exec_game_db_requete($requete);
 	if($ligne = mysql_fetch_array($resultat))
 	{
@@ -205,7 +205,7 @@ function userOverallStat($uid,&$totalScore,&$currentScore,&$totalSession,&$sessi
 }
 
 
-function hugeNumber2HumanDuration($score)
+function hugeNumber2Human($score)
 {
 	$res = "";
 	$strScore = "".$score;
