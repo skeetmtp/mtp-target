@@ -1203,6 +1203,7 @@ bool CEntityManager::everyBodyReady()
 	vector<uint8> IdToRemove;
 	vector<string> msgs;
 	{
+		float waitingReadyTimeout = IService::getInstance()->ConfigFile.getVar("WaitingReadyTimeout").asFloat(); 
 		CEntityManager::EntityConstIt it;
 		
 		bool allReady = true;
@@ -1211,7 +1212,7 @@ bool CEntityManager::everyBodyReady()
 		{
 			if((*it)->type()==CEntity::Client && (*it)->WaitingReady && !(*it)->Ready )
 			{
-				if( (float)(CTime::getLocalTime() - (*it)->WaitingReadyTimeoutStart)/1000.0f > 20) //timeout
+				if( (float)(CTime::getLocalTime() - (*it)->WaitingReadyTimeoutStart)/1000.0f > waitingReadyTimeout) //timeout
 				{
 					IdToRemove.push_back((*it)->id());
 					string timeoutMsg = toString("kick %s : wait for ready timeout",(*it)->name().c_str());
