@@ -258,6 +258,7 @@ void CWaterTask::release()
 	if(WaterInstance)
 	{
 		scene.deleteInstance(WaterInstance);
+		WaterInstance = NULL;
 		//delete WaterShape;
 	}
 
