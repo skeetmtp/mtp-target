@@ -83,3 +83,14 @@ void CGameTask::render()
 void CGameTask::release()
 {
 }
+
+void CGameTask::stop()
+{
+	ITask::stop();
+	CLevelManager::instance().stop();
+	CSkyTask::instance().stop();
+	CHudTask::instance().stop();
+	CScoreTask::instance().stop();
+	CChatTask::instance().stop();
+}
+

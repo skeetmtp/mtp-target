@@ -45,6 +45,8 @@ public:
 	virtual void render();
 	virtual void release();
 
+	virtual void stop();
+	
 	virtual std::string name() { return "CGameTask"; }
 	
 private:
