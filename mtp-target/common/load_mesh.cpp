@@ -63,10 +63,13 @@ using namespace NLMISC;
 uint32 loadMesh(const std::string &meshFileName, std::vector<NLMISC::CVector> &vertices, std::vector<NLMISC::CVector> &normals, std::vector<int> &indices, bool applyPreTransform)
 {
 	uint32 nbFaces = 0;
-	NL3D::registerSerial3d();
 
 	vertices.clear();
 	indices.clear();
+
+	//return 0;
+
+	NL3D::registerSerial3d();
 
 	if(CPath::lookup(meshFileName, false).empty())
 	{
@@ -183,6 +186,6 @@ uint32 loadMesh(const std::string &meshFileName, std::vector<NLMISC::CVector> &v
 		//		if(j)
 	}
 #endif
-	delete m;
+//	delete m;
 	return nbFaces;
 }
