@@ -57,6 +57,7 @@ include_once("stat_map_graph_display.php");
 	fprintf($html_fp,"Last game : %s<br>\n",$userLastSessionDate);
 	fprintf($html_fp,"Rank : %s<br>\n",$userRank);
 	fprintf($html_fp,"total score = %s<br>\n",hugeNumber2Human($totalScore));
+	//fprintf($html_fp,"sum score = %s<br>\n",hugeNumber2Human($currentScore));
 	fprintf($html_fp,"Team : <b><a href=\"?page=stat_team.php&p_team=%s\">%s</a></b><br>\n",$user_team,$user_team);
 	
 	fprintf($html_fp,"%d sessions played<br>\n",$sessionPlayedCount);
