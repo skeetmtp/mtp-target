@@ -168,7 +168,7 @@ void CMtpTarget::init()
 				{
 					fscanf (fp, "%f %f %f", &x, &y, &z);
 					
-					if (eid != 255)
+					if (eid != 255 && CEntityManager::instance().exist(eid))
 					{
 						CVector v(x, y, z);
 						//CEntityManager::instance()[eid].interpolator().addKey(CEntityInterpolatorKey(CEntityState(v,false),t));//.position(v,t, false); //put the entity in the good position
@@ -191,13 +191,15 @@ void CMtpTarget::init()
 				}
 				else if (string(cmd) == "OC")
 				{
-					CEntityManager::instance()[eid].addOpenCloseKey = true;
+					if(CEntityManager::instance().exist(eid))
+						CEntityManager::instance()[eid].addOpenCloseKey = true;
 				}
 				else if (string(cmd) == "CE")
 				{
 					fscanf (fp, "%f %f %f", &x, &y, &z);
 					CVector v(x, y, z);
-					CEntityManager::instance()[eid].addCrashEventKey = CCrashEvent(true,v);
+					if(CEntityManager::instance().exist(eid))
+						CEntityManager::instance()[eid].addCrashEventKey = CCrashEvent(true,v);
 				}
 				else
 				{

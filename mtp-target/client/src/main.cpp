@@ -60,8 +60,32 @@ uint NetworkThreadId = 0;
 
 
 #ifdef NL_OS_WINDOWS
+extern "C" { WINBASEAPI BOOL WINAPI IsDebuggerPresent(VOID); }
+
 int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
 {
+	if(!IsDebuggerPresent())
+	{
+		char exePath  [512] = "";
+		DWORD success = GetModuleFileName (NULL, exePath, 512);
+		bool found = false;
+		if(success)
+		{
+			int l = strlen(exePath);
+			for(int i=l;i>=0;i--)
+			{
+				if(exePath[i]=='\\')
+				{
+					exePath[i] = '\0';
+					found = true;
+					break;
+				}
+			}
+		}
+		if(found)
+			SetCurrentDirectory(exePath);
+	}
+
 	ghInstance = hInstance;
 	// Look the command line to see if we have a cookie and a addr
 

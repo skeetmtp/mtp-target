@@ -258,7 +258,7 @@ void CEntity::collisionWithWater(bool col)
 void CEntity::renderName() const
 {
 	// display name of other people than me
-	if(CMtpTarget::instance().controler().getControledEntity() != id())
+	if(CMtpTarget::instance().controler().getControledEntity() != id() || !ReplayFile.empty())
 	{
 		CFontManager::instance().printf3D(color(), interpolator().position(),0.01f, name().c_str());
 	}
