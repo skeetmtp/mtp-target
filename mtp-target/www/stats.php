@@ -8,6 +8,8 @@
 	$lastHour = 0;
 	$lastDay = 0;
 	
+	$lastRestartTime = mktime();
+	
 	for($i=0;$i<24;$i++)
 	{
 		$userCountPerHourTotal[$i]=0;
@@ -20,13 +22,15 @@
 	while (!feof($fp)):
 		$line = fgets($fp, 2048);
 		$out = array(substr($line,0,strlen($line)-1));//remove \n
-		list ($ttime, $year, $month, $sday, $shour, $min, $sec, $inout, $sname)= split (" ", $out[0]);
+		list ($ttime, $year, $month, $sday, $shour, $smin, $ssec, $inout, $sname)= split (" ", $out[0]);
 
 		$name = str_replace("'","",$sname);
 
 		//printf("[%s] -> [%s]<br>",$sname,$name);
 		
 		$hour = intval($shour);
+		$min = intval($smin);
+		$sec = intval($ssec);
 		$day = intval($sday);
 		if(strlen($line)!=0)
 		{		
@@ -58,6 +62,7 @@
 			}
 			else if($inout=='#')
 			{
+				$lastRestartTime = mktime($hour,$min,$sec);
 				$playerCount = 0;
 				//printf("<hr>",$name);
 			}
@@ -79,7 +84,14 @@
 	
 	fclose($fp);
 
-	printf("Courrent logged user : %d",$playerCount);
+	$serverUptime = mktime() - $lastRestartTime;
+
+	printf("server uptime : ");
+	if(date("z",$serverUptime)!="0")
+		printf("%s day(s) %s<br>\n",date("z",$serverUptime),date("H:i:s",$serverUptime));
+	else
+		printf("%s<br>\n",date("H:i:s",$serverUptime));
+	printf("Courrent logged user : %d<br>\n",$playerCount);
 	
 ?>
 
