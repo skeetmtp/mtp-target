@@ -18,7 +18,7 @@ include_once("stat_game.php");
 	{
 		fprintf($html_fp,"<center>");
 		fprintf($html_fp,"Player of the day :<br>\n");
-		fprintf($html_fp,"<b><a href=\"?page=stat_user.php&p_user_id=%d\">%s</a></b> with %s points<br>\n",$line[2],$line[0],$line[1]);
+		fprintf($html_fp,"<b><a href=\"?page=stat_user.php&p_user_id=%d\">%s</a></b> with %s points today<br>\n",$line[2],$line[0],$line[1]);
 		fprintf($html_fp,"</center>");
 		fprintf($html_fp,"<br>");
 	}
