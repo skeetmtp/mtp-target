@@ -93,6 +93,7 @@ void CModule::init(const std::string &name, const std::string &shapeName, uint8 
 	
 	Geom = 0;
 	luaProxy = NULL;
+	Visible = true;
 	_luaInit();
 	
 	// vertices must be multiple of 3
@@ -230,17 +231,29 @@ void CModule::update(const CVector &pos, const CVector &rot)
 	_changed = true;
 }
 
-void CModule::enabled(bool e) 
+void CModule::visible(bool e) 
 {
-	if(Enabled==e) return;
-
-	CModuleCommon::enabled(e);
-
+	if(Visible==e) return;
+	
+	nlinfo("visible element %s to %s",name().c_str(),e?"true":"false");
 	CNetMessage msgout(CNetMessage::EnableElement);
 	msgout.serial(_id);
 	msgout.serial(e);
 	CNetwork::instance().send(msgout);
+}
+
+void CModule::enabled(bool e) 
+{
+	if(Enabled==e) return;
+
 	nlinfo("enable element %s to %s",name().c_str(),e?"true":"false");
+	CModuleCommon::enabled(e);
+	
+	CNetMessage msgout(CNetMessage::EnableElement);
+	msgout.serial(_id);
+	msgout.serial(e);
+	CNetwork::instance().send(msgout);
+
 	pausePhysics();
 	if(e)
 		dGeomEnable(Geom);

@@ -52,6 +52,7 @@ public:
 	
 
 	virtual void	enabled(bool b);
+	virtual void	visible(bool b);
 	
 	
 
@@ -66,6 +67,7 @@ private:
 	dGeomID				Geom;
 	lua_State			*LuaState;
 	dTriMeshDataID		triMeshDataId;
+	bool				Visible;
 };
 
 
