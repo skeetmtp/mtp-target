@@ -262,7 +262,7 @@ uint32 loadMesh(const std::string &meshFileName, std::vector<NLMISC::CVector> &v
 			
 			CIndexBufferRead iba;
 			ib.lock(iba);
-			const uint32 *ibptr = iba.getPtr();
+			const uint32 *ibptr = (uint32 *)iba.getPtr();
 			uint nbi = ib.getNumIndexes();
 			nlassert((nbi%3)==0);
 			uint nbf = nbi/3;
