@@ -102,7 +102,7 @@ static void cbLogin(CClient *c, CNetMessage &msgin)
 
 	if(networkVersion != CNetwork::instance().version())
 	{
-		nlinfo("bad version %d",networkVersion);
+		nlinfo("bad client version %d should be %d",networkVersion,CNetwork::instance().version());
 		string reason = toString("login failed: bad client version(%d)! Get latest one on Mtp Target web site", networkVersion);
 		CNetMessage msgout(CNetMessage::Error);
 		msgout.serial(reason);
