@@ -265,6 +265,15 @@ void CEditorTask::update()
 					m->changed(false);
 				}
 			}
+			for(uint i=0;i<CLevelManager::instance().currentLevel().getStartPointCount();i++)
+			{
+				CStartPoint *m = CLevelManager::instance().currentLevel().getStartPoint(i);
+				if(m->changed())
+				{
+					CNetworkTask::instance().updateEditableElement(m);
+					m->changed(false);
+				}
+			}
 			_lastUpdateTime = time;
 		}
 	}
