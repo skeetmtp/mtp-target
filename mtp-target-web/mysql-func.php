@@ -51,8 +51,8 @@ function validNumber($input)
 
 function validInput($input)
 {
-  if(strlen($input)>20) return false;
-  $res = (ereg("^[\-_\.A-Za-z0-9([)(|\]|])]+$",$input));
+ 	if(strlen($input)>20) return false;
+		$res = (ereg("^[\-_\.A-Za-z0-9([)(|\]|])]+$",$input));
   //$res = (ereg("^[_\.A-Za-z0-9\-]+$",$input));
   /*
   if(!$res)
@@ -63,6 +63,7 @@ function validInput($input)
 
 function validPage($page)
 {
+	if(strstr($page,".."))	return false;
   	if(strlen($page)>128) return false;
     if(!ereg("^[_/\.A-Za-z0-9\-]+$",$page))
     	return false;
