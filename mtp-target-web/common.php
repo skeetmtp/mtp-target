@@ -40,17 +40,32 @@ function DisplayCacheFile($filename)
 
 function isCacheFileUpToDateDuration($filename,$duration)
 {
-	return (file_exists($filename) && filesize($filename)>0 && (strtotime(date("Y-m-d H:i:s")) - filemtime($filename))<$duration);
-}
-
-function isCacheFileUpToDate($filename)
-{
 	global $cache_dir;
 	if(!file_exists($cache_dir))
 		mkdir($cache_dir);
 	//chmod($cache_dir, 0777)
+	$fileModificationTime = -1;
+	if(file_exists($filename) && filesize($filename)>0)
+	{
+		$fileModificationTime = time() - filemtime($filename);
+		$fileModificationTime -= 1800; //web date and fiel date are not sync ?!?
+		/*
+		printf("date : %d<br>",strtotime(date("Y-m-d H:i:s")));
+		printf("filemtime : %d<br>",filemtime($filename));
+		printf("fileModificationTime : %d<br>",$fileModificationTime);
+		*/
+		if($fileModificationTime<$duration)
+			return true;
+		else
+			unlink($filename);
+	}
+	return false;
+}
+
+function isCacheFileUpToDate($filename)
+{
 	//return false;
-	$res = isCacheFileUpToDateDuration($filename,5*60);
+	$res = isCacheFileUpToDateDuration($filename,30*60); //update every 30 minutes 
 	return $res;
 }
 
