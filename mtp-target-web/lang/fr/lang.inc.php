@@ -60,7 +60,7 @@
   $menuLinkText_Sources = "Sources";
   $menuLinkText_Highscore = "Highscore";
   $menuLinkText_Documents = "Documentation";
-  $menuLinkText_Compatibility = "Compatibilitée";
+  $menuLinkText_Compatibility = "Compatibilité";
   $menuLinkText_Stats = "Stats";
   $menuLinkText_Todo = "Todo";
   $menuLinkText_Forum = "Forum";
