@@ -97,14 +97,14 @@ void CModule::init(const string &name,uint8 id, CVector position, CAngleAxis rot
 	
 	
 	Mesh = C3DTask::instance().scene().createInstance (ShapeName);
-	if (mesh == 0)
+	if (Mesh == 0)
 	{
 		nlwarning ("Can't load '%s.shape'", Name.c_str());
 	}
 	Mesh->setTransformMode(UTransformable::RotQuat);
 	Mesh->setRotQuat(CQuat(rotation));
 	Mesh->setPos(position);
-	
+	CMatrix mmatrix = mesh()->getMatrix();
 	
 }
 

@@ -65,7 +65,7 @@ void loadMesh(const std::string &meshFileName, std::vector<NLMISC::CVector> &ver
 	vertices.clear();
 	indices.clear();
 
-	if(!CPath::exists(meshFileName))
+	if(CPath::lookup(meshFileName, false).empty())
 	{
 		nlwarning("Mesh '%s' is not found, can't get colission", meshFileName.c_str());
 		return;

@@ -132,7 +132,9 @@ void CEditorTask::_mouseSelectModule()
 			CEditableElementCommon *element = *it;
 			CVector rayHit;
 			CEditableElement *editElement = (CEditableElement *)element;
-			bool intersect = element->intersect(rayStart,rayEnd,rayHit,editElement->mesh()->getMatrix());
+			NL3D :: UInstance* mesh = editElement->mesh();
+			CMatrix mat = mesh->getMatrix();
+			bool intersect = element->intersect(rayStart,rayEnd,rayHit,mat);
 			if(intersect)
 			{
 				CVector rayDirHit = rayHit - rayStart;

@@ -80,6 +80,7 @@ using namespace NL3D;
 CEditableElement::CEditableElement()
 {
 	mat = C3DTask::instance().driver().createMaterial();
+	Mesh = NULL;
 }
 
 
@@ -88,6 +89,41 @@ CEditableElement::~CEditableElement()
 	C3DTask::instance().scene().deleteInstance(Mesh);
 	
 }
+
+void CEditableElement::show()
+{
+	if(Mesh)
+		Mesh->show();
+}
+
+void CEditableElement::hide()
+{
+	if(Mesh)
+		Mesh->hide();
+}
+
+/*
+void CEditableElement::position(CVector pos)
+{
+	Position = pos;
+	Mesh->setPos(pos);
+	_changed = true;
+	CLevelManager::instance().currentLevel().changed(true);
+}
+*/
+
+UInstance *CEditableElement::mesh()
+{
+	CMatrix mmatrix = Mesh->getMatrix();
+	return Mesh;
+}
+
+/*
+void CEditableElement::update(NLMISC::CVector pos,NLMISC::CVector rot,uint32 selectedBy)
+{
+	position(pos);
+}
+*/
 
 
 /*
@@ -254,36 +290,4 @@ void CEditableElement::renderSelection()
 	C3DTask::instance().driver().drawQuad(quad,*mat);
 	*/			
 }
-
-void CEditableElement::show()
-{
-	Mesh->show();
-}
-
-void CEditableElement::hide()
-{
-	Mesh->hide();
-}
-
-/*
-void CEditableElement::position(CVector pos)
-{
-	Position = pos;
-	Mesh->setPos(pos);
-	_changed = true;
-	CLevelManager::instance().currentLevel().changed(true);
-}
-*/
-
-UInstance *CEditableElement::mesh()
-{
-	return Mesh;
-}
-
-/*
-void CEditableElement::update(NLMISC::CVector pos,NLMISC::CVector rot,uint32 selectedBy)
-{
-	position(pos);
-}
-*/
 
