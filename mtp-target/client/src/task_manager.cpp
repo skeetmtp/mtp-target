@@ -27,6 +27,7 @@
 #include <nel/misc/command.h>
 
 #include "task_manager.h"
+#include "main.h"
 
 
 //
@@ -40,6 +41,9 @@ using namespace NLMISC;
 //
 // Variables
 //
+
+CSynchronized<PauseFlags> taskManagerPauseFlags("taskManagerPauseFlags");
+void checkTaskManagerPaused();
 
 
 //
@@ -215,4 +219,82 @@ NLMISC_COMMAND(displayTasks, "display all task", "")
 	}
 
 	return true;
+}
+
+
+void checkTaskManagerPaused()
+{
+	{
+		bool pause;
+		{
+			CSynchronized<PauseFlags>::CAccessor acces(&taskManagerPauseFlags);
+			pause = acces.value().pauseCount>0;
+			if(pause)
+				acces.value().ackPaused = true;
+		}
+		while (pause) 
+		{
+			nlSleep(10);
+			{
+				CSynchronized<PauseFlags>::CAccessor acces(&taskManagerPauseFlags);
+				pause = acces.value().pauseCount>0;
+				if(pause)
+					acces.value().ackPaused = true;
+			}
+		}
+	}
+	{
+		CSynchronized<PauseFlags>::CAccessor acces(&taskManagerPauseFlags);
+		acces.value().ackPaused = false;
+	}	
+}
+
+bool pauseTaskManager(bool waitAck)
+{
+	bool pause;
+	{
+		CSynchronized<PauseFlags>::CAccessor acces(&taskManagerPauseFlags);
+		pause = acces.value().pauseCount>0;
+	}
+	if(!pause) 
+	{
+		bool ackPaused;
+		{
+			CSynchronized<PauseFlags>::CAccessor acces(&taskManagerPauseFlags);
+			ackPaused = false;
+			acces.value().pauseCount++;
+		}
+		if(!waitAck) return true;
+		while(!ackPaused)
+		{
+			nlSleep(10);
+			{
+				CSynchronized<PauseFlags>::CAccessor acces(&taskManagerPauseFlags);
+				ackPaused = acces.value().ackPaused;
+			}
+		}
+	}
+	else
+		return false;
+	return true;
+}
+
+bool isTaskManagerPaused()
+{
+	bool ackPaused;
+	{
+		CSynchronized<PauseFlags>::CAccessor acces(&taskManagerPauseFlags);
+		ackPaused = acces.value().ackPaused;
+	}
+	return ackPaused;
+}
+
+void resumeTaskManager()
+{
+	CSynchronized<PauseFlags>::CAccessor acces(&taskManagerPauseFlags);
+	if(acces.value().pauseCount>0) 
+	{
+		acces.value().pauseCount--;
+		nlassert(acces.value().pauseCount>=0);
+	}	
 }

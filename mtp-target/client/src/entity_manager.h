@@ -87,6 +87,10 @@ private:
 
 	//CEntity		Entities[256];
 	CEntities Entities;
+	std::list<uint8> ClientToAddTaskManagerThread;
+	std::list<uint8> ClientToAddNetworkThread;
+	std::list<uint8> ClientToRemoveTaskManagerThread;
+	std::list<uint8> ClientToRemoveNetworkThread;
 	
 };
 

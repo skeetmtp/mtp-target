@@ -95,4 +95,9 @@ private:
 	friend class CNetworkRunnable;
 };
 
+
+bool pauseNetwork(bool waitAck=true);
+bool isNetworkPaused();
+void resumeNetwork();
+
 #endif

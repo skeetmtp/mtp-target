@@ -452,6 +452,10 @@ SOURCE=.\mtp_target_service_default.cfg
 # End Source File
 # Begin Source File
 
+SOURCE=..\common\pause_flag.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\Src\physics.cpp
 # End Source File
 # Begin Source File

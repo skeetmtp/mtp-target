@@ -34,6 +34,7 @@
 #include <string>
 
 #include "mtp_target.h"
+#include "main.h"
 #include "task_manager.h"
 	
 
@@ -42,7 +43,8 @@
 //
 	
 using namespace std;
-
+using namespace NLMISC;
+	
 
 //
 // Variables
@@ -51,6 +53,9 @@ using namespace std;
 bool DisplayDebug = false;
 bool FollowEntity = false;
 string Cookie, FSAddr, ReplayFile;
+uint MainThreadId = 0;
+uint NetworkThreadId = 0;
+
 
 #ifdef NL_OS_WINDOWS
 int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
@@ -117,6 +122,7 @@ int main(int argc, char **argv)
 
 #endif
 
+	MainThreadId = getThreadId();
 	// add the main task
 	CTaskManager::instance().add(CMtpTarget::instance(), 70);
 
@@ -126,3 +132,6 @@ int main(int argc, char **argv)
 	// return
 	return EXIT_SUCCESS;
 }
+
+
+

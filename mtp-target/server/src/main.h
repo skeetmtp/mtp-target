@@ -27,7 +27,7 @@
 
 #include <nel/net/callback_server.h>
 #include <nel/net/udp_sock.h>
-
+#include "../../common/pause_flag.h"
 
 //
 // Variables
@@ -44,19 +44,6 @@ extern const float GSCALE;
 extern uint MainThreadId;
 extern uint NetworkThreadId;
 extern uint PhysicThreadId;
-
-
-class PauseFlags 
-{
-public:
-	PauseFlags()
-	{
-		pauseCount = 0;
-		ackPaused = false;		
-	}
-	int pauseCount;
-	bool ackPaused;
-};
 
 
 bool pauseService(bool waitAck=true);

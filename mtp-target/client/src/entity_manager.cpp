@@ -54,6 +54,29 @@ CEntityManager::CEntityManager()
 	}
 }
 
+/*
+void CEntityManager::add(uint8 eid)
+{
+	uint tid = getThreadId();
+	nlassert(tid==TaskManagerThreadId || tid==NetworkThreadId);
+	if(tid==TaskManagerThreadId)
+		ClientToAddTaskManagerThread.push_back(eid);
+	else
+		ClientToAddNetworkThread.push_back(eid);
+}
+
+void CEntityManager::remove(uint8 eid)
+{
+	uint tid = getThreadId();
+	nlassert(tid==TaskManagerThreadId || tid==NetworkThreadId);
+	if(tid==TaskManagerThreadId)
+		ClientToRemoveTaskManagerThread.push_back(eid);
+	else
+		ClientToRemoveNetworkThread.push_back(eid);
+	
+}
+*/
+
 void CEntityManager::init()
 {
 	for(uint i = 0; i < 256; i++)

@@ -647,6 +647,10 @@ SOURCE=.\Src\main.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\src\main.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\Src\mouse_listener.cpp
 # End Source File
 # Begin Source File
@@ -668,6 +672,10 @@ SOURCE=.\Src\mtp_target.h
 # Begin Source File
 
 SOURCE=.\mtp_target_default.cfg
+# End Source File
+# Begin Source File
+
+SOURCE=..\common\pause_flag.h
 # End Source File
 # Begin Source File
 

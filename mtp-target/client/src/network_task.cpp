@@ -49,6 +49,7 @@
 #include "net_callbacks.h"
 #include "config_file_task.h"
 #include "../../common/net_message.h"
+#include "main.h"
 
 
 //
@@ -66,6 +67,8 @@ using namespace NLNET;
 
 FILE *SessionFile = 0;
 
+CSynchronized<PauseFlags> networkPauseFlags("networkPauseFlags");
+void checkNetworkPaused();
 
 //
 // Thread
@@ -81,6 +84,7 @@ public:
 
 	virtual void run()
 	{
+		NetworkThreadId = getThreadId();
 		stopNetwork = false;
 		while(!stopNetwork)
 		{
@@ -283,3 +287,82 @@ void CNetworkTask::setEditMode(uint8 editMode)
 	send(msgout);
 	
 }
+
+
+void checkNetworkPaused()
+{
+	{
+		bool pause;
+		{
+			CSynchronized<PauseFlags>::CAccessor acces(&networkPauseFlags);
+			pause = acces.value().pauseCount>0;
+			if(pause)
+				acces.value().ackPaused = true;
+		}
+		while (pause) 
+		{
+			nlSleep(10);
+			{
+				CSynchronized<PauseFlags>::CAccessor acces(&networkPauseFlags);
+				pause = acces.value().pauseCount>0;
+				if(pause)
+					acces.value().ackPaused = true;
+			}
+		}
+	}
+	{
+		CSynchronized<PauseFlags>::CAccessor acces(&networkPauseFlags);
+		acces.value().ackPaused = false;
+	}	
+}
+
+bool pauseNetwork(bool waitAck)
+{
+	bool pause;
+	{
+		CSynchronized<PauseFlags>::CAccessor acces(&networkPauseFlags);
+		pause = acces.value().pauseCount>0;
+	}
+	if(!pause) 
+	{
+		bool ackPaused;
+		{
+			CSynchronized<PauseFlags>::CAccessor acces(&networkPauseFlags);
+			ackPaused = false;
+			acces.value().pauseCount++;
+		}
+		if(!waitAck) return true;
+		while(!ackPaused)
+		{
+			nlSleep(10);
+			{
+				CSynchronized<PauseFlags>::CAccessor acces(&networkPauseFlags);
+				ackPaused = acces.value().ackPaused;
+			}
+		}
+	}
+	else
+		return false;
+	return true;
+}
+
+bool isNetworkPaused()
+{
+	bool ackPaused;
+	{
+		CSynchronized<PauseFlags>::CAccessor acces(&networkPauseFlags);
+		ackPaused = acces.value().ackPaused;
+	}
+	return ackPaused;
+}
+
+void resumeNetwork()
+{
+	CSynchronized<PauseFlags>::CAccessor acces(&networkPauseFlags);
+	if(acces.value().pauseCount>0) 
+	{
+		acces.value().pauseCount--;
+		nlassert(acces.value().pauseCount>=0);
+	}	
+}
+
