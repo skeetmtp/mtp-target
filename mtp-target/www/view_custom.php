@@ -29,10 +29,11 @@
 			$t = filetype($f);
 			if($t == "file")
 			{
-				if(strstr($entry,"ping_ball_")!="" )
+				if(strstr($entry,"ping_ball_")!="" && strstr($entry,".tga")!="" )
 				{
 					printf("<tr>");
-					printf("<td bgcolor=\"%s\"><a href=\"../user_texture/$entry\"><img src=\"../user_texture/$entry\" ALT=\"file\"></a>&nbsp;$entry&nbsp;</td>",$table_news_row_color);
+					$entryjpg = str_replace(".tga", ".jpg", $entry);
+					printf("<td bgcolor=\"%s\"><a href=\"../user_texture/$entry\"><img src=\"../user_texture/$entryjpg\" ALT=\"file\"></a>&nbsp;$entry&nbsp;</td>",$table_news_row_color);
 					printf("</tr>");
 					printf("\n");
 					$count++;

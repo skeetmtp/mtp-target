@@ -21,6 +21,8 @@ if(!ereg("ping_ball_([[:alnum:]]+).tga", $_FILES['userfile']['name'], $regs))
 
 if (move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile))
 {
+   system("convert ".$uploaddir."ping_ball_".$regs[1].".tga ".$uploaddir."ping_ball_".$regs[1].".jpg");
+
    echo "<p>The file '".$_FILES['userfile']['name']."' was uploaded. Don't forget  to add the following line in your mtp_target.cfg: ";
    echo '<pre>EntityTexture = "'.$regs[1].'";</pre></p>';
 }
