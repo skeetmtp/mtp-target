@@ -191,7 +191,7 @@ static void cbClientVerifyLoginPassword(CMessage &msgin, TSockId from, CCallback
 		if(!reason.empty()) break;
 		if(nbrow!=0)
 		{
-			reason = "User banned";
+			reason = toString("You(%s) are  banned for %s minutes",row[1],row[3]);
 			break;
 		}
 

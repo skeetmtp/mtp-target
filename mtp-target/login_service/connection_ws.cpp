@@ -420,7 +420,7 @@ static void cbBanClient(CMessage &msgin, const std::string &serviceName, uint16 
 
 	if(nbrow == 0)
 	{
-		string request = toString("insert into ban (Ip,Date,Duration) values ('%s',NOW(),%d);",ip.c_str(),duration);
+		string request = toString("insert into ban (Ip,Date,Duration) values ('%s',NOW(),%d);",ip.c_str(),duration*60);
 		sqlQuery(request, nbrow, row, result);
 	}
 	//sqlQuery("update user set Score=Score+"+toString(score)+" where UId="+toString(uid), nbrow, row, result);
