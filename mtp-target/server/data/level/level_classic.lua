@@ -2,7 +2,11 @@ Name = "Snow classic"
 Author = "Skeet and 9dan"
 ServerLua = "level_classic_server.lua"
 
-skyShapeFileName = "sky.shape"
+skyShapeFileName = "sky.shape";
+sunAmbientColor = CRGBA(82, 100, 133, 255);
+sunDiffuseColor = CRGBA(255, 255, 255, 255);
+sunSpecularColor = CRGBA(255, 255, 255, 255);
+sunDirection = CVector(-1,0,-1);
 
 Cameras =
 {

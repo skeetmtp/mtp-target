@@ -196,11 +196,31 @@ CLevel::CLevel(const string &filename)
 	if(C3DTask::instance().levelParticle()!=0)
 		C3DTask::instance().levelParticle()->show();
 
+
+	CLuaRGBA sunAmbientColor(82, 100, 133, 255);
+	luaGetGlobalVariable(LuaState, sunAmbientColor);
+	nlinfo("sunAmbientColor = %d %d %d %d", sunAmbientColor.R, sunAmbientColor.G, sunAmbientColor.B, sunAmbientColor.A);
+	C3DTask::instance().driver().setAmbientColor(sunAmbientColor);
+	C3DTask::instance().scene().setSunAmbient(sunAmbientColor);
+	
+	CLuaRGBA sunDiffuseColor(255,255,255,255);
+	luaGetGlobalVariable(LuaState, sunDiffuseColor);
+	C3DTask::instance().scene().setSunDiffuse(sunDiffuseColor);
+	
+	CLuaRGBA sunSpecularColor(255,255,255,255);
+	luaGetGlobalVariable(LuaState, sunSpecularColor);
+	C3DTask::instance().scene().setSunDiffuse(sunSpecularColor);
+	
+	CLuaVector sunDirection(-1,0,-1);
+	luaGetGlobalVariable(LuaState, sunDirection);
+	C3DTask::instance().scene().setSunDirection(sunDirection);
+	
+	
 	string skyShapeFileName;
 	luaGetGlobalVariable(LuaState, skyShapeFileName);
 	nlinfo("skyShapeFileName '%s'", skyShapeFileName.c_str());
 	CSkyTask::instance().shapeName(skyShapeFileName);
-
+	
 	CTaskManager::instance().add(CSkyTask::instance(), 100);
 	
 
