@@ -224,14 +224,14 @@ static void cbUpdate(CNetMessage &msgin)
 			//nlassert(sxx==nsx);
 			dpos.x = convert8_8fp(nsx,ndx);
 			
-			pos = CEntityManager::instance()[eid].LastSent2OthersPos + dpos;
-			CEntityManager::instance()[eid].LastSent2OthersPos = pos;
-			CEntityManager::instance()[eid].LastSent2MePos = pos;
-			if(DisplayDebug)
-				nlinfo("TCP update client %hu a %g %g %g ping %hu", (uint16)eid, pos.x, pos.y, pos.z);
 
 			if(CEntityManager::instance().exist(eid))
 			{
+				pos = CEntityManager::instance()[eid].LastSent2OthersPos + dpos;
+				CEntityManager::instance()[eid].LastSent2OthersPos = pos;
+				CEntityManager::instance()[eid].LastSent2MePos = pos;
+				if(DisplayDebug)
+					nlinfo("TCP update client %hu a %g %g %g ping %hu", (uint16)eid, pos.x, pos.y, pos.z);
 				//TODO remove rsxTime param
 				CEntityManager::instance()[eid].interpolator().addKey(CEntityInterpolatorKey(CEntityState(pos,false),rsxTime));
 				//CEntityManager::instance()[eid].ping(ping);
@@ -307,21 +307,23 @@ static void cbUpdateOne(CNetMessage &msgin)
 		//nlinfo(">>>>dx =  %f ",dpos.x - mdx);
 		
 		
-		pos = CEntityManager::instance()[eid].LastSent2MePos + dpos;
-		CEntityManager::instance()[eid].LastSent2MePos = pos;
-		if(DisplayDebug)
-			nlinfo("TCP updateOne client %hu a %g %g %g ping %hu", (uint16)eid, pos.x, pos.y, pos.z);
 		
 		if(CEntityManager::instance().exist(eid))
 		{
+			pos = CEntityManager::instance()[eid].LastSent2MePos + dpos;
+			CEntityManager::instance()[eid].LastSent2MePos = pos;
+			if(DisplayDebug)
+				nlinfo("TCP updateOne client %hu a %g %g %g ping %hu", (uint16)eid, pos.x, pos.y, pos.z);
 			CEntityManager::instance()[eid].interpolator().addKey(CEntityInterpolatorKey(CEntityState(pos,false),rsxTime));
 			//CEntityManager::instance()[eid].ping(ping);
 		}
+		/*
 		else
 		{
-			nlstop;
 			nlwarning("Received a position of an unknown entity %hu", (uint16)eid);
+			nlstop;
 		}
+		*/
 	}
 }
 
@@ -351,13 +353,14 @@ static void cbFullUpdate(CNetMessage &msgin)
 		msgin.serial(eid);
 		msgin.serial(pos, ping);
 		//pos = CEntityManager::instance()[eid].LastSentPos + dpos;
-		CEntityManager::instance()[eid].LastSent2MePos = pos;
-		CEntityManager::instance()[eid].LastSent2OthersPos = pos;
-		if(DisplayDebug)
-			nlinfo("TCP updateFull client %hu a %g %g %g ping %hu", (uint16)eid, pos.x, pos.y, pos.z, ping);
 		
 		if(CEntityManager::instance().exist(eid))
 		{
+			CEntityManager::instance()[eid].LastSent2MePos = pos;
+			CEntityManager::instance()[eid].LastSent2OthersPos = pos;
+			if(DisplayDebug)
+				nlinfo("TCP updateFull client %hu a %g %g %g ping %hu", (uint16)eid, pos.x, pos.y, pos.z, ping);
+
 			CEntityManager::instance()[eid].interpolator().addKey(CEntityInterpolatorKey(CEntityState(pos,false),rsxTime));
 			CEntityManager::instance()[eid].ping(ping);
 		}
