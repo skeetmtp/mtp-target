@@ -48,7 +48,7 @@ include_once("helpers.php");
 		include($cacheFileName);
 	}
 	
-	
+	/*
 	$requete = "SELECT COUNT(*) FROM game_user WHERE UNIX_TIMESTAMP(NOW())-UNIX_TIMESTAMP(LastLoginDate)<$webUserIdleTime;";
 	$result=exec_requete($requete);
 	if($line = mysql_fetch_array($result))
@@ -56,7 +56,7 @@ include_once("helpers.php");
 		printf($potdUserOnWebCount,$line[0]);
 		printf("<br>");
 	}
-	
+	*/
 
 	printf("</div>");
 	boxEnd();
