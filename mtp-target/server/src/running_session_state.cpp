@@ -79,7 +79,8 @@ void CRunningSessionState::update()
 					}
 					else //si il est arrete
 					{
-						if(c->ArrivalTime == 0 && c->CurrentScore>0)
+						float minArrivalTime = TimeBeforeCheck/1000.0f + 1.0f;
+						if(c->ArrivalTime > minArrivalTime  && c->CurrentScore>0)
 						{
 							c->ArrivalTime =(float)(currentTime - CSessionManager::instance().startTime())/1000.0f;
 							nlinfo("*** ARRIVAL TIME '%s' %f",c->name().c_str(),c->ArrivalTime);
