@@ -144,18 +144,20 @@ void CEntityManager::_remove(std::list<uint8> &removeList)
 		if(!c)
 		{
 			nlwarning("Can't remove client because eid %hu is not found", (uint16)eid);
-			return;
+		}
+		else
+		{
+			nlinfo("Removing client eid %hu name '%s'", (uint16)c->id(), c->name().c_str());
+			CSessionManager::instance().editMode(0);
+			
+			// TODO clientConnected(c->Cookie, false);
+			
+			CNetMessage msgout(CNetMessage::Logout);
+			msgout.serial(eid);
+			CNetwork::instance().send(msgout);		
+			delete c;
 		}
 		
-		nlinfo("Removing client eid %hu name '%s'", (uint16)c->id(), c->name().c_str());
-		CSessionManager::instance().editMode(0);
-		
-		// TODO clientConnected(c->Cookie, false);
-		
-		CNetMessage msgout(CNetMessage::Logout);
-		msgout.serial(eid);
-		CNetwork::instance().send(msgout);		
-		delete c;
 	}
 	removeList.clear();
 	
@@ -166,25 +168,33 @@ void CEntityManager::_remove(std::list<uint8> &removeList)
 
 void CEntityManager::flushAddRemoveList()
 {
-	bool paused = pauseAllThread();
-	if(!paused)
-		return;
-
 	uint tid = getThreadId();
 	nlassert(tid==MainThreadId || tid==NetworkThreadId);
 	
 	if(tid==MainThreadId)
 	{
+		if(ClientToAddMainThread.size()==0 && ClientToRemoveMainThread.size()==0)
+			return;
+		bool paused = pauseAllThread();
+		if(!paused)
+			return;
 		_add(ClientToAddMainThread);
 		_remove(ClientToRemoveMainThread);
+		updateIdUpdateList();
+		resumeAllThread();
 	}
 	else
 	{
+		if(ClientToAddNetworkThread.size()==0 && ClientToRemoveNetworkThread.size()==0)
+			return;
+		bool paused = pauseAllThread();
+		if(!paused)
+			return;
 		_add(ClientToAddNetworkThread);
 		_remove(ClientToRemoveNetworkThread);
+		updateIdUpdateList();
+		resumeAllThread();
 	}		
-	updateIdUpdateList();
-	resumeAllThread();
 	
 }
 
