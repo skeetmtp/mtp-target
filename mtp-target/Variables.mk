@@ -16,7 +16,7 @@ DIR_DBG_on    = debug
 DIR_DBG_off   = release
 
 # CHANGE THESE PATHS IF NECESSARY
-#warning if you use ode 0.5 remove -lopcode in server Makefile
+# warning if you use ode 0.5 remove -lopcode in server Makefile
 #ODE_VERSION     = 0.5 
 ODE_VERSION     = 0.039
 ODE_INCLUDE     = $(HOME)/external/ode-$(ODE_VERSION)/include
