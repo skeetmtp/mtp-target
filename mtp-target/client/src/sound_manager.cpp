@@ -425,7 +425,7 @@ if(!isInit) return;
 	std::string longName = NLMISC::CPath::lookup(filename, false);
 	if (! longName.empty())
 	{
-		streamStream = FSOUND_Stream_Open(longName.c_str(), FSOUND_NORMAL | FSOUND_LOOP_OFF, 0, 0);
+		streamStream = FSOUND_Stream_Open(longName.c_str(), FSOUND_NORMAL | FSOUND_LOOP_NORMAL, 0, 0);
 		if (streamStream == 0)
 		{
 			nlwarning("CSoundManager: Can't load stream '%s' (%s)", longName.c_str(), FMOD_ErrorString(FSOUND_GetError()));
