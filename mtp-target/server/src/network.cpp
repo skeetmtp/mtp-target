@@ -277,6 +277,7 @@ void CNetwork::reset()
 
 void CNetwork::update()
 {
+	static uint8 pingnb = 0;
 
 #if OLD_NETWORK
 	if(CEntityManager::instance().humanClientCount()==0) return;
@@ -362,14 +363,15 @@ void CNetwork::update()
 				}
 			}
 		}
-		
+
 		if((updateCount%MT_NETWORK_FULL_UPDATE_PERIODE)==0 || DisableNetworkOptimization)
 	//	if(updateCount==0)
 		{
 			CNetMessage msgout(CNetMessage::FullUpdate);
 			
 			{
-				
+				msgout.serial(pingnb);
+
 				TTime currentTime = CTime::getLocalTime();
 				
 				for(CEntityManager::EntityConstIt it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
@@ -387,8 +389,8 @@ void CNetwork::update()
 					
 					if((*it)->type() != CEntity::Bot)
 					{
-						(*it)->LastSentPing.push(currentTime);
-						nlinfo("*********** send the ping %"NL_I64"u", currentTime);
+						(*it)->LastSentPing.push(make_pair(pingnb, currentTime));
+						nlinfo("*********** send the ping %u %"NL_I64"u", pingnb, currentTime);
 					}
 					
 					(*it)->LastSent2MePos = (*it)->Pos;
@@ -399,12 +401,14 @@ void CNetwork::update()
 			UpdatePacketSize = msgout.length();
 			
 			CNetwork::instance().send(msgout);
+			pingnb++;
 		}
 		else if((updateCount%MT_NETWORK_MY_UPDATE_FREQUENCE_RATIO)==0)
 		{
 			CNetMessage msgout(CNetMessage::Update);
 			
 			{
+				msgout.serial(pingnb);
 				
 				TTime currentTime = CTime::getLocalTime();
 				
@@ -458,8 +462,11 @@ void CNetwork::update()
 							
 							
 							if((*it)->type() != CEntity::Bot)
-								(*it)->LastSentPing.push(currentTime);
-							
+							{
+								(*it)->LastSentPing.push(make_pair(pingnb, currentTime));
+								nlinfo("*********** send the ping %u %"NL_I64"u", pingnb, currentTime);
+							}
+
 							CVector newPos = (*it)->LastSent2OthersPos + sendDPos; 
 							(*it)->LastSent2OthersPos = newPos;
 							(*it)->LastSent2MePos = newPos;
@@ -470,7 +477,7 @@ void CNetwork::update()
 			
 			CNetwork::instance().send(msgout);
 			UpdatePacketSize = msgout.length();
-			
+			pingnb++;
 		}
 		else
 		{

@@ -127,7 +127,7 @@ public:
 	NLMISC::CVector      CollideWhenFlyPos;
 	
 	NLMISC::CValueSmootherTemplate<uint16> Ping;
-	std::queue<NLMISC::TTime> LastSentPing;
+	std::queue<std::pair<uint8, NLMISC::TTime> > LastSentPing;
 
 	bool				 Spectator;
 

@@ -188,8 +188,12 @@ static void cbUpdate(CNetMessage &msgin)
 	//uint16 ping;
 
 	// reply to the update first (used for the ping)
+	uint8 pingnb;
+	msgin.serial(pingnb);
 	CNetMessage msgout(CNetMessage::Update);
+	msgout.serial(pingnb);
 	CNetworkTask::instance().send(msgout);
+	nlinfo("*********** send the pong %u %"NL_I64"u", pingnb, CTime::getLocalTime());
 	
 	//msgin.serial (rsxTime);
 
@@ -384,9 +388,12 @@ static void cbFullUpdate(CNetMessage &msgin)
 	float rsxTime = 0.0f;
 
 	// reply to the update first (used for the ping)
+	uint8 pingnb;
+	msgin.serial(pingnb);
 	CNetMessage msgout(CNetMessage::Update);
+	msgout.serial(pingnb);
 	CNetworkTask::instance().send(msgout);
-	nlinfo("*********** send the pong %"NL_I64"u", CTime::getLocalTime());
+	nlinfo("*********** send the pong %u %"NL_I64"u", pingnb, CTime::getLocalTime());
 	
 	//msgin.serial (rsxTime);
 

@@ -456,21 +456,43 @@ static void cbUpdate(CClient *c, CNetMessage &msgin)
 {
 	TTime CurrentTime = CTime::getLocalTime();
 
+	uint8 pingnb;
+	msgin.serial(pingnb);
+
 	if(c->LastSentPing.empty())
 	{
 		nlwarning ("Received an ack of an update without info sending from %hu '%s'", (uint16)c->id(), c->name().c_str());
 		return;
 	}
 
-	TTime OldTime = c->LastSentPing.front();
-	if(CurrentTime < OldTime)
+next:
+	if(c->LastSentPing.empty())
+	{
+		nlwarning ("empty ping array from %hu '%s'", (uint16)c->id(), c->name().c_str());
+		return;
+	}
+	pair<uint8, TTime> p = c->LastSentPing.front();
+	if(pingnb < p.first)
+	{
+		nlwarning ("Received an ack of an update with bad sync ping should be %u and is %u from %hu '%s'", p.first, pingnb, (uint16)c->id(), c->name().c_str());
+		return;
+	}
+	else if(pingnb > p.first)
+	{
+		nlwarning ("Received an ack of an update with bad sync ping should be %u and is %u from %hu '%s'", p.first, pingnb, (uint16)c->id(), c->name().c_str());
+		c->LastSentPing.pop();
+		goto next;
+	}
+
+	if(CurrentTime < p.second)
 	{
 		nlwarning ("Received an ack of an update with bad sync from %hu '%s'", (uint16)c->id(), c->name().c_str());
 		return;
 	}
 
-	c->Ping.addValue((uint16)(CurrentTime - OldTime));
-//	nlinfo("Ping for '%s' is %d (%"NL_I64"d)", c->name().c_str(), c->Ping.getSmoothValue(), CurrentTime - OldTime);
+	c->Ping.addValue((uint16)(CurrentTime - p.second));
+	nlinfo("*********** receive the pong %u %"NL_I64"u", pingnb, CurrentTime);
+	nlinfo("%"NL_I64"u Ping for '%s' is %d (%"NL_I64"d)", CurrentTime, c->name().c_str(), c->Ping.getSmoothValue(), CurrentTime - p.second);
 	c->LastSentPing.pop();
 }
 
