@@ -473,9 +473,11 @@ void CIntroTask::updateConnectionOnLan()
 	string res = CNetworkTask::instance().connect(CInetAddress(CConfigFileTask::instance().configFile().getVar("ServerHost").asString()+":"+toString(CConfigFileTask::instance().configFile().getVar("TcpPort").asInt())));
 	if(res.empty())
 	{
+/*
 #ifdef MTPT_RESOURCE_MANAGER2
 		CResourceManager::instance().connected(true);
 #endif
+*/
 		_autoLogin = 0;//autologin only once
 		stop();
 		// stop the background
