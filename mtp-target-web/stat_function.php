@@ -1,6 +1,11 @@
 <?php
 include_once("stat_graph_display.php");
 
+function thisYear()
+{
+	return date("Y");
+}
+
 function Id2ServerName($server_id)
 {
 	  $requete = "SELECT Name FROM shard WHERE ShardId='".$server_id."';";

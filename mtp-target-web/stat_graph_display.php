@@ -128,6 +128,11 @@ function drawGraphMultiple($html_fp,$mysqlArray,$isHour,$CriterionBase,$valCount
 
 function drawGraphMultipleLink($html_fp,$mysqlArray,$isHour,$CriterionBase,$valCount,$header,$ValueName,$CriterionArray,$CriterionNotNull,$CriterionLink)
 {
+	drawGraphMultipleLinkCount($html_fp,$mysqlArray,$isHour,$CriterionBase,$valCount,$header,$ValueName,$CriterionArray,$CriterionNotNull,$CriterionLink,count($CriterionArray)-1);
+}
+
+function drawGraphMultipleLinkCount($html_fp,$mysqlArray,$isHour,$CriterionBase,$valCount,$header,$ValueName,$CriterionArray,$CriterionNotNull,$CriterionLink,$linkParamCount)
+{
 	global $table_news_bgcolor_color;
 	global $table_news_head_color;
 	global $table_news_row_color;
@@ -147,13 +152,16 @@ function drawGraphMultipleLink($html_fp,$mysqlArray,$isHour,$CriterionBase,$valC
 	{
 		$valPerCriterion[$line[1]][0]=$line[0];
 		
-		switch(count($CriterionArray)-1)
+		switch($linkParamCount)
 		{
 			case 1:
 				$valPerCriterion[$line[1]][2]=sprintf($CriterionLink,$line[2],$line[2]);
 				break;
 			case 2:
 				$valPerCriterion[$line[1]][2]=sprintf($CriterionLink,$line[2],$line[3],$line[2]);
+				break;
+			case 3:
+				$valPerCriterion[$line[1]][2]=sprintf($CriterionLink,$line[2],$line[3],$line[4],$line[2]);
 				break;
 			default:
 				$valPerCriterion[$line[1]][2] = $line[2];
