@@ -23,6 +23,7 @@
 //
 
 #include "stdpch.h"
+#include "time.h"
 
 #include <nel/net/service.h>
 
