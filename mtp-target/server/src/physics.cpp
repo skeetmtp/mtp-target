@@ -544,7 +544,7 @@ class PhysicsThread : public IRunnable
 								dBodySetAngularVel(e->Body, avel[0]*friction, avel[1]*friction, avel[2]*friction);
 							}
 						}
-						e->Friction = 0;
+						e->Friction = e->DefaultFriction;
 	//					e->jointed = false;
 						if(e->type()==CEntity::Bot && !e->FreezeCommand && e->InGame && e->NbOpenClose<e->MaxOpenClose)
 						{
