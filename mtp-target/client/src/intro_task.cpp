@@ -327,8 +327,8 @@ void CIntroTask::updateLoginOnlan()
 		loginLanText->text = NLMISC::strlwr(loginLanText->text);
 		passwordLanText->text = NLMISC::strlwr(passwordLanText->text);
 		serverLanText->text = NLMISC::strlwr(serverLanText->text);
-		CConfigFileTask::instance().configFile().getVar("Login").setAsString(loginText->text);
-		CConfigFileTask::instance().configFile().getVar("Password").setAsString(passwordText->text);
+		CConfigFileTask::instance().configFile().getVar("Login").setAsString(loginLanText->text);
+		CConfigFileTask::instance().configFile().getVar("Password").setAsString(passwordLanText->text);
 		CConfigFileTask::instance().configFile().getVar("ServerHost").setAsString(serverLanText->text);
 		CConfigFileTask::instance().configFile().save();
 		
