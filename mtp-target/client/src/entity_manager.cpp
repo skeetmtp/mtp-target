@@ -116,10 +116,23 @@ void CEntityManager::add(uint8 eid, const std::string &name, sint32 totalScore, 
 	nlassert(tid==TaskManagerThreadId || tid==NetworkThreadId);
 	
 	CEntityInitData entityToAdd(eid,name,totalScore,color,spectator,isLocal);
+	std::list<CEntityInitData> *ClientToAddList;
 	if(tid==TaskManagerThreadId)
-		ClientToAddTaskManagerThread.push_back(entityToAdd);
+		ClientToAddList = &ClientToAddTaskManagerThread;
 	else
-		ClientToAddNetworkThread.push_back(entityToAdd);
+		ClientToAddList = &ClientToAddNetworkThread;
+
+	list<CEntityInitData>::iterator it2;
+	for(it2=ClientToAddList->begin(); it2!=ClientToAddList->end();it2++)
+	{
+		CEntityInitData e = *it2;
+		if(e.eid==eid)
+		{
+			nlwarning("client %d %s still in add list",eid,name.c_str());
+			return;
+		}
+	}
+	ClientToAddList->push_back(entityToAdd);
 }
 
 void CEntityManager::remove(uint8 eid)
@@ -127,10 +140,23 @@ void CEntityManager::remove(uint8 eid)
 	nlassert(exist(eid));
 	uint tid = getThreadId();
 	nlassert(tid==TaskManagerThreadId || tid==NetworkThreadId);
+	std::list<uint8> *ClientToRemoveList;
 	if(tid==TaskManagerThreadId)
-		ClientToRemoveTaskManagerThread.push_back(eid);
+		ClientToRemoveList = &ClientToRemoveTaskManagerThread;
 	else
-		ClientToRemoveNetworkThread.push_back(eid);
+		ClientToRemoveList = &ClientToRemoveNetworkThread;
+
+	list<uint8>::iterator it1;
+	for(it1=ClientToRemoveList->begin(); it1!=ClientToRemoveList->end();it1++)
+	{
+		uint8 iteid = *it1;
+		if(iteid==eid)
+		{
+			nlwarning("client %d still in remove list",eid);
+			return;
+		}
+	}
+	ClientToRemoveList->push_back(eid);
 }
 
 void CEntityManager::_add(std::list<CEntityInitData> &addList)

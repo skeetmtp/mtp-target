@@ -87,20 +87,51 @@ void CEntityManager::add(CEntity *entity)
 {
 	uint tid = getThreadId();
 	nlassert(tid==MainThreadId || tid==NetworkThreadId);
+	std::list<CEntity *> *ClientToAddList;
+	
 	if(tid==MainThreadId)
-		ClientToAddMainThread.push_back(entity);
+		ClientToAddList = &ClientToAddMainThread;
 	else
-		ClientToAddNetworkThread.push_back(entity);
+		ClientToAddList = &ClientToAddNetworkThread;
+	
+	list<CEntity *>::iterator it2;
+	for(it2=ClientToAddList->begin(); it2!=ClientToAddList->end();it2++)
+	{
+		CEntity *e = *it2;
+		if(e==entity)
+		{
+			nlwarning("client 0x%p %d %s still in add list",e,e->id(),e->name().c_str());
+			return;
+		}
+	}
+	
+	ClientToAddList->push_back(entity);
 }
 
 void CEntityManager::remove(uint8 eid)
 {
 	uint tid = getThreadId();
 	nlassert(tid==MainThreadId || tid==NetworkThreadId);
+	std::list<uint8> *ClientToRemoveList;
+
 	if(tid==MainThreadId)
-		ClientToRemoveMainThread.push_back(eid);
+		ClientToRemoveList = &ClientToRemoveMainThread;
 	else
-		ClientToRemoveNetworkThread.push_back(eid);
+		ClientToRemoveList = &ClientToRemoveNetworkThread;
+
+	list<uint8>::iterator it1;
+	for(it1=ClientToRemoveList->begin(); it1!=ClientToRemoveList->end();it1++)
+	{
+		uint8 iteid = *it1;
+		if(iteid==eid)
+		{
+			nlwarning("client %d still in remove list",eid);
+			return;			
+		}
+
+	}
+	
+	ClientToRemoveList->push_back(eid);
 
 }
 
