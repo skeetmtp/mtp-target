@@ -59,6 +59,7 @@ extern FILE *SessionFile;
 
 static void cbChat(CNetMessage &msgin)
 {
+	nlinfo("cbChat");
 	string msg;
 	while(msgin.getPos() < (sint32)msgin.length())
 	{
@@ -69,6 +70,7 @@ static void cbChat(CNetMessage &msgin)
 
 static void cbError(CNetMessage &msgin)
 {
+	nlinfo("cbError");
 	string msg;
 	msgin.serial(msg);
 	CMtpTarget::instance().error(msg);	
@@ -154,6 +156,7 @@ static void cbLogout(CNetMessage &msgin)
 
 static void cbOpenClose(CNetMessage &msgin)
 {
+	nlinfo("cbOpenClose");
 	uint8 eid;
 	msgin.serial(eid);
 	
@@ -404,6 +407,7 @@ static void cbUpdateList(CNetMessage &msgin)
 
 static void cbEditMode(CNetMessage &msgin)
 {
+	nlinfo("cbEditMode");
 	uint8 editMode;
 	msgin.serial(editMode);
 	
@@ -411,6 +415,7 @@ static void cbEditMode(CNetMessage &msgin)
 
 static void cbUpdateElement(CNetMessage &msgin)
 {
+	//nlinfo("cbUpdateElement");
 	uint8 elementType;
 	msgin.serial(elementType);
 	uint8 elementId;
@@ -446,6 +451,7 @@ static void cbEverybodyReady(CNetMessage &msgin)
 
 static void cbEnableElement(CNetMessage &msgin)
 {
+	nlinfo("cbEnableElement");
 	uint8 elementId;
 	msgin.serial(elementId);
 	bool enabled;
@@ -462,8 +468,8 @@ static void cbRequestCRCKey(CNetMessage &msgin)
 	msgin.serial(fn);
 	CHashKey hashKey;
 	msgin.serial(hashKey);
-	CResourceManager::instance().receivedCRC(fn);
 	nlinfo("cbRequestCRCKey res = '%s'",fn.c_str());
+	CResourceManager::instance().receivedCRC(fn);
 }
 
 static void cbRequestDownload(CNetMessage &msgin)
@@ -501,9 +507,9 @@ static void cbDisplayText(CNetMessage &msgin)
 	msgin.serial(col);
 	msgin.serial(duration);
 
+	nlinfo("display text(during %f sec) : %s",duration,message.c_str());
 	CHudTask::instance().addMessage(CHudMessage(x,y,s,message,col,duration));
 
-	nlinfo("display text(during %f sec) : %s",duration,message.c_str());
 	
 }
 
@@ -550,6 +556,7 @@ static void cbSessionState(CNetMessage &msgin)
 
 static void cbEndSession(CNetMessage &msgin)
 {
+	nlinfo("cbEndSession");
 	while(msgin.getPos() < (sint32)msgin.length())
 	{
 		uint8 eid;
