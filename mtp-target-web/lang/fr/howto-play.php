@@ -4,7 +4,9 @@
 <ul>
 <li>récuperez <a href="http://mtptarget.free.fr/download">le programme d'installation</a>.</li>
 <li>lancer <code>mtptarget_launcher.exe</code>.</li>
-<li>Entrez un login et un mot de passe, la premiere fois que vous vous logger, ces informations sont enregistrées dans la base de donnée</li>
+<li>Entrez un login et un mot de passe, la premiere fois que vous vous logger, ces informations sont enregistrées dans la base de donnée<br>
+<b>Attention</b> : Taille maximum du login <b>20 characteres</b>, uniquement les characteres suivant sont authorisés : <b>a-z A-Z 0-9 [ ] _ -</b>
+</li>
 <li>Mantenant choisissez un des serveurs disponible</li>
 <li>Le jeu peut etre automatiquement patché</li>
 <li>Une fenetre <code>"Press enter to connect to the server"</code> devrai apparaitre, appuyer sur <b>ENTER</b> :).</li>
