@@ -402,6 +402,11 @@ void CMtpTarget::loadNewSession()
 	resetFollowedEntity();
 	controler().Camera.reset();
 
+	if(CLevelManager::instance().levelPresent())
+		CLevelManager::instance().currentLevel().reset();
+	else
+		nlwarning("there is no level");
+
 	State = eStartSession;
 	
 	nlinfo ("loaded level");
@@ -790,10 +795,6 @@ void mtpTarget::everybodyReady()
 {
 	// everybody is ok, let s count down
 	CMtpTarget::instance().State = CMtpTarget::eReady;
-	if(CLevelManager::instance().levelPresent())
-		CLevelManager::instance().currentLevel().reset();
-	else
-		nlwarning("mtpTarget::everybodyReady() but there is no level");
 	CEntityManager::instance().everybodyReady(true);
 }
 	
