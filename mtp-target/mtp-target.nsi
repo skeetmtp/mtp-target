@@ -36,6 +36,7 @@ Section "base" Section1
 	FILE "client\imagehlp.dll"
 	FILE "client\fmod.dll"
 	FILE "..\nel\lib\nel_drv_opengl_win_rd.dll"
+	FILE "..\nel\lib\nel_drv_direct3d_win_rd.dll"
 	FILE "..\wpkg\bin\stlport_vc645.dll"
 	; Set Section Files and Shortcuts
 	CreateDirectory "$SMPROGRAMS\${APPNAME}"
