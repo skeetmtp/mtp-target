@@ -56,6 +56,11 @@ void CWaitingStartSessionState::update()
 	
 	if(CSessionManager::instance().forceEnding() || currentTime > CSessionManager::instance().startTime())
 	{
+		CEntityManager::EntityConstIt it;
+		for(it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
+		{
+			(*it)->InGame = true;
+		}
 		changeState(CRunningSessionState::instance());
 		// set gravity if the game started
 		dWorldSetGravity(World, 0.0f, 0.0f, Gravity);

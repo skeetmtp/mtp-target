@@ -56,7 +56,6 @@ void CWaitingReadySessionState::update()
 		CEntityManager::EntityConstIt it;
 		for(it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
 		{
-			(*it)->InGame = true;
 			if((*it)->type() == CEntity::Client)
 			{
 				CClient *c = (CClient *)(*it);
