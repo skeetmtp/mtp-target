@@ -59,7 +59,7 @@ extern FILE *SessionFile;
 
 static void cbChat(CNetMessage &msgin)
 {
-	nlinfo("cbChat");
+	nlinfo("NET: cbChat");
 	string msg;
 	while(msgin.getPos() < (sint32)msgin.length())
 	{
@@ -70,11 +70,11 @@ static void cbChat(CNetMessage &msgin)
 
 static void cbError(CNetMessage &msgin)
 {
-	nlinfo("cbError");
 	string msg;
 	msgin.serial(msg);
+	nlinfo("NET: cbError msg='%s'", msg.c_str());
+	
 	CMtpTarget::instance().error(msg);	
-	//nlerror(msg.c_str());
 }
 
 static void cbLogin(CNetMessage &msgin)
@@ -89,38 +89,30 @@ static void cbLogin(CNetMessage &msgin)
 
 	msgin.serial(self, eid, name, totalScore);
 	msgin.serial(color, texture, spec);
-	nlinfo("cbLogin : Adding player %hu(%s) , list.size = %d", (uint16)eid,name.c_str(),CEntityManager::instance().size());
+	nlinfo("NET: cbLogin self=%d eid=%hu name='%s' totalScore='%d' color=(%d,%d,%d) texture='%s' spec=%d", 
+		self, (uint16)eid, name.c_str(), totalScore, color.R, color.G, color.B, texture.c_str(), spec);
+		
+	nldebug("player list.size = %d", CEntityManager::instance().size());
 
 	CEntityManager::instance().add(eid, name, totalScore, color, texture, spec, self);
 
 	if(self)
 	{
-		nlinfo("I'm the player number %hu, my name is '%s' and my score is %d", (uint16)eid, name.c_str(), totalScore);
-	
 		CMtpTarget::instance().displayTutorialInfo(totalScore<=CConfigFileTask::instance().configFile().getVar("MinTotalScoreToHideTutorial").asInt());
+
+		string levelName;
+		float timeBeforeTimeout;
+		msgin.serial(levelName, timeBeforeTimeout);
+		nlinfo("levelName='%s' timeBeforeTimeout=%f", levelName.c_str(), timeBeforeTimeout);
 		
-		try
-		{
-			string levelName;
-			msgin.serial(levelName);
-			float timeBeforeTimeout;
-			msgin.serial(timeBeforeTimeout);
-			if (!levelName.empty())
-			{
-				CMtpTarget::instance().startSession(0, timeBeforeTimeout/1000.0f, levelName);
-			}
-			else
-				CMtpTarget::instance().timeBeforeTimeout(timeBeforeTimeout/1000.0f);
-		}
-		catch(Exception &)
-		{
-			nlwarning("can't load level because not in message (old server)");
-		}
+		if (!levelName.empty())
+			CMtpTarget::instance().startSession(0, timeBeforeTimeout/1000.0f, levelName);
+		else
+			CMtpTarget::instance().timeBeforeTimeout(timeBeforeTimeout/1000.0f);
 	}
 	else
 	{
 		CChatTask::instance().addLine(toString("%s comes in !", name.c_str()));
-		nlinfo("a new player number %hu name '%s' score %d", (uint16)eid, name.c_str(), totalScore);
 	}
 }
 
@@ -128,23 +120,16 @@ static void cbLogout(CNetMessage &msgin)
 {
 	uint8 eid;
 	msgin.serial(eid);
+	nlinfo("NET: cbLogout eid=%hu", (uint16)eid);
 
-	//CEntity *entity = mtpTarget::instance().World.getEntityById(id);
-	//nlassert(entity!=0);
-	//mtpTarget::instance().World.remove(entity);
+	// check if the player exists
+	if(!CEntityManager::instance().exist(eid)) { nlwarning("The eid doesn't exist"); return; }
 
-	if(!CEntityManager::instance().exist(eid))
-	{
-		nlwarning("Try to cbLogout the eid %hu but doesn't exist, discard it", (uint16)eid);
-		return;
-	}
-
-	nlinfo("player number %hu leaves", (uint16)eid);
-	
 	// if it's my eid, it means that i have to disconnect because i was kicked out from the server
 	if(CMtpTarget::instance().controler().getControledEntity()==eid)
 	{
-		nlerror("You have been kicked");
+		CMtpTarget::instance().error("You have been kicked");
+		//nlerror("You have been kicked");
 	}
 	else
 	{
@@ -156,19 +141,16 @@ static void cbLogout(CNetMessage &msgin)
 
 static void cbOpenClose(CNetMessage &msgin)
 {
-	nlinfo("cbOpenClose");
 	uint8 eid;
 	msgin.serial(eid);
+	nlinfo("NET: cbOpenClose eid=%hu", (uint16)eid);
+
+	// check if the player exists
+	if(!CEntityManager::instance().exist(eid)) { nlwarning("The eid doesn't exist"); return; }
 	
-	//CEntity *entity = mtpTarget::instance().World.getEntityById(id);
-	//nlassert(entity);
 	CEntityManager::instance()[eid].swapOpenClose();
-	//nlinfo("%d open/close",eid);
-	//if(eid == mtpTarget::instance().Controler->getControledEntity())
-	//	mtpTarget::instance().Controler->swapOpenClose();
-	
-	if(SessionFile)
-		fprintf(SessionFile, "%hu OC\n", (uint16)eid);
+
+	if(SessionFile) fprintf(SessionFile, "%hu OC\n", (uint16)eid);
 }
 
 static void cbUpdate(CNetMessage &msgin)
@@ -184,7 +166,7 @@ static void cbUpdate(CNetMessage &msgin)
 	// reply to the update first (used for the ping)
 	CNetMessage msgout(CNetMessage::Update);
 	CNetworkTask::instance().send(msgout);
-
+	
 	//msgin.serial (rsxTime);
 
 	//while(msgin.getPos() < (sint32)msgin.length())
@@ -322,9 +304,7 @@ static void cbUpdateOne(CNetMessage &msgin)
 		dpos.x = convert8_8fp(nsx,ndx);
 		
 		//nlinfo(">>>>dx =  %f ",dpos.x - mdx);
-		
-		
-		
+
 		if(CEntityManager::instance().exist(eid))
 		{
 			pos = CEntityManager::instance()[eid].LastSent2MePos + dpos;
@@ -348,18 +328,13 @@ static void cbUpdateOne(CNetMessage &msgin)
 static void cbFullUpdate(CNetMessage &msgin)
 {
 	//nlinfo("cbFullUpdate %f",CTimeTask::instance().time());
-	float rsxTime;
-	uint8 eid;
-	CVector pos;
-	CVector dpos;
-	uint16 ping;
-	
+	float rsxTime = 0.0f;
+
 	// reply to the update first (used for the ping)
 	CNetMessage msgout(CNetMessage::Update);
 	CNetworkTask::instance().send(msgout);
 	
 	//msgin.serial (rsxTime);
-	
 
 	//nlassert(CEntityManager::instance().updateListId.size());
 	//std::list <uint8 >::iterator it;
@@ -367,8 +342,11 @@ static void cbFullUpdate(CNetMessage &msgin)
 	while(msgin.getPos() < (sint32)msgin.length())
 	{
 		//eid = *it;
-		msgin.serial(eid);
-		msgin.serial(pos, ping);
+		//CVector dpos;
+		uint8 eid;
+		CVector pos;
+		uint16 ping;
+		msgin.serial(eid, pos ,ping);
 		//pos = CEntityManager::instance()[eid].LastSentPos + dpos;
 		
 		if(CEntityManager::instance().exist(eid))
@@ -394,11 +372,10 @@ static void cbFullUpdate(CNetMessage &msgin)
 
 static void cbUpdateList(CNetMessage &msgin)
 {
-	uint8 eid;
-	nlinfo("getting new update list");
 	CEntityManager::instance().updateListId.clear();
 	while(msgin.getPos() < (sint32)msgin.length())
 	{
+		uint8 eid;
 		msgin.serial(eid);
 		CEntityManager::instance().updateListId.push_back(eid);
 	}
@@ -407,30 +384,32 @@ static void cbUpdateList(CNetMessage &msgin)
 
 static void cbEditMode(CNetMessage &msgin)
 {
-	nlinfo("cbEditMode");
 	uint8 editMode;
 	msgin.serial(editMode);
-	
+	nlinfo("NET: cbEditMode editMode=%hu", (uint16)editMode);
+
+	// TODO: what is the goal of this function???
 }
 
 static void cbUpdateElement(CNetMessage &msgin)
 {
-	//nlinfo("cbUpdateElement");
-	uint8 elementType;
-	msgin.serial(elementType);
-	uint8 elementId;
-	msgin.serial(elementId);
-	uint8 selectedBy;
-	msgin.serial(selectedBy);
-	CVector pos;
-	msgin.serial(pos);
-	CVector eulerRot;
-	msgin.serial(eulerRot);
-
-	if(elementType==CEditableElementCommon::Module)
+	uint8 elementType, elementId, selectedBy;
+	CVector pos, eulerRot;
+	msgin.serial(elementType, elementId, selectedBy, pos, eulerRot);
+	nlinfo("NET: cbUpdateElement");
+	
+	switch(elementType)
+	{
+	case CEditableElementCommon::Module:
 		CLevelManager::instance().currentLevel().updateModule(elementId,pos,eulerRot,selectedBy);
-	if(elementType==CEditableElementCommon::StartPosition)
+		break;
+	case CEditableElementCommon::StartPosition:
 		CLevelManager::instance().currentLevel().updateStartPoint(elementId,pos,eulerRot,selectedBy);
+		break;
+	default:
+		nlwarning("Unknown elemen type %hu", (uint16)elementType);
+		break;
+	}
 }
 	
 static void cbReady(CNetMessage &msgin)
@@ -438,26 +417,29 @@ static void cbReady(CNetMessage &msgin)
 	// called when one player is ready
 	uint8 eid;
 	msgin.serial(eid);
-	nlinfo ("player %d is ready",eid);
+	nlinfo("NET: cbReady eid=%hu", (uint16)eid);
+
+	// check if the player exists
+	if(!CEntityManager::instance().exist(eid)) { nlwarning("The eid doesn't exist"); return; }
+	
 	CEntityManager::instance()[eid].ready(true);
 }
 
 static void cbEverybodyReady(CNetMessage &msgin)
 {
+	nlinfo("NET: cbEverybodyReady");
+
 	// called when everybody is ready, can start the countdown
-	nlinfo ("everybody is ready");
 	mtpTarget::instance().everybodyReady();
 }
 
 static void cbEnableElement(CNetMessage &msgin)
 {
-	nlinfo("cbEnableElement");
 	uint8 elementId;
-	msgin.serial(elementId);
 	bool enabled;
-	msgin.serial(enabled);
-
-
+	msgin.serial(elementId, enabled);
+	nlinfo("NET: cbEnableElement");
+	
 	if(CLevelManager::instance().levelPresent())
 		CLevelManager::instance().currentLevel().getModule(elementId)->enabled(enabled);
 }
@@ -465,10 +447,10 @@ static void cbEnableElement(CNetMessage &msgin)
 static void cbRequestCRCKey(CNetMessage &msgin)
 {
 	string fn;
-	msgin.serial(fn);
 	CHashKey hashKey;
-	msgin.serial(hashKey);
-	nlinfo("cbRequestCRCKey res = '%s'",fn.c_str());
+	msgin.serial(fn, hashKey);
+	nlinfo("NET: cbRequestCRCKey fn='%s' hashKey='%s'", fn.c_str(), hashKey.toString().c_str());
+
 	CResourceManager::instance().receivedCRC(fn);
 }
 
@@ -476,14 +458,14 @@ static void cbRequestDownload(CNetMessage &msgin)
 {
 	string res;
 	vector<uint8> buf;
-	bool eof;
-	uint32 fileSize;
-	
+	bool eof = false;
+	uint32 fileSize = 0xFFFFFFFF;
+
 	msgin.serial(res);
-	nlinfo("cbRequestDownload res = '%s'",res.c_str());
-	
+	nlinfo("NET: cbRequestDownload res = '%s'", res.c_str());
+
 	bool receivedError = res.find("FILE:")!=0;
-	
+
 	if(!receivedError)
 	{
 		msgin.serial(fileSize);
@@ -495,44 +477,36 @@ static void cbRequestDownload(CNetMessage &msgin)
 
 static void cbDisplayText(CNetMessage &msgin)
 {
-	float x,y;
-	float s;
+	float x, y, s;
 	CRGBA col;
 	double duration;
 	string message;
-	msgin.serial(x);
-	msgin.serial(y);
-	msgin.serial(s);
-	msgin.serial(message);
-	msgin.serial(col);
-	msgin.serial(duration);
+	msgin.serial(x, y, s, message, col, duration);
+	nlinfo("NET: cbDisplayText x=%f y=%f s=%f col=(%d,%d,%d), duration=%f message='%s'",
+		x, y, s, col.R, col.G, col.B, duration, message.c_str());
 
-	nlinfo("display text(during %f sec) : %s",duration,message.c_str());
 	CHudTask::instance().addMessage(CHudMessage(x,y,s,message,col,duration));
-
-	
 }
 
 static void cbStartSession(CNetMessage &msgin)
 {
 	float timebeforestart, timeout;
-	msgin.serial(timebeforestart, timeout);
-
 	string levelName, str1, str2;
-	msgin.serial(levelName, str1, str2);
-
 	vector<uint8> ranks;
 	vector<uint8> eids;
+	
+	msgin.serial(timebeforestart, timeout, levelName, str1, str2);	
 	msgin.serialCont(ranks);
 	msgin.serialCont(eids);
-
+	
+	nlinfo("NET: cbStartSession timebeforestart=%f timeout=%f levelName='%s' str1='%s' str2='%s'",
+		timebeforestart, timeout, levelName.c_str(), str1.c_str(), str2.c_str());
+	
 	nlassert(ranks.size()==eids.size());
-	nlinfo("cbStartSession(%s)",levelName.c_str());
 
 	for(uint32 i=0;i<eids.size();i++)
 		CEntityManager::instance()[eids[i]].rank(ranks[i]);
 	
-	nlinfo ("cbStartSession");
 	CMtpTarget::instance().startSession(timebeforestart / 1000.0f, timeout / 1000.0f, levelName);
 
 	/*
@@ -551,12 +525,15 @@ static void cbSessionState(CNetMessage &msgin)
 {
 	string sn;
 	msgin.serial(sn);
-	nlinfo("Server session state is now '%s'", sn.c_str());
+	nlinfo("NET: cbSessionState sn='%s'", sn.c_str());
+
+	// TODO: what is the goal of this function???
 }
 
 static void cbEndSession(CNetMessage &msgin)
 {
-	nlinfo("cbEndSession");
+	nlinfo("NET: cbEndSession");
+
 	while(msgin.getPos() < (sint32)msgin.length())
 	{
 		uint8 eid;
@@ -583,7 +560,8 @@ static void cbExecLua(CNetMessage &msgin)
 {
 	string luaCode;
 	msgin.serial(luaCode);
-	nlinfo("exeLua : %s",luaCode.c_str());
+	nlinfo("NET: cbExecLua luaCode='%s'", luaCode.c_str());
+
 	if(CLevelManager::instance().levelPresent())
 		CLevelManager::instance().currentLevel().execLuaCode(luaCode);
 }
@@ -592,11 +570,13 @@ static void cbCollideWhenFly(CNetMessage &msgin)
 {
 	uint8 eid;
 	CVector pos;
-	msgin.serial(eid);
-	msgin.serial(pos);
-	nlinfo("collide in flying mode (entity %d at pos=%f,%f,%f)",eid,pos.x,pos.y,pos.z);
-	if(CEntityManager::instance().exist(eid))
-		CEntityManager::instance()[eid].collideWhenFly(pos);
+	msgin.serial(eid, pos);
+	nlinfo("NET: cbCollideWhenFly eid=%hu, pos=(%f,%f,%f)", (uint16)eid, pos.x, pos.y, pos.z);
+
+	// check if the player exists
+	if(!CEntityManager::instance().exist(eid)) { nlwarning("The eid doesn't exist"); return; }
+
+	CEntityManager::instance()[eid].collideWhenFly(pos);
 }
 
 //
@@ -607,7 +587,7 @@ static void cbCollideWhenFly(CNetMessage &msgin)
 
 void netCallbacksHandler(CNetMessage &msgin)
 {
-//	nlinfo ("Received message type %hu", (uint16)msgin.type());
+//	nldebug("Received message type %hu", (uint16)msgin.type());
 
 	switch(msgin.type())
 	{
@@ -633,7 +613,7 @@ void netCallbacksHandler(CNetMessage &msgin)
 	SWITCH_CASE(ExecLua);
 	SWITCH_CASE(CollideWhenFly);
 	
-	default: nlinfo("Received an unknown message type %hu", (uint16)msgin.type()); break;
+	default: nlwarning("Received an unknown message type %hu", (uint16)msgin.type()); break;
 	}
 	
 }
