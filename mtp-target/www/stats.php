@@ -4,6 +4,7 @@
 	
 	$userCountPerHourTotal;
 	$userCountPerHourToday;
+	$userCountPerHourTodayMax;
 	$lastHour = 0;
 	$lastDay = 0;
 	
@@ -11,6 +12,7 @@
 	{
 		$userCountPerHourTotal[$i]=0;
 		$userCountPerHourToday[$i]=0;
+		$userCountPerHourTodayMax[$i]=0;
 	}
 
 	
@@ -38,15 +40,20 @@
 			{
 				$lastDay=$day;
 				for($i=0;$i<24;$i++)
+				{
 					$userCountPerHourToday[$i]=0;
+					$userCountPerHourTodayMax[$i]=0;
+				}
 				//printf("<hr>",$name);
 			}
 			
 			if($inout=='+')
 			{
+				$playerCount++;
 				$userCountPerHourTotal[$hour]++;
 				$userCountPerHourToday[$hour]++;
-				$playerCount++;
+				if($playerCount>$userCountPerHourTodayMax[$hour])
+					$userCountPerHourTodayMax[$hour] = $playerCount;
 				//printf("%d:%d [%s] comes(%d,%d) in<br>",$hour,$min,$name,$playerCount,$userCountPerHourToday[$hour]);
 			}
 			else if($inout=='#')
@@ -56,13 +63,13 @@
 			}
 			else if($inout=='?')
 			{
-				if(strlen($name)>3)
+				if(strlen($name)>0)
 					$playerCount++;
 				//printf("invalid login(%d) %s(%d)<br>",$playerCount,$name,strlen($name));
 			}
 			else if($inout=='-')
 			{
-				if(strlen($name)>3)
+				if(strlen($name)>0)
 					$playerCount--;
 				//printf("[%s](%d) leaves(%d)<br>",$name,strlen($name),$playerCount);
 			}
@@ -79,21 +86,17 @@
 <br>
 <br>
 
-Total login per hour :
+Total login :
 
 <table>
 <tr valign="bottom">
 <?php
 	$maxTotal = 0;
-	$maxToday = 0;
 	
 	for($i=0;$i<24;$i++)
 	{
 		if($userCountPerHourTotal[$i]>$maxTotal)
 			$maxTotal = $userCountPerHourTotal[$i];
-		if($userCountPerHourToday[$i]>$maxToday)
-			$maxToday = $userCountPerHourToday[$i];
-		
 	}
 	
 	for($i=0;$i<24;$i++)
@@ -123,17 +126,14 @@ Total login per hour :
 <br>
 <br>
 
-Today login per hour :
+Today login :
 <table>
 <tr valign="bottom">
 <?php
-	$maxTotal = 0;
 	$maxToday = 0;
 	
 	for($i=0;$i<24;$i++)
 	{
-		if($userCountPerHourTotal[$i]>$maxTotal)
-			$maxTotal = $userCountPerHourTotal[$i];
 		if($userCountPerHourToday[$i]>$maxToday)
 			$maxToday = $userCountPerHourToday[$i];
 		
@@ -161,3 +161,44 @@ Today login per hour :
 	printf("</tr>\n");	
 ?>
 </table>
+
+<br>
+<br>
+
+
+Today Max simultaneous user :
+<table>
+<tr valign="bottom">
+<?php
+	$maxTodayMax = 0;
+	
+	for($i=0;$i<24;$i++)
+	{
+		if($userCountPerHourTodayMax[$i]>$maxTodayMax)
+			$maxTodayMax = $userCountPerHourTodayMax[$i];
+		
+	}
+	
+	for($i=0;$i<24;$i++)
+	{
+		printf("<td valign=\"bottom\">\n");
+		if($maxToday!=0)
+			printf("\t<img align=\"bottom\" src=\"./img/vh.png\" height=\"%d\" width=\"6\" alt='today simultaneous user : %d' title='today simultaneous user : %d' />\n",$userCountPerHourTodayMax[$i]*100/$maxTodayMax,$userCountPerHourTodayMax[$i],$userCountPerHourTodayMax[$i]);
+		printf("</td>\n");
+	}
+	printf("</tr>\n");
+	printf("<tr>\n");
+	for($i=0;$i<24;$i++)
+	{
+		printf("<td>%d</td>\n",$i);
+	}
+	printf("</tr>\n");	
+	printf("<tr>\n");
+	for($i=0;$i<24;$i++)
+	{
+		printf("<td><img src=\"./img/hr%d.png\" width=\"10\"/></td>\n",($i%12)+1);
+	}
+	printf("</tr>\n");	
+?>
+</table>
+
