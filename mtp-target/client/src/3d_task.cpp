@@ -298,6 +298,8 @@ void C3DTask::render()
 
 void C3DTask::release()
 {
+	nlassert(Driver);
+	Driver->release();
 }
 
 bool C3DTask::kbPressed(NLMISC::TKey key) const
