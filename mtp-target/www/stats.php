@@ -9,7 +9,7 @@
 <body>
 
 <?php
-function generateHtml() 
+function generateHtml($server)
 {
 
 	if (!function_exists('fprintf')) {
@@ -39,8 +39,24 @@ function generateHtml()
 	   }
 	}
 	
-	$html_fp = fopen("stats.html", "wt");
-	$fp = fopen("../server/connection.stat", "r");
+	$html_fp = fopen("stats_$server.html", "wt");
+
+	if($server == "easy")
+	{
+	    $filename = "/home/ace/cvs/mtp-target/server/connection.stat";
+		$servername = "easy";
+	}
+	else if($server == "adv")
+	{
+    	$filename = "/home/ace/cvs/mtp-target/adv_server/connection.stat";
+		$servername = "advanced";
+	}
+	else
+	{
+		die("ERROR: Unknown server $server");
+	}
+
+	$fp = fopen($filename, "r");
 	if (!$fp) {echo "<p>Unable to open remote file.</p>"; exit;}
 	
 	$userCountPerHourTotal;
@@ -156,6 +172,7 @@ function generateHtml()
 	$upHour = (($t3/60)/60)%24;
 	$upDay = ((($t3/60)/60)/24)%100;
 
+	fprintf($html_fp,"Server : %s<br>\n",$servername);
 	fprintf($html_fp,"Stats generated : %s<br>\n",date("l dS of F Y H:i:s"));
 	
 	if($upDay == 1)
@@ -366,13 +383,15 @@ function generateHtml()
 	fprintf($html_fp,"</table>\n");
 	fclose($html_fp);
 }
+	if(!isset($server)) $server = "easy";
 	
-	$lastModeTime = strtotime(date("Y-m-d H:i:s")) - filemtime("stats.html");
+	//$lastModeTime = strtotime(date("Y-m-d H:i:s")) - filemtime("stats_$server.html");
 	//printf("%d<br>",$lastModeTime);
-	if (!file_exists("stats.html") || $lastModeTime>60*5)
-		generateHtml();
+
+	if (!file_exists("stats_$server.html") || (strtotime(date("Y-m-d H:i:s")) - filemtime("stats_$server.html"))>60*5)
+		generateHtml($server);
 	
-	$html_fp = fopen("stats.html", "rt");
+	$html_fp = fopen("stats_$server.html", "rt");
 	while (!feof($html_fp)):
 		$line = fgets($html_fp, 2048);
 		echo $line;
