@@ -476,9 +476,9 @@ string CResourceManager::get(const string &filename, bool &ok)
 	if(CFile::fileExists(destfn))
 		CFile::deleteFile(destfn);
 		
-	vector<uint8> buf;
-	buf.resize(8000);
-	uint8 *ptr = &(*(buf.begin()));
+		vector<uint8> buf;
+		buf.resize(8000);
+		uint8 *ptr = &(*(buf.begin()));
 	{
 		FILE *fp = fopen(destfn.c_str(), "wb");
 		gzFile gzfp = gzopen(packedfn.c_str(), "rb");

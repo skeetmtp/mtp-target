@@ -30,6 +30,7 @@
 // Includes
 //
 
+#include <nel/misc/thread.h>
 #include <nel/misc/types_nl.h>
 #include <nel/misc/mem_stream.h>
 #include <nel/misc/sha1.h>
@@ -40,7 +41,8 @@
 // Classes
 //
 
-typedef std::map<std::string, double> filename2LastCRCCheckTime;
+typedef std::map<std::string, CHashKey> filename2CRC;
+class CResourceManagerRunnable;
 
 class CResourceManager : public CSingleton<CResourceManager>, public ITask
 {
@@ -59,32 +61,31 @@ public:
 	// ok is true if the file is found, false is not
 	std::string get(const std::string &filename, bool &ok);
 
-	void refresh(const  std::string &filename);
-		
-	bool waitNetworkMessage(bool stopFlag,bool &received, bool displayBackground=true);
-
-	void receivedCRC(std::string &fn);
+	void connected(bool c);
+	bool connected();
 	
-	// called only by cbRequestDownload()
-	void receivedBlock(const std::string &res, const std::vector<uint8> &buf, bool eof, uint32 fileSize, bool receivedError);
+	std::string getFile(std::string &filename,bool now=true);
 
-	filename2LastCRCCheckTime CRCCheckTimes;
+	//compatibility func
+	void refresh(const  std::string &filename) {};
+	void receivedCRC(std::string &fn) {};
+	void receivedBlock(const std::string &res, const std::vector<uint8> &buf, bool eof, uint32 fileSize, bool receivedError){};
+	void clearCrcCheckTimes(){};
+	
 private:
-
+	//bool CResourceManager::downloadFile (const std::string &source, const std::string &dest);
 	void loadChildren(const std::string &filename);
-
-	std::string			Reason;
-	bool				CRCUpToDate;
-	bool				ReceivedError;
-	std::vector<uint8>	Buffer;
-	bool				Eof;
-	uint32				FileSize;
-	std::string			ReceivedFilename;
-	volatile bool		Received;
-	volatile bool		CRCReceived;
-	CHashKey			ReceivedHashKey;
-	
+	void update3DWhileDownloading();
+		
 	std::string			CacheDirectory;
+	bool				Connected;
+	friend int myProgressFunc(void *foo, double t, double d, double ultotal, double ulnow);	
+
+	CResourceManagerRunnable	*ResourceManagerRunnable;
+	NLMISC::IThread				*ResourceManagerThread;
+	friend class CResourceManagerRunnable;
+	std::string HttpServerFile;
+	filename2CRC CRCs;
 };
 
 #endif

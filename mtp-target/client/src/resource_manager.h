@@ -70,10 +70,10 @@ public:
 	
 	// called only by cbRequestDownload()
 	void receivedBlock(const std::string &res, const std::vector<uint8> &buf, bool eof, uint32 fileSize, bool receivedError);
-
-	filename2LastCRCCheckTime CRCCheckTimes;
+	void clearCrcCheckTimes(){CRCCheckTimes.clear();};
 private:
-
+	filename2LastCRCCheckTime CRCCheckTimes;
+	
 	void loadChildren(const std::string &filename);
 
 	std::string			Reason;

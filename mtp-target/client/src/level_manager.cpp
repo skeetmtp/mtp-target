@@ -104,7 +104,7 @@ void CLevelManager::loadLevel(const std::string &fileName)
 	//nlassert(CurrentLevel->valid());
 	
 	if(CConfigFileTask::instance().configFile().getVar("ForceCRCCheck").asInt())
-		CResourceManager::instance().CRCCheckTimes.clear();
+		CResourceManager::instance().clearCrcCheckTimes();
 }
 
 void CLevelManager::display(CLog *log) const

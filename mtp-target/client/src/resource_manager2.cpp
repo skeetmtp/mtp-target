@@ -55,8 +55,11 @@
 #include "font_manager.h"
 #include "background_task.h"
 #include "config_file_task.h"
-#include "resource_manager2.h"
+#include "resource_manager.h"
 
+#include <curl/curl.h>
+
+#ifdef MTPT_RESOURCE_MANAGER2
 
 //
 // Namespaces
@@ -66,11 +69,285 @@ using namespace std;
 using namespace NL3D;
 using namespace NLMISC;
 
+//
+// Functions
+//
+int myProgressFunc(void *data, double t, double d, double ultotal, double ulnow)
+{
+	double pour1 = t!=0.0?d*100.0/t:0.0;
+	double pour2 = ultotal!=0.0?ulnow*100.0/ultotal:0.0;
+	//if(PatchThread)
+	//	PatchThread->setState(false, false, "Getting file %s : %s / %s (%5.02f %%)", currentFile.c_str(), NLMISC::bytesToHumanReadable((uint32)d).c_str(), NLMISC::bytesToHumanReadable((uint32)t).c_str(), pour1);
+	if(data)
+	{
+		float *f = (float *)data;
+		*f = (float)pour1;
+		//nlinfo(">> download percent = %f",pour1 );
+	}
+	return 0;
+}
+
+bool downloadFile (const string &source, const string &dest, void *data=NULL)
+{
+	nlinfo("downloadFileWithCurl file '%s' to '%s'", source.c_str(), dest.c_str());
+	
+	CURL *curl;
+	CURLcode res;
+	
+	//setState(true, true, "Getting %s", NLMISC::CFile::getFilename (source).c_str ());
+	//currentFile = NLMISC::CFile::getFilename (source);
+	
+	curl_global_init(CURL_GLOBAL_ALL);
+	curl = curl_easy_init();
+	long r = 0;
+	if(curl == NULL)
+	{
+		// file not found, delete local file
+		nlwarning("curl init failed");
+		return false;
+		//throw Exception ("curl init failed");
+	}
+	curl_easy_setopt(curl, CURLOPT_NOPROGRESS, FALSE);
+	curl_easy_setopt(curl, CURLOPT_PROGRESSFUNCTION, myProgressFunc);
+	curl_easy_setopt(curl, CURLOPT_PROGRESSDATA, data);
+	curl_easy_setopt(curl, CURLOPT_URL, source.c_str());
+	
+	// create the local file
+	//setRWAccess(dest);
+	FILE *fp = fopen (dest.c_str(), "wb");
+	if (fp == NULL)
+	{
+		nlwarning("Can't open file '%s' for writing: code=%d %s (error code 37)", dest.c_str (), errno, strerror(errno));
+		return false;
+		//throw Exception ("Can't open file '%s' for writing: code=%d %s (error code 37)", dest.c_str (), errno, strerror(errno));
+	}
+	curl_easy_setopt(curl, CURLOPT_FILE, fp);
+	
+	//CurrentFilesToGet++;
+	
+	res = curl_easy_perform(curl);
+	curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &r);
+
+	curl_easy_cleanup(curl);
+	fclose(fp);
+	
+	curl_global_cleanup();
+	
+	//currentFile = "";
+	
+	if(CURLE_FTP_COULDNT_RETR_FILE == res)
+	{
+		// file not found, delete local file
+		NLMISC::CFile::deleteFile(dest.c_str());
+		nlwarning("curl download failed: (ec %d %d)", res, r);
+		return false;
+		//throw Exception ("curl download failed: (ec %d %d)", res, r);
+	}
+	
+	if(CURLE_OK != res)
+	{
+		NLMISC::CFile::deleteFile(dest.c_str());
+		nlwarning("curl download failed: (ec %d %d)", res, r);
+		return false;
+		//throw Exception ("curl download failed: (ec %d %d)", res, r);
+	}
+	
+	if(r==404 || r==403)
+	{
+		// file not found, delete it
+		NLMISC::CFile::deleteFile(dest.c_str());
+		nlwarning("curl download failed: (ec %d %d)", res, r);
+		return false;
+		//throw Exception ("curl download failed: (ec %d %d)", res, r);
+	}	
+	nlinfo("downloadFileWithCurl done(r=%d).",r);
+	return true;
+}
+
+void gunzipFile(string &filename)
+{
+	vector<uint8> buf;
+	buf.resize(8000);
+	uint8 *ptr = &(*(buf.begin()));
+
+	string destfn = filename;
+	string packedfn = filename+".gz";
+
+	FILE *fp = fopen(destfn.c_str(), "wb");
+	gzFile gzfp = gzopen(packedfn.c_str(), "rb");
+	if(fp && gzfp)
+	{
+		while (!gzeof(gzfp)) 
+		{
+			uint32 res = gzread(gzfp, ptr, 8000);
+			fwrite(ptr,1,res,fp);
+		}
+		fclose(fp);
+		gzclose(gzfp);
+	}
+	CFile::deleteFile(packedfn);		
+}
+
+
+//
+// Thread
+//
+
+class CResourceManagerRunnable : public NLMISC::IRunnable
+{
+public:
+	
+	CResourceManagerRunnable()
+	{
+	}
+	
+	virtual void run()
+	{
+		DownloadList.clear();
+		HttpServerFile = CConfigFileTask::instance().configFile().getVar("HttpServerFile").asString()+"/";
+		CacheDirectory = CPath::standardizePath(CConfigFileTask::instance().configFile().getVar("CacheDirectory").asString());
+		while(true)
+		{
+			string nextFilename = getNextFileToDownload();
+			if(!nextFilename.empty())
+			{
+				startDownload(nextFilename);
+				string res = getFile(nextFilename);
+				downloadFinished(nextFilename);
+			}
+			nlSleep(10);
+		}
+	}
+
+	
+	void addFilename(string &filename)
+	{
+		if(filenameInQueue(filename)) return;
+		CFairMutex m;
+		m.enter();
+		DownloadList.push_back(filename);
+		m.leave();
+	}
+
+	bool filenameInQueue(string &filename)
+	{
+		bool res = false;
+		CFairMutex m;
+		m.enter();
+		deque<string>::iterator it;
+		for(it=DownloadList.begin();it!=DownloadList.end();it++)
+		{
+			if(*it==filename)
+			{
+				res = true;
+				break;
+			}
+		}
+		m.leave();
+		return res;
+	}
+
+	bool getCurrent(string &filename,float &pos)
+	{
+		bool res = false;
+		CFairMutex m;
+		m.enter();
+		res = !CurrentDownloadFilename.empty();
+		filename = CurrentDownloadFilename;
+		pos = CurrentDownloadPos;
+		m.leave();
+		return res;
+	}
+protected:
+	friend int myProgressFunc(void *foo, double t, double d, double ultotal, double ulnow);	
+	void setCurrentPos(float pos)
+	{
+		CFairMutex m;
+		m.enter();
+		CurrentDownloadPos = pos;
+		m.leave();
+	}
+
+private:
+	
+	string getFile(string &filename)
+	{
+		string fn = filename;
+		string srcfn = HttpServerFile + fn + ".gz";
+		string destfn = CacheDirectory + fn;
+		string packedfn = destfn + ".gz";
+		string ext = CFile::getExtension(fn);
+		bool res = downloadFile(srcfn,packedfn,&CurrentDownloadPos);
+		if(!res && ext=="tga")
+		{
+			fn = CFile::getFilenameWithoutExtension(fn)+".dds";
+			srcfn = HttpServerFile + fn + ".gz";
+			destfn = CacheDirectory + fn;
+			packedfn = destfn + ".gz";
+			res = downloadFile(srcfn,packedfn,&CurrentDownloadPos);
+		}
+		if(res)
+		{
+			gunzipFile(destfn);
+			CPath::addSearchFile(destfn);
+			return destfn;
+		}
+		else
+			return "";
+	}
+	
+	
+	void startDownload(string &filename)
+	{
+		CFairMutex m;
+		m.enter();
+		CurrentDownloadFilename = filename;
+		CurrentDownloadPos = 0;
+		m.leave();
+	}
+
+	void downloadFinished(string &filename)
+	{
+		CFairMutex m;
+		m.enter();
+		deque<string>::iterator it;
+		for(it=DownloadList.begin();it!=DownloadList.end();it++)
+		{
+			if(*it==filename)
+			{
+				DownloadList.erase(it);
+				break;
+			}
+		}
+		CurrentDownloadFilename = "";
+		CurrentDownloadPos = 0;
+		m.leave();
+	}
+
+	string getNextFileToDownload()
+	{
+		string res = "";
+		CFairMutex m;
+		m.enter();
+		if(DownloadList.size())
+		{
+			res = DownloadList.front();
+		}
+		m.leave();		
+		return res;
+	}
+
+	deque<string> DownloadList;
+	string CurrentDownloadFilename;
+	float  CurrentDownloadPos;
+	string HttpServerFile;
+	string CacheDirectory;
+};
+
 
 //
 // Functions
 //
-
 
 void CResourceManager::init()
 {
@@ -89,45 +366,10 @@ void CResourceManager::init()
 	for (int i = 0; i < v.size(); i++)
 		CPath::addSearchPath (v.asString(i), true, false);
 
-	CRCCheckTimes.clear();
-}
-
-void CResourceManager::receivedCRC(string &fn)
-{
-	CRCReceived = true;
-	CRCUpToDate = fn.empty();
-	if(!CRCUpToDate)
-	{
-		nlinfo("CResourceManager::receivedCRC %s: key different",fn.c_str());
-		filename2LastCRCCheckTime::iterator it = CRCCheckTimes.find(CFile::getFilename(fn));
-		if(it!=CRCCheckTimes.end())
-			CRCCheckTimes.erase(it);		
-	}
-}
-
-
-void CResourceManager::receivedBlock(const string &res, const vector<uint8> &buf, bool eof, uint32 fileSize, bool receivedError)
-{
-	Reason = res;
-	Buffer = buf;
-	Eof = eof;
-	Received = true;
-	FileSize = fileSize;
-	
-	ReceivedError = receivedError;
-
-	ReceivedFilename ="none";
-	
-	if(!ReceivedError)
-	{
-		nlinfo("Receive an answer of a download request block size %d eof %d", buf.size(), eof);
-	}
-	else
-	{
-		nlwarning("Error during download request '%s'", res.substr(strlen("ERROR:")).c_str());
-		return;
-	}
-	ReceivedFilename = res.substr(strlen("FILE:"));
+	Connected = false;
+	HttpServerFile = "";
+	ResourceManagerRunnable = 0;
+	ResourceManagerThread = 0;
 }
 
 void CResourceManager::loadChildren(const std::string &filename)
@@ -210,71 +452,53 @@ void CResourceManager::loadChildren(const std::string &filename)
 }
 
 
-bool CResourceManager::waitNetworkMessage(bool stopFlag,bool &received, bool displayBackground)
-{
-		C3DTask::instance().update();
-		CTimeTask::instance().update();
-		//CBackgroundTask::instance().update();
-		CChatTask::instance().update();
-		CGuiTask::instance().update();
-		CNetworkTask::instance().update();
-
-		if (C3DTask::instance().kbPressed(KeyESCAPE) || !C3DTask::instance().driver().isActive() || !CNetworkTask::instance().connected())
-		{
-			exit(1);
-			received = false;
-			return false;
-		}
-		
-		//			mt3dUpdate();
-		//			mtpTarget::instance().updateTime ();
-		//			mtpTarget::instance().Interface2d.updateChat();
-		
-		C3DTask::instance().clear();
-		//			mt3dClear ();
-		
-		// ace todo put this in task	
-		
-		//			mtpTarget::instance().Interface2d.displayBackground();
-		//			mtpTarget::instance().Interface2d.displayChat(true);
-		
-		C3DTask::instance().render();
-		if(displayBackground)
-			CBackgroundTask::instance().render();
-		CChatTask::instance().render();
-		CGuiTask::instance().render();
-		
-		
-		//CFontManager::instance().littlePrintf(3.0f, 29.0f, str.c_str());
-		
-		CSwap3DTask::instance().render();
-		
-		//			mt3dSwap ();
-		
-		nlSleep(1);
-
-		if(!stopFlag)
-			received = true;
-		return !stopFlag;
-}
-
-
-void CResourceManager::refresh(const string &filename)
-{
-	string fn = CFile::getFilename(filename);
-	filename2LastCRCCheckTime::iterator it = CRCCheckTimes.find(fn);
-	while(it!=CRCCheckTimes.end())
-	{
-		CRCCheckTimes.erase(it);		
-		it = CRCCheckTimes.find(fn);
-	}
-}
-
 string CResourceManager::get(const string &filename)
 {
 	bool ok;
 	return get(filename, ok);
 }
+
+
+void CResourceManager::update3DWhileDownloading()
+{
+	C3DTask::instance().update();
+	CTimeTask::instance().update();
+	//CBackgroundTask::instance().update();
+	CChatTask::instance().update();
+	CGuiTask::instance().update();
+	
+	if (C3DTask::instance().kbPressed(KeyESCAPE) || !C3DTask::instance().driver().isActive() || !CNetworkTask::instance().connected())
+	{
+		exit(1);
+		return;
+	}
+	
+	//			mt3dUpdate();
+	//			mtpTarget::instance().updateTime ();
+	//			mtpTarget::instance().Interface2d.updateChat();
+	
+	C3DTask::instance().clear();
+	//			mt3dClear ();
+	
+	// ace todo put this in task	
+	
+	//			mtpTarget::instance().Interface2d.displayBackground();
+	//			mtpTarget::instance().Interface2d.displayChat(true);
+	
+	C3DTask::instance().render();
+	CBackgroundTask::instance().render();
+	CChatTask::instance().render();
+	CGuiTask::instance().render();
+	
+	
+	//CFontManager::instance().littlePrintf(3.0f, 29.0f, str.c_str());
+	
+	CSwap3DTask::instance().render();
+	
+	//			mt3dSwap ();
+	
+}
+
 
 string CResourceManager::get(const string &filename, bool &ok)
 {
@@ -309,196 +533,191 @@ string CResourceManager::get(const string &filename, bool &ok)
 
 	//nlinfo("CResourceManager get(%s)",filename.c_str());
 
-	if(!path.empty())
+	if(!connected())
 	{
-		//nlinfo("!path.empty()");
-		CRCUpToDate = true;
-		if(CNetworkTask::instance().connected())
+		if(!path.empty())
 		{
-			//nlinfo("connected");
-			double lastCheckTime = 0;
-			filename2LastCRCCheckTime::iterator it = CRCCheckTimes.find(fn);
-			if(it!=CRCCheckTimes.end())
-				lastCheckTime = (*it).second;
-			if( it==CRCCheckTimes.end() && CConfigFileTask::instance().configFile().getVar("CRCCheck").asInt())
-			{
-				guiSPG<CGuiXml> xml = CGuiXmlManager::instance().Load("checking.xml");
-				mainFrame = (CGuiFrame *)xml->get("checkingFrame");
-				guiSPG<CGuiText>  checkingMessage = (CGuiText *)xml->get("checkingMessage");
-				checkingMessage->text = "Please wait while checking : ";
-				guiSPG<CGuiText>  checkingFilename = (CGuiText *)xml->get("checkingFilename");
-				checkingFilename->text = fn;
-				CGuiObjectManager::instance().objects.push_back(mainFrame);
-
-				nlinfo("CResourceManager::get(%s) sending RequestCRCKey and waiting result",fn.c_str());
-				CHashKey hashKey = getSHA1(path);
-				CNetMessage msgout(CNetMessage::RequestCRCKey);
-				msgout.serial(fns);
-				msgout.serial(hashKey);
-				CNetworkTask::instance().send(msgout);
-				
-				CRCReceived = false;
-				bool messageReceived;
-
-				uint tid = getThreadId();
-				nlassert(tid==TaskManagerThreadId || tid==NetworkThreadId);
-				if(tid==TaskManagerThreadId)
-				{
-					while(waitNetworkMessage(CRCReceived,messageReceived) && !CMtpTarget::instance().error())
-						checkTaskManagerPaused();
-				}
-				else
-					while(waitNetworkMessage(CRCReceived,messageReceived) && !CMtpTarget::instance().error());
-					
-				if(!messageReceived)
-					return unk;
-				if(it!=CRCCheckTimes.end())
-					CRCCheckTimes.erase(it);
-				CRCCheckTimes.insert(filename2LastCRCCheckTime::value_type(fn,currentTime));
-			}
-		}
-
-		if(CRCUpToDate)
-		{
-			//nlinfo("CRCUpToDate");
-			loadChildren(path);
-			// we already have the file on local
 			ok = true;
 			return path;
 		}
 		else
-		{
-			nlinfo("CResourceManager::get %s : key diferent",fn.c_str());			
-		}
+			return unk;
 	}
-
-	if(!CNetworkTask::instance().connected())
+	else
 	{
-		//nlinfo("!connected");
-		// we can't download the file
-		return unk;
-	}
-	
-	guiSPG<CGuiXml> xml = CGuiXmlManager::instance().Load("updating.xml");
-	mainFrame = (CGuiFrame *)xml->get("updatingFrame");
-	guiSPG<CGuiText>  updatingMessage = (CGuiText *)xml->get("updatingMessage");
-	updatingMessage->text = "Please wait while dowloading : ";
-	guiSPG<CGuiText>  updatingFilename = (CGuiText *)xml->get("updatingFilename");
-	updatingFilename->text = fn;
-	guiSPG<CGuiProgressBar>  updatingProgressBar = (CGuiProgressBar *)xml->get("updatingProgressBar");
-	updatingProgressBar->ptrValue(&updatePercent);
-	CGuiObjectManager::instance().objects.push_back(mainFrame);		
-	
-	
-	Eof = false;
-	uint32 part = 0;
-	FileSize = 0;
-	
-	string dlfn = CacheDirectory + fn;
-	string packedfn = dlfn + ".gz";
-	
-	if(updatingMessage)
-		updatingMessage->text = "Please wait while dowloading : ";
-
-	if(CFile::fileExists(packedfn))
-		CFile::deleteFile(packedfn);
-	if(CFile::fileExists(dlfn))
-		CFile::deleteFile(dlfn);
-	
-	while(!Eof)
-	{
-		if(CMtpTarget::instance().error())
+		nlinfo("chekcing '%s'",fn.c_str());
+		CHashKey serverHashKey;
+		filename2CRC::iterator it = CRCs.find(fn);
+		if(!path.empty()) //prefer check against cached filename
 		{
-			CFile::deleteFile(packedfn);
-			return unk;			
+			filename2CRC::iterator it1 = CRCs.find(CFile::getFilename(path));
+			if(it1!=CRCs.end())
+				it = it1;
 		}
-		
-		Received = false;
-		CNetMessage msgout(CNetMessage::RequestDownload);
-		msgout.serial(fn);
-		msgout.serial(part);
-		CNetworkTask::instance().send(msgout);
-
-		string str = toString("Please wait while downloading '%s' part %d", fn.c_str(), part);
-
-		bool messageReceived;
-		uint tid = getThreadId();
-		nlassert(tid==TaskManagerThreadId || tid==NetworkThreadId);
-		if(tid==TaskManagerThreadId)
+		if(it!=CRCs.end())
 		{
-			while(waitNetworkMessage(Received,messageReceived))
-				checkTaskManagerPaused();
+			nlinfo("key found in list");
+			serverHashKey=it->second;
 		}
 		else
-			while(waitNetworkMessage(Received,messageReceived));
-		if(!messageReceived)
 		{
-			CFile::deleteFile(packedfn);
-			exit(1);
+			nlinfo("key NOT found in list(maybe remaped extension)");
 		}
-
-		if(ReceivedError)
+		
+		if(!path.empty())
 		{
-			CFile::deleteFile(packedfn);
+			CHashKey hashKey = getSHA1(path);
+			nlinfo("checking keys(local:server) : %s:%s",hashKey.toString().c_str(),serverHashKey.toString().c_str());
+			if(hashKey==serverHashKey)
+			{
+				nlinfo("up to date");
+				loadChildren(path);
+				ok = true;
+				return path;
+			}
+			else
+				nlinfo("not up to date");
+		}
+		else
+			nlinfo("file not in cache");
+		nlinfo("downloading file");
+		
+		float updatePercent = 0;
+		if(ResourceManagerRunnable)
+		{
+			ResourceManagerRunnable->addFilename(fn);
+			guiSPG<CGuiXml> xml = CGuiXmlManager::instance().Load("updating.xml");
+			mainFrame = (CGuiFrame *)xml->get("updatingFrame");
+			guiSPG<CGuiText>  updatingMessage = (CGuiText *)xml->get("updatingMessage");
+			updatingMessage->text = "Please wait while dowloading : ";
+			guiSPG<CGuiText>  updatingFilename = (CGuiText *)xml->get("updatingFilename");
+			updatingFilename->text = fn;
+			guiSPG<CGuiProgressBar>  updatingProgressBar = (CGuiProgressBar *)xml->get("updatingProgressBar");
+			updatingProgressBar->ptrValue(&updatePercent);
+			CGuiObjectManager::instance().objects.push_back(mainFrame);		
+
+			while(ResourceManagerRunnable && ResourceManagerRunnable->filenameInQueue(fn))
+			{
+				nlSleep(10);
+				string filename = "";
+				float pos = 0;
+				ResourceManagerRunnable->getCurrent(filename,pos);
+				updatePercent = pos;
+				updatingFilename->text = filename;
+				update3DWhileDownloading();
+			}
+			//keep alive the server
+			CNetMessage msgout(CNetMessage::RequestCRCKey);
+			msgout.serial(fn);
+			msgout.serial(serverHashKey);
+			CNetworkTask::instance().send(msgout);
+		}
+		string path = CPath::lookup(fn, false, false);
+		if(path.empty())
 			return unk;
-		}
+		loadChildren(path);
+		ok = true;
+		return path;
+	}
+	
+}
 
-		nlinfo("Receive an answer of a download request block size %s %d eof %d", Reason.c_str(), Buffer.size(), Eof);
+void CResourceManager::connected(bool c)
+{
+	if(Connected==c) return;
 
-		FILE *fp = fopen(packedfn.c_str(), "ab");
+	if(c)
+	{
+		string crcFileName = CConfigFileTask::instance().configFile().getVar("CrcFileName").asString();
+		HttpServerFile = CConfigFileTask::instance().configFile().getVar("HttpServerFile").asString()+"/";
+		string srcfn = HttpServerFile + crcFileName;
+		string destfn = CacheDirectory + crcFileName;
+		bool res = downloadFile(srcfn,destfn);
+		if(!res)
+			return;
+
+
+		FILE *fp = NULL;
+		fp = fopen(destfn.c_str(),"rt");
 		if(!fp)
+			return;
+			
+		while(!feof(fp))
 		{
-			nlwarning("Couldn't open file '%s'", packedfn.c_str());
-			return unk;
-		}
-		if(fwrite(&*Buffer.begin(), 1, Buffer.size(), fp) != Buffer.size())
-		{
-			nlwarning("Couldn't write file '%s'", packedfn.c_str());
-			fclose(fp);
-			return unk;
+			char *res = NULL;
+			char filename[1024];
+			res = fgets(filename,1024,fp);
+			if(res==NULL || strlen(filename)==0) break;
+			if(filename[strlen(filename)-1]=='\n')
+				filename[strlen(filename)-1]='\0';
+
+			char crcKey[1024];
+			res = fgets(crcKey,1024,fp);
+			if(res==NULL || strlen(crcKey)==0) break;
+			if(crcKey[strlen(crcKey)-1]=='\n')
+				crcKey[strlen(crcKey)-1]='\0';
+			
+			//nlinfo(">> adding %s:%s",filename,crcKey);
+
+			CHashKey hashKey(crcKey);
+			filename2CRC::iterator it = CRCs.find(filename);
+			while(it!=CRCs.end())
+			{
+				CRCs.erase(it);		
+				it = CRCs.find(filename);
+			}
+			CRCs.insert(filename2CRC::value_type(filename,hashKey));
 		}
 		fclose(fp);
 
-		part += Buffer.size();
-		if(FileSize)
-			updatePercent = ((float)part) / FileSize;
-		if(part>FileSize)
-		{
-			nlwarning("CResourceManager::get() received more data than expected");
-			break;
-		}
-	}
-
-	string destfn = CacheDirectory + ReceivedFilename;
-	nlinfo("Received the whole file '%s'", destfn.c_str());
-	if(CFile::fileExists(destfn))
-		CFile::deleteFile(destfn);
+		ResourceManagerRunnable = new CResourceManagerRunnable();
+		nlassert(ResourceManagerRunnable);
 		
-	vector<uint8> buf;
-	buf.resize(8000);
-	uint8 *ptr = &(*(buf.begin()));
-	{
-		FILE *fp = fopen(destfn.c_str(), "wb");
-		gzFile gzfp = gzopen(packedfn.c_str(), "rb");
-		if(fp && gzfp)
-		{
-			while (!gzeof(gzfp)) 
-			{
-				uint32 res = gzread(gzfp, ptr, 8000);
-				fwrite(ptr,1,res,fp);
-			}
-			fclose(fp);
-			gzclose(gzfp);
-		}
-		CFile::deleteFile(packedfn);		
+		ResourceManagerThread = NLMISC::IThread::create(ResourceManagerRunnable);
+		nlassert(ResourceManagerThread);
+		
+		ResourceManagerThread->start();
+		
+		Connected = true;
 	}
-	
-	CPath::addSearchFile(destfn);
-
-	loadChildren(destfn);
-	CRCCheckTimes.insert(filename2LastCRCCheckTime::value_type(fn,currentTime));
-				
-	// need to download the file
-	ok = true;
-	return destfn;
+	else
+	{
+		if(ResourceManagerThread && ResourceManagerRunnable)
+		{
+			ResourceManagerThread->terminate();
+			delete ResourceManagerThread;
+			ResourceManagerThread = 0;
+			delete ResourceManagerRunnable;
+			ResourceManagerRunnable = 0;
+		}	
+		Connected = false;
+	}
 }
+
+bool CResourceManager::connected()
+{
+	return Connected;
+}
+
+
+string CResourceManager::getFile(string &filename,bool now)
+{
+	string fn = filename;
+	string srcfn = HttpServerFile + fn;
+	string destfn = CacheDirectory + fn;
+	string ext = CFile::getExtension(fn);
+	bool res = downloadFile(srcfn,destfn);
+	if(!res && ext=="tga")
+	{
+		fn = CFile::getFilenameWithoutExtension(fn)+".dds";
+		srcfn = HttpServerFile + fn;
+		destfn = CacheDirectory + fn;
+		res = downloadFile(srcfn,destfn);
+	}
+	if(res)
+		return destfn;
+	else
+		return "";
+}
+
+#endif
