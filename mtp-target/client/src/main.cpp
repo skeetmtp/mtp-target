@@ -67,27 +67,6 @@ uint NetworkThreadId = 0;
 
 int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
 {
-	if(!IsDebuggerPresent())
-	{
-		char exePath  [512] = "";
-		DWORD success = GetModuleFileName (NULL, exePath, 512);
-		bool found = false;
-		if(success)
-		{
-			int l = strlen(exePath);
-			for(int i=l;i>=0;i--)
-			{
-				if(exePath[i]=='\\')
-				{
-					exePath[i] = '\0';
-					found = true;
-					break;
-				}
-			}
-		}
-		if(found)
-			SetCurrentDirectory(exePath);
-	}
 
 	ghInstance = hInstance;
 	// Look the command line to see if we have a cookie and a addr
@@ -135,6 +114,28 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 		}
 	}
 
+	if(!IsDebuggerPresent() && !ReplayFile.empty())
+	{
+		char exePath  [512] = "";
+		DWORD success = GetModuleFileName (NULL, exePath, 512);
+		bool found = false;
+		if(success)
+		{
+			int l = strlen(exePath);
+			for(int i=l;i>=0;i--)
+			{
+				if(exePath[i]=='\\')
+				{
+					exePath[i] = '\0';
+					found = true;
+					break;
+				}
+			}
+		}
+		if(found)
+			SetCurrentDirectory(exePath);
+	}
+	
 #else
 
 int main(int argc, char **argv)
