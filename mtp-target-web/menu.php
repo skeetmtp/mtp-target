@@ -55,7 +55,7 @@
   $menu_array = array (
     "news"  => array ("url"=>"?page=news-manager.php", "name"=>$menuLinkText_News),
     "home"  => array ("url"=>"?page=home.php", "name"=>$menuLinkText_Home),
-//    "download"  => array ("url"=>"http://mtptarget.free.fr/mtp-target.exe", "name"=>$menuLinkText_Download),
+    "download"  => array ("url"=>"?page=download.php", "name"=>$menuLinkText_Download),
     "sources"  => array ("url"=>"http://cvsweb.tuxfamily.org/cvs/?cvsroot=mtp-target", "name"=>$menuLinkText_Sources),
     "screenshot"  => array ("url"=>"?page=screenshot.php", "name"=>$menuLinkText_Screenshot),
     "documents"  => array ("url"=>"?page=howto.php", "name"=>$menuLinkText_Documents),
