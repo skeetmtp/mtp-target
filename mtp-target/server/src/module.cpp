@@ -119,7 +119,11 @@ void CModule::init(const std::string &name, const std::string &shapeName, uint8 
 	dGeomTriMeshDataBuildSingle(triMeshDataId, &OdeVertices[0], 3*sizeof(dReal), OdeVertices.size()/3, &Indices[0], Indices.size(), 3*sizeof(int));
 #endif
 #else
+#if defined(dDOUBLE) 
+#error don't use ode 0.039 in double mode
+#else
 	dGeomTriMeshDataBuild(triMeshDataId, &OdeVertices[0], 3*sizeof(dReal), OdeVertices.size()/3, &Indices[0], Indices.size(), 3*sizeof(int));
+#endif
 #endif
 	
 	{
