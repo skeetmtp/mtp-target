@@ -92,6 +92,7 @@ void CWaitingClientsSessionState::update()
 			(*it)->Force = CVector::Null;
 			(*it)->OpenClose = false;
 			(*it)->FreezeCommand = false;
+			(*it)->SendCollideWhenFly = false;
 			(*it)->NbOpenClose = 0;
 			(*it)->InGame = false;
 			(*it)->Ready = false;

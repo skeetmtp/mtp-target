@@ -118,7 +118,9 @@ public:
 	dBodyID				 Body;
 	dGeomID				 Geom;
 	bool				 FreezeCommand;
-
+	bool				 SendCollideWhenFly;
+	NLMISC::CVector      CollideWhenFlyPos;
+	
 	NLMISC::CValueSmootherTemplate<uint16> Ping;
 	std::queue<NLMISC::TTime> LastSentPing;
 

@@ -28,6 +28,7 @@
 
 #include "main.h"
 #include "entity.h"
+#include "network.h"
 #include "physics.h"
 #include "variables.h"
 #include "session_manager.h"
@@ -77,6 +78,8 @@ void CEntity::init ()
 	NbOpenClose = 0;
 	MaxOpenClose = (uint32)DefaultMaxOpenClose;
 	FreezeCommand = true;
+	SendCollideWhenFly = false;
+	CollideWhenFlyPos = CVector(0,0,0);
 	InGame = false;
 	Ready = false;
 	WaitingReady = false;
@@ -206,6 +209,20 @@ void CEntity::startPointId(uint8 id)
 	CVector startPos = CLevelManager::instance().currentLevel().getStartPoint(StartingPointId)->position();
 	dBodySetPosition(Body, startPos.x, startPos.y, startPos.z);
 	dGeomSetPosition(Geom, startPos.x, startPos.y, startPos.z);
+	if(type()==CEntity::Client)
+		if(MTPT_NETWORK_VERSION>=2)
+		{
+			string code = "";
+			code += "getEntityById(";
+			code += toString(Id);
+			code += "):setStartPointId(";
+			code += toString(StartingPointId);
+			code += ");";
+			CNetMessage msgout(CNetMessage::ExecLua);
+			msgout.serial(code);
+			CNetwork::instance().send(msgout);
+		}
+		
 }
 
 void CEntity::reset() 
@@ -223,6 +240,8 @@ void CEntity::reset()
 	DefaultFriction = 0;
 	MaxLinearVelocity = 0;
 	EnableOpenCloseCommand = true;
+	SendCollideWhenFly = false;
+	CollideWhenFlyPos = CVector(0,0,0);
 }
 
 void CEntity::update() 
@@ -237,6 +256,19 @@ void CEntity::update()
 	
 	if(luaProxy)
 		luaProxy->call("preUpdate");
+
+	if(SendCollideWhenFly)
+	{
+		SendCollideWhenFly = false;
+		if(MTPT_NETWORK_VERSION>=2)
+		{
+			CNetMessage msgout(CNetMessage::CollideWhenFly);
+			uint8 eid = id();
+			msgout.serial(eid);
+			msgout.serial(CollideWhenFlyPos);
+			CNetwork::instance().send(msgout);
+		}
+	}
 
 	H_AUTO(CEntityUpdate);
 	set<CModule *>::iterator mit;

@@ -75,6 +75,7 @@ public:
 		UpdateElement,		// 20 CS SC
 		EnableElement,		// 21    SC
 		ExecLua,			// 22    SC
+		CollideWhenFly,		// 23    SC
 	};
 
 	CNetMessage(TType type = Unknown, bool inputStream = false);
