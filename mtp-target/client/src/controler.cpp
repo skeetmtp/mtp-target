@@ -249,9 +249,7 @@ void CControler::update()
 			p = UDriver::TPolygonMode(((int)p+1)%3);
 			C3DTask::instance().driver().setPolygonMode (p);
 		}
-		
 
-		
 		if (C3DTask::instance().kbDown(KeyCONTROL) && C3DTask::instance().kbPressed(KeyF4))
 		{
 			if (C3DTask::instance().kbDown(KeySHIFT))
@@ -364,6 +362,11 @@ void CControler::update()
 			CNetworkTask::instance().openClose();
 			//if(isLocal())
 			swapOpenClose();
+		}
+
+		if (C3DTask::instance().kbDown(KeyMENU) && C3DTask::instance().kbPressed(KeyA))
+		{
+			C3DTask::instance().EnableExternalCamera = !C3DTask::instance().EnableExternalCamera;
 		}
 	}
 

@@ -100,5 +100,4 @@ private:
 	NLMISC::CRGBA	Color;
 };
 
-
 #endif

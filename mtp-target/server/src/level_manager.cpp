@@ -103,8 +103,11 @@ bool CLevelManager::newLevel(string &str1, string &str2)
 {
 	LevelSessionCount++;
 	pausePhysics();
+
+	// reset old state with default state
 	CNetwork::instance().reset();
 	CEntityManager::instance().reset();
+	timeTimeout(60 * 1000);
 
 	nlinfo("newLevel (%d/%d)",LevelSessionCount,MaxLevelSessionCount);
 	if(CurrentLevel)

@@ -202,9 +202,7 @@ void  CModule::color(const NLMISC::CRGBA &col)
 	Color = col; 
 	for(uint i = 0; i < Mesh.getNumMaterials(); i++)
 	{
-		Mesh.getMaterial(i).setDiffuse(Color);
-		//Mesh.getMaterial(i).setAmbient(Color);
+//		Mesh.getMaterial(i).setDiffuse(Color);
+		Mesh.getMaterial(i).setAmbient(Color);
 	}
-	
 }
-
