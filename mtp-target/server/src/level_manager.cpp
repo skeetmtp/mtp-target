@@ -158,6 +158,12 @@ bool CLevelManager::newLevel(string &str1, string &str2)
 			}
 		}
 	}
+
+	if(preferedMap.size()>0)
+	{
+		CNetwork::instance().sendChat("voteMap : "+preferedMap + " : file not found");
+		preferedMap = "";
+	}
 	
 	for(i = 0; i < levels.size(); i++)
 	{
