@@ -89,6 +89,7 @@ private:
 	friend class CSingleton<CNetwork>;
 
 	uint32 updateCount;
+	float MinDeltaToSendFullUpdate;
 };
 
 

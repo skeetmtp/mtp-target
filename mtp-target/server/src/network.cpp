@@ -202,6 +202,8 @@ void CNetwork::init()
 
 	NetworkThread->start();
 	updateCount = 0;
+
+	MinDeltaToSendFullUpdate = NLNET::IService::getInstance()->ConfigFile.getVar("MinDeltaToSendFullUpdate").asFloat();
 }
 
 void CNetwork::reset()
@@ -243,7 +245,7 @@ void CNetwork::update()
 				//msgout.serial(eid);
 				
 				CVector dpos = npos - (*it)->LastSent2OthersPos;
-				if(dpos.norm()>100)
+				if(dpos.norm()>MinDeltaToSendFullUpdate)
 				{
 					updateCount=0;
 					break;
