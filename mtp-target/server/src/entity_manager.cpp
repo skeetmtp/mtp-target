@@ -909,6 +909,24 @@ NLMISC_COMMAND(displayEntities, "display info about all entities", "")
 	return true;
 }
 
+MTPT_COMMAND(playerlist, "switch user chat on/off", "[<eid>|<name>]")
+{
+	string res = "";
+	for(CEntityManager::EntityConstIt it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
+	{
+		res += toString("%d#%s ",(*it)->id(),(*it)->name().c_str());
+		if(res.size()>100)
+		{
+			CNetwork::instance().sendChat(entity->id(),res);
+			res = "";
+		}
+	}
+	if(res.size())
+		CNetwork::instance().sendChat(entity->id(),res);
+	
+	return true;
+}
+
 MTPT_COMMAND(kick, "kick a user from the server", "[<eid>|<name>]")
 {
 	if(args.size() != 1) return false;
@@ -957,7 +975,7 @@ MTPT_COMMAND(kick, "kick a user from the server", "[<eid>|<name>]")
 	return true;
 }
 
-NLMISC_COMMAND(mute, "switch user chat on/off", "[<eid>|<name>]")
+MTPT_COMMAND(mute, "switch user chat on/off", "[<eid>|<name>]")
 {
 	if(args.size() != 1) return false;
 	
@@ -969,7 +987,7 @@ NLMISC_COMMAND(mute, "switch user chat on/off", "[<eid>|<name>]")
 		return true;
 
 	e->canSpeak(!e->canSpeak());
-	CNetwork::instance().sendChat(toString("%s chat is now %s",e->name().c_str(),e->canSpeak()?"on":"off"));
+	CNetwork::instance().sendChat(entity->id(),toString("%s chat is now %s",e->name().c_str(),e->canSpeak()?"on":"off"));
 	
 	return true;
 }
