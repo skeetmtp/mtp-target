@@ -119,7 +119,7 @@ public:
 	float				 LastVel[10];		// last velocity
 	uint32				 LastVelPos;		// between 0 and 9
 	uint8				 StartingPointId;
-	NLMISC::CVector		 Replay;
+	NLMISC::CVector		 LastSentPos;
 
 	uint8				 LastTouchedClientId;
 	sint32				 PushScore;

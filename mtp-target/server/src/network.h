@@ -69,6 +69,8 @@ private:
 	CNetwork();
 
 	friend class CSingleton<CNetwork>;
+
+	uint32 updateCount;
 };
 
 #endif

@@ -92,7 +92,6 @@ void CClient::setForce(const CVector &clientForce)
 		//if(replayX!=x || replayY!=y || replayZ!=z)
 		{
 			fprintf(ReplayFile, "%d PO %.3f %.3f %.3f %.3f %.3f %.3f %.3f\n", id(), rsxTime, clientForce.x, clientForce.y, clientForce.z, Pos.x, Pos.y, Pos.z);
-			Replay = clientForce;
 		}
 	}
 

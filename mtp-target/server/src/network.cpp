@@ -36,6 +36,7 @@
 #include "network.h"
 #include "net_callbacks.h"
 #include "entity_manager.h"
+#include "../../common/constant.h"
 #include "../../common/net_message.h"
 
 
@@ -45,6 +46,7 @@
 
 using namespace std;
 using namespace NLMISC;
+
 
 
 //
@@ -198,37 +200,121 @@ void CNetwork::init()
 	nlassert(NetworkThread);
 
 	NetworkThread->start();
+	updateCount = 0;
+}
+
+static sint8 computeMantis(float x,float &mx,sint8 &dx)
+{
+	float ax = (float)fabs(x);
+	sint8 sx = 0;
+	mx = 1;
+	if(ax>128)
+	{
+		while(ax*mx>128)
+		{
+			sx--;
+			mx /= 2;
+		}
+	}
+	else
+	{
+		while(ax*mx<128)
+		{
+			sx++;
+			mx *= 2;
+		}
+		sx--;
+		mx /= 2;
+	}
+	dx = (sint8)(x * mx);
+	return sx;	
+}
+
+static serial8_8fp(CNetMessage &msgout,float x)
+{
+	float mx;
+	sint8 dx;
+	sint8 sx = computeMantis(x,mx,dx);
+	//sint8 dx = (sint8)(x*mx);
+	msgout.serial(sx);
+	msgout.serial(dx);
 }
 
 void CNetwork::update()
 {
-	CNetMessage msgout(CNetMessage::Update);
-
+	updateCount++;
+	if((updateCount%MT_NETWORK_FULL_UPDATE_PERIODE)==0)
 	{
-		CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
+		CNetMessage msgout(CNetMessage::FullUpdate);
 		
-		TTime currentTime = CTime::getLocalTime();
-		
-		for(CEntityManager::EntityConstIt it = acces.value().begin(); it != acces.value().end(); it++)
 		{
-			const dReal *pos = dBodyGetPosition((*it)->Body);
+			CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
 			
-			(*it)->Pos.x = (float)pos[0];
-			(*it)->Pos.y = (float)pos[1]; 
-			(*it)->Pos.z = (float)pos[2];
-
-			uint8 eid = (*it)->id();
-			uint16 ping = (*it)->Ping.getSmoothValue();
-			msgout.serial(eid, (*it)->Pos, ping);
-
-			if((*it)->type() != CEntity::Bot)
-				(*it)->LastSentPing.push(currentTime);
+			TTime currentTime = CTime::getLocalTime();
+			
+			for(CEntityManager::EntityConstIt it = acces.value().begin(); it != acces.value().end(); it++)
+			{
+				const dReal *pos = dBodyGetPosition((*it)->Body);
+				
+				(*it)->Pos.x = (float)pos[0];
+				(*it)->Pos.y = (float)pos[1]; 
+				(*it)->Pos.z = (float)pos[2];
+				
+				uint8 eid = (*it)->id();
+				uint16 ping = (*it)->Ping.getSmoothValue();
+				CVector dpos = (*it)->Pos - (*it)->LastSentPos;
+				msgout.serial(eid, (*it)->Pos, ping);
+				
+				if((*it)->type() != CEntity::Bot)
+					(*it)->LastSentPing.push(currentTime);
+				
+				(*it)->LastSentPos = (*it)->Pos;
+			}
 		}
+		
+		UpdatePacketSize = msgout.length();
+		
+		CNetwork::instance().send(msgout);
 	}
+	else
+	{
+		CNetMessage msgout(CNetMessage::Update);
+		
+		{
+			CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
+			
+			TTime currentTime = CTime::getLocalTime();
+			
+			for(CEntityManager::EntityConstIt it = acces.value().begin(); it != acces.value().end(); it++)
+			{
+				const dReal *pos = dBodyGetPosition((*it)->Body);
+				
+				(*it)->Pos.x = (float)pos[0];
+				(*it)->Pos.y = (float)pos[1]; 
+				(*it)->Pos.z = (float)pos[2];
+				
+				uint8 eid = (*it)->id();
+				uint16 ping = (*it)->Ping.getSmoothValue();
+				msgout.serial(eid,ping);
 
-	UpdatePacketSize = msgout.length();
+				CVector dpos = (*it)->Pos - (*it)->LastSentPos;
 
-	CNetwork::instance().send(msgout);
+				serial8_8fp(msgout,dpos.x);
+				serial8_8fp(msgout,dpos.y);
+				serial8_8fp(msgout,dpos.z);
+				
+				if((*it)->type() != CEntity::Bot)
+					(*it)->LastSentPing.push(currentTime);
+				
+				(*it)->LastSentPos = (*it)->Pos;
+			}
+		}
+		
+		UpdatePacketSize = msgout.length();
+		
+		CNetwork::instance().send(msgout);
+		
+	}
 }
 
 void CNetwork::release()

@@ -149,11 +149,39 @@ static void cbOpenClose(CNetMessage &msgin)
 		fprintf(SessionFile, "%hu OC\n", (uint16)eid);
 }
 
+static float serial8_8fp(CNetMessage &msgin)
+{
+	float mx = 1;
+	sint8 sx;
+	sint8 dx;
+	msgin.serial(sx);
+	msgin.serial(dx);
+	if(sx>0)
+	{
+		while(sx>0)
+		{
+			mx/=2;
+			sx--;
+		}
+	}
+	else if(sx<0)
+	{
+		while(sx<0)
+		{
+			mx*=2;
+			sx++;
+		}
+	}
+	return dx * mx;
+}
+
+
 static void cbUpdate(CNetMessage &msgin)
 {
 	float rsxTime;
 	uint8 eid;
 	CVector pos;
+	CVector dpos;
 	uint16 ping;
 
 	// reply to the update first (used for the ping)
@@ -164,7 +192,13 @@ static void cbUpdate(CNetMessage &msgin)
 
 	while(msgin.getPos() < (sint32)msgin.length())
 	{
-		msgin.serial(eid, pos, ping);
+		float deltaCoef = 100;
+		msgin.serial(eid,ping);
+		dpos.x = serial8_8fp(msgin);
+		dpos.y = serial8_8fp(msgin);
+		dpos.z = serial8_8fp(msgin);
+		pos = CEntityManager::instance()[eid].LastSentPos + dpos;
+		CEntityManager::instance()[eid].LastSentPos = pos;
 		if(DisplayDebug)
 			nlinfo("TCP update client %hu a %g %g %g ping %hu", (uint16)eid, pos.x, pos.y, pos.z, ping);
 
@@ -191,6 +225,53 @@ static void cbUpdate(CNetMessage &msgin)
 		}
 	}
 }
+
+static void cbFullUpdate(CNetMessage &msgin)
+{
+	float rsxTime;
+	uint8 eid;
+	CVector pos;
+	CVector dpos;
+	uint16 ping;
+	
+	// reply to the update first (used for the ping)
+	CNetMessage msgout(CNetMessage::Update);
+	CNetworkTask::instance().send(msgout);
+	
+	//msgin.serial (rsxTime);
+	
+	while(msgin.getPos() < (sint32)msgin.length())
+	{
+		msgin.serial(eid, pos, ping);
+		//pos = CEntityManager::instance()[eid].LastSentPos + dpos;
+		CEntityManager::instance()[eid].LastSentPos = pos;
+		if(DisplayDebug)
+			nlinfo("TCP update client %hu a %g %g %g ping %hu", (uint16)eid, pos.x, pos.y, pos.z, ping);
+		
+		//		CEntity *entity = mtpTarget::instance().World.getEntityById(id);
+		//		if(entity != 0)
+		//		{
+		//			nlinfo("%gf rsxTime %f", (float)CTime::getLocalTime(), rsxTime);
+		//			entity->setPosition(pos, rsxTime, false);
+		//			entity->ping = ping;
+		//		}
+		//		else
+		//			nlwarning("%hu introuvable", (uint16)id);
+		
+		//		nlinfo("TCP update client %hu / %d a %g %g %g ping %hu", (uint16)eid ,CEntityManager::instance().size(), pos.x, pos.y, pos.z, ping);
+		if(CEntityManager::instance().exist(eid))
+		{
+			CEntityManager::instance()[eid].interpolator.addKey(CEntityInterpolatorKey(CEntityState(pos,false),rsxTime));
+			CEntityManager::instance()[eid].ping(ping);
+		}
+		else
+		{
+			nlstop;
+			nlwarning("Received a position of an unknown entity %hu", (uint16)eid);
+		}
+	}
+}
+
 
 static void cbEditMode(CNetMessage &msgin)
 {
@@ -355,6 +436,7 @@ void netCallbacksHandler(CNetMessage &msgin)
 	SWITCH_CASE(Logout);
 	SWITCH_CASE(OpenClose);
 	SWITCH_CASE(Update);
+	SWITCH_CASE(FullUpdate);
 	SWITCH_CASE(UpdateElement);
 	SWITCH_CASE(Ready);
 	SWITCH_CASE(RequestDownload);

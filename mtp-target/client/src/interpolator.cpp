@@ -180,7 +180,7 @@ void CInterpolator::update()
 	_outOfKeyCount--;
 	if(_outOfKeyCount<0)
 		_outOfKeyCount=0;
-	nlinfo("outofkeycount = %d ; keysize = %d",_outOfKeyCount,_keys.size());
+//	nlinfo("outofkeycount = %d ; keysize = %d",_outOfKeyCount,_keys.size());
 	_autoAdjustLct();
 
 	_localTime = CTimeTask::instance().time() - _startTime;

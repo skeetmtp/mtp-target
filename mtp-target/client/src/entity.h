@@ -114,6 +114,7 @@ public:
 
 	NL3D::UParticleSystemInstance *TraceParticle;
 	
+	NLMISC::CVector		 LastSentPos;
 private:
 	
 	TEntity			Type;

@@ -73,6 +73,7 @@ CEntity::CEntity()
 	OpenMesh = 0;
 	TraceParticle = 0;
 	Rank = 255;
+	LastSentPos = CVector::Null;
 }
 
 void CEntity::swapOpenClose()

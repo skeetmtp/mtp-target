@@ -82,8 +82,8 @@ void CEntity::init ()
 	LastVelPos = 0;
 	StartingPointId = 255;
 	OnTheWater = false;
-	Replay = CVector::Null;
 	Accel = 0.0f;
+	LastSentPos = CVector::Null;
 	Friction = 0.0f;
 	LuaInit = false;
 	Pos = CVector::Null;
