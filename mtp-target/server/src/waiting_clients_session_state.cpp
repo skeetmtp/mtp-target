@@ -133,6 +133,10 @@ void CWaitingClientsSessionState::update()
 			if((*it)->type() == CEntity::Bot)
 			{
 				(*it)->Ready = true;
+				CNetMessage msgout(CNetMessage::Ready);
+				uint8 eid = (*it)->id();
+				msgout.serial(eid);
+				CNetwork::instance().send(msgout);
 			}
 		}
 		

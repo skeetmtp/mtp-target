@@ -210,7 +210,7 @@ static void cbReady(CClient *c, CNetMessage &msgin)
 	CNetMessage msgout(CNetMessage::Ready);
 	uint8 eid = c->id();
 	msgout.serial(eid);
-	CNetwork::instance().sendAllExcept(eid,msgout);
+	CNetwork::instance().send(msgout);
 }
 
 static void cbRequestCRCKey(CClient *c, CNetMessage &msgin)
