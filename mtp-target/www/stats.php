@@ -229,7 +229,7 @@ fprintf($html_fp,"<br>\n");
 
 fprintf($html_fp,"Today Max simultaneous user :\n");
 fprintf($html_fp,"<table>\n");
-fprintf($html_fp,"<tr valign="bottom">\n");
+fprintf($html_fp,"<tr valign=\"bottom\">\n");
 
 	$maxTodayMax = 0;
 	
