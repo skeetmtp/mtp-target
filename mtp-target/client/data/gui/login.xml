@@ -23,6 +23,7 @@
 							<object class="CGuiText" name="loginEntry">
 								<alignment>eAlignRight|eAlignCenterVertical</alignment>
 								<minSize>100,0</minSize>
+								<isMultiline>false</isMultiline>
 								<isEntry>true</isEntry>
 								<isEditable>true</isEditable>
 								<string>skeet</string>
@@ -39,6 +40,7 @@
 							<object class="CGuiText" name="passwordEntry">
 								<alignment>eAlignRight|eAlignCenterVertical</alignment>
 								<minSize>100,0</minSize>
+								<isMultiline>false</isMultiline>
 								<isEntry>true</isEntry>
 								<isEditable>true</isEditable>
 								<isPassword>true</isPassword>
