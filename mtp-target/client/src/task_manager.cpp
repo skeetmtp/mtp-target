@@ -26,8 +26,9 @@
 
 #include <nel/misc/command.h>
 
-#include "task_manager.h"
 #include "main.h"
+#include "task_manager.h"
+#include "entity_manager.h"
 
 
 //
@@ -43,7 +44,6 @@ using namespace NLMISC;
 //
 
 CSynchronized<PauseFlags> taskManagerPauseFlags("taskManagerPauseFlags");
-void checkTaskManagerPaused();
 
 
 //
@@ -97,6 +97,8 @@ void CTaskManager::execute()
 				it2++;
 			}
 		}
+		checkTaskManagerPaused();
+		CEntityManager::instance().flushAddRemoveList();
 	}
 
 	for(std::list<ITask*>::reverse_iterator it = Tasks.rbegin(); it != Tasks.rend(); it++)

@@ -37,6 +37,7 @@
 
 #include "zlib.h"
 
+#include "main.h"
 #include "3d_task.h"
 #include "interface.h"
 #include "time_task.h"
@@ -286,7 +287,17 @@ string CResourceManager::get(const string &filename)
 				
 				CRCReceived = false;
 				bool messageReceived;
-				while(waitNetworkMessage(CRCReceived,messageReceived));
+
+				uint tid = getThreadId();
+				nlassert(tid==TaskManagerThreadId || tid==NetworkThreadId);
+				if(tid==TaskManagerThreadId)
+				{
+					while(waitNetworkMessage(CRCReceived,messageReceived))
+						checkTaskManagerPaused();
+				}
+				else
+					while(waitNetworkMessage(CRCReceived,messageReceived));
+					
 				if(!messageReceived)
 					return unk;
 				if(it!=CRCCheckTimes.end())

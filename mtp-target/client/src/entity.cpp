@@ -259,7 +259,7 @@ void CEntity::reset()
 	Ready = false;
 }
 
-void CEntity::init(TEntity type, const std::string &name, sint32 totalScore, CRGBA &color, const std::string &meshname, bool spectator)
+void CEntity::init(TEntity type, const std::string &name, sint32 totalScore, CRGBA &color, const std::string &meshname, bool spectator, bool isLocal)
 {
 	nlassert(type != Unknown);
 
@@ -271,7 +271,7 @@ void CEntity::init(TEntity type, const std::string &name, sint32 totalScore, CRG
 	Spectator = spectator;
 	Ready = false;
 	interpolator().reset();
-	setIsLocal(false);
+	setIsLocal(isLocal);
 	
 	CSoundManager::instance().registerEntity(SoundsDescriptor);
 

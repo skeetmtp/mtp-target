@@ -435,7 +435,7 @@ void mtpTarget::init()
 				fscanf (fp, "%d %s %d %d", &eid, &name, &self, &totalScore);
 
 				CRGBA col(255,255,255);
-				CEntityManager::instance().add(eid, name, totalScore, col, false);
+				CEntityManager::instance().add(eid, name, totalScore, col, false,false);
 			
 				//CEntity *entity = new CEntity(CRGBA(255,255,255));
 				//entity->setId(eid);

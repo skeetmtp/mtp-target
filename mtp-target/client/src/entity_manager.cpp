@@ -86,6 +86,11 @@ void CEntityManager::init()
 		entities()[i]->reset();
 	}
 	updateListId.clear();
+
+	ClientToAddTaskManagerThread.clear();
+	ClientToAddNetworkThread.clear();
+	ClientToRemoveTaskManagerThread.clear();
+	ClientToRemoveNetworkThread.clear();
 }
 
 void CEntityManager::update()
@@ -104,13 +109,13 @@ void CEntityManager::update()
 	}
 }
 
-void CEntityManager::add(uint8 eid, const std::string &name, sint32 totalScore, CRGBA &color, bool spectator)
+void CEntityManager::add(uint8 eid, const std::string &name, sint32 totalScore, CRGBA &color, bool spectator, bool isLocal)
 {
 	nlassert(!exist(eid));
 	uint tid = getThreadId();
 	nlassert(tid==TaskManagerThreadId || tid==NetworkThreadId);
 	
-	CEntityInitData entityToAdd(eid,name,totalScore,color,spectator);
+	CEntityInitData entityToAdd(eid,name,totalScore,color,spectator,isLocal);
 	if(tid==TaskManagerThreadId)
 		ClientToAddTaskManagerThread.push_back(entityToAdd);
 	else
@@ -135,7 +140,7 @@ void CEntityManager::_add(std::list<CEntityInitData> &addList)
 	{
 		CEntityInitData e = *it2;
 		nlassert(!exist(e.eid));
-		entities()[e.eid]->init(CEntity::Player, e.name, e.totalScore, e.color, "pingoo", e.spectator);
+		entities()[e.eid]->init(CEntity::Player, e.name, e.totalScore, e.color, "pingoo", e.spectator,e.isLocal);
 		nlinfo("CEntityManager::add(%d,%s)",e.eid,e.name.c_str());
 	}
 	addList.clear();	

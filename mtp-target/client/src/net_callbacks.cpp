@@ -86,12 +86,11 @@ static void cbLogin(CNetMessage &msgin)
 	msgin.serial(self, eid, name, totalScore, color, spec);
 	nlinfo("cbLogin : Adding player %hu(%s) , list.size = %d", (uint16)eid,name.c_str(),CEntityManager::instance().size());
 	
-	CEntityManager::instance().add(eid, name, totalScore, color, spec);
+	CEntityManager::instance().add(eid, name, totalScore, color, spec, self);
 
 	if(self)
 	{
 		nlinfo("I'm the player number %hu, my name is '%s' and my score is %d", (uint16)eid, name.c_str(), totalScore);
-		CEntityManager::instance()[eid].setIsLocal(true);
 		
 		try
 		{

@@ -45,16 +45,17 @@ class CEntityInitData
 
 public:
 
-	CEntityInitData(uint8 _eid, const std::string &_name, sint32 _totalScore, NLMISC::CRGBA &_color, bool _spectator):eid(_eid),name(_name),totalScore(_totalScore),color(_color),spectator(_spectator)
+	CEntityInitData(uint8 _eid, const std::string &_name, sint32 _totalScore, NLMISC::CRGBA &_color, bool _spectator, bool _isLocal):eid(_eid),name(_name),totalScore(_totalScore),color(_color),spectator(_spectator),isLocal(_isLocal)
 	{
 
 	}
 
 	uint8 eid;
-	const std::string &name;
+	std::string name;
 	sint32 totalScore;
 	NLMISC::CRGBA &color;
 	bool spectator;
+	bool isLocal;
 };
 
 class CEntityManager : public CSingleton<CEntityManager>, public ITask
@@ -71,7 +72,7 @@ public:
 	void renderNames();
 	virtual std::string name() { return "CEntityManager"; }
 
-	void	add(uint8 eid, const std::string &name, sint32 totalScore, NLMISC::CRGBA &color, bool spectator);
+	void	add(uint8 eid, const std::string &name, sint32 totalScore, NLMISC::CRGBA &color, bool spectator, bool isLocal);
 	void	remove(uint8 eid);
 	void	flushAddRemoveList();
 	void	_add(std::list<CEntityInitData> &addList);

@@ -140,7 +140,7 @@ private:
 	virtual ~CEntity() { delete _interpolator; _interpolator = NULL; }
 
 	void reset();
-	void init(TEntity type, const std::string &name, sint32 totalScore, NLMISC::CRGBA &color, const std::string &meshname, bool spectator);
+	void init(TEntity type, const std::string &name, sint32 totalScore, NLMISC::CRGBA &color, const std::string &meshname, bool spectator, bool isLocal);
 	void id(uint8 nid);
 
 //////////////////////////////////////////////////////////////////////////

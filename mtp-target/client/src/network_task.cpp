@@ -47,6 +47,7 @@
 #include "mtp_target.h"
 #include "network_task.h"
 #include "net_callbacks.h"
+#include "entity_manager.h"
 #include "config_file_task.h"
 #include "../../common/net_message.h"
 #include "main.h"
@@ -112,6 +113,8 @@ public:
 			{
 				nlSleep(100);
 			}
+			checkNetworkPaused();
+			CEntityManager::instance().flushAddRemoveList();
 		}
 	}
 
