@@ -366,13 +366,30 @@ void CControler::update()
 			nlinfo("\t{ Position = CVector(%f, %f, %f), Rotation = CAngleAxis(%f, %f, %f, %f) },",
 				v.x, v.y, v.z, q.x, q.y, q.z, q.w);
 		}
+		
+		/*
+		if(C3DTask::instance().kbDown(KeyMENU))
+			nlinfo(">>KeyMENU");
+		if(C3DTask::instance().kbDown(KeyLMENU))
+			nlinfo(">>KeyLMENU");
+		if(C3DTask::instance().kbDown(KeyRMENU))
+			nlinfo(">>KeyRMENU");
 
-		if (C3DTask::instance().kbPressed(KeyLCONTROL) || C3DTask::instance().kbPressed(KeyRCONTROL) || C3DTask::instance().kbPressed(KeyCONTROL))
+		if(C3DTask::instance().kbPressed(KeyCONTROL))
+			nlinfo(">>KeyCONTROL");
+		if(C3DTask::instance().kbPressed(KeyLCONTROL))
+			nlinfo(">>KeyLCONTROL");
+		if(C3DTask::instance().kbPressed(KeyRCONTROL))
+			nlinfo(">>KeyRCONTROL");
+		*/
+
+		if (C3DTask::instance().kbPressed(KeyLCONTROL) || C3DTask::instance().kbPressed(KeyRCONTROL) || C3DTask::instance().kbPressed(KeyCONTROL) && !C3DTask::instance().kbDown(KeyMENU))
 		{
 			CNetworkTask::instance().openClose();
 			//if(isLocal())
 			swapOpenClose();
 		}
+		
 
 		if (C3DTask::instance().kbDown(KeyMENU) && C3DTask::instance().kbPressed(KeyA))
 		{

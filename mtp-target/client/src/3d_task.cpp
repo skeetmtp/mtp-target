@@ -143,6 +143,7 @@ void C3DTask::init()
 #endif
 	nlassert(Driver);
 
+
 	bool displayOk = false;
 	
 	try
@@ -181,6 +182,7 @@ void C3DTask::init()
 	}
 
 	Driver->EventServer.addListener (EventCharId, &InterfaceListener);
+//	Driver->enableLowLevelKeyboard(true);
 
 	Driver->setAmbientColor(AmbientColor);
 
