@@ -125,6 +125,14 @@ void CNetwork::reset()
 void CNetwork::update()
 {
 	static uint8 pingnb = 0;
+	
+	static TTime tsttime = 0;
+	TTime t0 = CTime::getLocalTime ();
+	TTime updatedt = 0;
+	if(tsttime)
+		updatedt = t0 - tsttime;
+	tsttime = t0;
+	nlinfo("time before 2 network update : %d>50ms",updatedt);
 
 	{
 		{

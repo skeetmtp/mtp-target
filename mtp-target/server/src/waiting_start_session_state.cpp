@@ -56,32 +56,10 @@ void CWaitingStartSessionState::update()
 	
 	if(CSessionManager::instance().forceEnding() || currentTime > CSessionManager::instance().startTime())
 	{
-		CEntityManager::EntityConstIt it;
-		for(it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
-		{
-			(*it)->InGame = true;
-			if((*it)->type() == CEntity::Client)
-			{
-				CClient *c = (CClient *)(*it);
-				if(c->ReplayFile)
-					fclose(c->ReplayFile);
-				
-				if(!NLMISC::CFile::isDirectory("./replay"))
-					NLMISC::CFile::createDirectory("./replay");
-				string CurrentLevel = CLevelManager::instance().currentLevel().name();
-				c->ReplayFilename = NLMISC::CFile::findNewFile("replay/"+CurrentLevel+"."+toString(c->StartingPointId)+"..mtr");
-				c->ReplayFile = fopen(c->ReplayFilename.c_str(), "wt");
-			}
-			else if((*it)->type() == CEntity::Bot)
-			{
-				CBot *b = (CBot *)(*it);
-				b->loadBotReplay();
-			}
-		}
 		changeState(CRunningSessionState::instance());
 		// set gravity if the game started
 		dWorldSetGravity(World, 0.0f, 0.0f, Gravity);
-		nlinfo("set gravity : on");
+		nlinfo("set gravity : on at %d",currentTime);
 		
 	}
 }

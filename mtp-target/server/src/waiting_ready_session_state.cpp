@@ -49,16 +49,39 @@ using namespace NLMISC;
 
 void CWaitingReadySessionState::update()
 {
-	TTime currentTime = CTime::getLocalTime();
-	
 	if(CSessionManager::instance().forceEnding() || CEntityManager::instance().everyBodyReady())
 	{
-		nlinfo("Everybody ready, start session in %g seconds", TimeBeforeStart/1000.0f);
+		CLevelManager::instance().currentLevel().initBeforeStartLevel();
+
+		CEntityManager::EntityConstIt it;
+		for(it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
+		{
+			(*it)->InGame = true;
+			if((*it)->type() == CEntity::Client)
+			{
+				CClient *c = (CClient *)(*it);
+				if(c->ReplayFile)
+					fclose(c->ReplayFile);
+				
+				if(!NLMISC::CFile::isDirectory("./replay"))
+					NLMISC::CFile::createDirectory("./replay");
+				string CurrentLevel = CLevelManager::instance().currentLevel().name();
+				c->ReplayFilename = NLMISC::CFile::findNewFile("replay/"+CurrentLevel+"."+toString(c->StartingPointId)+"..mtr");
+				c->ReplayFile = fopen(c->ReplayFilename.c_str(), "wt");
+			}
+			else if((*it)->type() == CEntity::Bot)
+			{
+				CBot *b = (CBot *)(*it);
+				b->loadBotReplay();
+			}
+		}
+
+		TTime currentTime = CTime::getLocalTime();
+		nlinfo("Everybody ready, start session in %g seconds(at %d)", TimeBeforeStart/1000.0f,currentTime+TimeBeforeStart);
 		changeState(CWaitingStartSessionState::instance());
 		CSessionManager::instance().startTime(currentTime+(TTime)TimeBeforeStart);
 		
 		CNetMessage msgout(CNetMessage::EverybodyReady);
 		CNetwork::instance().send(msgout);
-		CLevelManager::instance().currentLevel().initBeforeStartLevel();
 	}
 }
