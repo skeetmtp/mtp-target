@@ -268,10 +268,11 @@ void CEntityManager::login(CEntity *e)
 				}
 			}
 		}
+		
 		// now the client can receive position update
 		((CClient*)e)->networkReady(true);
 	}
-
+	CEntityManager::instance().sendUpdateList();				
 }
 
 CEntity *CEntityManager::getByName(const std::string &name)
