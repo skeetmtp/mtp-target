@@ -60,6 +60,28 @@
 //menu stat
   $menuStat = "<b>%d joueurs inscrits</b> | <b>%d joueurs en ligne</b> | <b>%d parties jouées</b>";
 
+//welcome frame
+  $welcomeUser = "Bienvenue <b>%s</b>... (<a href=\"user_logout.php\">se deconnecter</a>)<br>";
+  $welcomeTodayScore = "Score du jour : %d<br>";
+  $welcomeTotalScore = "Score total : %d<br>";
+  $welcomeSettings = "<a href=\"?page=user_settings.php\">vos réglages</a><br>";
+  $welcomeStat = "<a href=\"?page=stat_user.php&p_user_id=%d\">vos stats</a><br>";
+
+//player of the day frame
+  $potdTitle = "Joueur du jour :<br>\n";
+  $potdTop1 = "<b><a href=\"?page=stat_user.php&p_user_id=%d\">%s</a></b> avec %s points aujourd'hui<br>\n";
+  $potdTops = "#%d <a href=\"?page=stat_user.php&p_user_id=%d\">%s</a> %s points<br>\n";
+  $potdNewUser = "Le dernier utilisateur enregistré est <b><a href=\"?page=stat_user.php&p_user_id=%d\">%s</a></b>\n";
+  $potdUserOnWebCount = "Il y a <b>%d</b> utilisateur(s) enregistré(s) sur le site\n";
+
+//user settings
+  $settingsChangeTexture = "<a href=\"?page=user_texture_selection.php\">Changer sa texture...</a><br>"; 
+  $settingsUploadTexture = "<a href=\"?page=user_upload_texture.php\">Ajouter sa propre texture...</a><br>";
+  $settingsMerge = "<a href=\"?page=user_merge.php\">Fusionner ce compte avec un autre</a><br>";
+  $settingsRename = "<a href=\"?page=user_rename.php\">Renommer ce compte</a><br>";
+  
+//upload texture
+
 //menu
   $menuLinkText_News = "News";
   $menuLinkText_Home = "Accueil";

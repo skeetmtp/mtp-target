@@ -29,12 +29,12 @@ include_once("stat_function.php");
 	printf("</td>\n");
 
 	printf("<td valign=\"bottom\">\n");
-	printf("<a href=\"?page=user_texture_selection.php\">Change your texture...</a><br>");
-	printf("<a href=\"?page=user_upload_texture.php\">Upload your own texture...</a><br>");
+	printf($settingsChangeTexture);
+	printf($settingsUploadTexture);
 	//printf("<a href=\"?page=user_color_selection.php\">Change your color...</a><br>");
 	//printf("<a href=\"?page=user_delete.php\">Delete this account</a><br>");
-	printf("<a href=\"?page=user_merge.php\">Merge this account with another one</a><br>");
-	printf("<a href=\"?page=user_rename.php\">Rename this account</a><br>");
+	printf($settingsMerge);
+	printf($settingsRename);
 	//printf("<a href=\"?page=test.php\">test</a><br>");
 	printf("</td>\n");
 

@@ -60,6 +60,28 @@ Please verify that the solution to your bug/problem is not in the ";
 //menu stat
   $menuStat = "<b>%d registered players</b> | <b>%d online players</b> | <b>%d played sessions</b>";
 
+//welcome frame
+  $welcomeUser = "Welcome <b>%s</b>... (<a href=\"user_logout.php\">logout</a>)<br>";
+  $welcomeTodayScore = "Today score : %d<br>";
+  $welcomeTotalScore = "Total score : %d<br>";
+  $welcomeSettings = "<a href=\"?page=user_settings.php\">your settings</a><br>";
+  $welcomeStat = "<a href=\"?page=stat_user.php&p_user_id=%d\">your stats</a><br>";
+
+//player of the day frame
+  $potdTitle = "Player of the day :<br>\n";
+  $potdTop1 = "<b><a href=\"?page=stat_user.php&p_user_id=%d\">%s</a></b> with %s points today<br>\n";
+  $potdTops = "#%d <a href=\"?page=stat_user.php&p_user_id=%d\">%s</a> %s points<br>\n";
+  $potdNewUser = "The newest registered user is <b><a href=\"?page=stat_user.php&p_user_id=%d\">%s</a></b>\n"; 
+  $potdUserOnWebCount = "There is <b>%d</b> registered users on the site\n"; 
+
+//user settings
+  $settingsChangeTexture = "<a href=\"?page=user_texture_selection.php\">Change your texture...</a><br>"; 
+  $settingsUploadTexture = "<a href=\"?page=user_upload_texture.php\">Upload your own texture...</a><br>";
+  $settingsMerge = "<a href=\"?page=user_merge.php\">Merge this account with another one</a><br>";
+  $settingsRename = "<a href=\"?page=user_rename.php\">Rename this account</a><br>";
+
+//upload texture
+
 //menu
   $menuLinkText_News = "News";
   $menuLinkText_Home = "About";
