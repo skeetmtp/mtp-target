@@ -6,6 +6,7 @@ setLevelTimeout(20);
 local clientId = 0;
 
 function Entity:init()
+  self:displayText(0,5,1,255,200,0,"warning : In this level you must hit the target in open mode",60);
   self:setCurrentScore(0);
   --print(self:getName());
   --print("entity init");
