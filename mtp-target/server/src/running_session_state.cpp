@@ -185,13 +185,17 @@ void CRunningSessionState::update()
 
 				(*it)->Score +=(*it)->CurrentScore;
 
-				CConfigFile::CVar &accounts = IService::getInstance()->ConfigFile.getVar("Accounts");
-				for(sint i = 0; i < accounts.size(); i+=3)
+				// only save the score in the cfg if shardId = 0 (mean that on lan mode)
+				if(IService::getInstance()->ConfigFile.getVar("ShardId").asInt() == 0)
 				{
-					if(accounts.asString(i) == (*it)->name())
+					CConfigFile::CVar &accounts = IService::getInstance()->ConfigFile.getVar("Accounts");
+					for(sint i = 0; i < accounts.size(); i+=3)
 					{
-						accounts.setAsString(toString((*it)->Score), i+2);
-						break;
+						if(accounts.asString(i) == (*it)->name())
+						{
+							accounts.setAsString(toString((*it)->Score), i+2);
+							break;
+						}
 					}
 				}
 

@@ -834,7 +834,10 @@ string CEntityManager::check(const string &login, const string &password, bool d
 					return "Client "+login+" already online";
 				}
 
-				score = accounts.asInt(i+2);
+				// if don't check, it means that we are on internet mode and then
+				// we don't want to setup the score
+				if(!dontCheck)
+					score = accounts.asInt(i+2);
 
 				sint32 maxScore = IService::getInstance()->ConfigFile.getVar("MaxScore").asInt();
 				if(!isAdmin(login) && maxScore != -1 && score >= maxScore)
