@@ -73,9 +73,10 @@ public:
 
 	uint8					 id() const { return Id; }
 	const std::string		&name() const { return Name; }
-	void					 name(const std::string &name) { Name = name; }
+	void name(const std::string &name);
 	void startPointId(uint8 id);
-
+	bool isAdmin() const;
+		
 	TEntity					 type() const { return Type; }
 
 	bool					 spectator() const { return Spectator; }
@@ -140,6 +141,7 @@ private:
 	TEntity				 Type;				// type of entity
 	uint8				 Id;
 	std::string			 Name;				// empty name mean that the client not already send login information
+	bool                 _isAdmin;
 };
 
 

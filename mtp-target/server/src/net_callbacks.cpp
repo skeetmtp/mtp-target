@@ -63,24 +63,14 @@ static void cbCommand(CClient *c, CNetMessage &msgin)
 	string cmd;
 	msgin.serial(cmd);
 
-	string name;
-	CConfigFile::CVar &admin = IService::getInstance()->ConfigFile.getVar("Admin");
-	for(uint i = 0; i < (uint)admin.size(); i++)
-	{
-		if(admin.asString(i) == c->name())
-		{
-			name = c->name();
-			break;
-		}
-	}
-	if(!name.empty())
+	if(c->isAdmin())
 	{
 		ICommand::execute(cmd, *InfoLog);
-		CNetwork::instance().sendChat(name+" executed: "+cmd);
+		CNetwork::instance().sendChat(c->name()+" executed: "+cmd);
 	}
 	else
 	{
-		CNetwork::instance().sendChat(name+" tried to execute the admin command "+cmd);
+		CNetwork::instance().sendChat(c->name()+" tried to execute the admin command "+cmd);
 	}
 }
 
@@ -176,7 +166,8 @@ static void cbEditMode(CClient *c, CNetMessage &msgin)
 {
 	uint8 editMode;
 	msgin.serial(editMode);
-	CSessionManager::instance().editMode(editMode);
+	if(c->isAdmin())
+		CSessionManager::instance().editMode(editMode);
 }
 
 static void cbUpdateElement(CClient *c, CNetMessage &msgin)
@@ -192,7 +183,7 @@ static void cbUpdateElement(CClient *c, CNetMessage &msgin)
 	CVector eulerRot;
 	msgin.serial(eulerRot);
 
-	if(CSessionManager::instance().currentStateName()=="Running")
+	if(c->isAdmin() && CSessionManager::instance().currentStateName()=="Running")
 	{
 		CNetMessage msgout(CNetMessage::UpdateElement);
 		msgout.serial(elementType);

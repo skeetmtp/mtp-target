@@ -42,6 +42,7 @@
 
 using namespace std;
 using namespace NLMISC;
+using namespace NLNET;
 
 
 //
@@ -93,6 +94,7 @@ void CEntity::init ()
 	StopedScore = 0;
 	FirstStop = 0;
 	Spectator = true;
+	_isAdmin = false;
 
 	nlassert(World);
 
@@ -145,6 +147,7 @@ CEntity::CEntity(uint8 eid, const std::string &name)
 	Type = Bot;
 	Spectator = false;
 	_luaInit();
+	_isAdmin = false;
 }
 
 void CEntity::_luaInit()
@@ -176,6 +179,26 @@ CEntity::~CEntity()
 	}
 	resumePhysics();
 }
+
+bool CEntity::isAdmin() const
+{
+	return _isAdmin;
+}
+
+void CEntity::name(const string &name)
+{
+	Name = name;
+	CConfigFile::CVar &admin = IService::getInstance()->ConfigFile.getVar("Admin");
+	for(uint i = 0; i < (uint)admin.size(); i++)
+	{
+		if(admin.asString(i) == name)
+		{
+			_isAdmin = true;
+			return;
+		}
+	}
+}
+
 
 void CEntity::startPointId(uint8 id)
 {
