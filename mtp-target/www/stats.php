@@ -9,7 +9,8 @@
 	$lastHour = 0;
 	$lastDay = 0;
 	$lastMinute = 0;
-	
+	$once = 0;
+	$firstDate = mktime();
 	$lastRestartTime = mktime();
 	
 	for($i=0;$i<24;$i++)
@@ -24,7 +25,7 @@
 	while (!feof($fp)):
 		$line = fgets($fp, 2048);
 		$out = array(substr($line,0,strlen($line)-1));//remove \n
-		list ($ttime, $year, $month, $sday, $shour, $smin, $ssec, $inout, $sname)= split (" ", $out[0]);
+		list ($ttime, $syear, $smonth, $sday, $shour, $smin, $ssec, $inout, $sname)= split (" ", $out[0]);
 
 		$name = str_replace("'","",$sname);
 
@@ -34,6 +35,8 @@
 		$minute = intval($smin);
 		$sec = intval($ssec);
 		$day = intval($sday);
+		$month = intval($smonth);
+		$year = intval($syear);
 		if(strlen($line)!=0)
 		{		
 			if($lastHour!=$hour)
@@ -76,7 +79,12 @@
 			}
 			else if($inout=='#')
 			{
-				$lastRestartTime = mktime($hour,$minute,$sec);
+				$lastRestartTime = mktime($hour,$minute,$sec,$month,$day,$year);
+				if($once==0)
+				{
+					$firstDate = $lastRestartTime;
+					$once = 0;
+				}
 				$playerCount = 0;
 				//printf("<hr>",$name);
 			}
@@ -112,7 +120,10 @@
 <br>
 <br>
 
-Total login :
+<?php
+printf("<b>Total</b> login :<br>\n");
+printf("Since %s\n",date("l dS of F Y h:i:s A",$firstDate));
+?>
 
 <table>
 <tr valign="bottom">
@@ -183,18 +194,28 @@ Today login :
 		printf("</td>\n");
 	}
 	printf("</tr>\n");
+	
 	printf("<tr>\n");
 	for($i=0;$i<24;$i++)
 	{
-		printf("<td>%d</td>\n",$i);
+		printf("<td width=20>%d</td>\n",$userCountPerHourToday[$i]);
 	}
 	printf("</tr>\n");	
+	
 	printf("<tr>\n");
 	for($i=0;$i<24;$i++)
 	{
 		printf("<td><img src=\"./img/hr%d.png\" width=\"10\"/></td>\n",($i%12)+1);
 	}
 	printf("</tr>\n");	
+
+	printf("<tr>\n");
+	for($i=0;$i<24;$i++)
+	{
+		printf("<td>%d</td>\n",$i);
+	}
+	printf("</tr>\n");	
+	
 ?>
 </table>
 
@@ -223,18 +244,28 @@ Today Max simultaneous user :
 		printf("</td>\n");
 	}
 	printf("</tr>\n");
+	
 	printf("<tr>\n");
 	for($i=0;$i<24;$i++)
 	{
-		printf("<td>%d</td>\n",$i);
+		printf("<td width=20>%d</td>\n",$userCountPerHourTodayMax[$i]);
 	}
 	printf("</tr>\n");	
+	
 	printf("<tr>\n");
 	for($i=0;$i<24;$i++)
 	{
 		printf("<td><img src=\"./img/hr%d.png\" width=\"10\"/></td>\n",($i%12)+1);
 	}
 	printf("</tr>\n");	
+
+	printf("<tr>\n");
+	for($i=0;$i<24;$i++)
+	{
+		printf("<td>%d</td>\n",$i);
+	}
+	printf("</tr>\n");	
+	
 ?>
 </table>
 
@@ -264,6 +295,7 @@ Last hour max simultaneous user :
 		printf("</td>\n");
 	}
 	printf("</tr>\n");
+	
 	/*
 	printf("<tr>\n");
 	for($i=0;$i<60 && $i<=$lastMinute;$i++)
@@ -272,6 +304,7 @@ Last hour max simultaneous user :
 	}
 	printf("</tr>\n");	
 	*/
+	
 	/*
 	printf("<tr>\n");
 	for($i=0;$i<24;$i++)
