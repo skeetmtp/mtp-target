@@ -77,10 +77,10 @@ static void cbWSConnection(const std::string &serviceName, uint16 sid, void *arg
 
 	nldebug("new potential shard: %s", ia.asString ().c_str ());
 
+	//TODO  HACK to keep only the offical server
+	return;
+	
 	// if we accept external shard, don't need to check if address is valid
-	//TODO sid==3 =>  HACK to keep only the offical server
-	if(sid==2)
-		return;
 	if(IService::getInstance ()->ConfigFile.getVar("AcceptExternalShards").asInt () == 1)
 		return;
 
