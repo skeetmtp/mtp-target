@@ -302,6 +302,10 @@ CVector CLinearInterpolator::_position(double time)
 			if(!nextKeySet)
 				break;
 
+			CVector dpos = (nextKey.value().position - key.value().position ) / (float)_dt;
+			//TODO put 10 into a .cfg variable
+			if(dpos.norm()>10) 
+				return nextKey.value().position;
 			return CEntityInterpolatorKey::Lerp(key.value(),nextKey.value(),lerpPos).position;
 		}
 		nextKey = key;
