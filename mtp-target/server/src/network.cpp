@@ -570,7 +570,15 @@ void CNetwork::sleep(TTime timeout)
 #ifdef NL_OS_UNIX
 		// Sleep until the time expires or we receive a message
 		H_BEFORE(UserSleep);
-		BufServer->sleepUntilDataAvailable( remainingTime * 1000); break; // accurate sleep with select()
+		fd_set readers;
+		timeval tv;
+		FD_ZERO( &readers );
+		FD_SET( BufServer->dataAvailablePipeReadHandle(), &readers );
+		tv.tv_sec = 0;
+		tv.tv_usec = remainingTime * 1000;
+		int res = ::select( BufServer->dataAvailablePipeReadHandle()+1, &readers, NULL, NULL, &tv );
+		if ( res == -1 )
+			nlerror( "LNETL1: Select failed in sleepUntilDataAvailable (code %u)", CSock::getLastError() );
 		H_AFTER(UserSleep);
 #else
 		// Enable windows multithreading before rescanning all connections
