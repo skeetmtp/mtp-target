@@ -56,9 +56,8 @@ void CWaitingStartSessionState::update()
 	
 	if(CSessionManager::instance().forceEnding() || currentTime > CSessionManager::instance().startTime())
 	{
-		CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
 		CEntityManager::EntityConstIt it;
-		for(it = acces.value().begin(); it != acces.value().end(); it++)
+		for(it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
 		{
 			(*it)->InGame = true;
 			if((*it)->type() == CEntity::Client)

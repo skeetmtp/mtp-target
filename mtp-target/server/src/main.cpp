@@ -70,6 +70,8 @@ TTime NextSendUpdate = 0;
 
 const float GSCALE = 0.01f;
 
+CSynchronized<PauseFlags> servicePauseFlags("servicePauseFlags");
+void checkServicePaused();
 
 //
 // Classes
@@ -122,6 +124,8 @@ public:
 
 		CLevelManager::instance().update();
 
+		checkServicePaused();
+
 		return true;
 	}
 
@@ -159,3 +163,118 @@ NLMISC_COMMAND(broadcast, "send a message to everybody", "<string>")
 }
 
 NLMISC_VARIABLE(uint32, UpdatePacketSize, "update packet size");
+
+
+void checkServicePaused()
+{
+	{
+		bool pause;
+		{
+			CSynchronized<PauseFlags>::CAccessor acces(&servicePauseFlags);
+			pause = acces.value().pauseCount>0;
+			if(pause)
+				acces.value().ackPaused = true;
+		}
+		while (pause) 
+		{
+			nlSleep(10);
+			{
+				CSynchronized<PauseFlags>::CAccessor acces(&servicePauseFlags);
+				pause = acces.value().pauseCount>0;
+				acces.value().ackPaused = true;
+			}
+		}
+	}
+	{
+		CSynchronized<PauseFlags>::CAccessor acces(&servicePauseFlags);
+		acces.value().ackPaused = false;
+	}	
+}
+
+bool pauseService(bool waitAck)
+{
+	bool pause;
+	{
+		CSynchronized<PauseFlags>::CAccessor acces(&servicePauseFlags);
+		pause = acces.value().pauseCount>0;
+	}
+	if(!pause) 
+	{
+		bool ackPaused;
+		{
+			CSynchronized<PauseFlags>::CAccessor acces(&servicePauseFlags);
+			ackPaused = false;
+			acces.value().ackPaused = false;
+			acces.value().pauseCount++;
+		}
+		if(!waitAck) return true;
+		while(!ackPaused)
+		{
+			nlSleep(10);
+			{
+				CSynchronized<PauseFlags>::CAccessor acces(&servicePauseFlags);
+				ackPaused = acces.value().ackPaused;
+			}
+		}
+	}
+	else
+		return false;
+	return true;
+}
+
+bool isServicePaused()
+{
+	bool ackPaused;
+	{
+		CSynchronized<PauseFlags>::CAccessor acces(&servicePauseFlags);
+		ackPaused = acces.value().ackPaused;
+	}
+	return ackPaused;
+}
+
+void resumeService()
+{
+	CSynchronized<PauseFlags>::CAccessor acces(&servicePauseFlags);
+	if(acces.value().pauseCount>0) 
+	{
+		acces.value().pauseCount--;
+		nlassert(acces.value().pauseCount>=0);
+		if(acces.value().pauseCount==0)
+			acces.value().ackPaused = false;
+	}	
+}
+
+
+bool pauseAllThread()
+{
+	bool allOk = true;
+	allOk = allOk && pauseService(false);
+	allOk = allOk && pausePhysics(false);
+	allOk = allOk && pauseNetwork(false);
+
+	if(!allOk) 
+		return false;
+
+	while(true)
+	{
+		int threadPausedCount = 0;
+		if(isServicePaused())
+			threadPausedCount++;
+		if(isPhysicsPaused())
+			threadPausedCount++;
+		if(isNetworkPaused())
+			threadPausedCount++;
+		if(threadPausedCount==2)
+			break;
+		nlSleep(10);
+	}
+	
+	return true;
+}
+
+void resumeAllThread()
+{
+	resumeService();
+	resumePhysics();
+	resumeNetwork();	
+}

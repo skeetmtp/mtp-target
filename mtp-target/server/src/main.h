@@ -42,4 +42,24 @@ extern NLMISC::TTime LastPingSent;	// When we send all information of client (pi
 extern const float GSCALE;
 
 
+class PauseFlags 
+{
+public:
+	PauseFlags()
+	{
+		pauseCount = 0;
+		ackPaused = false;		
+	}
+	int pauseCount;
+	bool ackPaused;
+};
+
+
+bool pauseService(bool waitAck=true);
+bool isServicePaused();
+void resumeService();
+
+bool pauseAllThread();
+void resumeAllThread();
+
 #endif

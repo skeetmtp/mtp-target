@@ -52,8 +52,10 @@
 // Functions
 //
 
-void pausePhysics();
+bool pausePhysics(bool waitAck=true);
+bool isPhysicsPaused();
 void resumePhysics();
+
 void initPhysics();
 void releasePhysics();
 

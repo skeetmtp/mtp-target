@@ -94,4 +94,11 @@ private:
 	uint32 updateCount;
 };
 
+
+
+
+bool pauseNetwork(bool waitAck=true);
+bool isNetworkPaused();
+void resumeNetwork();
+
 #endif

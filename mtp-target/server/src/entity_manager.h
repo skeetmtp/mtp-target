@@ -48,7 +48,7 @@ public:
 	void release();
 	void reset();
 	
-	CEntities *entities() { return &Entities; }
+	std::list <CEntity*> &entities() { return Entities; }
 
 	std::string check (const std::string &login, const std::string &password, bool dontCheck, sint32 &score);
 
@@ -89,7 +89,7 @@ public:
 	std::list<uint8> IdUpdateList;
 private:
 
-	CEntities Entities;
+	std::list <CEntity*> Entities;
 
 	void add(CEntity *entity);
 	uint8		findNewId();

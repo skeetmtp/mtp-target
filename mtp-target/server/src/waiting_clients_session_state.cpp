@@ -55,7 +55,6 @@ void CWaitingClientsSessionState::update()
 
 	if(humanClientCount >= NbWaitingClients)
 	{
-		CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
 		CEntityManager::EntityConstIt it;
 		// ok to launch a session
 		changeState(CWaitingReadySessionState::instance());
@@ -73,7 +72,7 @@ void CWaitingClientsSessionState::update()
 		// reset everybody in startpos
 		static uint st = 0;
 		uint i=st++;
-		for(it = acces.value().begin(); it != acces.value().end(); it++, i++)
+		for(it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++, i++)
 		{
 			//dGeomSetPosition((*it)->Geom, StartX+2.5*i, StartY, StartZ);
 			//dBodySetPosition((*it)->Body, StartX+2.5*i, StartY, StartZ);
@@ -123,7 +122,7 @@ void CWaitingClientsSessionState::update()
 		//ace		msgout.serial(CurrentLevel, LevelName, string1, string2, Author);
 		vector<uint8> ranks;
 		vector<uint8> eids;
-		for(it = acces.value().begin(); it != acces.value().end(); it++)
+		for(it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
 		{
 			CEntity *e = *it;
 			ranks.push_back(e->StartingPointId);
@@ -134,7 +133,7 @@ void CWaitingClientsSessionState::update()
 		msgout.serialCont(eids);		
 		CNetwork::instance().send(msgout);
 		
-		for(it = acces.value().begin(); it != acces.value().end(); it++, i++)
+		for(it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++, i++)
 		{
 			if((*it)->type() == CEntity::Bot)
 			{
@@ -146,7 +145,7 @@ void CWaitingClientsSessionState::update()
 		}
 			
 /*
-		for(it = acces.value().begin(); it != acces.value().end(); it++)
+		for(it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
 		{
 			CLuaEngine::clientInit(*it);
 		}

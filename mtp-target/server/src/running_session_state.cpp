@@ -56,7 +56,6 @@ void CRunningSessionState::update()
 	vector<string> chat;
 
 	{
-		CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
 		CEntityManager::EntityConstIt it;
 
 		bool everybodyStopped = true;
@@ -67,7 +66,7 @@ void CRunningSessionState::update()
 		}
 		else
 		{
-			for(it = acces.value().begin(); it != acces.value().end(); it++)
+			for(it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
 			{
 				CEntity *c = *it;
 				if(c->InGame)
@@ -92,48 +91,48 @@ void CRunningSessionState::update()
 
 		if(CSessionManager::instance().forceEnding() || everybodyStopped)
 		{
-			CEntityManager::EntityConstIt  bestit1 = acces.value().end();
-			CEntityManager::EntityConstIt  bestit2 = acces.value().end();
-			CEntityManager::EntityConstIt  bestit3 = acces.value().end();
-			for(it = acces.value().begin(); it != acces.value().end(); it++)
+			CEntityManager::EntityConstIt  bestit1 = CEntityManager::instance().entities().end();
+			CEntityManager::EntityConstIt  bestit2 = CEntityManager::instance().entities().end();
+			CEntityManager::EntityConstIt  bestit3 = CEntityManager::instance().entities().end();
+			for(it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
 			{
-				if((*it)->CurrentScore > 0 && (bestit1 == acces.value().end() || (*bestit1)->ArrivalTime >(*it)->ArrivalTime))
+				if((*it)->CurrentScore > 0 && (bestit1 == CEntityManager::instance().entities().end() || (*bestit1)->ArrivalTime >(*it)->ArrivalTime))
 				{
 					bestit1 = it;
 				}
-				else if((*it)->CurrentScore > 0 && (bestit2 == acces.value().end() || (*bestit2)->ArrivalTime >(*it)->ArrivalTime))
+				else if((*it)->CurrentScore > 0 && (bestit2 == CEntityManager::instance().entities().end() || (*bestit2)->ArrivalTime >(*it)->ArrivalTime))
 				{
 					bestit2 = it;
 				}
-				else if((*it)->CurrentScore > 0 && (bestit3 == acces.value().end() || (*bestit3)->ArrivalTime > (*it)->ArrivalTime))
+				else if((*it)->CurrentScore > 0 && (bestit3 == CEntityManager::instance().entities().end() || (*bestit3)->ArrivalTime > (*it)->ArrivalTime))
 				{
 					bestit3 = it;
 				}
 			}
-			switch(acces.value().size())
+			switch(CEntityManager::instance().entities().size())
 			{
 			case 0:
 			case 1:
 				break;
 			case 2:
-				if(bestit1 != acces.value().end()) (*bestit1)->CurrentScore +=  50;
+				if(bestit1 != CEntityManager::instance().entities().end()) (*bestit1)->CurrentScore +=  50;
 				break;
 			case 3:
-				if(bestit1 != acces.value().end()) (*bestit1)->CurrentScore += 100;
-				if(bestit2 != acces.value().end()) (*bestit2)->CurrentScore +=  50;
+				if(bestit1 != CEntityManager::instance().entities().end()) (*bestit1)->CurrentScore += 100;
+				if(bestit2 != CEntityManager::instance().entities().end()) (*bestit2)->CurrentScore +=  50;
 				break;
 			default:
-				if(bestit1 != acces.value().end()) (*bestit1)->CurrentScore += 150;
-				if(bestit2 != acces.value().end()) (*bestit2)->CurrentScore += 100;
-				if(bestit3 != acces.value().end()) (*bestit3)->CurrentScore +=  50;
+				if(bestit1 != CEntityManager::instance().entities().end()) (*bestit1)->CurrentScore += 150;
+				if(bestit2 != CEntityManager::instance().entities().end()) (*bestit2)->CurrentScore += 100;
+				if(bestit3 != CEntityManager::instance().entities().end()) (*bestit3)->CurrentScore +=  50;
 				break;
 			}
 
 //			CMessage msgout("END_SESSION");
 			CNetMessage msgout(CNetMessage::EndSession);
-//			uint8 nb = acces.value().size();
+//			uint8 nb = CEntityManager::instance().entities().size();
 //			msgout.serial(nb);
-			for(it = acces.value().begin(); it != acces.value().end(); it++)
+			for(it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
 			{
 				if((*it)->type() == CEntity::Client)
 				{
@@ -174,7 +173,7 @@ void CRunningSessionState::update()
 			
 			// send the message to all entities
 			CNetwork::instance().send(msgout);
-			/*for(it = acces.value().begin(); it != acces.value().end(); it++)
+			/*for(it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
 			{
 				if((*it)->From != 0)
 					Server->send(msgout, (*it)->From);

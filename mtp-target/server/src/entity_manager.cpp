@@ -71,16 +71,15 @@ void CEntityManager::init()
 	IdUpdateList.clear();
 	EntitiesToAdd.clear();
 	IdToRemove.clear();
-	checkForcedClientCount();
 }
 
 void CEntityManager::update()
 {
 	flushAddRemoveList();
+	checkForcedClientCount();
 	{
-		CEntities::CReadAccessor acces(entities());
 		EntityConstIt it;
-		for(it = acces.value().begin(); it != acces.value().end(); it++)
+		for(it = entities().begin(); it != entities().end(); it++)
 		{
 			(*it)->update();
 		}
@@ -89,9 +88,8 @@ void CEntityManager::update()
 
 void CEntityManager::reset()
 {
-	CEntities::CReadAccessor acces(entities());
 	EntityConstIt it;
-	for(it = acces.value().begin(); it != acces.value().end(); it++)
+	for(it = entities().begin(); it != entities().end(); it++)
 	{
 		(*it)->reset();
 	}
@@ -105,16 +103,15 @@ void CEntityManager::release()
 uint8 CEntityManager::findNewId()
 {
 	uint8 ni = 0;
-	CEntities::CReadAccessor acces(entities());
 	while(true)
 	{
 		EntityConstIt it;
-		for(it = acces.value().begin(); it != acces.value().end(); it++)
+		for(it = entities().begin(); it != entities().end(); it++)
 		{
 			if((*it)->id() == ni)
 				break;
 		}
-		if(it == acces.value().end())
+		if(it == entities().end())
 			return ni;
 		ni++;
 		if(ni == 255)
@@ -158,21 +155,19 @@ void CEntityManager::addClient(NLNET::CTcpSock *sock)
 
 void CEntityManager::add(CEntity *entity)
 {
-	{
-		CEntities::CWriteAccessor acces(entities());
-		acces.value().push_back(entity);
-	}
+	pauseAllThread();
+	entities().push_back(entity);
+	resumeAllThread();
 	updateIdUpdateList();
 }
 
 void CEntityManager::updateIdUpdateList()
 {
 	int minId = 0;
-	CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
 	IdUpdateList.clear();
 	for(int i=0;i<255;i++)
 	{
-		for(CEntityManager::EntityConstIt it = acces.value().begin(); it != acces.value().end(); it++)
+		for(CEntityManager::EntityConstIt it = entities().begin(); it != entities().end(); it++)
 		{
 			uint8 eid = (*it)->id();
 			if(eid==i)
@@ -245,9 +240,8 @@ void CEntityManager::login(CEntity *e)
 		// send all entities informations to the new client
 		{
 			self = false;
-			CEntities::CReadAccessor acces(entities());
-			nlinfo ("There's %d people", acces.value().size());
-			for(EntityConstIt it = acces.value().begin(); it != acces.value().end(); it++)
+			nlinfo ("There's %d people", entities().size());
+			for(EntityConstIt it = entities().begin(); it != entities().end(); it++)
 			{
 				if((*it) != e)
 				{
@@ -276,8 +270,7 @@ void CEntityManager::login(CEntity *e)
 CEntity *CEntityManager::getByName(const std::string &name)
 {
 	CEntity *res = NULL;
-	CEntities::CReadAccessor acces(entities());
-	for(EntityConstIt it = acces.value().begin(); it != acces.value().end(); it++)
+	for(EntityConstIt it = entities().begin(); it != entities().end(); it++)
 	{
 		if((*it)->name() == name)
 		{
@@ -330,8 +323,7 @@ CEntity *CEntityManager::getById(uint8 eid)
 	
 	{
 		EntityIt it;
-		CEntities::CWriteAccessor acces(entities());
-		for( it = acces.value().begin(); it != acces.value().end(); it++)
+		for( it = entities().begin(); it != entities().end(); it++)
 		{
 			if((*it)->id() == eid)
 			{
@@ -359,17 +351,18 @@ void CEntityManager::remove(uint8 eid)
 
 	{
 		EntityIt it;
-		CEntities::CWriteAccessor acces(entities());
-		for( it = acces.value().begin(); it != acces.value().end(); it++)
+		pauseAllThread();
+		for( it = entities().begin(); it != entities().end(); it++)
 		{
 			if((*it)->id() == eid)
 			{
 				// only unlink the client from the list
 				c = (*it);
-				acces.value().erase(it);
+				entities().erase(it);
 				break;
 			}
 		}
+		resumeAllThread();
 	}
 	
 	if(!c)
@@ -402,8 +395,7 @@ void CEntityManager::checkForcedClientCount()
 {
 	uint clientCount;
 	{
-		CEntities::CReadAccessor acces(entities());
-		clientCount = acces.value().size();
+		clientCount = entities().size();
 	}
 
 	if(clientCount < ForcedClientCount)
@@ -421,8 +413,7 @@ void CEntityManager::checkForcedClientCount()
 			botFound = false;
 			uint8 oldBotId = 0;
 			{
-				CEntities::CReadAccessor acces(entities());
-				for(EntityConstIt it = acces.value().begin(); it != acces.value().end(); it++)
+				for(EntityConstIt it = entities().begin(); it != entities().end(); it++)
 				{
 					if((*it)->type() == CEntity::Bot)
 					{
@@ -449,8 +440,7 @@ void CEntityManager::checkForcedClientCount()
 void CEntityManager::openClose(uint8 eid)
 {
 	bool found = false;
-	CEntities::CReadAccessor acces(entities());
-	for(EntityConstIt it = acces.value().begin(); it != acces.value().end(); it++)
+	for(EntityConstIt it = entities().begin(); it != entities().end(); it++)
 	{
 		if((*it)->id() == eid)
 		{
@@ -473,16 +463,14 @@ uint8 CEntityManager::nbEntities()
 {
 	uint8 nb;
 	{
-		CEntities::CReadAccessor acces(entities());
-		nb = acces.value().size();
+		nb = entities().size();
 	}
 	return nb;
 }
 
 bool CEntityManager::connected(const std::string &name)
 {
-	CEntities::CReadAccessor acces(entities());
-	for(EntityConstIt it = acces.value().begin(); it != acces.value().end(); it++)
+	for(EntityConstIt it = entities().begin(); it != entities().end(); it++)
 	{
 		if((*it)->name() == name)
 		{
@@ -568,9 +556,8 @@ NLMISC_COMMAND(displayEntities, "display info about all entities", "")
 {
 	if(args.size() != 0) return false;
 	
-	CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
-	log.displayNL("Displaying %d entities:", acces.value().size());
-	for(CEntityManager::EntityConstIt it = acces.value().begin(); it != acces.value().end(); it++)
+	log.displayNL("Displaying %d entities:", CEntityManager::instance().entities().size());
+	for(CEntityManager::EntityConstIt it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
 	{
 		(*it)->display(log);
 	}
@@ -603,8 +590,7 @@ NLMISC_DYNVARIABLE(uint32, NbEntities, "Number of entities (player+bot)")
 {
 	if(!get) return;
 	
-	CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
-	*pointer = acces.value().size();
+	*pointer = CEntityManager::instance().entities().size();
 }
 
 NLMISC_DYNVARIABLE(uint32, NbClients, "Number of players")
@@ -612,8 +598,7 @@ NLMISC_DYNVARIABLE(uint32, NbClients, "Number of players")
 	if(!get) return;
 
 	uint32 nb = 0;
-	CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
-	for(CEntityManager::EntityConstIt it = acces.value().begin(); it != acces.value().end(); it++)
+	for(CEntityManager::EntityConstIt it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
 	{
 		if((*it)->type() == CEntity::Client)
 		{
@@ -633,8 +618,7 @@ NLMISC_DYNVARIABLE(string, Watch1, "")
 	}
 
 	{
-		CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
-		for(CEntityManager::EntityConstIt it = acces.value().begin(); it != acces.value().end(); it++)
+		for(CEntityManager::EntityConstIt it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
 		{
 			if((*it)->id() == WatchingId)
 			{
@@ -666,8 +650,7 @@ NLMISC_DYNVARIABLE(string, Watch2, "")
 	}
 	
 	{
-		CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
-		for(CEntityManager::EntityConstIt it = acces.value().begin(); it != acces.value().end(); it++)
+		for(CEntityManager::EntityConstIt it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
 		{
 			if((*it)->id() == WatchingId)
 			{
@@ -702,8 +685,7 @@ NLMISC_DYNVARIABLE(string, Watch3, "")
 	}
 	
 	{
-		CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
-		for(CEntityManager::EntityConstIt it = acces.value().begin(); it != acces.value().end(); it++)
+		for(CEntityManager::EntityConstIt it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
 		{
 			if((*it)->id() == WatchingId)
 			{
@@ -728,8 +710,7 @@ NLMISC_DYNVARIABLE(string, Watch4, "")
 	}
 	
 	{
-		CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
-		for(CEntityManager::EntityConstIt it = acces.value().begin(); it != acces.value().end(); it++)
+		for(CEntityManager::EntityConstIt it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
 		{
 			if((*it)->id() == WatchingId)
 			{
@@ -756,8 +737,7 @@ NLMISC_DYNVARIABLE(string, Watch5, "")
 	}
 	
 	{
-		CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
-		for(CEntityManager::EntityConstIt it = acces.value().begin(); it != acces.value().end(); it++)
+		for(CEntityManager::EntityConstIt it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
 		{
 			if((*it)->id() == WatchingId)
 			{
@@ -778,11 +758,10 @@ NLMISC_DYNVARIABLE(string, Watch5, "")
 
 uint CEntityManager::humanClientCount()
 {
-	CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
 	CEntityManager::EntityConstIt it;
 	
 	uint res = 0;
-	for(it = acces.value().begin(); it != acces.value().end(); it++)
+	for(it = entities().begin(); it != entities().end(); it++)
 	{
 		if((*it)->type() == CEntity::Client)
 		{
@@ -830,10 +809,9 @@ void CEntityManager::flushAddRemoveList()
 
 bool CEntityManager::nameExist(std::string name)
 {
-	CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
 	CEntityManager::EntityConstIt it;
 
-	for(CEntityManager::EntityConstIt it = acces.value().begin(); it != acces.value().end(); it++)
+	for(CEntityManager::EntityConstIt it = entities().begin(); it != entities().end(); it++)
 	{
 		if((*it)->name() == name)
 		{
@@ -846,10 +824,9 @@ bool CEntityManager::nameExist(std::string name)
 
 void CEntityManager::saveAllValidReplay()
 {
-	CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
 	CEntityManager::EntityConstIt it;
 	// close all replay file
-	for(it = acces.value().begin(); it != acces.value().end(); it++)
+	for(it = entities().begin(); it != entities().end(); it++)
 	{
 		if((*it)->type() == CEntity::Client)
 		{
@@ -875,12 +852,11 @@ bool CEntityManager::everyBodyReady()
 	vector<uint8> IdToRemove;
 	vector<string> msgs;
 	{
-		CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
 		CEntityManager::EntityConstIt it;
 		
 		bool allReady = true;
 		// send the message to all entities
-		for(it = acces.value().begin(); it != acces.value().end(); it++)
+		for(it = entities().begin(); it != entities().end(); it++)
 		{
 			if((*it)->type()==CEntity::Client && (*it)->WaitingReady && !(*it)->Ready )
 			{
@@ -915,14 +891,13 @@ bool CEntityManager::everyBodyReady()
 }
 
 
-float slowerVelocity()
+float CEntityManager::slowerVelocity()
 {
 
 	float res = 1000;
-	CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
 	CEntityManager::EntityConstIt it;
 	
-	for(it = acces.value().begin(); it != acces.value().end(); it++)
+	for(it = entities().begin(); it != entities().end(); it++)
 	{
 		CEntity *c = *it;
 

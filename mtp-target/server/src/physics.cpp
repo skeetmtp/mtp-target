@@ -73,6 +73,9 @@ dGeomID			Water = 0;
 //list<CCollisionEntity> CollisionEntityList;
 //vector<CVector> StartPointList;
 
+CSynchronized<PauseFlags> physicPauseFlags("physicPauseFlags");
+void checkPhysicPaused();
+
 
 //
 //
@@ -430,32 +433,11 @@ static void nearCallback(void *data, dGeomID o1, dGeomID o2)
 }
 
 static float worldStep = 0.001f;
-class PauseFlags 
-{
-public:
-	PauseFlags()
-	{
-		pause = false;
-		ackPaused = false;		
-	}
-	bool pause;
-	bool ackPaused;
-};
-
-CSynchronized<PauseFlags> pauseFlags("pauseFlags");
 
 class PhysicsThread : public IRunnable
 {
 	void run()
 	{
-		/*
-		{
-			CSynchronized<PauseFlags>::CAccessor acces(&pauseFlags);
-			acces.value().pause = false;
-			acces.value().ackPaused = false;
-		}
-		*/
-		
 		static TTime lastTime = CTime::getLocalTime();
 		static float deltaTime = worldStep;
 		while(true)
@@ -472,13 +454,12 @@ class PhysicsThread : public IRunnable
 			}
 
 			{
-				CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
 				CEntityManager::EntityConstIt it;
 				for(int step=0;step<nbLoop;step++)
 				{
 					//_CrtCheckMemory();
 
-					for(it = acces.value().begin(); it != acces.value().end(); it++)
+					for(it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
 					{
 						CEntity *e = (*it);
 
@@ -586,7 +567,7 @@ class PhysicsThread : public IRunnable
 
 
 					// reset bad evaluation
-					for(it = acces.value().begin(); it != acces.value().end(); it++)
+					for(it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
 					{
 						const dReal *vel = dBodyGetLinearVel((*it)->Body);
 						if(fabs(vel[0])>1000.0 || fabs(vel[1])>1000.0 || fabs(vel[2])>1000.0)
@@ -613,35 +594,11 @@ class PhysicsThread : public IRunnable
 				}*/
 			}
 			nlSleep(10);
-			{
-			}
-			{
-				bool pause;
-				{
-					CSynchronized<PauseFlags>::CAccessor acces(&pauseFlags);
-					pause = acces.value().pause;
-					if(pause)
-						acces.value().ackPaused = true;
-				}
-				while (pause) 
-				{
-					nlSleep(10);
-					{
-						CSynchronized<PauseFlags>::CAccessor acces(&pauseFlags);
-						pause = acces.value().pause;
-						acces.value().ackPaused = true;
-					}
-				}
-			}
-			{
-				CSynchronized<PauseFlags>::CAccessor acces(&pauseFlags);
-				acces.value().ackPaused = false;
-			}
+			checkPhysicPaused();
 		}
 	}
 	
 };
-
 
 static PhysicsThread *physicThread = NULL;
 
@@ -786,43 +743,82 @@ NLMISC_COMMAND(displayLevel, "display the current level", "")
 */
 
 
-void pausePhysics()
+void checkPhysicPaused()
 {
-	//nlinfo(">> pausePhysics");
+	{
+		bool pause;
+		{
+			CSynchronized<PauseFlags>::CAccessor acces(&physicPauseFlags);
+			pause = acces.value().pauseCount>0;
+			if(pause)
+				acces.value().ackPaused = true;
+		}
+		while (pause) 
+		{
+			nlSleep(10);
+			{
+				CSynchronized<PauseFlags>::CAccessor acces(&physicPauseFlags);
+				pause = acces.value().pauseCount>0;
+				acces.value().ackPaused = true;
+			}
+		}
+	}
+	{
+		CSynchronized<PauseFlags>::CAccessor acces(&physicPauseFlags);
+		acces.value().ackPaused = false;
+	}	
+}
+
+bool pausePhysics(bool waitAck)
+{
+	/*
 	bool pause;
 	{
-		CSynchronized<PauseFlags>::CAccessor acces(&pauseFlags);
-		pause = acces.value().pause;
+		CSynchronized<PauseFlags>::CAccessor acces(&physicPauseFlags);
+		pause = acces.value().pauseCount>0;
 	}
 	if(!pause) 
+	*/
 	{
 		bool ackPaused;
 		{
-			CSynchronized<PauseFlags>::CAccessor acces(&pauseFlags);
+			CSynchronized<PauseFlags>::CAccessor acces(&physicPauseFlags);
 			ackPaused = false;
 			acces.value().ackPaused = false;
-			acces.value().pause = true;
+			acces.value().pauseCount++;
 		}
+		if(!waitAck) return true;
 		while(!ackPaused)
 		{
 			nlSleep(10);
 			{
-				CSynchronized<PauseFlags>::CAccessor acces(&pauseFlags);
+				CSynchronized<PauseFlags>::CAccessor acces(&physicPauseFlags);
 				ackPaused = acces.value().ackPaused;
 			}
 		}
 	}
-//	nlinfo("<< pausePhysics");
+	return true;
+}
+
+bool isPhysicsPaused()
+{
+	bool ackPaused;
+	{
+		CSynchronized<PauseFlags>::CAccessor acces(&physicPauseFlags);
+		ackPaused = acces.value().ackPaused;
+	}
+	return ackPaused;
 }
 
 void resumePhysics()
 {
-	//nlinfo(">> resumePhysics");
-	CSynchronized<PauseFlags>::CAccessor acces(&pauseFlags);
-	if(acces.value().pause) 
+	CSynchronized<PauseFlags>::CAccessor acces(&physicPauseFlags);
+	if(acces.value().pauseCount>0) 
 	{
-		acces.value().pause = false;
-		acces.value().ackPaused = false;
+		acces.value().pauseCount--;
+		nlassert(acces.value().pauseCount>=0);
+		if(acces.value().pauseCount==0)
+			acces.value().ackPaused = false;
 	}	
-//	nlinfo("<< resumePhysics");
 }
+

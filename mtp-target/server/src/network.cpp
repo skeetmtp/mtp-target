@@ -48,6 +48,8 @@
 using namespace std;
 using namespace NLMISC;
 
+CSynchronized<PauseFlags> networkPauseFlags("networkPauseFlags");
+void checkNetworkPaused();
 
 
 //
@@ -77,8 +79,7 @@ void CNetworkTask::run()
 		FD_SET(ListenSock.descriptor(), &readers);
 
 		{
-			CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
-			for(CEntityManager::EntityConstIt it = acces.value().begin(); it != acces.value().end(); it++)
+			for(CEntityManager::EntityConstIt it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
 			{
 				nlassert(*it);
 				if((*it)->type() != CEntity::Client)
@@ -95,7 +96,14 @@ void CNetworkTask::run()
 		tv.tv_sec = 3600;		// 1 hour
 		tv.tv_usec = 0;
 
+		{
+			CSynchronized<PauseFlags>::CAccessor acces(&networkPauseFlags);
+			acces.value().ackPaused = true;
+		}
+
 		int res = ::select(descmax+1, &readers, 0, 0, &tv);
+		
+		checkNetworkPaused();
 		
 		switch(res)
 		{
@@ -124,8 +132,7 @@ void CNetworkTask::run()
 		vector<uint8> IdToRemove;
 
 		{
-			CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
-			for(CEntityManager::EntityConstIt it = acces.value().begin(); it != acces.value().end(); it++)
+			for(CEntityManager::EntityConstIt it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
 			{
 				nlassert(*it);
 				CClient *c = (CClient *)(*it);
@@ -165,6 +172,7 @@ void CNetworkTask::run()
 		}
 		IdToRemove.clear();
 		fludhCommand();
+
 	}
 }
 
@@ -234,12 +242,11 @@ void CNetwork::update()
 	updateCount2++;
 
 	{
-		CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
 		{
 			TTime currentTime = CTime::getLocalTime();
 			unsigned int i;
 			CEntityManager::EntityConstIt it;
-			for(i=0,it = acces.value().begin(); it != acces.value().end(); it++,i++)
+			for(i=0,it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++,i++)
 			{
 				const dReal *pos = dBodyGetPosition((*it)->Body);
 				CVector npos;
@@ -270,7 +277,7 @@ void CNetwork::update()
 				
 				TTime currentTime = CTime::getLocalTime();
 				
-				for(CEntityManager::EntityConstIt it = acces.value().begin(); it != acces.value().end(); it++)
+				for(CEntityManager::EntityConstIt it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
 				{
 					const dReal *pos = dBodyGetPosition((*it)->Body);
 					
@@ -306,7 +313,7 @@ void CNetwork::update()
 				for(list<uint8>::iterator it1=CEntityManager::instance().IdUpdateList.begin();it1!=CEntityManager::instance().IdUpdateList.end();it1++)
 				{
 					uint8 eid = *it1;
-					for(CEntityManager::EntityConstIt it = acces.value().begin(); it != acces.value().end(); it++)
+					for(CEntityManager::EntityConstIt it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
 					{
 						if((*it)->id()==eid)
 						{
@@ -372,7 +379,7 @@ void CNetwork::update()
 			
 			TTime currentTime = CTime::getLocalTime();
 			
-			for(CEntityManager::EntityConstIt it = acces.value().begin(); it != acces.value().end(); it++)
+			for(CEntityManager::EntityConstIt it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
 			{
 				if((*it)->type() != CEntity::Bot)
 				{
@@ -438,8 +445,7 @@ void CNetwork::release()
 
 void CNetwork::send(uint8 eid, CNetMessage &msg, bool checkReady)
 {
-	CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
-	for(CEntityManager::EntityConstIt it = acces.value().begin(); it != acces.value().end(); it++)
+	for(CEntityManager::EntityConstIt it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
 	{
 		if((*it)->id() == eid)
 		{
@@ -457,8 +463,7 @@ void CNetwork::send(uint8 eid, CNetMessage &msg, bool checkReady)
 
 void CNetwork::send(CNetMessage &msg)
 {
-	CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
-	for(CEntityManager::EntityConstIt it = acces.value().begin(); it != acces.value().end(); it++)
+	for(CEntityManager::EntityConstIt it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
 	{
 		if((*it)->type() == CEntity::Client)
 		{
@@ -475,8 +480,7 @@ void CNetwork::send(CNetMessage &msg)
 
 void CNetwork::sendAllExcept(uint8 eid, CNetMessage &msg)
 {
-	CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
-	for(CEntityManager::EntityConstIt it = acces.value().begin(); it != acces.value().end(); it++)
+	for(CEntityManager::EntityConstIt it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
 	{
 		if((*it)->id() != eid && (*it)->type() == CEntity::Client)
 		{
@@ -498,6 +502,82 @@ void CNetwork::sendChat(const string &msg)
 	CNetwork::instance().send(msgout);
 }
 
-//
-// Commands
-//
+
+
+void checkNetworkPaused()
+{
+	{
+		bool pause;
+		{
+			CSynchronized<PauseFlags>::CAccessor acces(&networkPauseFlags);
+			pause = acces.value().pauseCount>0;
+			if(pause)
+				acces.value().ackPaused = true;
+		}
+		while (pause) 
+		{
+			nlSleep(10);
+			{
+				CSynchronized<PauseFlags>::CAccessor acces(&networkPauseFlags);
+				pause = acces.value().pauseCount>0;
+				if(pause)
+					acces.value().ackPaused = true;
+			}
+		}
+	}
+	{
+		CSynchronized<PauseFlags>::CAccessor acces(&networkPauseFlags);
+		acces.value().ackPaused = false;
+	}	
+}
+
+bool pauseNetwork(bool waitAck)
+{
+	bool pause;
+	{
+		CSynchronized<PauseFlags>::CAccessor acces(&networkPauseFlags);
+		pause = acces.value().pauseCount>0;
+	}
+	if(!pause) 
+	{
+		bool ackPaused;
+		{
+			CSynchronized<PauseFlags>::CAccessor acces(&networkPauseFlags);
+			ackPaused = false;
+			acces.value().pauseCount++;
+		}
+		if(!waitAck) return true;
+		while(!ackPaused)
+		{
+			nlSleep(10);
+			{
+				CSynchronized<PauseFlags>::CAccessor acces(&networkPauseFlags);
+				ackPaused = acces.value().ackPaused;
+			}
+		}
+	}
+	else
+		return false;
+	return true;
+}
+
+bool isNetworkPaused()
+{
+	bool ackPaused;
+	{
+		CSynchronized<PauseFlags>::CAccessor acces(&networkPauseFlags);
+		ackPaused = acces.value().ackPaused;
+	}
+	return ackPaused;
+}
+
+void resumeNetwork()
+{
+	CSynchronized<PauseFlags>::CAccessor acces(&networkPauseFlags);
+	if(acces.value().pauseCount>0) 
+	{
+		acces.value().pauseCount--;
+		nlassert(acces.value().pauseCount>=0);
+	}	
+}
+

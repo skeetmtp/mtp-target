@@ -68,7 +68,6 @@ using namespace NLNET;
 
 void CEntity::init ()
 {
-	pausePhysics();
 	Type = Unknown;
 	Id = 255;
 	CurrentScore = 0;
@@ -126,7 +125,6 @@ void CEntity::init ()
 	dGeomSetData(Geom, (void *)this);
 	
 	dGeomSetBody(Geom, Body);
-	resumePhysics();
 	luaProxy = NULL;
 }
 
@@ -159,7 +157,6 @@ void CEntity::_luaInit()
 
 CEntity::~CEntity()
 {
-	pausePhysics();
 	
 	if(luaProxy)
 		delete luaProxy;
@@ -178,7 +175,6 @@ CEntity::~CEntity()
 		dBodyDestroy(Body);
 		Body = 0;
 	}
-	resumePhysics();
 }
 
 bool CEntity::isAdmin() const
