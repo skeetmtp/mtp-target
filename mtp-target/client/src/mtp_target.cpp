@@ -546,10 +546,7 @@ void mtpTarget::init()
 
 	setReportEmailFunction ((void*)sendEmail);
 
-	if (Cookie.empty())
-		CMtpTarget::instance().State = CMtpTarget::eLoginPassword;
-	else
-		CMtpTarget::instance().State = CMtpTarget::eConnect;
+	CMtpTarget::instance().State = CMtpTarget::eLoginPassword;
 	
 	DisplayDebug = (CConfigFileTask::instance().configFile().getVar("DisplayDebug").asInt() == 1);
 

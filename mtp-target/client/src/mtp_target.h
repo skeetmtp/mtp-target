@@ -51,7 +51,7 @@ extern bool DisplayDebug;
 extern bool FollowEntity;
 extern CVector ControlerFreeLookPos;
 extern CMatrix ControlerCamMatrix;
-extern std::string Cookie, FSAddr, ReplayFile;
+extern std::string ReplayFile;
 
 
 //
@@ -72,7 +72,7 @@ public:
 	void error(std::string reason);
 	bool error();
 	
-	virtual std::string name() { return "CMtpTarget"; }
+	virtual std::string name() const { return "CMtpTarget"; }
 
 	CControler		&controler() const { nlassert(Controler); return *Controler; }
 

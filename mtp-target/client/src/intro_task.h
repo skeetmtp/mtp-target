@@ -57,7 +57,7 @@ public:
 	void updateConnectionOnLine();
 	void updateConnectionOnLan();
 	
-	virtual std::string name() { return "CIntroTask"; }
+	virtual std::string name() const { return "CIntroTask"; }
 		
 	void doConnectionOnLine(uint32 serverId);
 	void doConnectionOnLan();

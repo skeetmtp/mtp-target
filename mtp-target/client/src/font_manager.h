@@ -48,7 +48,7 @@ public:
 	virtual void render() { }
 	virtual void release();
 
-	virtual std::string name() { return "CFontManager"; }
+	virtual std::string name() const { return "CFontManager"; }
 
 	NL3D::UMaterial &material() { return Material; }
 

@@ -48,7 +48,7 @@ public:
 
 	virtual void reset();
 
-	virtual std::string name() { return "CTimeTask"; }
+	virtual std::string name() const { return "CTimeTask"; }
 	
 	// Current time in second
 	double		time() const { return Time; }

@@ -49,7 +49,7 @@ public:
 	virtual void render() { }
 	virtual void release();
 
-	virtual std::string name() { return "CLevelManager"; }
+	virtual std::string name() const { return "CLevelManager"; }
 	
 	void display(NLMISC::CLog *log = NLMISC::InfoLog) const;
 

@@ -45,7 +45,7 @@ public:
 	virtual void render() { }
 	virtual void release() { }
 
-	virtual std::string name() { return "CConfigFileTask"; }
+	virtual std::string name() const { return "CConfigFileTask"; }
 
 	NLMISC::CConfigFile &configFile() { nlassert(ConfigFile.loaded()); return ConfigFile; }
 

@@ -84,7 +84,7 @@ public:
 	virtual void release() { 	CEntityManager::uninstance();	}
 		
 	void renderNames();
-	virtual std::string name() { return "CEntityManager"; }
+	virtual std::string name() const { return "CEntityManager"; }
 
 	void	add(uint8 eid, const std::string &name, sint32 totalScore, NLMISC::CRGBA &color, const std::string &texture, bool spectator, bool isLocal);
 	void	remove(uint8 eid);

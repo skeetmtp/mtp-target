@@ -34,6 +34,7 @@
 
 #include <nel/net/tcp_sock.h>
 #include <nel/net/inet_address.h>
+#include <nel/net/login_cookie.h>
 
 #include "entity.h"
 #include "editable_element.h"
@@ -63,10 +64,10 @@ public:
 	virtual void render() { }
 	virtual void release();
 
-	virtual std::string name() { return "CNetworkTask"; }
+	virtual std::string name() const { return "CNetworkTask"; }
 	
 	// return an empty string if connected, the reason if failed
-	std::string connect(NLNET::CInetAddress *ip=0);
+	std::string connect(const NLNET::CInetAddress &ip, const NLNET::CLoginCookie &cookie);
 	
 	void send(CNetMessage &msg);
 
@@ -85,12 +86,10 @@ public:
 
 private:
 	
-	CNetworkRunnable		*NetworkRunnable;
-	NLMISC::IThread			*NetworkThread;
+	CNetworkRunnable	*NetworkRunnable;
+	NLMISC::IThread		*NetworkThread;
 	
 	NLNET::CTcpSock		 Sock;
-
-	std::string			 Login;
 
 	friend class CNetworkRunnable;
 };

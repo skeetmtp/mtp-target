@@ -52,7 +52,7 @@ public:
 
 	void updateListener(const NLMISC::CVector &position, const NLMISC::CVector &velocity, const NLMISC::CVector &atVector, const NLMISC::CVector &upVector);
 	
-	virtual std::string name() { return "CSoundManager"; }
+	virtual std::string name() const { return "CSoundManager"; }
 
 	class CEntitySoundsDescriptor
 	{

@@ -46,7 +46,7 @@ public:
 	virtual void render();
 	virtual void release() {}
 
-	virtual std::string name() { return "CSwap3DTask"; }
+	virtual std::string name() const { return "CSwap3DTask"; }
 
 private:
 

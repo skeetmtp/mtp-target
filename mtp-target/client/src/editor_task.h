@@ -46,7 +46,7 @@ public:
 	virtual void render();
 	virtual void release();
 
-	virtual std::string name() { return "CEditorTask"; }
+	virtual std::string name() const { return "CEditorTask"; }
 
 	void enable(bool e);
 	bool enable();

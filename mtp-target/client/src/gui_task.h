@@ -45,7 +45,7 @@ public:
 	virtual void render();
 	virtual void release();
 
-	virtual std::string name() { return "CGuiTask"; }
+	virtual std::string name() const { return "CGuiTask"; }
 	
 private:
 };

@@ -349,21 +349,8 @@ void CIntroTask::updateConnectionOnLine()
 	
 	CInetAddress ip;
 	CLoginCookie cookie;
-	string reason = CLoginClientMtp::connectToShard(ServerId,ip,cookie); // i = index dans le vector de server a parti de 0
-	if(reason.empty())
-	{
-		_autoLogin = 0;//autologin only once
-		stop();
-		// stop the background
-		CBackgroundTask::instance().stop();
-		// go to the game task
-		CTaskManager::instance().add(CGameTask::instance(), 60);
-		
-		CGuiObjectManager::instance().objects.clear();
-		State = eNone;
-		return;
-	}
-	else
+	string reason = CLoginClientMtp::connectToShard(ServerId,ip,cookie);
+	if(!reason.empty())
 	{
 		_autoLogin = 0;
 		error(reason);
@@ -372,21 +359,8 @@ void CIntroTask::updateConnectionOnLine()
 		return;
 	}
 
-	reason = CNetworkTask::instance().connect(&ip);
-	if(reason.empty())
-	{
-		_autoLogin = 0;//autologin only once
-		stop();
-		// stop the background
-		CBackgroundTask::instance().stop();
-		// go to the game task
-		CTaskManager::instance().add(CGameTask::instance(), 60);
-		
-		CGuiObjectManager::instance().objects.clear();
-		State = eNone;
-		return;		
-	}
-	else
+	reason = CNetworkTask::instance().connect(ip, cookie);
+	if(!reason.empty())
 	{
 		_autoLogin = 0;
 		error(reason);
@@ -394,6 +368,16 @@ void CIntroTask::updateConnectionOnLine()
 		State = eLoginOnline;
 		return;
 	}
+
+	_autoLogin = 0;//autologin only once
+	stop();
+	// stop the background
+	CBackgroundTask::instance().stop();
+	// go to the game task
+	CTaskManager::instance().add(CGameTask::instance(), 60);
+	
+	CGuiObjectManager::instance().objects.clear();
+	State = eNone;
 }
 
 
@@ -403,7 +387,7 @@ void CIntroTask::updateConnectionOnLan()
 	
 	CGuiObjectManager::instance().objects.clear();
 	
-	string res = CNetworkTask::instance().connect();
+	string res = CNetworkTask::instance().connect(CInetAddress(CConfigFileTask::instance().configFile().getVar("ServerHost").asString()+":"+toString(CConfigFileTask::instance().configFile().getVar("TcpPort").asInt())), CLoginCookie());
 	if(res.empty())
 	{
 		_autoLogin = 0;//autologin only once

@@ -58,7 +58,7 @@ public:
 	virtual void render();
 	virtual void release();
 
-	virtual std::string name() { return "CSkyTask"; }
+	virtual std::string name() const { return "CSkyTask"; }
 
 	void shapeName(std::string shapeName);
 	std::string shapeName();

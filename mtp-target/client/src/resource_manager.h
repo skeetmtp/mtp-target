@@ -51,7 +51,7 @@ public:
 	virtual void render() { };
 	virtual void release() { };
 	
-	virtual std::string name() { return "CResourceManager"; }
+	virtual std::string name() const { return "CResourceManager"; }
 	
 	// return empty string it a problem occurs or the full path of the file
 	std::string get(const std::string &filename);

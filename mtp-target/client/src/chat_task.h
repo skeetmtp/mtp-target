@@ -45,7 +45,7 @@ public:
 	virtual void render();
 	virtual void release();
 
-	virtual std::string name() { return "CChatTask"; }
+	virtual std::string name() const { return "CChatTask"; }
 
 	void	addLine(const std::string &text);
 		

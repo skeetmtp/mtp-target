@@ -74,7 +74,7 @@ public:
 	virtual void render();
 	virtual void release();
 
-	virtual std::string name() { return "CHudTask"; }
+	virtual std::string name() const { return "CHudTask"; }
 
 	void setDisplayViewedName(const std::string &name);
 	void CHudTask::addMessage(const CHudMessage &message);

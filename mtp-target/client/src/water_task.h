@@ -59,7 +59,7 @@ public:
 	virtual void render();
 	virtual void release();
 
-	virtual std::string name() { return "CWaterTask"; }
+	virtual std::string name() const { return "CWaterTask"; }
 
 	void envMap0Name(const std::string &envMapName);
 	void envMap1Name(const std::string &envMapName);

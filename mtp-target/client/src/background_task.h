@@ -45,7 +45,7 @@ public:
 	virtual void render();
 	virtual void release();
 
-	virtual std::string name() { return "CBackgroundTask"; }
+	virtual std::string name() const { return "CBackgroundTask"; }
 	
 private:
 

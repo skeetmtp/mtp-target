@@ -57,7 +57,7 @@ using namespace NLMISC;
 
 bool DisplayDebug = false;
 bool FollowEntity = false;
-string Cookie, FSAddr, ReplayFile;
+string ReplayFile;
 
 uint TaskManagerThreadId = 0;
 uint NetworkThreadId = 0;
@@ -65,7 +65,7 @@ uint NetworkThreadId = 0;
 
 #ifdef NL_OS_WINDOWS
 
-int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 
 	ghInstance = hInstance;
@@ -73,8 +73,6 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 
 	nlinfo ("args: '%s'", lpCmdLine);
 
-	// extract the 2 first param (argv[1] and argv[2]) it must be cookie and addr or a replay file
-	
 	string cmd = lpCmdLine;
 
 	if (cmd.find ("\"") != string::npos)
@@ -84,34 +82,7 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	}
 	else
 	{
-		int pos1 = cmd.find_first_not_of (' ');
-		int pos2;
-		if (pos1 != string::npos)
-		{
-			pos2 = cmd.find (' ', pos1);
-			if(pos2 != string::npos)
-			{
-				Cookie = cmd.substr (pos1, pos2-pos1);
-				
-				pos1 = cmd.find_first_not_of (' ', pos2);
-				if (pos1 != string::npos)
-				{
-					pos2 = cmd.find (' ', pos1);
-					if(pos2 == string::npos)
-					{
-						FSAddr = cmd.substr (pos1);
-					}
-					else if (pos1 != pos2)
-					{
-						FSAddr = cmd.substr (pos1, pos2-pos1);
-					}
-				}
-			}
-			else
-			{
-				ReplayFile = cmd;
-			}
-		}
+		ReplayFile = cmd;
 	}
 
 	if(!IsDebuggerPresent() && !ReplayFile.empty())
@@ -143,11 +114,6 @@ int main(int argc, char **argv)
 	if (argc == 2)
 	{
 		ReplayFile = argv[1];
-	}
-	else if (argc == 3)
-	{
-		Cookie = argv[1];
-		FSAddr = argv[2];
 	}
 
 #endif

@@ -47,7 +47,7 @@ public:
 
 	virtual void stop();
 	
-	virtual std::string name() { return "CGameTask"; }
+	virtual std::string name() const { return "CGameTask"; }
 	
 private:
 

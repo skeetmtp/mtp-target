@@ -45,7 +45,7 @@ public:
 	virtual void render();
 	virtual void release();
 
-	virtual std::string name() { return "CLensFlareTask"; }
+	virtual std::string name() const { return "CLensFlareTask"; }
 
 	friend class CSingleton<CLensFlareTask>;
 protected:

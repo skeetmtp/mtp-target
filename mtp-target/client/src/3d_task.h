@@ -50,7 +50,7 @@ public:
 	virtual void render();
 	virtual void release();
 
-	virtual std::string name() { return "C3DTask"; }
+	virtual std::string name() const { return "C3DTask"; }
 	
 	NL3D::UDriver		&driver() const { nlassert(Driver); return *Driver; }
 
