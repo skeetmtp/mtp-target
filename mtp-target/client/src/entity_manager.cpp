@@ -278,8 +278,10 @@ void CEntityManager::load3d()
 {
 	for(uint i = 0; i < 256; i++)
 	{
-		if(entities()[i]->type() != CEntity::Unknown && !entities()[i]->spectator())
-			entities()[i]->load3d();
+		//skeet
+		//if(entities()[i]->type() != CEntity::Unknown && !entities()[i]->spectator())
+		if(entities()[i]->type() != CEntity::Unknown)
+				entities()[i]->load3d();
 	}
 }
 
