@@ -25,6 +25,12 @@ else
 	$requete = sprintf("UPDATE user SET Login='%s' WHERE UId=%d;",$user_newname_login,$uid);
 	$result=exec_game_db_requete($requete);
 
+	$requete = sprintf("UPDATE game_user SET Login='%s' WHERE UId=%d;",$user_newname_login,$uid);
+	$result=exec_requete($requete);
+
+	@unlink($cache_dir."/user_welcome_en_".$uid.".html");
+	@unlink($cache_dir."/user_welcome_fr_".$uid.".html");
+
 	printf("%s successfully rennamed to %s<br>",$user_login,$user_newname_login);
 	
 }
