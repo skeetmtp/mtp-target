@@ -25,3 +25,90 @@
 #include "stdpch.h"
 
 #include "gui_script.h"
+#include "3d_task.h"
+#include "time_task.h"
+#include "resource_manager2.h"
+#include "gui_bitmap.h"
+#include "gui_stretched_quad.h"
+#include "gui_text.h"
+#include "gui_xml.h"
+
+#include <nel/3d/u_material.h>
+
+//
+// Namespaces
+//
+
+using namespace std;
+using namespace NL3D;
+using namespace NLMISC;
+
+
+//
+// Variables
+//
+
+
+//
+// Functions
+//
+	
+
+void CGuiScriptManager::init()
+{
+	CGuiScript::XmlRegister();	
+}
+
+
+void CGuiScriptManager::render()
+{
+	
+	
+}
+
+void CGuiScriptManager::release()
+{
+	
+}
+
+
+//
+//
+//
+CGuiScript::CGuiScript()
+{
+}
+
+CGuiScript::~CGuiScript()
+{
+	
+}
+
+void CGuiScript::load(lua_State *luaState,const std::string &filename)
+{
+	luaLoad(luaState,filename);
+}
+
+
+void CGuiScript::XmlRegister()
+{
+	CGuiObjectManager::instance().registerClass("CGuiBitmap",CGuiBitmap::Create);
+}
+
+CGuiObject *CGuiScript::Create()
+{
+	CGuiObject *res = new CGuiScript;
+	
+	return res;	
+}
+
+void CGuiScript::init(CGuiXml *xml,xmlNodePtr node)
+{
+	CGuiObject::init(xml,node);
+	string filename;
+	bool isok;
+
+	isok = xml->getString(node,"filename",filename);
+	nlassert(isok);
+	load(xml->LuaState,filename);
+}

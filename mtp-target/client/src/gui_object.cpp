@@ -88,7 +88,7 @@ NLMISC::CVector CVectorMax(const NLMISC::CVector &a, const NLMISC::CVector &b)
 
 void CGuiObjectManager::init()
 {
-	//CGuiScriptManager::instance().init();
+	CGuiScriptManager::instance().init();
 	CGuiListViewManager::instance().init();
 	CGuiButtonManager::instance().init();
 	CGuiSpacerManager::instance().init();
