@@ -34,6 +34,7 @@
 #include "entity_manager.h"
 #include "level_manager.h"
 #include "resource_manager.h"
+#include "../../common/custom_floating_point.h"
 
 
 //
@@ -141,7 +142,7 @@ static void cbOpenClose(CNetMessage &msgin)
 	//CEntity *entity = mtpTarget::instance().World.getEntityById(id);
 	//nlassert(entity);
 	CEntityManager::instance()[eid].swapOpenClose();
-	nlinfo("%d open/close",eid);
+	//nlinfo("%d open/close",eid);
 	//if(eid == mtpTarget::instance().Controler->getControledEntity())
 	//	mtpTarget::instance().Controler->swapOpenClose();
 	
@@ -150,54 +151,6 @@ static void cbOpenClose(CNetMessage &msgin)
 }
 
 
-
-static float convert8_8fp(sint rsx,uint rdx)
-{
-	float mx = 1;
-	bool dxisneg = false;
-	sint8 dx;
-	sint8 sx = rsx - 31;
-
-	nlassert(fabs(sx)<32);
-	
-	if(sx==0)
-		return 0;
-	dxisneg = sx&1 != 0;
-	sx = sx / 2;
-	if(sx>0)
-		sx--;
-	dx = rdx;
-	dx += 16;
-	if(dxisneg)
-		dx = -dx;
-	if(sx>0)
-	{
-		while(sx>0)
-		{
-			mx/=2;
-			sx--;
-		}
-	}
-	else if(sx<0)
-	{
-		while(sx<0)
-		{
-			mx*=2;
-			sx++;
-		}
-	}
-	return dx * mx;
-}
-
-static float serial8_8fp(CNetMessage &msgin)
-{
-	sint8 sx;
-	uint8 rdx;
-	msgin.serial(sx);
-	msgin.serial(rdx);
-
-	return convert8_8fp(sx,rdx);
-}
 
 
 static void cbUpdate(CNetMessage &msgin)
@@ -222,10 +175,45 @@ static void cbUpdate(CNetMessage &msgin)
 	{
 		eid = *it;
 		float deltaCoef = 100;
-		//msgin.serial(eid);
-		dpos.x = serial8_8fp(msgin);
-		dpos.y = serial8_8fp(msgin);
-		dpos.z = serial8_8fp(msgin);
+
+		/*
+		uint8 dxx,sxx;
+		msgin.serial(sxx,dxx);
+		dpos.x = convert8_8fp(sxx,dxx);
+		uint8 dxy,sxy;
+		msgin.serial(sxy,dxy);
+		dpos.y = convert8_8fp(sxy,dxy);
+		uint8 dxz,sxz;
+		msgin.serial(sxz,dxz);
+		dpos.z = convert8_8fp(sxz,dxz);
+		*/
+
+		uint32 bits;
+		msgin.serial(bits);
+		packBit32 pb32(bits);
+		uint32 ndx,nsx;
+		pb32.unpackBits(nsx,6);
+		pb32.unpackBits(ndx,4);//z
+		//		nlinfo(">>>>z dx/ndx = %d/%d ",dxz,ndx);
+		//		nlinfo(">>>>z sx/nsx = %d/%d ",sxz,nsx);
+		//nlassert(dxz==ndx);
+		//nlassert(sxz==nsx);
+		dpos.z = convert8_8fp(nsx,ndx);
+		pb32.unpackBits(nsx,6);
+		pb32.unpackBits(ndx,4);//y
+		//		nlinfo(">>>>y dx/ndx = %d/%d ",dxy,ndx);
+		//		nlinfo(">>>>y sx/nsx = %d/%d ",sxy,nsx);
+		//nlassert(dxy==ndx);
+		//nlassert(sxy==nsx);
+		dpos.y = convert8_8fp(nsx,ndx);
+		pb32.unpackBits(nsx,6);
+		pb32.unpackBits(ndx,4);//x
+		//		nlinfo(">>>>x dx/ndx = %d/%d ",dxx,ndx);
+		//		nlinfo(">>>>x sx/nsx = %d/%d ",sxx,nsx);
+		//nlassert(dxx==ndx);
+		//nlassert(sxx==nsx);
+		dpos.x = convert8_8fp(nsx,ndx);
+		
 		pos = CEntityManager::instance()[eid].LastSent2OthersPos + dpos;
 		CEntityManager::instance()[eid].LastSent2OthersPos = pos;
 		CEntityManager::instance()[eid].LastSent2MePos = pos;
@@ -265,9 +253,47 @@ static void cbUpdateOne(CNetMessage &msgin)
 		float deltaCoef = 100;
 		//msgin.serial(eid);
 		eid = CMtpTarget::instance().controler().getControledEntity();
-		dpos.x = serial8_8fp(msgin);
-		dpos.y = serial8_8fp(msgin);
-		dpos.z = serial8_8fp(msgin);
+		/*
+		uint8 dxx,sxx;
+		msgin.serial(sxx,dxx);
+		dpos.x = convert8_8fp(sxx,dxx);
+		uint8 dxy,sxy;
+		msgin.serial(sxy,dxy);
+		dpos.y = convert8_8fp(sxy,dxy);
+		uint8 dxz,sxz;
+		msgin.serial(sxz,dxz);
+		dpos.z = convert8_8fp(sxz,dxz);
+		*/
+
+		uint32 bits;
+		msgin.serial(bits);
+		packBit32 pb32(bits);
+		uint32 ndx,nsx;
+		pb32.unpackBits(nsx,6);
+		pb32.unpackBits(ndx,4);//z
+		//		nlinfo(">>>>z dx/ndx = %d/%d ",dxz,ndx);
+		//		nlinfo(">>>>z sx/nsx = %d/%d ",sxz,nsx);
+		//nlassert(dxz==ndx);
+		//nlassert(sxz==nsx);
+		dpos.z = convert8_8fp(nsx,ndx);
+		pb32.unpackBits(nsx,6);
+		pb32.unpackBits(ndx,4);//y
+		//		nlinfo(">>>>y dx/ndx = %d/%d ",dxy,ndx);
+		//		nlinfo(">>>>y sx/nsx = %d/%d ",sxy,nsx);
+		//nlassert(dxy==ndx);
+		//nlassert(sxy==nsx);
+		dpos.y = convert8_8fp(nsx,ndx);
+		pb32.unpackBits(nsx,6);
+		pb32.unpackBits(ndx,4);//x
+		//		nlinfo(">>>>x dx/ndx = %d/%d ",dxx,ndx);
+		//		nlinfo(">>>>x sx/nsx = %d/%d ",sxx,nsx);
+		//nlassert(dxx==ndx);
+		//nlassert(sxx==nsx);
+		dpos.x = convert8_8fp(nsx,ndx);
+		
+		//nlinfo(">>>>dx =  %f ",dpos.x - mdx);
+		
+		
 		pos = CEntityManager::instance()[eid].LastSent2MePos + dpos;
 		CEntityManager::instance()[eid].LastSent2MePos = pos;
 		if(DisplayDebug)

@@ -38,6 +38,7 @@
 #include "entity_manager.h"
 #include "../../common/constant.h"
 #include "../../common/net_message.h"
+#include "../../common/custom_floating_point.h"
 
 
 //
@@ -208,134 +209,6 @@ void CNetwork::reset()
 	updateCount = 0;	
 }
 
-static float convert8_8fp(sint rsx,uint rdx)
-{
-	float mx = 1;
-	bool dxisneg = false;
-	sint8 dx;
-	sint8 sx = rsx - 31;
-	
-	nlassert(fabs(sx)<32);
-
-	if(sx==0)
-		return 0;
-	dxisneg = sx&1 != 0;
-	sx = sx / 2;
-	if(sx>0)
-		sx--;
-	dx = rdx;
-	dx += 16;
-	if(dxisneg)
-		dx = -dx;
-	if(sx>0)
-	{
-		while(sx>0)
-		{
-			mx/=2;
-			sx--;
-		}
-	}
-	else if(sx<0)
-	{
-		while(sx<0)
-		{
-			mx*=2;
-			sx++;
-		}
-	}
-	return dx * mx;
-}
-
-class packBit32
-{
-public:
-	packBit32()
-	{
-		currentAccess = 0;
-		this->bits = 0;
-	}
-	packBit32(uint32 bits)
-	{
-		this->bits = bits;
-		currentAccess = 32;
-	}
-	
-	void packBits(uint32 newBits,uint32 count)
-	{
-		currentAccess += count;
-		nlassert(currentAccess<=32);
-		bits = bits<<count;
-		bits = bits | newBits;
-	}
-	
-	void unpackBits(uint32 count,uint32 &res)
-	{
-		currentAccess -= count;
-		nlassert(currentAccess>=0);
-		uint32 mask = 0xffffffff;
-		mask = mask<<count;
-		res = bits & (~mask);
-		bits = bits >> count;
-	}
-	
-	uint32 bits;
-	sint32 currentAccess;
-protected:
-private:
-};
-
-#define F88_MAX_VALUE 32
-static sint8 computeMantis8_8(float x,float &mx,uint8 &dx)
-{
-
-	if(x==0.0f)
-	{
-		mx = 0;
-		dx = 0;
-		return 31;
-	}
-	float ax = (float)fabs(x);
-	sint8 sx = 0;
-	mx = 1;
-	if(ax>(F88_MAX_VALUE))
-	{
-		while(ax*mx>(F88_MAX_VALUE) && sx>-14)
-		{
-			sx--;
-			mx /= 2;
-		}
-	}
-	else
-	{
-		while(ax*mx<(F88_MAX_VALUE) && sx<14)
-		{
-			sx++;
-			mx *= 2;
-		}
-		mx /= 2;
-	}
-	int sdx = (int)(x * mx);
-	sx = sx * 2;
-	if(sdx<0)
-		sx|=1;
-	dx = abs(sdx);
-	dx -= F88_MAX_VALUE/2;
-	nlassert(fabs(sx)<32);
-	return sx+31;	
-}
-
-static float serial8_8fp(CNetMessage &msgout,float x,uint8 &rdx,sint8 &rsx)
-{
-	float mx;
-	uint8 dx;
-	sint8 sx = computeMantis8_8(x,mx,dx);
-	//sint8 dx = (sint8)(x*mx);
-	msgout.serial(sx);
-	msgout.serial(dx);
-	rsx = sx;
-	rdx = dx;
-	return convert8_8fp(rsx,rdx);
-}
 
 static FILE *fp = NULL;
 static int rpos;
@@ -351,7 +224,35 @@ void CNetwork::update()
 	}
 	updateCount2++;
 
-	if((updateCount%MT_NETWORK_FULL_UPDATE_PERIODE)==0)
+	{
+		CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
+		
+		TTime currentTime = CTime::getLocalTime();
+		
+		for(CEntityManager::EntityConstIt it = acces.value().begin(); it != acces.value().end(); it++)
+		{
+			const dReal *pos = dBodyGetPosition((*it)->Body);
+			CVector npos;
+			
+			npos.x = (float)pos[0];
+			npos.y = (float)pos[1]; 
+			npos.z = (float)pos[2];
+			
+			uint8 eid = (*it)->id();
+			uint16 ping = (*it)->Ping.getSmoothValue();
+			//msgout.serial(eid);
+			
+			CVector dpos = npos - (*it)->LastSent2OthersPos;
+			if(dpos.norm()>100)
+			{
+				updateCount=0;
+				break;
+			}
+		}
+	}
+	
+//	if((updateCount%MT_NETWORK_FULL_UPDATE_PERIODE)==0)
+	if(updateCount==0)
 	{
 		CNetMessage msgout(CNetMessage::FullUpdate);
 		
@@ -408,14 +309,26 @@ void CNetwork::update()
 
 				CVector dpos = (*it)->Pos - (*it)->LastSent2OthersPos;
 				
-				sint8 sx;
+				uint8 sx;
 				uint8 dx;
 				CVector sendDPos;
+				packBit32 pb32;
 
-				sendDPos.x = serial8_8fp(msgout,dpos.x,dx,sx);
+				sendDPos.x = computeOut8_8fp(dpos.x,dx,sx);
+				pb32.packBits(dx,4);
+				pb32.packBits(sx,6);
+				sendDPos.y = computeOut8_8fp(dpos.y,dx,sx);
+				pb32.packBits(dx,4);
+				pb32.packBits(sx,6);
+				sendDPos.z = computeOut8_8fp(dpos.z,dx,sx);
+				pb32.packBits(dx,4);
+				pb32.packBits(sx,6);
+
+				msgout.serial(pb32.bits);
+
 				/*
-				if((*it)->id()==rpos && dpos.x!=0)
-				//if(dpos.x!=0)
+				if((*it)->id()==rpos && dpos.z!=0)
+				//if(dpos.z!=0)
 				{
 					sint8 dsx = sx;// - (*it)->LastSentSX;
 					//fwrite(&dx,1,1,fp);
@@ -424,8 +337,6 @@ void CNetwork::update()
 					(*it)->LastSentSX = sx;
 				}
 				*/
-				sendDPos.y = serial8_8fp(msgout,dpos.y,dx,sx);
-				sendDPos.z = serial8_8fp(msgout,dpos.z,dx,sx);
 				
 				
 				if((*it)->type() != CEntity::Bot)
@@ -464,13 +375,22 @@ void CNetwork::update()
 				
 				CVector dpos = (*it)->Pos - (*it)->LastSent2MePos;
 				
-				sint8 sx;
+				uint8 sx;
 				uint8 dx;
+				packBit32 pb32;
 				CVector sendDPos;
 
-				sendDPos.x = serial8_8fp(msgout,dpos.x,dx,sx);
-				sendDPos.y = serial8_8fp(msgout,dpos.y,dx,sx);
-				sendDPos.z = serial8_8fp(msgout,dpos.z,dx,sx);
+				sendDPos.x = computeOut8_8fp(dpos.x,dx,sx);
+				pb32.packBits(dx,4);
+				pb32.packBits(sx,6);
+				sendDPos.y = computeOut8_8fp(dpos.y,dx,sx);
+				pb32.packBits(dx,4);
+				pb32.packBits(sx,6);
+				sendDPos.z = computeOut8_8fp(dpos.z,dx,sx);
+				pb32.packBits(dx,4);
+				pb32.packBits(sx,6);
+
+				msgout.serial(pb32.bits);
 				
 				CVector newPos = (*it)->LastSent2MePos + sendDPos; 
 				

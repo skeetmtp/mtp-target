@@ -170,6 +170,14 @@ SOURCE=.\Src\entity_manager.h
 # PROP Default_Filter ""
 # Begin Source File
 
+SOURCE=..\common\custom_floating_point.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\common\custom_floating_point.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\Src\net_callbacks.cpp
 # End Source File
 # Begin Source File

@@ -184,7 +184,8 @@ void CInterpolator::update()
 	if(_outOfKeyCount<0)
 		_outOfKeyCount=0;
 //	nlinfo("outofkeycount = %d ; keysize = %d",_outOfKeyCount,_keys.size());
-	_autoAdjustLct();
+	if(_entity->id()==CMtpTarget::instance().controler().getControledEntity())
+		_autoAdjustLct();
 
 	_localTime = CTimeTask::instance().time() - _startTime;
 	_deltaTime = _localTime - _lastUpdateTime;
@@ -243,8 +244,10 @@ CVector CInterpolator::_speed(double time)
 {
 	deque<CEntityInterpolatorKey>::reverse_iterator it;
 	it = _keys.rbegin();
+	if(it==_keys.rend()) return(CVector::Null);
 	CEntityInterpolatorKey key2 = *it;
 	it++;
+	if(it==_keys.rend()) return(CVector::Null);
 	CEntityInterpolatorKey key1 = *it;
 	return (key2.value().position - key1.value().position) / (float)_dt;
 }
@@ -253,8 +256,10 @@ CVector CInterpolator::_direction(double time)
 {
 	deque<CEntityInterpolatorKey>::reverse_iterator it;
 	it = _keys.rbegin();
+	if(it==_keys.rend()) return(CVector::Null);
 	CEntityInterpolatorKey key2 = *it;
 	it++;
+	if(it==_keys.rend()) return(CVector::Null);
 	CEntityInterpolatorKey key1 = *it;
 	return (key2.value().position - key1.value().position);
 }

@@ -324,9 +324,9 @@ void CControler::update()
 	float dt = (float)CTimeTask::instance().deltaTime();
 
 	VirtualFrameTime += (float)CTimeTask::instance().deltaTime();
-	Accel     += deltaAccel * ( (dt + MissedTime) / NetVirtualFrameDuration );
-	Pique     += deltaPique * ( (dt + MissedTime) / NetVirtualFrameDuration ); 
-	RotZ      += deltaRot   * ( (dt + MissedTime) / NetVirtualFrameDuration );
+	Accel     += 10.0f * deltaAccel * ( (dt + MissedTime) );
+	Pique     += 10.0f * deltaPique * ( (dt + MissedTime) ); 
+	RotZ      += 10.0f * deltaRot   * ( (dt + MissedTime) );
 	MissedTime = 0.0f;
 
 //	nlinfo ("pik %f", Pique);
