@@ -50,14 +50,34 @@ CSynchronized<PauseFlags> taskManagerPauseFlags("taskManagerPauseFlags");
 // Functions
 //
 
+void CTaskManager::switchBench()
+{
+	Benching = !Benching;
+	if(Benching) nlinfo("Starting benchmark...");
+	else
+	{
+		nlinfo("End of benchmark");
+		CHTimer::display();
+		CHTimer::displayHierarchicalByExecutionPathSorted(InfoLog, CHTimer::TotalTime, true, 64);
+	}		
+}
+
 void CTaskManager::execute()
 {
-	CHTimer::startBench();
-
 	Exit = false;
+	Benching = false;
+
+	//
+	// Init the hierarchical timer
+	//
+
+	CHTimer::startBench();
+	CHTimer::endBench();
 
 	while(!Exit)
 	{
+		if(Benching) CHTimer::startBench(false, false, false);
+		
 //		nlinfo("***** new frame, update");
 		for(list<ITask*>::iterator it = OrderSortedTasks.begin(); it != OrderSortedTasks.end(); it++)
 		{
@@ -99,6 +119,8 @@ void CTaskManager::execute()
 		}
 		checkTaskManagerPaused();
 		CEntityManager::instance().flushAddRemoveList();
+
+		CHTimer::endBench();
 	}
 
 	for(std::list<ITask*>::reverse_iterator it = Tasks.rbegin(); it != Tasks.rend(); it++)
@@ -106,8 +128,6 @@ void CTaskManager::execute()
 //		nlinfo("Release %s", (*it)->name().c_str());
 		(*it)->release();
 	}
-
-	CHTimer::endBench();
 }
 
 void CTaskManager::remove(ITask &task)

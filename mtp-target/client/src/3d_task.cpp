@@ -217,8 +217,7 @@ void C3DTask::init()
 		}
 	}
 	*/
-
-
+	
 #ifdef NL_OS_WINDOWS
 	HWND hWnd = (HWND )Driver->getDisplay();
 	SetWindowText(hWnd,"Mtp Target");
@@ -235,8 +234,7 @@ void C3DTask::update()
 
 	if(C3DTask::instance().kbPressed(KeyF1))
 	{
-		CHTimer::display();
-		CHTimer::displayHierarchicalByExecutionPathSorted(InfoLog, CHTimer::TotalTime, true, 64);
+		CTaskManager::instance().switchBench();
 	}
 }
 

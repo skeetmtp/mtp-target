@@ -54,6 +54,9 @@ public:
 	// call this function if you want to exit the game
 	void exit();
 
+	// call this to enable/disable the benchmark
+	void switchBench();
+
 	CTaskManager();
 
 private:
@@ -62,6 +65,8 @@ private:
 	std::list<ITask*>	OrderSortedTasks;
 
 	bool Exit;
+
+	bool Benching;
 
 	friend struct displayTasksClass;
 };
