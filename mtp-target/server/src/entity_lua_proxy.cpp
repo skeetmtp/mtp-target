@@ -26,6 +26,7 @@
 #include "network.h"
 #include "lua_engine.h"
 #include "level_manager.h"
+#include "session_manager.h"
 #include "entity_lua_proxy.h"
 
 
@@ -73,6 +74,7 @@ Lunar<CEntityProxy>::RegType CEntityProxy::methods[] =
 		bind_method(CEntityProxy, setDefaultFriction),	
 		bind_method(CEntityProxy, getDefaultFriction),	
 		bind_method(CEntityProxy, setFreezCommand),	
+		bind_method(CEntityProxy, setArrivalTime),	
 	{0,0}
 };
 
@@ -325,4 +327,11 @@ int CEntityProxy::getDefaultFriction(lua_State *luaSession)
 	lua_Number dfric = _entity->DefaultFriction;
 	lua_pushnumber(luaSession, dfric); 
 	return 1;	
+}
+
+int CEntityProxy::setArrivalTime(lua_State *luaSession)
+{
+	TTime currentTime = CTime::getLocalTime();
+	_entity->ArrivalTime =(float)(currentTime - CSessionManager::instance().startTime())/1000.0f;
+	return 0;	
 }

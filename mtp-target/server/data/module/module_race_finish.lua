@@ -20,6 +20,7 @@ function CModuleFinish:onCollide( entity )
     entity:displayText(0,6,1,255,255,0,entity:getCurrentScore(),3);
     entity:parent().team = 2;
     entity:setOpenCloseCount(2);
+    entity:setArrivalTime();
     --entity:setFreezCommand(1);
   end
 end
