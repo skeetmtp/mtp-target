@@ -107,6 +107,9 @@ public:
 	std::set<CEntity *> collideEntity;
 	bool                collideWater;
 	bool                callOpenCloseLua;
+
+	void voteMap(const std::string &voteMap);
+	std::string voteMap();
 public:
 
 	// ugly public variables
@@ -163,6 +166,7 @@ public:
 	bool				 EnableCrashInFly;
 	bool				 ForceReceived;
 	uint32				 AfkCount;
+	std::string			 VoteMap;
 	
 	// store all ping for
 	std::vector<std::pair<NLMISC::TTime, uint32> >	StatPing;

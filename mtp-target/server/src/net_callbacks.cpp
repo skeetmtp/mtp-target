@@ -75,12 +75,21 @@ static void cbCommand(CClient *c, CNetMessage &msgin)
 			CNetwork::instance().sendChat(c->id(),string("/reparsePath"));
 			CNetwork::instance().sendChat(c->id(),string("/kick nick"));
 			CNetwork::instance().sendChat(c->id(),string("/forceEnd (CTRL+F5): force end of session (safe)"));
-			CNetwork::instance().sendChat(c->id(),string("/votemap mapname : try to start this map for next level"));
+			CNetwork::instance().sendChat(c->id(),string("/forceMap mapname : try to force this map for next level"));
+		}
+		else
+		{
+			CNetwork::instance().sendChat(c->id(),string("/voteMap mapname : vote to start this map for next level"));
 		}
 		return;
 	}
 
-	if(c->isAdmin() || c->isModerator())
+	if(cmd.substr(0,7)=="voteMap")
+	{
+		c->voteMap(cmd.substr(8));
+		CNetwork::instance().sendChat(c->name()+" executed: "+cmd);
+	}
+	else if(c->isAdmin() || c->isModerator())
 	{
 		//CNetwork::instance().networkTask().addCommand(cmd);
 		ICommand::execute(cmd, *InfoLog);

@@ -38,6 +38,10 @@ function Entity:preUpdate()
 end
 
 function Entity:update()
+  if(self:parent()==nil) then
+    return;
+  end
+  
   if(self:parent().currentModuleId~=self:parent().newModuleId) then
     local score = self:getCurrentScore();
     self:setCurrentScore(score+50);

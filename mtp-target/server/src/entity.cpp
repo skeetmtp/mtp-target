@@ -103,6 +103,7 @@ void CEntity::init ()
 	MaxLinearVelocity = 0;
 	ForceReceived = true;
 	AfkCount = 0;
+	VoteMap = "";
 
 	nlassert(World);
 	pausePhysics();
@@ -167,6 +168,7 @@ void CEntity::init(std::string &name,std::string &texture, NLMISC::CRGBA &color)
 	
 	ForceReceived = true;
 	AfkCount = 0;
+	VoteMap = "";
 }
 
 void CEntity::_luaInit()
@@ -518,6 +520,17 @@ string CEntity::team()
 		res = "";
 	return res;
 }
+
+void CEntity::voteMap(const string &voteMap)
+{
+	VoteMap = voteMap;
+}
+
+string CEntity::voteMap()
+{
+	return VoteMap;
+}
+
 
 //
 // Commands

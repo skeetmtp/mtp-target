@@ -101,6 +101,7 @@ public:
 	
 	bool isAdmin(const std::string &name) const;
 	bool isModerator(const std::string &name) const;
+
 	
 	std::list<uint8> IdUpdateList;
 	
