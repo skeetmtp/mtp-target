@@ -64,6 +64,7 @@ bool CLevelProxy::call(string funcName)
 	if(res<0)
 		nlwarning("error calling lua function : %s",funcName.c_str());
 	*/
+	lua_pop(L,-1);
 	return res>=0;
 }
 
