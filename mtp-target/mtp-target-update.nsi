@@ -29,15 +29,21 @@ Section "base" Section1
 	SectionIn RO
 	SetOverwrite on
 	
-	SetOutPath "$INSTDIR"
+	SetOutPath "$INSTDIR\client"
 	FILE "client\ReleaseDebug\mtp-target.exe"
 	FILE "client\mtp_target_default.cfg"
 	;FILE "..\nel\lib\nel_drv_opengl_win_rd.dll"
 	;FILE "..\nel\lib\nel_drv_direct3d_win_rd.dll"
+
+
 	; Set Section Files and Shortcuts
 	;CreateDirectory "$SMPROGRAMS\${APPNAME}"
 	;CreateShortCut "$SMPROGRAMS\${APPNAME}\Play Mtp-Target.lnk" "$INSTDIR\mtp-target.exe"
 	;CreateShortCut "$SMPROGRAMS\${APPNAME}\About.lnk" "http://mtptarget.free.fr/" "" "$INSTDIR\mtp-target.exe" 0
+	
+	
+	SetOutPath "$INSTDIR\client\data"
+	FILE "client\data\font\*.ttf"
 	
 	WriteUninstaller "$INSTDIR\Uninst.exe"
 	CreateShortCut "$SMPROGRAMS\${APPNAME}\Uninstall.lnk" "$INSTDIR\uninstall.exe"
@@ -70,9 +76,10 @@ Section "server" Section2
 	; Set Section properties
 	SetOverwrite on
 	
-	SetOutPath "$INSTDIR"
-	;FILE "server\ReleaseDebug\mtp_target_service.exe"
-	;FILE "server\mtp_target_service_default.cfg"
+	SetOutPath "$INSTDIR\server"
+	FILE "server\ReleaseDebug\mtp_target_service.exe"
+	FILE "server\mtp_target_service_default.cfg"
+	;FILE "..\wpkg\bin\stlport_vc645.dll"
 
 	; Set Section Files and Shortcuts
 	;CreateDirectory "$SMPROGRAMS\${APPNAME}"
