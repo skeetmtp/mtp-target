@@ -85,7 +85,7 @@ function userId2Name($user_id)
 
 function getUserTeam($user_name)
 {
-  $ok = (ereg("^\[[A-Za-z0-9]+\][\-_\.A-Za-z0-9([)(|\]|])]+$",$user_name));
+  $ok = (ereg("^\[[A-Za-z0-9\._\-]+\][\-_\.A-Za-z0-9([)(|\]|])]+$",$user_name));
   if(!$ok)
   	return "";
   $res = "";
