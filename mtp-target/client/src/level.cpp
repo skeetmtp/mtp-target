@@ -221,6 +221,7 @@ CLevel::~CLevel()
 		//C3DTask::instance().scene().deleteInstance(StartPositions[j]);
 	}
 	StartPoints.clear();
+	CHudTask::instance().messages.clear();
 }
 
 CVector CLevel::startPosition(uint32 id)
@@ -231,7 +232,6 @@ CVector CLevel::startPosition(uint32 id)
 void CLevel::reset()
 {
 	nlinfo("--level reset--");
-	CHudTask::instance().messages.clear();
 	luaClose(LuaState);
 
 	LuaState = luaOpenAndLoad(FileName);
