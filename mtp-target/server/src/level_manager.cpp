@@ -183,7 +183,7 @@ bool CLevelManager::newLevel(string &str1, string &str2)
 		}
 	}
 
-	int voteCountNeeded = CEntityManager::instance().humanClientCount()/3;
+	int voteCountNeeded = CEntityManager::instance().humanClientCount()/3+1;
 	if(voteCountNeeded<0)
 		voteCountNeeded=0;
 
