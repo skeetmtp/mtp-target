@@ -350,6 +350,8 @@ static void cbClientChooseShard(CMessage &msgin, TSockId from, CCallbackNetBase 
 		msgout.serial(userColor);
 		string userTrace = row[10];
 		msgout.serial(userTrace);
+		string userMesh = row[11];
+		msgout.serial(userMesh);
 		CUnifiedNetwork::getInstance()->send(sid, msgout);
 
 		CMysqlResult result3;

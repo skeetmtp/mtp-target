@@ -65,13 +65,14 @@ class CUserInformation
 {
 public:
 
-	CUserInformation(const string &name,sint32 totalScore,const string &texture, uint32 color,const string &trace)
+	CUserInformation(const string &name,sint32 totalScore,const string &texture, uint32 color,const string &trace,const string &mesh)
 	{
 		this->name		 = name;
 		this->totalScore = totalScore;
 		this->texture	 = texture;
 		this->color.setPacked(color);
 		this->trace		 = trace;
+		this->mesh		 = mesh;
 	}
 
 	string name;
@@ -79,6 +80,7 @@ public:
 	string texture;
 	CRGBA  color;
 	string trace;
+	string mesh;
 protected:
 private:
 };
@@ -88,7 +90,7 @@ static map<string, CUserInformation > UserIdNameAssociations;
 
 static string ListenAddr;
 
-string getUserFromCookie(const string &cookie, sint32 &totalScore,string &userTexture, CRGBA &color ,string &userTrace)
+string getUserFromCookie(const string &cookie, sint32 &totalScore,string &userTexture, CRGBA &color ,string &userTrace, string &userMesh)
 {
 	//map<string, pair<string, pair<string, sint32> > >::iterator it = UserIdNameAssociations.find(cookie);
 	map<string, CUserInformation >::iterator it = UserIdNameAssociations.find(cookie);
@@ -103,6 +105,7 @@ string getUserFromCookie(const string &cookie, sint32 &totalScore,string &userTe
 		userTexture = (*it).second.texture;
 		color		= (*it).second.color;
 		userTrace	= (*it).second.trace;
+		userMesh	= (*it).second.mesh;
 		return (*it).second.name;
 	}
 }
@@ -127,8 +130,10 @@ void cbLSChooseShard (CMessage &msgin, const std::string &serviceName, uint16 si
 	string userTexture = "";
 	string userTrace = "";
 	uint32 userColor = 0xffffffff;
+	string userMesh = "";
 
 	msgin.serial(cookie, userName, totalScore);
+	//TODO remove this test when version will be = to 6
 	if(msgin.getPos() < (sint32)msgin.length())
 	{
 		msgin.serial(userTexture);
@@ -137,12 +142,18 @@ void cbLSChooseShard (CMessage &msgin, const std::string &serviceName, uint16 si
 	if(msgin.getPos() < (sint32)msgin.length())
 	{
 		msgin.serial(userColor);
-		nlinfo("LS sent user color : %d",userColor);
+		nlinfo("LS sent user color : 0x%x",userColor);
 	}
 	if(msgin.getPos() < (sint32)msgin.length())
 	{
 		msgin.serial(userTrace);
 		nlinfo("LS sent user trace: %s",userTrace.c_str());
+	}
+	
+	if(msgin.getPos() < (sint32)msgin.length())
+	{
+		msgin.serial(userMesh);
+		nlinfo("LS sent user mesh : %s",userMesh.c_str());
 	}
 	
 	// always accept clients
@@ -163,7 +174,7 @@ void cbLSChooseShard (CMessage &msgin, const std::string &serviceName, uint16 si
 	CUnifiedNetwork::getInstance()->send("LS", msgout);
 
 	//UserIdNameAssociations.insert(make_pair(cookie, make_pair(userName,make_pair(userTexture,totalScore))));
-	UserIdNameAssociations.insert(make_pair(cookie, CUserInformation(userName,totalScore,userTexture,userColor,userTrace)));
+	UserIdNameAssociations.insert(make_pair(cookie, CUserInformation(userName,totalScore,userTexture,userColor,userTrace,userMesh)));
 
 	nlinfo("Client %s will come with cookie %s to ip '%s' with total score %d userTexture '%s'", userName.c_str(), cookie.c_str(), ListenAddr.c_str(), totalScore,userTexture.c_str());
 }
