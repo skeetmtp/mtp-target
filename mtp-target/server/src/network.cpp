@@ -74,6 +74,11 @@ void CNetworkTask::run()
 
 	while(true)
 	{
+		{
+			CSynchronized<PauseFlags>::CAccessor acces(&networkPauseFlags);
+			acces.value().ackPaused = true;
+		}
+		
 		descmax = ListenSock.descriptor();
 		FD_ZERO(&readers);
 		FD_SET(ListenSock.descriptor(), &readers);
@@ -96,14 +101,9 @@ void CNetworkTask::run()
 		tv.tv_sec = 3600;		// 1 hour
 		tv.tv_usec = 0;
 
-		{
-			CSynchronized<PauseFlags>::CAccessor acces(&networkPauseFlags);
-			acces.value().ackPaused = true;
-		}
 
 		int res = ::select(descmax+1, &readers, 0, 0, &tv);
 		
-		checkNetworkPaused();
 		
 		switch(res)
 		{
@@ -118,6 +118,8 @@ void CNetworkTask::run()
 			nlerror("Select failed: %s (code %u)", NLNET::CSock::errorString(NLNET::CSock::getLastError()).c_str(), NLNET::CSock::getLastError());
 		}
 
+		checkNetworkPaused();
+
 		if(FD_ISSET(ListenSock.descriptor(), &readers) != 0)
 		{
 			nlinfo("New client connected");
@@ -128,7 +130,7 @@ void CNetworkTask::run()
 
 			CEntityManager::instance().addClient(sock);
 		}
-
+		
 		vector<uint8> IdToRemove;
 
 		{

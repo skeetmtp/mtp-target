@@ -149,7 +149,6 @@ void CEntityManager::addClient(NLNET::CTcpSock *sock)
 	nlassert(e);
 
 	add(e);
-	checkForcedClientCount();
 }
 
 
@@ -383,7 +382,6 @@ void CEntityManager::remove(uint8 eid)
 	
 	delete c;
 
-	checkForcedClientCount();
 }
 
 void CEntityManager::removeBot()

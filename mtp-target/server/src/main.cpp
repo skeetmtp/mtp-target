@@ -181,7 +181,8 @@ void checkServicePaused()
 			{
 				CSynchronized<PauseFlags>::CAccessor acces(&servicePauseFlags);
 				pause = acces.value().pauseCount>0;
-				acces.value().ackPaused = true;
+				if(pause)
+					acces.value().ackPaused = true;
 			}
 		}
 	}
@@ -204,7 +205,6 @@ bool pauseService(bool waitAck)
 		{
 			CSynchronized<PauseFlags>::CAccessor acces(&servicePauseFlags);
 			ackPaused = false;
-			acces.value().ackPaused = false;
 			acces.value().pauseCount++;
 		}
 		if(!waitAck) return true;
@@ -239,21 +239,45 @@ void resumeService()
 	{
 		acces.value().pauseCount--;
 		nlassert(acces.value().pauseCount>=0);
-		if(acces.value().pauseCount==0)
-			acces.value().ackPaused = false;
 	}	
 }
 
+CSynchronized<PauseFlags> pauseAllFlags("pauseAll");
 
 bool pauseAllThread()
 {
+	{
+		CSynchronized<PauseFlags>::CAccessor acces(&pauseAllFlags);
+		if(acces.value().pauseCount>0)
+			return false;
+		acces.value().pauseCount = 1;
+	}
 	bool allOk = true;
 	allOk = allOk && pauseService(false);
+	if(!allOk)
+	{
+		CSynchronized<PauseFlags>::CAccessor acces(&pauseAllFlags);
+		acces.value().pauseCount = 0;
+		return false;		
+	}
 	allOk = allOk && pausePhysics(false);
+	if(!allOk)
+	{
+		resumeService();
+		CSynchronized<PauseFlags>::CAccessor acces(&pauseAllFlags);
+		acces.value().pauseCount = 0;
+		return false;		
+	}
 	allOk = allOk && pauseNetwork(false);
-
-	if(!allOk) 
-		return false;
+	if(!allOk)
+	{
+		resumeService();
+		resumePhysics();
+		CSynchronized<PauseFlags>::CAccessor acces(&pauseAllFlags);
+		acces.value().pauseCount = 0;
+		return false;		
+	}
+	
 
 	while(true)
 	{
@@ -277,4 +301,8 @@ void resumeAllThread()
 	resumeService();
 	resumePhysics();
 	resumeNetwork();	
+	{
+		CSynchronized<PauseFlags>::CAccessor acces(&pauseAllFlags);
+		acces.value().pauseCount = 0;
+	}
 }
