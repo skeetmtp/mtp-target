@@ -111,9 +111,17 @@ void CModule::init(const std::string &name, const std::string &shapeName, uint8 
 	}
 	triMeshDataId = dGeomTriMeshDataCreate();
 
-//	dGeomTriMeshDataBuildSingle(data, &OdeVertices[0], 3*sizeof(dReal), OdeVertices.size()/3, &Indices[0], Indices.size(), 3*sizeof(int));
+#ifdef _ODE_COMPATIBILITY_H_ //if this is defined we use ode 0.5
+	//dGeomTriMeshDataBuildSimple(triMeshDataId, &OdeVertices[0], OdeVertices.size(), &Indices[0], Indices.size());
+#if defined(dDOUBLE) //we use ode 0.5 so we could manage single or double precision
+	dGeomTriMeshDataBuildDouble(triMeshDataId, &OdeVertices[0], 3*sizeof(dReal), OdeVertices.size()/3, &Indices[0], Indices.size(), 3*sizeof(int));
+#else
+	dGeomTriMeshDataBuildSingle(triMeshDataId, &OdeVertices[0], 3*sizeof(dReal), OdeVertices.size()/3, &Indices[0], Indices.size(), 3*sizeof(int));
+#endif
+#else
 	dGeomTriMeshDataBuild(triMeshDataId, &OdeVertices[0], 3*sizeof(dReal), OdeVertices.size()/3, &Indices[0], Indices.size(), 3*sizeof(int));
-
+#endif
+	
 	{
 		CSynchronized<dSpaceID>::CAccessor acces(&Space);
 		Geom = dCreateTriMesh(acces.value(), triMeshDataId, _dTriCallback, _dTriArrayCallback, _dTriRayCallback);
