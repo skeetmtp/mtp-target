@@ -10,7 +10,7 @@ local arrivedCount = 0;
 CEntity = {}
 CEntity_mt = {}
 function CEntity:new(baseEntity)
-  return setmetatable({base=baseEntity, team = 0, id = 0, startTargetTime = 0, lastPos }, CEntity_mt)
+  return setmetatable({base=baseEntity, team = 0, id = 0, startTargetTime = 0, lastPos, lastPosTime=60 }, CEntity_mt)
 end
 
 function CEntity:print()
@@ -80,7 +80,10 @@ function entityLeaveEvent ( entity )
 end
 
 function entitySceneCollideEvent ( entity, module )
-  entity:parent().lastPos = entity:getPos();
+  if(entity:parent().lastPosTime > (getTimeRemaining()+1)) then
+    entity:parent().lastPos = entity:getPos();
+    entity:parent().lastPosTime = getTimeRemaining();
+  end
   module:parent():onCollide(entity);
 end
 
