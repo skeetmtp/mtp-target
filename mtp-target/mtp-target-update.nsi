@@ -32,8 +32,8 @@ Section "base" Section1
 	SetOutPath "$INSTDIR"
 	FILE "client\ReleaseDebug\mtp-target.exe"
 	FILE "client\mtp_target_default.cfg"
-	FILE "server\ReleaseDebug\mtp_target_service.exe"
-	FILE "server\mtp_target_service_default.cfg"
+	FILE "..\nel\lib\nel_drv_opengl_win_rd.dll"
+	FILE "..\nel\lib\nel_drv_direct3d_win_rd.dll"
 	; Set Section Files and Shortcuts
 	CreateDirectory "$SMPROGRAMS\${APPNAME}"
 	CreateShortCut "$SMPROGRAMS\${APPNAME}\Play Mtp-Target.lnk" "$INSTDIR\mtp-target.exe"
@@ -50,7 +50,7 @@ Section "server" Section2
 	SetOverwrite on
 	
 	SetOutPath "$INSTDIR"
-	FILE "server\ReleaseDebug\mtp_target_service.exe"
+	;FILE "server\ReleaseDebug\mtp_target_service.exe"
 	FILE "server\mtp_target_service_default.cfg"
 
 	; Set Section Files and Shortcuts
