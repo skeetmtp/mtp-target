@@ -1,0 +1,54 @@
+
+body
+{
+	font-family: verdana,helvetica,arial,sans-serif;
+	background-image:url("back.jpg")
+}
+
+pre, tt         {font-size: small}
+th              {font-family: arial, helvetica, geneva, sans-serif; font-size: small; font-weight: bold;}
+td              {font-family: arial, helvetica, geneva, sans-serif; font-size: small}
+form            {font-family: arial, helvetica, geneva, sans-serif; font-size: small}
+input           {font-family: arial, helvetica, geneva, sans-serif; font-size: small}
+input.textfield {font-family: arial, helvetica, geneva, sans-serif; font-size: small; color: #000000; background-color: #FFFFFF}
+select          {font-family: arial, helvetica, geneva, sans-serif; font-size: small; color: #000000; background-color: #FFFFFF}
+textarea        {font-family: arial, helvetica, geneva, sans-serif; font-size: small; color: #000000; background-color: #FFFFFF}
+
+p,ul		{ font-size:100% }
+h2		{ font-size:120% }
+h3		{ font-size:100% }
+
+a		{ text-decoration:none; }
+a:link		{ color:#700B09 }
+a:visited	{ color:#700B09 }
+a:active	{ text-decoration:none; color:#8C7443 }
+a:hover		{ text-decoration:underline; color:#8C7443 }
+
+img
+{
+   border: 0px solid #666666;
+}
+
+
+div#menu a
+{
+   font: bold 1em sans-serif;
+   text-decoration: none; color:#700B09;
+}
+
+div#menu a:hover
+{
+   font: bold 1em sans-serif;
+   text-decoration: none; color: black; background: #F2E2C8;
+}
+
+div#footer
+{
+   text-align: right;
+   font-size:70%
+}
+
+div#main
+{
+   text-align: left;
+}

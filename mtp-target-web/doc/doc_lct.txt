@@ -1,0 +1,7 @@
+Le server envoi un update tous les 50ms = 0.05s
+Au premier packet ServerTime = 0, StartTime = getTime() = 0.123
+Si on fait un update(getTime()=1.270)
+Il s'est passé 1.270 - 0.123 = 1.147 secondes depuis le 1er packet
+Comme on a une LCT de 0.25(5 clef d avances) on veut la position a 
+ServerTime = 1.147 - 0.25 = 0.897
+Donc on interpole entre les clef a ServerTime = 0.85 et a 0.90 (granularité de 0.05)

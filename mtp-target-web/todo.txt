@@ -1,0 +1,63 @@
+
+
+Cette liste sert juste a rappeller aux developpeurs ce qu'ils restent a faire
+
+
+Prioritaire!!!!
+---------------
+
+
+Client :
+--------
+  - remplacer tous les commentaires francais en anglais
+  - remplacer tous les nlinfo francais en anglais
+  - que le client prenne le port du listenaddr si ya un : dedans
+  - une mer visuelement potable (héhé) en mode 1
+  - controle : sur la rampe kan on appuye un petit coup a droite ou un long coup a droite ca tourne a peu pres du meme angle
+               en l air essayer de voir pour faire un truc plus interactif , moins je reste a fond en planage juske a la platforme
+  - moins forte les particules, fonction de la vitesse
+  - le pingoo ki gene la vue
+  - | decaler le calcul lct au nivo de network pas a chak entité
+  - | refaire entierement le systeme de LCT
+  - blinder le look at (camera qui saute quand f9 et debut de partie)
+  - bot qui disparaissent
+  - faire kkchose kan on touche ouvert sur la scene
+  - avoir une vue sympa en attendant sa 1ere partie
+  - WRN 1992: keys order are inversed in time  ==>>  tj en debut de session au GO
+  - mettre un gros texte quand on follow kk1 (genre FOLLOWING XXX au milieu de l ecran) avec info pour passer au suivant ou au precedent
+
+Serveur :
+---------
+  - implementer un "kicked out" a la mtp pour eviter de devoir attendre 10 min pdt lesquelles on est "already logged" quand on s'est fait déco brutalement (coupure adsl , pied dans le cable rezo et autre)
+  - sauver le nombre de partie fait par chaque joueur
+  - limiter le nb de replay pour les bots
+  - pas de case sur le nom des joueurs (prob de score double)
+
+Common :
+--------
+  - optimiser les packets TCP
+
+Web :
+-----
+  - le logo mtp target dans la todo et placé a droite
+  - que toutes les docs soient en web et pas dans cvs 
+  - faire une todo list a la bankiz web site (http://www.bankiz.org/site_fr/dev/index.php)
+  - selecteur de langue (avec detection automatique au debut de la langue du browser)
+  - ?faire le schema en gif anime pour anime la boule? :)
+
+Doc :
+-----
+  - faire une page pour expliquer la nomenclature (fichier, variable ...)
+  - faire doc comment faire un level
+  - faire une doc pour expliquer comment recuperer le cvs et trouver les lib external
+  - faire doc sur comment faire/lancer un serveur
+
+QQ ID kan on aura fait tt le reste :)
+-------------------------------------
+  - Scripting Lua (un script par col par ex, plus des scripts par level: init, update etc)
+  - ajouter la possibilité de mettre 1 ou 2 col dynamic (pas trop a cause du debit rsx)
+  - mode par ekip (par ex l ekip ki a une boule la plus proche du mur)
+  - Integrer picogui
+
+
+Last updated: $Id$

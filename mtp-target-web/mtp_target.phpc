@@ -1,0 +1,9 @@
+[Settings]
+ParseMethod=3
+PHPPath=C:\code\FoxServ\php\php.exe
+WebServerRoot=http://localhost/
+DocRoot=C:\code\FoxServ\www\
+IncPath=
+[Files]
+0=*||C:\code\FoxServ\www\mtp-target
+Count=1

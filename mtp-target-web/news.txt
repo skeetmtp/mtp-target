@@ -1,0 +1,37 @@
+Sun Mar 23 08:04:38 CET 2003 by acemtp : ADDED: sound in CVS and exe and default cfg
+Mon Mar 24 21:49:30 CET 2003 by skeet : ADDED : "patch" data dir
+Sun Mar 30 21:01:56 CEST 2003 by skeet : ADDED : client icon , and window title
+Sun Mar 30 21:03:15 CEST 2003 by skeet : ADDED : Config.exe
+Sun Mar 30 21:05:15 CEST 2003 by skeet : ADDED : server
+Mon Mar 31 18:57:28 CEST 2003 by skeet : CHANGED : shape pivot at zero (easier export manipulation)
+Mon Mar 31 18:57:28 CEST 2003 by skeet : CHANGED : shape pivot at zero (easier export manipulation)
+Mon Mar 31 18:57:29 CEST 2003 by skeet : CHANGED : shape pivot at zero (easier export manipulation)
+Wed Apr  2 21:49:28 CEST 2003 by skeet : FIXED : config.exe : login and password bug (not a string)
+Thu Apr  3 19:03:34 CEST 2003 by skeet : ADDED : luaFunctionName to piste module
+Thu Apr  3 19:04:30 CEST 2003 by skeet : ADDED : first lua script for snow.level
+Fri Apr  4 23:14:36 CEST 2003 by acemtp : ADDED: second map for water displacement
+Sun Apr  6 21:20:37 CEST 2003 by skeet : Big merge version , lot of bug fixed
+Sun Apr  6 21:20:38 CEST 2003 by skeet : Big merge version , lot of bug fixed
+Sun Apr  6 21:20:38 CEST 2003 by skeet : Big merge version , lot of bug fixed
+Sun Apr  6 21:36:07 CEST 2003 by skeet : ADDED : nel launcher
+Mon Apr  7 21:56:07 CEST 2003 by acemtp : <b>First Release</b>
+Tue Apr  8 23:36:50 CEST 2003 by skeet : FIXED : camera out of bounds when net lag
+Sun Aug 10 00:14:26 CEST 2003 by acemtp : CHANGED: now each module are 0 centered, the new level use the real module system and added flat target
+Sun Aug 10 00:14:26 CEST 2003 by acemtp : CHANGED: now each module are 0 centered, the new level use the real module system and added flat target
+Sun Aug 10 00:14:28 CEST 2003 by acemtp : CHANGED: now each module are 0 centered, the new level use the real module system and added flat target
+Sun Aug 10 23:48:42 CEST 2003 by acemtp : CHANGED: new file format and lot lot other things
+Sun Aug 10 23:48:43 CEST 2003 by acemtp : CHANGED: new file format and lot lot other things
+Sun Aug 10 23:49:13 CEST 2003 by acemtp : CHANGED: new file format and lot lot other things
+Sun Aug 10 23:49:14 CEST 2003 by acemtp : CHANGED: new file format and lot lot other things
+Mon Sep 15 00:08:56 CEST 2003 by acemtp : FIXED: open close is ok
+Sun Sep 28 19:35:39 CEST 2003 by acemtp : FIXED: target 100 had score 0
+Thu Nov  6 23:29:06 CET 2003 by acemtp : no message
+Tue Jan 20 17:52:11 CET 2004 by skeet : ADDED  : TGA -> DDS
+Tue Jan 20 21:51:17 CET 2004 by skeet : REMOVED : sky dds
+Tue Jan 20 22:09:12 CET 2004 by skeet : REMOVED : tga when possible
+Sun Jan 25 08:59:31 CET 2004 by acemtp : CLEAN: remove data not useful
+Sun Jan 25 08:59:31 CET 2004 by acemtp : CLEAN: remove data not useful
+Sun Jan 25 08:59:34 CET 2004 by acemtp : CLEAN: remove data not useful
+Sun Jan 25 08:59:35 CET 2004 by acemtp : CLEAN: remove data not useful
+Sun Jan 25 08:59:38 CET 2004 by acemtp : CLEAN: remove data not useful
+Sun Jan 25 08:59:40 CET 2004 by acemtp : CLEAN: remove data not useful
