@@ -85,3 +85,8 @@ Modules ={
 Particles =
 {
 }
+
+ExternalCameras =
+{
+	{ Position = CVector(0.260632, -16.652920, 1.270847), Rotation = CAngleAxis(0.028885, 0.012964, 0.409266, 0.911866) },
+}

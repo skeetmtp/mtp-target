@@ -71,4 +71,5 @@ Particles =
 
 ExternalCameras =
 {
+	{ Position = CVector(-0.020185, -30.473835, 1.236753), Rotation = CAngleAxis(-0.099024, -0.022244, 0.218036, 0.970649) },
 }
