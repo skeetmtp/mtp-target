@@ -1,7 +1,7 @@
 Name = "Stairs 2"
 Author = "Skeet"
 ServerLua = "level_stairs_server.lua"
-ReleaseLevel = 3
+ReleaseLevel = 2
 
 skyShapeFileName = "sky.shape";
 sunAmbientColor = CRGBA(82, 100, 133, 255);
@@ -85,5 +85,5 @@ Particles =
 
 ExternalCameras =
 {
-	{ Position = CVector(-0.171097, -14.318943, 3.089481), Rotation = CAngleAxis(0.023125, -0.132589, 0.976166, -0.170251) },
+	{ Position = CVector(0.235616, -15.587805, 3.067564), Rotation = CAngleAxis(-0.208756, -0.093624, 0.398360, 0.888237) },
 }

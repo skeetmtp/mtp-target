@@ -1,7 +1,7 @@
 Name = "Team All on one"
 Author = "Skeet"
 ServerLua = "level_team_all_on_one_server.lua"
-ReleaseLevel = 3
+ReleaseLevel = 2
 
 skyShapeFileName = "sky.shape";
 sunAmbientColor = CRGBA(82, 100, 133, 255);
@@ -76,5 +76,5 @@ Particles =
 
 ExternalCameras =
 {
-	{ Position = CVector(-0.171097, -14.318943, 3.089481), Rotation = CAngleAxis(0.023125, -0.132589, 0.976166, -0.170251) },
+	{ Position = CVector(-0.114005, -15.741055, 2.953115), Rotation = CAngleAxis(0.048297, -0.001298, -0.026842, 0.998471) },
 }
