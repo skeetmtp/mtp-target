@@ -106,7 +106,6 @@ string sqlQuery(const string &query, sint32 &nbRow, MYSQL_ROW &firstRow, MYSQL_R
 			firstRow = mysql_fetch_row(result);
 			if(firstRow == 0)
 			{
-				mysql_free_result(result);
 				nlwarning("mysql_fetch_row (%s) failed: %s", query.c_str (),  mysql_error(DatabaseConnection));
 				return toString("mysql_fetch_row (%s) failed: %s", query.c_str (),  mysql_error(DatabaseConnection));
 			}
@@ -115,7 +114,6 @@ string sqlQuery(const string &query, sint32 &nbRow, MYSQL_ROW &firstRow, MYSQL_R
 		{
 			firstRow = 0;
 		}
-		mysql_free_result(result);
 	}
 
 	return "";
