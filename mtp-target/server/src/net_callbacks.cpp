@@ -413,12 +413,14 @@ static void cbRequestDownload(CClient *c, CNetMessage &msgin)
 	uint32 fileSize = CFile::getFileSize(fp);
 
 	uint32 res = fread(ptr, 1, 8000, fp);
+	bool eof = false;
 	if(res != 8000)
 	{
 		if(feof(fp))
 		{
 			// we are at the end of the file, resize to the good size
 			buf.resize(res);
+			eof = true;
 		}
 		else
 		{
@@ -438,7 +440,6 @@ static void cbRequestDownload(CClient *c, CNetMessage &msgin)
 	msgout.serial(fileSize);
 	msgout.serialCont(buf);
 
-	bool eof = feof(fp)!=0;
 	nlinfo("the file eof is : %d size = %d", eof, res);
 	msgout.serial(eof);
 
