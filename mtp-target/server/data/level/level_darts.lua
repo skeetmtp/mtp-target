@@ -1,7 +1,7 @@
 Name = "Snow darts"
 Author = "Ace"
 ServerLua = "level_darts_server.lua"
-ReleaseLevel = 2
+ReleaseLevel = 4
 
 skyShapeFileName = "sky.shape";
 sunAmbientColor = CRGBA(82, 100, 133, 255);
@@ -15,7 +15,7 @@ fogDistMin = 0;
 fogDistMax = 150;
 fogColor = clearColor;
 
-cameraMinDistFromStartPointToMove = 1.0;
+cameraMinDistFromStartPointToMove = 100.0;
 
 Cameras =
 {

@@ -15,7 +15,7 @@ function Entity:init()
 end
 
 function Entity:preUpdate()
-  self:setCurrentScore(0);
+  --self:setCurrentScore(0);
 end
 
 function Entity:update()
