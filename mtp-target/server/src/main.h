@@ -29,6 +29,12 @@
 #include <nel/net/udp_sock.h>
 #include "../../common/pause_flag.h"
 
+#ifdef NL_OS_UNIX
+
+#include "pthread.h"
+
+#endif
+
 //
 // Variables
 //
@@ -52,5 +58,7 @@ void resumeService();
 
 bool pauseAllThread();
 void resumeAllThread();
+
+uint myGetThreadId();
 
 #endif

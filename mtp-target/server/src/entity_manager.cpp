@@ -88,7 +88,7 @@ void CEntityManager::update()
 void CEntityManager::add(CEntity *entity)
 {
 	nlinfo("CEntityManager::add(0x%p,%d:%s)",entity,entity->id(),entity->name().c_str());
-	uint tid = getThreadId();
+	uint tid = myGetThreadId();
 	nlassert(tid==MainThreadId || tid==NetworkThreadId);
 	std::list<CEntity *> *ClientToAddList;
 	
@@ -114,7 +114,7 @@ void CEntityManager::add(CEntity *entity)
 void CEntityManager::remove(uint8 eid)
 {
 	nlinfo("CEntityManager::remove(%d)",eid);
-	uint tid = getThreadId();
+	uint tid = myGetThreadId();
 	nlassert(tid==MainThreadId || tid==NetworkThreadId);
 	std::list<uint8> *ClientToRemoveList;
 
@@ -226,7 +226,7 @@ void CEntityManager::_remove(std::list<uint8> &removeList)
 
 void CEntityManager::flushAddRemoveList()
 {
-	uint tid = getThreadId();
+	uint tid = myGetThreadId();
 	nlassert(tid==MainThreadId || tid==NetworkThreadId);
 	
 	if(tid==MainThreadId)
@@ -275,7 +275,7 @@ uint8 CEntityManager::findNewId()
 {
 	uint8 ni = 0;
 	uint8 baseId = 0;
-	uint tid = getThreadId();
+	uint tid = myGetThreadId();
 	nlassert(tid==MainThreadId || tid==NetworkThreadId);
 
 	if(tid==NetworkThreadId)

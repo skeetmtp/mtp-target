@@ -104,7 +104,7 @@ public:
 			}
 		}	  
 
-		MainThreadId = getThreadId();
+		MainThreadId = myGetThreadId();
 #ifdef NL_OS_WINDOWS
 		BOOL res;
 		if(ConfigFile.getVar("HighPriority").asInt()==1)
@@ -171,6 +171,16 @@ NLNET_SERVICE_MAIN(CMtpTargetService, "MTS", "mtp_target_service", 0, EmptyCallb
 //
 // Functions
 //
+
+uint myGetThreadId()
+{
+#ifdef NL_OS_UNIX
+	return pthread_self();
+#else
+	return getThreadId();
+#endif
+}
+
 
 void checkServicePaused()
 {
@@ -304,7 +314,7 @@ bool pauseAllThread()
 	if(i>=maxLoopCount)
 	{
 		nlwarning("pauseAllThread() failed after %d tries during %d ms",maxLoopCount,maxLoopCount*10);
-		uint tid = getThreadId();
+		uint tid = myGetThreadId();
 		if(tid==MainThreadId)
 			nlwarning("pauseAllThread() called(%d) in MainThreadId(%d)",tid,MainThreadId);
 		if(tid==NetworkThreadId)
