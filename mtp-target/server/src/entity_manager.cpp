@@ -66,7 +66,7 @@ using namespace NLNET;
 
 static uint8 WatchingId = 0;
 
-CVariable<bool> SavePingStat("SavePingStat", "1 if you want to save the ping stat", false, 0, true);
+CVariable<bool> SavePingStat("variables","SavePingStat", "1 if you want to save the ping stat", false, 0, true);
 
 
 //
