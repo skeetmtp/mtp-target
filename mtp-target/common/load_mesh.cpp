@@ -262,8 +262,21 @@ uint32 loadMesh(const std::string &meshFileName, std::vector<NLMISC::CVector> &v
 			
 			CIndexBufferRead iba;
 			ib.lock(iba);
-			const uint32 *ibptr = (uint32 *)iba.getPtr();
 			uint nbi = ib.getNumIndexes();
+			uint32 *ibptr = new uint32[nbi];
+			if(iba.getFormat()==CIndexBuffer::Indices16)
+			{
+				const uint16 *ibptrSrc = (uint16 *)iba.getPtr();
+				for(uint k=0;k<nbi;k++)
+					ibptr[k]=ibptrSrc[k];
+			}
+			else
+			{
+				const uint32 *ibptrSrc = (uint32 *)iba.getPtr();
+				for(uint k=0;k<nbi;k++)
+					ibptr[k]=ibptrSrc[k];
+			}
+
 			nlassert((nbi%3)==0);
 			uint nbf = nbi/3;
 			for(uint k = 0; k < nbf; k++)
@@ -296,6 +309,7 @@ uint32 loadMesh(const std::string &meshFileName, std::vector<NLMISC::CVector> &v
 					*/
 				aeCount++;
 			}
+			delete[] ibptr;
 		}
 	}
 	
