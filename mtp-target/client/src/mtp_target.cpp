@@ -428,7 +428,21 @@ void CMtpTarget::loadNewSession()
 	
 	if(ReplayFile.empty() && CConfigFileTask::instance().configFile().getVar("GenerateReplay").asInt() == 1)
 	{
-		SessionFileName = NLMISC::CFile::findNewFile("replay/session.mtr");
+		int currentReplaySavedCount = CConfigFileTask::instance().configFile().getVar("currentReplaySavedCount").asInt();
+		int maxReplaySavedCount = CConfigFileTask::instance().configFile().getVar("maxReplaySavedCount").asInt();
+		if(maxReplaySavedCount<1)
+			maxReplaySavedCount=1;
+		if(maxReplaySavedCount>999)
+			maxReplaySavedCount=999;
+
+		currentReplaySavedCount++;
+		currentReplaySavedCount = currentReplaySavedCount % maxReplaySavedCount;
+		CConfigFileTask::instance().configFile().getVar("currentReplaySavedCount").setAsInt(currentReplaySavedCount);
+		CConfigFileTask::instance().configFile().save();
+		
+		SessionFileName = toString("replay/session%03d.mtr",currentReplaySavedCount);
+		//nlinfo(">>%s",SessionFileName.c_str());
+		//SessionFileName = NLMISC::CFile::findNewFile("replay/session.mtr");
 		SessionFile = fopen (SessionFileName.c_str(), "wt");
 		nlassert (SessionFile != 0);
 	}

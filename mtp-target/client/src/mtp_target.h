@@ -52,6 +52,7 @@ extern bool FollowEntity;
 extern CVector ControlerFreeLookPos;
 extern CMatrix ControlerCamMatrix;
 extern std::string ReplayFile;
+extern sint32 AutoServerId;
 
 
 //
