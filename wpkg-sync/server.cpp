@@ -65,25 +65,23 @@ string CPackageSum::toString()
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
-#if 0
-struct DlFile
-{
-	string filename;
-	FILE *stream;
-};
-
-static int my_fwrite(void *buffer, size_t size, size_t nmemb, void *stream)
-{
-	DlFile *out=(DlFile *)stream;
-	if(out && !out->stream)
-	{
-		/* open file for writing */
-		out->stream = fopen(out->filename.c_str(), "wb");
-		if(!out->stream) return -1; /* failure, can't open file to write */
-	}
-	return fwrite(buffer, size, nmemb, out->stream);
-}
-#endif // _DEBUG
+//struct DlFile
+//{
+//	string filename;
+//	FILE *stream;
+//};
+//
+//static int my_fwrite(void *buffer, size_t size, size_t nmemb, void *stream)
+//{
+//	DlFile *out=(DlFile *)stream;
+//	if(out && !out->stream)
+//	{
+//		/* open file for writing */
+//		out->stream = fopen(out->filename.c_str(), "wb");
+//		if(!out->stream) return -1; /* failure, can't open file to write */
+//	}
+//	return fwrite(buffer, size, nmemb, out->stream);
+//}
 
 int my_progress_func(void *foo, double t, double d, double ultotal, double ulnow)
 {
