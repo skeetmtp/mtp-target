@@ -81,6 +81,16 @@ void CEntityManager::update()
 	}
 }
 
+void CEntityManager::reset()
+{
+	CEntities::CReadAccessor acces(entities());
+	EntityConstIt it;
+	for(it = acces.value().begin(); it != acces.value().end(); it++)
+	{
+		(*it)->reset();
+	}
+}
+
 void CEntityManager::release()
 {
 }

@@ -45,7 +45,8 @@ public:
 	void init();
 	void update();
 	void release();
-
+	void reset();
+	
 	CEntities *entities() { return &Entities; }
 
 	std::string check (const std::string &login, const std::string &password, bool dontCheck, sint32 &score);
