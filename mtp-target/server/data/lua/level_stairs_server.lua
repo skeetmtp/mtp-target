@@ -30,6 +30,7 @@ function Entity:init()
   self:setCurrentScore(0);
   --self:setStartPointId(clientId+getSessionId()*2);
   clientId = clientId + 1;
+  self:displayText(0,5,1,255,200,0,"go down the stairs : 1 stair = 50 Points",60);
 end
 
 function Entity:preUpdate()
