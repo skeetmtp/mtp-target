@@ -346,6 +346,11 @@ static void cbClientChooseShard(CMessage &msgin, TSockId from, CCallbackNetBase 
 		msgout.serial(userTexture);
 		CUnifiedNetwork::getInstance()->send(sid, msgout);
 
+		CMysqlResult result3;
+		MYSQL_ROW row3;
+		sint32 nbrow3;
+		reason = sqlQuery("update texture set LastUsed=NOW() where Name='"+userTexture+"';", nbrow3, row3, result3);
+
 		return;
 	}
 
