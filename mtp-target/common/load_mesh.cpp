@@ -97,23 +97,15 @@ uint32 loadMesh(const std::string &meshFileName, std::vector<NLMISC::CVector> &v
 	{
 		CAnimatedValueBlock avBlock;
 
-		//dynamic_cast<const CAnimatedValueVector &>(m->getDefaultPos()->getValue()).Value;
 		CVector gpos = dynamic_cast<const CAnimatedValueVector &>(m->getDefaultPos()->eval(m->getDefaultPos()->getBeginTime(),avBlock)).Value;
 		CQuat grot = dynamic_cast<const CAnimatedValueBlendable<CQuat> &>(m->getDefaultRotQuat()->eval(m->getDefaultRotQuat()->getBeginTime(),avBlock)).Value;
 		CVector gscale = dynamic_cast<const CAnimatedValueVector &>(m->getDefaultScale()->eval(m->getDefaultScale()->getBeginTime(),avBlock)).Value;
-/*
-		CVector gpos = dynamic_cast<const CAnimatedValueVector &>(m->getDefaultPos()->getValue()).Value;
-		CQuat grot = dynamic_cast<const CAnimatedValueBlendable<CQuat> &>(m->getDefaultRotQuat()->getValue()).Value;
-		CVector gscale = dynamic_cast<const CAnimatedValueVector &>(m->getDefaultScale()->getValue()).Value;
-*/		
+
 		tmat.setPos(gpos);
 		tmat.setRot(grot);
 		tmat.scale(gscale);
 	}
 	
-
-#ifdef NL_INDEX_BUFFER_H //new 3d
-
 	uint nbmb = mg.getNbMatrixBlock();
 	for(uint i = 0; i < nbmb; i++)
 	{
@@ -121,6 +113,16 @@ uint32 loadMesh(const std::string &meshFileName, std::vector<NLMISC::CVector> &v
 		for(uint j = 0; j < nbrp; j++)
 		{
 			const CIndexBuffer &ib = mg.getRdrPassPrimitiveBlock(i, j);
+			uint32 materialId = mg.getRdrPassMaterial(i,j);
+			const CMaterial &material = m->getMaterial(materialId);
+			int kk;
+			for(kk=0;kk<material.getNumUsedTextureStages();kk++)
+			{
+				ITexture *tex = material.getTexture(kk);
+				std::string sharedName = tex->getShareName();
+				nlinfo(">> shared texture name : %s",sharedName.c_str());
+			}
+
 			CIndexBufferRead iba;
 			ib.lock(iba);
 			const uint32 *ibptr = iba.getPtr();
@@ -157,44 +159,6 @@ uint32 loadMesh(const std::string &meshFileName, std::vector<NLMISC::CVector> &v
 		}
 	}
 
-#else //old 3d
-	uint nbmb = mg.getNbMatrixBlock();
-	for(uint i = 0; i < nbmb; i++)
-	{
-		uint nbrp = mg.getNbRdrPass(i);
-		for(uint j = 0; j < nbrp; j++)
-		{
-			const CPrimitiveBlock &pb = mg.getRdrPassPrimitiveBlock(i, j);
-			const uint32 *ptr = pb.getTriPointer();
-			uint nbt = pb.getNumTri();
-			for(uint k = 0; k < nbt*3; k+=3)
-			{
-				nbFaces++;
-				indices.push_back(ptr[k+0]);
-				indices.push_back(ptr[k+1]);
-				indices.push_back(ptr[k+2]);
-				//				nlinfo("%d %d %d %d", k, ptr[k+0], ptr[k+1], ptr[k+2]);
-			}
-		}
-	}
-	
-	const CVertexBuffer &vb = mg.getVertexBuffer();
-	uint32 nbv = vb.getNumVertices();
-	for(uint i = 0; i < nbv; i++)
-	{
-		const void *vv = vb.getVertexCoordPointer(i);
-		CVector v = *(CVector*)vv;
-		const void *nn = vb.getNormalCoordPointer(i);
-		CVector n = *(CVector*)nn;
-		//		uint j;
-		//		for(j = 0; j < vertices.c_str(); j++)
-		//		{
-		vertices.push_back(tmat * v);
-		normals.push_back(n);
-		//		}
-		//		if(j)
-	}
-#endif
 
 	delete m;
 	return nbFaces;
