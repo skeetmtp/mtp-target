@@ -141,10 +141,11 @@ void CSkyTask::update()
 
 void CSkyTask::render()
 {
+	C3DTask::instance().driver().clearZBuffer();
 	nelSkyScene->render ();
 	
 	// Must clear ZBuffer For incoming rendering.
-	C3DTask::instance().driver().clearZBuffer();
+	//C3DTask::instance().driver().clearZBuffer();
 	
 	if (nelCloudScape)
 		nelCloudScape->render ();
