@@ -104,11 +104,11 @@ void CEntityManager::update()
 	}
 }
 
-void CEntityManager::add(uint8 eid, const std::string &name, sint32 totalScore, CRGBA &color, const string &texture, bool spectator, bool isLocal, const string &trace)
+void CEntityManager::add(uint8 eid, const std::string &name, sint32 totalScore, CRGBA &color, const string &texture, bool spectator, bool isLocal, const string &trace, const string &meshName)
 {
 	nlinfo("CEntityManager::add(%d:%s)",eid,name.c_str());
 	nlassert(!exist(eid));
-	entities()[eid]->init(CEntity::Player, name, totalScore, color, texture, "pingoo", spectator, isLocal, trace);
+	entities()[eid]->init(CEntity::Player, name, totalScore, color, texture, meshName, spectator, isLocal, trace);
 }
 
 void CEntityManager::remove(uint8 eid)

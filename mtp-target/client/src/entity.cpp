@@ -425,6 +425,9 @@ void CEntity::load3d()
 		if(!ok) TextureFilename = "";
 	}
 
+	if(MeshName.empty())
+		MeshName = "pingoo";
+
 	if(CloseMesh.empty())
 	{
 		string res = CResourceManager::instance().get("entity_"+MeshName+"_close.shape");

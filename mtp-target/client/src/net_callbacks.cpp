@@ -111,6 +111,7 @@ static void cbLogin(CNetMessage &msgin)
 	bool spec;
 	bool oc = false;
 	string trace = "trace";
+	string mesh = "pingoo";
 
 	msgin.serial(self, eid, name, totalScore);
 	msgin.serial(color, texture, spec);
@@ -123,12 +124,16 @@ static void cbLogin(CNetMessage &msgin)
 	{
 		msgin.serial(trace);
 	}
-	nlinfo("NET: cbLogin self=%d eid=%hu name='%s' totalScore='%d' color=(%d,%d,%d) texture='%s' spec=%d oc=%d trace='%s", 
-		self, (uint16)eid, name.c_str(), totalScore, color.R, color.G, color.B, texture.c_str(), spec, oc, trace.c_str());
+	if(msgin.getPos() < (sint32)msgin.length())
+	{
+		msgin.serial(mesh);
+	}
+	nlinfo("NET: cbLogin self=%d eid=%hu name='%s' totalScore='%d' color=(%d,%d,%d) texture='%s' spec=%d oc=%d trace='%s' mesh='%s'", 
+		self, (uint16)eid, name.c_str(), totalScore, color.R, color.G, color.B, texture.c_str(), spec, oc, trace.c_str(), mesh.c_str());
 		
 	nldebug("player list.size = %d", CEntityManager::instance().size());
 
-	CEntityManager::instance().add(eid, name, totalScore, color, texture, spec, self, trace);
+	CEntityManager::instance().add(eid, name, totalScore, color, texture, spec, self, trace, mesh);
 
 	if(oc)
 		CEntityManager::instance()[eid].swapOpenClose();
