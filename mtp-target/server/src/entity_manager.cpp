@@ -32,6 +32,7 @@
 #include "client.h"
 #include "network.h"
 #include "variables.h"
+#include "lua_engine.h"
 #include "level_manager.h"
 #include "entity_manager.h"
 #include "session_manager.h"
@@ -133,7 +134,6 @@ void CEntityManager::remove(uint8 eid)
 	}
 	
 	ClientToRemoveList->push_back(eid);
-
 }
 
 void CEntityManager::_add(std::list<CEntity *> &addList)
@@ -180,6 +180,7 @@ void CEntityManager::_remove(std::list<uint8> &removeList)
 		else
 		{
 			nlinfo("Removing client eid %hu name '%s'", (uint16)c->id(), c->name().c_str());
+			CLuaEngine::instance().entityLeaveEvent(c);
 			CSessionManager::instance().editMode(0);
 			
 			// TODO clientConnected(c->Cookie, false);
