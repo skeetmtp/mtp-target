@@ -33,6 +33,7 @@
 #include "login_client.h"
 
 #include "3d_task.h"
+#include "time_task.h"
 
 
 //
@@ -174,8 +175,12 @@ string CLoginClientMtp::authenticate (const string &loginServiceAddr, const stri
 	{
 		_CallbackClient->update ();
 		nlSleep(10);
+		C3DTask::instance().update();
+		CTimeTask::instance().update();
+		if(C3DTask::instance().kbPressed(KeyESCAPE))
+			return "CLoginClientMtp::authenticate(): user abort";
 	}
-
+	
 	// have we received the answer?
 	if (!VerifyLoginPassword)
 	{
@@ -214,8 +219,12 @@ string CLoginClientMtp::confirmConnection (uint32 shardListIndex)
 	{
 		_CallbackClient->update ();
 		nlSleep(10);
+		C3DTask::instance().update();
+		CTimeTask::instance().update();
+		if(C3DTask::instance().kbPressed(KeyESCAPE))
+			return "CLoginClientMtp::confirmConnection(): user abort";
 	}
-
+	
 	// have we received the answer?
 	if (!ShardChooseShard)
 	{
