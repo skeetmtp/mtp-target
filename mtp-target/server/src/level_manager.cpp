@@ -200,7 +200,7 @@ string CLevelManager::updateStats(const std::string &name, sint32 score, float t
 	{
 		if(stats.asString(i) == levelname)
 		{
-			if(score > 0 && int(time*100.0) < int(stats.asFloat(i+2)*100.0f))
+			if(time > 0.0f && score > 0 && int(time*100.0) < int(stats.asFloat(i+2)*100.0f))
 			{
 				stats.setAsString(name, i+1);
 				stats.setAsString(toString("%.2f",time), i+2);
@@ -208,7 +208,7 @@ string CLevelManager::updateStats(const std::string &name, sint32 score, float t
 				res = toString("%s has broken the time record with %.2f seconds.", name.c_str(), time);
 				nlinfo("best time");
 			}
-			if(score > 0 && score > stats.asInt(i+4))
+			if(time > 0.0f && score > 0 && score > stats.asInt(i+4))
 			{
 				stats.setAsString(name, i+3);
 				stats.setAsString(toString("%d",score), i+4);
