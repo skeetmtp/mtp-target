@@ -13,7 +13,7 @@ include_once("lang.php");
 		$limit_base=0;
 		
 	$cacheFileName = $cache_dir."/stat_ranking_per_score_of_the_day_".$limit_base.".html";
-	if(isCacheFileUpToDate($cacheFileName))
+	if(isCacheFileUpToDateDuration($cacheFileName,60*60*24))//once a day
 	{
 		include($cacheFileName);
 		return;
