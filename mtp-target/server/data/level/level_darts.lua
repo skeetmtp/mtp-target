@@ -1,7 +1,7 @@
 Name = "Snow darts"
 Author = "Ace"
 ServerLua = "level_darts_server.lua"
-ReleaseLevel = 4
+ReleaseLevel = 2
 
 skyShapeFileName = "sky.shape";
 sunAmbientColor = CRGBA(82, 100, 133, 255);
