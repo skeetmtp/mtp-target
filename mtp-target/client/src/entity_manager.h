@@ -106,6 +106,7 @@ public:
 
 	CEntity &operator [](uint8 eid);
 	CEntity *getByName(std::string &name);
+	CEntity *getById(uint8 eid);
 	
 	void	getEIdSortedByScore(std::vector<uint8> &eids) ;
 

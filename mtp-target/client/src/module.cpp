@@ -79,6 +79,7 @@ using namespace NL3D;
 CModule::CModule() : CModuleCommon()
 {
 	mat = C3DTask::instance().driver().createMaterial();
+	luaProxy = 0;
 }
 
 
@@ -115,6 +116,24 @@ void CModule::init(const string &name, const std::string &shapeName, uint8 id, c
 	oldScale.z *= scale.z;
 	Mesh.setScale(oldScale);
 	CMatrix mmatrix = mesh().getMatrix();
+	Color.set(255,255,255);
+	
+}
+
+void CModule::luaInit()
+{
+	if(luaProxy)
+	{
+		delete luaProxy;
+		luaProxy = 0;
+	}
+	if(CLevelManager::instance().levelPresent())
+	{
+		luaProxy = new CModuleProxy(CLevelManager::instance().currentLevel().luaState(),this);	
+		nlinfo("CModule::luaInit(), luaState=0x%p , proxy = 0x%p",CLevelManager::instance().currentLevel().luaState(),luaProxy);
+	}
+	else
+		nlwarning("lua init : no level loaded");
 	
 }
 
@@ -163,7 +182,7 @@ void CModule::update(const NLMISC::CVector &pos, const NLMISC::CVector &rot)
 
 void CModule::enabled(bool b)
 {
-	if(Enabled==b) return;
+	if(Enabled==b || Mesh.empty()) return;
 
 	CModuleCommon::enabled(b);
 
@@ -174,3 +193,17 @@ void CModule::enabled(bool b)
 
 	nlinfo("%s %s",b?"show":"hide",name().c_str());
 }
+
+void  CModule::color(const NLMISC::CRGBA &col) 
+{ 
+	if(Color==col || Mesh.empty()) return;
+	
+	Color = col; 
+	for(uint i = 0; i < Mesh.getNumMaterials(); i++)
+	{
+		Mesh.getMaterial(i).setDiffuse(Color);
+		Mesh.getMaterial(i).setAmbient(Color);
+	}
+	
+}
+

@@ -374,6 +374,14 @@ CEntity *CEntityManager::getByName(string &name)
 	return 0;
 }
 
+CEntity *CEntityManager::getById(uint8 eid)
+{
+	if(!exist(eid))
+		return NULL;
+	return entities()[eid];
+}
+
+
 //
 // Commands
 //

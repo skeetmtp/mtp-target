@@ -94,6 +94,10 @@ public:
 	static int getModuleByName(lua_State *L);
 	static int getParticlesByName(lua_State *L);
 	
+	static int getEntityById(lua_State *L);
+	static int getModuleById(lua_State *L);
+	static int getParticlesById(lua_State *L);
+	
 	
 private:
 	

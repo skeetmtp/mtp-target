@@ -55,7 +55,10 @@ Lunar<CModuleProxy>::RegType CModuleProxy::methods[] =
 		bind_method(CModuleProxy, setEnabled),	
 		bind_method(CModuleProxy, setVisible),	
 		bind_method(CModuleProxy, getName),	
+		bind_method(CModuleProxy, getId),	
 		bind_method(CModuleProxy, setShapeName),	
+		bind_method(CModuleProxy, getPos),	
+		bind_method(CModuleProxy, setPos),	
 	{0,0}
 };
 
@@ -151,6 +154,13 @@ int CModuleProxy::getName(lua_State *luaSession)
 	return 1;
 }
 
+int CModuleProxy::getId(lua_State *luaSession)
+{
+	lua_Number id = _module->id();
+	lua_pushnumber(luaSession,id); 
+	return 1;
+}
+
 int CModuleProxy::setShapeName(lua_State *luaSession)
 {
 	unsigned int name_len;
@@ -175,3 +185,19 @@ int CModuleProxy::setUserData(lua_State *luaSession)
 	LuaUserDataRef = lua_ref(luaSession,1); //get ref id and lock it
 	return 0; // no return value
 }
+
+int CModuleProxy::setPos(lua_State *luaSession)
+{
+	CLuaVector pos  = *Lunar<CLuaVector>::check(luaSession,-1);
+	_module->position(pos);
+	return 0;
+}
+
+int CModuleProxy::getPos(lua_State *luaSession)
+{
+	Pos = _module->position();
+	Lunar<CLuaVector>::push(luaSession,&Pos);
+	return 1;
+}
+
+

@@ -57,6 +57,8 @@ public:
 	int setUserData(lua_State *luaSession);
 	
 	int getName(lua_State *luaSession);
+	int getPos(lua_State *luaSession);
+	int setPos(lua_State *luaSession);
 	
 	
 	static const char className[];	
@@ -65,6 +67,7 @@ private:
 	void		*LuaUserData;
 	int			 LuaUserDataRef;	
 	CParticles *_particles;
+	CLuaVector Pos;
 };
 
 

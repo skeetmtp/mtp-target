@@ -21,6 +21,7 @@
 #define _MODULE_LUA_PROXY_H_
 
 #include "../../common/lunar.h"
+#include "../../common/lua_nel.h"
 
 class CModule;
 
@@ -56,6 +57,9 @@ public:
 	int setUserData(lua_State *luaSession);
 	
 	int getName(lua_State *luaSession);
+	int getPos(lua_State *luaSession);
+	int setPos(lua_State *luaSession);
+	int setColor(lua_State *luaSession);
 	
 	
 	static const char className[];	
@@ -64,6 +68,7 @@ private:
 	void		*LuaUserData;
 	int			 LuaUserDataRef;	
 	CModule *_module;
+	CLuaVector Pos;
 };
 
 

@@ -44,6 +44,7 @@ extern "C"
 #include "water_task.h"
 #include "editor_task.h"
 #include "task_manager.h"
+#include "level_manager.h"
 #include "entity_manager.h"
 #include "lens_flare_task.h"
 #include "entity_lua_proxy.h"
@@ -486,7 +487,16 @@ void CLevel::reset()
 	lua_register(LuaState, "getEntityByName", getEntityByName);	
 	lua_register(LuaState, "getModuleByName", getModuleByName);	
 	lua_register(LuaState, "getParticlesByName", getParticlesByName);	
+	lua_register(LuaState, "getEntityById", getEntityById);	
+	lua_register(LuaState, "getModuleById", getModuleById);	
+	lua_register(LuaState, "getParticlesById", getParticlesById);	
 	CEntityManager::instance().luaInit();
+	for(uint j = 0; j<getModuleCount();j++)
+		if(Modules[j])
+			Modules[j]->luaInit();
+	for(uint k = 0; k<getParticlesCount();k++)
+		if(Particles[k])
+			Particles[k]->luaInit();
 }
 
 
@@ -644,6 +654,15 @@ int CLevel::getModuleByName(lua_State *L)
 	const char *moduleName = luaL_checklstring(L, 1, &len);
 	string name(moduleName);
 	CModule *m = 0;
+	if(CLevelManager::instance().levelPresent())
+		m = CLevelManager::instance().currentLevel().getModule(name);
+	if(m)
+		nlinfo("Lua(0x%p) : getModuleById(%s))=0x%p(0x%p)",L,name.c_str(),m,m->luaProxy);
+	if(m==0)
+	{
+		nlwarning("getModuleById(%s)==0",name.c_str());
+		return 0;
+	}
 	Lunar<CModuleProxy>::push(L, m->luaProxy);
 	return 1;
 }
@@ -655,6 +674,68 @@ int CLevel::getParticlesByName(lua_State *L)
 	const char *particlesName = luaL_checklstring(L, 1, &len);
 	string name(particlesName);
 	CParticles *p = 0;
+	if(CLevelManager::instance().levelPresent())
+		p = CLevelManager::instance().currentLevel().getParticles(name);
+	if(p)
+		nlinfo("Lua(0x%p) : getParticlesByName(%s))=0x%p(0x%p)",L,name.c_str(),p,p->luaProxy);
+	if(p==0)
+	{
+		nlwarning("getParticlesByName(%s)==0",name.c_str());
+		return 0;
+	}
+	Lunar<CParticlesProxy>::push(L, p->luaProxy);
+	return 1;
+}
+
+
+int CLevel::getEntityById(lua_State *L)
+{
+	uint8 id = (uint8 )luaL_checknumber(L,1);
+	CEntity *e = CEntityManager::instance().getById(id);
+	if(e)
+		nlinfo("Lua(0x%p) : getEntityById(%d))=0x%p(0x%p)",L,id,e,e->luaProxy);
+	if(e==0)
+	{
+		nlwarning("getEntityById(%d)==0",id);
+		return 0;
+	}
+	else
+		Lunar<CEntityProxy>::push(L, e->luaProxy);
+	return 1;
+}
+
+
+int CLevel::getModuleById(lua_State *L)
+{
+	uint8 id = (uint8 )luaL_checknumber(L,1);
+	CModule *m = 0;
+	if(CLevelManager::instance().levelPresent())
+		m = CLevelManager::instance().currentLevel().getModule(id);
+	if(m)
+		nlinfo("Lua(0x%p) : getModuleById(%d))=0x%p(0x%p)",L,id,m,m->luaProxy);
+	if(m==0)
+	{
+		nlwarning("getModuleById(%d)==0",id);
+		return 0;
+	}
+	Lunar<CModuleProxy>::push(L, m->luaProxy);
+	return 1;
+}
+
+
+int CLevel::getParticlesById(lua_State *L)
+{
+	uint8 id = (uint8 )luaL_checknumber(L,1);
+	CParticles *p = 0;
+	if(CLevelManager::instance().levelPresent())
+		p = CLevelManager::instance().currentLevel().getParticles(id);
+	if(p)
+		nlinfo("Lua(0x%p) : getParticlesById(%d))=0x%p(0x%p)",L,id,p,p->luaProxy);
+	if(p==0)
+	{
+		nlwarning("getParticlesById(%d)==0",id);
+		return 0;
+	}
 	Lunar<CParticlesProxy>::push(L, p->luaProxy);
 	return 1;
 }

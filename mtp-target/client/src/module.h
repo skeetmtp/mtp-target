@@ -89,9 +89,15 @@ public:
 	virtual void update(const NLMISC::CVector &pos, const NLMISC::CVector &rot);
 	
 	virtual void position(const NLMISC::CVector &pos) {Position = pos; _changed = true; Mesh.setPos(pos);}
-
+	virtual NLMISC::CVector position() {return CEditableElementCommon::position();}
+	
+	const NLMISC::CRGBA	&color() const { return Color; }
+	void  color(const NLMISC::CRGBA &col);
+	void luaInit();
+	
 	CModuleProxy *luaProxy;
 private:
+	NLMISC::CRGBA	Color;
 };
 
 

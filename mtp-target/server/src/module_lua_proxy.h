@@ -62,7 +62,10 @@ public:
 	int setEnabled(lua_State *L);
 	int setVisible(lua_State *L);
 	int getName(lua_State *luaSession);
+	int getId(lua_State *luaSession);
 	int setShapeName(lua_State *luaSession);
+	int setPos(lua_State *luaSession);
+	int getPos(lua_State *luaSession);
 	
 	
 	static const char className[];	
@@ -71,6 +74,7 @@ private:
 	void		*LuaUserData;
 	int			 LuaUserDataRef;	
 	CModule *_module;
+	CLuaVector Pos;
 };
 
 

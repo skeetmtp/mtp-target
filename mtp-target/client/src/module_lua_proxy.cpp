@@ -47,6 +47,9 @@ Lunar<CModuleProxy>::RegType CModuleProxy::methods[] =
 		bind_method(CModuleProxy, getUserData),	
 		bind_method(CModuleProxy, setUserData),	
 		bind_method(CModuleProxy, getName),	
+		bind_method(CModuleProxy, setColor),	
+		bind_method(CModuleProxy, setPos),	
+		bind_method(CModuleProxy, getPos),	
 	{0,0}
 };
 
@@ -103,3 +106,29 @@ int CModuleProxy::getName(lua_State *luaSession)
 	lua_pushstring(luaSession, _module->name().c_str());
 	return 1;
 }
+
+int CModuleProxy::setColor(lua_State *luaSession)
+{
+	uint8 r = (uint8 )luaL_checknumber(luaSession,1);
+	uint8 g = (uint8 )luaL_checknumber(luaSession,2);
+	uint8 b = (uint8 )luaL_checknumber(luaSession,3);
+	uint8 a = (uint8 )luaL_checknumber(luaSession,4);
+	_module->color(CRGBA(r,g,b,a));
+	return 0;	
+}
+
+
+int CModuleProxy::getPos(lua_State *luaSession)
+{
+	Pos = _module->position();
+	Lunar<CLuaVector>::push(luaSession,&Pos);
+	return 1;
+}
+
+int CModuleProxy::setPos(lua_State *luaSession)
+{
+	CLuaVector pos  = *Lunar<CLuaVector>::check(luaSession,-1);
+	_module->position(pos);
+	return 0;
+}
+

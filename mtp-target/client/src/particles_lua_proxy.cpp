@@ -47,6 +47,8 @@ Lunar<CParticlesProxy>::RegType CParticlesProxy::methods[] =
 		bind_method(CParticlesProxy, getUserData),	
 		bind_method(CParticlesProxy, setUserData),	
 		bind_method(CParticlesProxy, getName),	
+		bind_method(CParticlesProxy, getPos),	
+		bind_method(CParticlesProxy, setPos),	
 	{0,0}
 };
 
@@ -102,5 +104,22 @@ int CParticlesProxy::getName(lua_State *luaSession)
 {
 	lua_pushstring(luaSession,_particles->name().c_str());
 	return 1;
+}
+
+
+
+
+int CParticlesProxy::getPos(lua_State *luaSession)
+{
+	Pos = _particles->position();
+	Lunar<CLuaVector>::push(luaSession,&Pos);
+	return 1;
+}
+
+int CParticlesProxy::setPos(lua_State *luaSession)
+{
+	CLuaVector pos  = *Lunar<CLuaVector>::check(luaSession,-1);
+	_particles->position(pos);
+	return 0;
 }
 

@@ -403,6 +403,7 @@ int CLuaEngine::execLuaOnAllClient(lua_State *L)
 	string code(text);
 	if(MTPT_NETWORK_VERSION>=2)
 	{
+		//nlwarning("lua : execLuaOnAllClient : %s",code.c_str());
 		CNetMessage msgout(CNetMessage::ExecLua);
 		msgout.serial(code);
 		CNetwork::instance().send(msgout);

@@ -89,6 +89,9 @@ public:
 	virtual void update(const NLMISC::CVector &pos, const NLMISC::CVector &rot);
 	
 	virtual void position(const NLMISC::CVector &pos);
+	virtual NLMISC::CVector position() {return CEditableElementCommon::position();}
+	
+	void luaInit();
 
 	CParticlesProxy *luaProxy;
 	
