@@ -85,7 +85,7 @@ void CModule::init(const std::string &name,uint8 id, NLMISC::CVector position, N
 	CModuleCommon::init(name,id,position,rotation);
 	
 	// Get collision faces
-	loadMesh(ShapeName, Vertices, Normals, Indices,true);
+	loadMesh(ShapeName, Vertices, Normals, Indices, AutoEdges,true);
 	
 	Geom = 0;
 	luaProxy = NULL;

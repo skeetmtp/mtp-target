@@ -105,7 +105,7 @@ bool CAutoEdge::compute(CEditableElementCommon *aeFixedEditableElement,CEditable
 	vector<CAutoEdge> &aeMove  = aeMoveEditableElement->AutoEdges;
 	vector<CAutoEdge> &aeFixed = aeFixedEditableElement->AutoEdges;
 	float dpEpsilon = 0.1f;
-	float offsetEpsilon = 0.5f;
+	float offsetEpsilon = 0.05f;
 	for(uint i=0;i<aeMove.size();i++)
 	{
 		for(uint j=0;j<aeFixed.size();j++)
