@@ -60,45 +60,44 @@ StartPoints =
 Modules =
 {
 	{ Position = CVector(0.000000,0.000000,5.000000), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_ramp", Shape="snow_ramp" },
-	{ Position = CVector(-0.091699,-15.224501,0.990530), Scale = CVector(100.000000, 1.000000, 100.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_box", Shape="snow_box" },
-	{ Position = CVector(-0.107331,-15.384774,0.990401), Scale = CVector(100.000000, 1.000000, 100.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_box", Shape="snow_box" },
+	{ Position = CVector(-0.091699,-15.224501,0.990530), Scale = CVector(100.000000, 1.000000, 100.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_neutral", Shape="snow_box" },
+	{ Position = CVector(-0.107331,-15.384774,0.990401), Scale = CVector(100.000000, 1.000000, 100.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_neutral", Shape="snow_box" },
 
-	{ Position = CVector(-1.0,-15.300000,2.000812), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_funnel", Shape="snow_funnel" },
-	{ Position = CVector(-1.0,-15.300000,1.902271), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_tube", Shape="snow_tube" },
+	{ Position = CVector(-1.0,-15.300000,2.000812), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_neutral", Shape="snow_funnel" },
+	{ Position = CVector(-1.0,-15.300000,1.902271), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_neutral", Shape="snow_tube" },
 	{ Position = CVector(-1.0,-15.300000,1.834467), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_target_50", Shape="snow_torus" },
 
-	{ Position = CVector(-0.8,-15.300000,2.000812), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_funnel", Shape="snow_funnel" },
+	{ Position = CVector(-0.8,-15.300000,2.000812), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_neutral", Shape="snow_funnel" },
 
-	{ Position = CVector(-0.6,-15.300000,2.000812), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_funnel", Shape="snow_funnel" },
-	{ Position = CVector(-0.6,-15.300000,1.902271), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_tube", Shape="snow_tube" },
+	{ Position = CVector(-0.6,-15.300000,2.000812), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_neutral", Shape="snow_funnel" },
+	{ Position = CVector(-0.6,-15.300000,1.902271), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_neutral", Shape="snow_tube" },
 	{ Position = CVector(-0.6,-15.300000,1.834467), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_target_100", Shape="snow_torus" },
 
-	{ Position = CVector(-0.4,-15.300000,2.000812), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_funnel", Shape="snow_funnel" },
-	{ Position = CVector(-0.4,-15.300000,1.902271), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_tube", Shape="snow_tube" },
+	{ Position = CVector(-0.4,-15.300000,2.000812), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_neutral", Shape="snow_funnel" },
+	{ Position = CVector(-0.4,-15.300000,1.902271), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_neutral", Shape="snow_tube" },
 
-	{ Position = CVector(-0.2,-15.300000,2.000812), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_funnel", Shape="snow_funnel" },
-	{ Position = CVector(-0.2,-15.300000,1.902271), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_tube", Shape="snow_tube" },
+	{ Position = CVector(-0.2,-15.300000,2.000812), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_neutral", Shape="snow_funnel" },
+	{ Position = CVector(-0.2,-15.300000,1.902271), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_neutral", Shape="snow_tube" },
 	{ Position = CVector(-0.2,-15.300000,1.834467), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_target_300", Shape="snow_torus" },
 
-	{ Position = CVector(0.0,-15.300000,2.000812), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_funnel", Shape="snow_funnel" },
-	{ Position = CVector(0.0,-15.300000,1.902271), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_tube", Shape="snow_tube" },
+	{ Position = CVector(0.0,-15.300000,2.000812), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_neutral", Shape="snow_funnel" },
+	{ Position = CVector(0.0,-15.300000,1.902271), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_neutral", Shape="snow_tube" },
 
-	{ Position = CVector(0.2,-15.300000,2.000812), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_funnel", Shape="snow_funnel" },
-	{ Position = CVector(0.2,-15.300000,1.902271), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_tube", Shape="snow_tube" },
+	{ Position = CVector(0.2,-15.300000,2.000812), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_neutral", Shape="snow_funnel" },
+	{ Position = CVector(0.2,-15.300000,1.902271), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_neutral", Shape="snow_tube" },
 	{ Position = CVector(0.2,-15.300000,1.834467), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_target_n300", Shape="snow_torus" },
 
-	{ Position = CVector(0.4,-15.300000,2.000812), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_funnel", Shape="snow_funnel" },
+	{ Position = CVector(0.4,-15.300000,2.000812), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_neutral", Shape="snow_funnel" },
 
-	{ Position = CVector(0.6,-15.300000,2.000812), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_funnel", Shape="snow_funnel" },
-	{ Position = CVector(1.0,-15.300000,1.902271), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_tube", Shape="snow_tube" },
+	{ Position = CVector(0.6,-15.300000,2.000812), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_neutral", Shape="snow_funnel" },
+	{ Position = CVector(1.0,-15.300000,1.902271), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_neutral", Shape="snow_tube" },
 	{ Position = CVector(1.0,-15.300000,1.834467), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_target_n100", Shape="snow_torus" },
 
-	{ Position = CVector(0.8,-15.300000,2.000812), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_funnel", Shape="snow_funnel" },
-	{ Position = CVector(1.0,-15.300000,1.902271), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_tube", Shape="snow_tube" },
+	{ Position = CVector(0.8,-15.300000,2.000812), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_neutral", Shape="snow_funnel" },
+	{ Position = CVector(1.0,-15.300000,1.902271), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_neutral", Shape="snow_tube" },
 	{ Position = CVector(1.0,-15.300000,1.834467), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_target_50", Shape="snow_torus" },
 
-	{ Position = CVector(1.0,-15.300000,2.000812), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_funnel", Shape="snow_funnel" },
-	{ Position = CVector(1.0,-15.300000,1.902271), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_tube", Shape="snow_tube" },
+	{ Position = CVector(1.0,-15.300000,2.000812), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_neutral", Shape="snow_funnel" },
+	{ Position = CVector(1.0,-15.300000,1.902271), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_neutral", Shape="snow_tube" },
 	{ Position = CVector(1.0,-15.300000,1.834467), Scale = CVector(1.000000, 1.000000, 1.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_target_50", Shape="snow_torus" },
-
 }
