@@ -16,8 +16,7 @@ if(file_exists($uploadfile) || $uploadfile == "ping_ball_blue.tga")
 
 if(!ereg("ping_ball_([[:alnum:]]+).tga", $_FILES['userfile']['name'], $regs))
 {
-   die("FAILED! The file you tried to upload doesn't follow the file name rulez (for example: ping_ball_ryzom.tga), please, use another \
-name");
+   die("FAILED! The file you tried to upload doesn't follow the file name rulez (for example: ping_ball_ryzom.tga), please, use another name");
 }
 
 if (move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile))
