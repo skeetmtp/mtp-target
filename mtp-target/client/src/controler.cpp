@@ -123,7 +123,12 @@ void CControler::update()
 		CVector right;
 		lookAt = mat->getJ();
 		right  = mat->getI();
-
+		/*
+		if(lookAt.norm()>1.0f)
+			nlinfo(">>look = %f",lookAt.norm());
+		if(right.norm()>1.0f)
+			nlinfo(">>right = %f",right.norm());
+		*/
 		if (!FollowEntity && !CEditorTask::instance().enable())
 		{			
 			CVector dv(0,0,0);
@@ -399,12 +404,15 @@ void CControler::update()
 		//TODO gerer la diff de temps entre _virtualFrameTime et NetVirtualFrameDuration
 		if(!CEntityManager::instance()[EId].openClose())
 		{
-			CNetworkTask::instance().force(CVector(Accel.x, Accel.y, 0.0f));
+			CVector newForce(Accel.x, Accel.y, 0.0f);
+			CNetworkTask::instance().force(newForce);
+			//nlinfo(">> force=%f",newForce.norm());
 		}
 		else
 		{
 			float realRotz = RotZ - (float)NLMISC::Pi / 2.0f;
-			CNetworkTask::instance().force(CVector(realRotz, 0.0f, Pique));
+			CVector newForce(realRotz, 0.0f, Pique);
+			CNetworkTask::instance().force(newForce);
 		}
 	
 		Accel = CVector::Null;
