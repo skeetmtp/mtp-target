@@ -204,13 +204,6 @@ void CNetwork::update()
 {
 	CNetMessage msgout(CNetMessage::Update);
 
-	float rsxTime;
-	{
-		SyncPhyTime::CAccessor acces(&syncPhyTime);
-		rsxTime = (acces.value()-syncStartPhyTime) / 1000.0f;
-	}
-	//msgout.serial(rsxTime);
-
 	{
 		CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
 		
@@ -228,7 +221,8 @@ void CNetwork::update()
 			uint16 ping = (*it)->Ping.getSmoothValue();
 			msgout.serial(eid, (*it)->Pos, ping);
 
-			(*it)->LastSentPing.push(currentTime);
+			if((*it)->type() != CEntity::Bot)
+				(*it)->LastSentPing.push(currentTime);
 		}
 	}
 
