@@ -169,6 +169,7 @@ static void cbLogin(CClient *c, CNetMessage &msgin)
 			fprintf(fp, " '%s'", (c->sock()?c->sock()->remoteAddr().ipAddress().c_str():"unknown"));
 			if(!error.empty()) fprintf(fp, " '%s'", error.c_str());
 			fprintf(fp, "\n");
+			fclose(fp);
 		}
 		fp = fopen("clients_count.stat", "ab");
 		if(fp)
