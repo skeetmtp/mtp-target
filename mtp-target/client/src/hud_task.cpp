@@ -338,6 +338,11 @@ void CHudTask::render()
 		TimeBeforeTimeout = 0;
 	string timeBeforeTimeoutStr = toString("Time left %u",(uint)TimeBeforeTimeout);
 	CFontManager::instance().printf(CRGBA(245, 238, 141, 255), 10.0f, (float)(C3DTask::instance().screenHeight() - 20),1,timeBeforeTimeoutStr.c_str() );
+	if(!ReplayFile.empty())
+	{
+		string pressPauseToRestart = "Press pause key to restart replay";
+		CFontManager::instance().printf(CRGBA(245, 238, 141, 255), 10.0f, (float)(C3DTask::instance().screenHeight() - 40),1,pressPauseToRestart.c_str() );
+	}
 	
 	CFontManager::instance().printf(CRGBA(255,255,255,255),(C3DTask::instance().screenWidth() - _viewedName.size() * CFontManager::instance().fontWidth()) / 2.0f,float(C3DTask::instance().screenHeight() - 2 * CFontManager::instance().fontHeight()),1,_viewedName.c_str());
 
