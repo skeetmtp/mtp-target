@@ -4,10 +4,10 @@
 	<server name="Easy" address="mtp-target.dyndns.org">
 		<port>51574</port>
 	</server>
-	<server name="Advanced" address="mtp-target.dyndns.org">
+	<server name="Expert" address="mtp-target.dyndns.org">
 		<port>51575</port>
 	</server>
-	<server name="Development" address="skeet.dyndns.org">
+	<server name="Testing" address="skeet.dyndns.org">
 		<port>51574</port>
 	</server>
 </resource>
