@@ -1,0 +1,6 @@
+<?xml version="1.0" standalone="no" ?>
+<!-- this is a mtp-target resource -->
+<resource>
+	<server name="Easy server" address="mtp-target.dyndns.org" port="mainFrame">
+	</server>
+</resource>
