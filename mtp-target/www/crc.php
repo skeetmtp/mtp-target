@@ -7,7 +7,7 @@
 	<?php
 		function emptyDir($dir)
 		{
-			if(!file_exists)
+			if(!file_exists($dir))
 			{
 				mkdir($dir);
 				return;
