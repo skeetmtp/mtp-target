@@ -1,4 +1,5 @@
 <?php
+ob_start ("ob_gzhandler");
 include_once("menu.php");
 
 if ($page=="todo.txt") echo "<pre>";
