@@ -160,7 +160,7 @@ string CNetworkTask::connect(const CInetAddress &ip, const string &cookie)
 		string password = CConfigFileTask::instance().configFile().getVar("Password").asString();
 		CRGBA color(CConfigFileTask::instance().configFile().getVar("EntityColor").asInt(0), CConfigFileTask::instance().configFile().getVar("EntityColor").asInt(1), CConfigFileTask::instance().configFile().getVar("EntityColor").asInt(2));
 		string texture = CConfigFileTask::instance().configFile().getVar("EntityTexture").asString();
-		uint32 networkVersion = CConfigFileTask::instance().configFile().getVar("NetworkVersion").asInt();
+		networkVersion = CConfigFileTask::instance().configFile().getVar("NetworkVersion").asInt();
 		string co = cookie;
 		msgout.serial(networkVersion, co, login);
 		msgout.serial(password, color, texture);

@@ -82,6 +82,8 @@ public:
 
 	NLNET::CBufClient &sock() { return Sock; }
 
+	uint32 networkVersion;
+
 private:
 	
 	NLNET::CBufClient	Sock;
