@@ -9,6 +9,8 @@ function Entity:init()
   self:setCurrentScore(0);
   --print(self:getName());
   --print("entity init");
+  self:setStartPointId(clientId+0*getSessionId()*2);
+  clientId = clientId + 1;
 end
 
 function Entity:preUpdate()

@@ -203,14 +203,22 @@ void CNetwork::init()
 	updateCount = 0;
 }
 
-static sint8 computeMantis8_8(float x,float &mx,sint8 &dx)
+#define F88_MAX_VALUE 64
+static sint8 computeMantis8_8(float x,float &mx,uint8 &dx)
 {
+
+	if(x==0.0f)
+	{
+		mx = 0;
+		dx = 0;
+		return 0;
+	}
 	float ax = (float)fabs(x);
 	sint8 sx = 0;
 	mx = 1;
-	if(ax>128)
+	if(ax>(F88_MAX_VALUE))
 	{
-		while(ax*mx>128)
+		while(ax*mx>(F88_MAX_VALUE))
 		{
 			sx--;
 			mx /= 2;
@@ -218,32 +226,46 @@ static sint8 computeMantis8_8(float x,float &mx,sint8 &dx)
 	}
 	else
 	{
-		while(ax*mx<128)
+		while(ax*mx<(F88_MAX_VALUE))
 		{
 			sx++;
 			mx *= 2;
 		}
-		sx--;
 		mx /= 2;
 	}
-	dx = (sint8)(x * mx);
+	int sdx = (int)(x * mx);
+	sx = sx * 2;
+	if(sdx<0)
+		sx|=1;
+	dx = abs(sdx);
+	dx -= F88_MAX_VALUE/2;
 	return sx;	
 }
 
-static void serial8_8fp(CNetMessage &msgout,float x)
+static void serial8_8fp(CNetMessage &msgout,float x,uint8 &rdx,sint8 &rsx)
 {
 	float mx;
-	sint8 dx;
+	uint8 dx;
 	sint8 sx = computeMantis8_8(x,mx,dx);
 	//sint8 dx = (sint8)(x*mx);
 	msgout.serial(sx);
 	msgout.serial(dx);
+	rsx = sx;
+	rdx = dx;
 }
+
+static FILE *fp = NULL;
+static int rpos;
 
 void CNetwork::update()
 {
 	if(CEntityManager::instance().humanClientCount()==0) return;
-	
+	if(updateCount==0)
+	{
+		fp = fopen("net.data","wb");
+		rpos = 0;//rand()%10;
+	}
+
 	updateCount++;
 	if((updateCount%MT_NETWORK_FULL_UPDATE_PERIODE)==0)
 	{
@@ -301,10 +323,24 @@ void CNetwork::update()
 
 				CVector dpos = (*it)->Pos - (*it)->LastSentPos;
 				
-				serial8_8fp(msgout,dpos.x);
-				serial8_8fp(msgout,dpos.y);
-				serial8_8fp(msgout,dpos.z);
-
+				int r;
+				sint8 sx;
+				uint8 dx;
+				//dpos.x = fabs(dpos.x);
+				serial8_8fp(msgout,dpos.x,dx,sx);
+//				if((*it)->id()==rpos && dpos.x!=0)
+				if(dpos.x!=0)
+				{
+					sint8 dsx = sx - (*it)->LastSentSX;
+					//fwrite(&dx,1,1,fp);
+					fwrite(&dsx,1,1,fp);
+					fflush(fp);
+					(*it)->LastSentSX = sx;
+				}
+				serial8_8fp(msgout,dpos.y,dx,sx);
+				serial8_8fp(msgout,dpos.z,dx,sx);
+				
+				
 				if((*it)->type() != CEntity::Bot)
 					(*it)->LastSentPing.push(currentTime);
 				
@@ -321,6 +357,8 @@ void CNetwork::update()
 
 void CNetwork::release()
 {
+	if(fp)
+		fclose(fp);
 	if(!NetworkThread || !NetworkTask)
 		return;
 

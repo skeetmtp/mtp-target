@@ -152,10 +152,21 @@ static void cbOpenClose(CNetMessage &msgin)
 static float serial8_8fp(CNetMessage &msgin)
 {
 	float mx = 1;
-	sint8 sx;
-	sint8 dx;
+	sint8 rsx,sx,dx;
+	uint8 rdx;
+	bool dxisneg = false;
 	msgin.serial(sx);
-	msgin.serial(dx);
+	msgin.serial(rdx);
+	if(sx==0)
+		return 0;
+	dxisneg = sx&1 != 0;
+	sx = sx / 2;
+	if(sx>0)
+		sx--;
+	dx = rdx;
+	dx += 32;
+	if(dxisneg)
+		dx = -dx;
 	if(sx>0)
 	{
 		while(sx>0)

@@ -120,6 +120,8 @@ public:
 	uint32				 LastVelPos;		// between 0 and 9
 	uint8				 StartingPointId;
 	NLMISC::CVector		 LastSentPos;
+	NLMISC::CVector		 LastSentDPos;
+	sint8				 LastSentSX;
 	
 	uint8				 LastTouchedClientId;
 	sint32				 PushScore;

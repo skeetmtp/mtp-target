@@ -42,7 +42,7 @@ function Entity:init()
   local parent = CEntity:new();
   self:setCurrentScore(0);
   self:setUserData(parent);
-  self:setStartPointId(clientId+getSessionId()*2);
+  self:setStartPointId(clientId+0*getSessionId()*2);
   local t = math.mod(clientId,2);
 
   if(t==0) then
