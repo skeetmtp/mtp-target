@@ -359,11 +359,13 @@ static void cbFullUpdate(CNetMessage &msgin)
 			CEntityManager::instance()[eid].interpolator().addKey(CEntityInterpolatorKey(CEntityState(pos,false),rsxTime));
 			CEntityManager::instance()[eid].ping(ping);
 		}
+		/*
 		else
 		{
-			nlstop;
 			nlwarning("Received a position of an unknown entity %hu", (uint16)eid);
+			nlstop;
 		}
+		*/
 	}
 }
 
