@@ -69,8 +69,9 @@ public:
 		SessionState,		//    SC
 		StartSession,		//    SC
 		Update,				// CS SC
-		UpdateOne,			// CS SC
-		FullUpdate,			// CS SC
+		UpdateOne,			//    SC
+		UpdateList,			//    SC
+		FullUpdate,			//    SC
 		UpdateElement,		// CS SC
 	};
 

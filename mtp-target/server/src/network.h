@@ -49,8 +49,10 @@ public:
 	void update();
 	void release();
 
+	void reset();
+		
 	// send a message to a specific client
-	void send(uint8 eid, CNetMessage &msg);
+	void send(uint8 eid, CNetMessage &msg, bool checkReady=false);
 
 	// send a message to all connected clients
 	void send(CNetMessage &msg);

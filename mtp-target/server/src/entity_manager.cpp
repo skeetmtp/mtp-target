@@ -154,6 +154,27 @@ void CEntityManager::addClient(NLNET::CTcpSock *sock)
 	}
 }
 
+
+
+void CEntityManager::sendUpdateList()
+{
+	CNetMessage msgout(CNetMessage::UpdateList);
+
+	{
+		CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
+		
+		TTime currentTime = CTime::getLocalTime();
+		
+		for(CEntityManager::EntityConstIt it = acces.value().begin(); it != acces.value().end(); it++)
+		{
+			uint8 eid = (*it)->id();
+			msgout.serial(eid);
+		}
+		CNetwork::instance().send(msgout);
+	}
+}
+
+
 void CEntityManager::login(CEntity *e)
 {
 	bool self;
@@ -241,7 +262,8 @@ void CEntityManager::login(CEntity *e)
 		// now the client can receive position update
 		((CClient*)e)->networkReady(true);
 	}
-	
+
+	sendUpdateList();
 }
 
 void CEntityManager::remove(const string &name)
@@ -432,7 +454,7 @@ string CEntityManager::check(const string &login, const string &password, bool d
 	uint8 nbc = nbEntities();
 	
 	// check if server not full
-	if(nbc == NbMaxClients)
+	if(nbc > NbMaxClients)
 	{
 		return "Server full, "+toString(nbc)+" clients connected";
 	}

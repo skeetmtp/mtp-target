@@ -147,7 +147,7 @@ protected:
 	CVector _currentSmoothDirection;
 	bool    _currentOnWater;
 	
-	double  _lct;
+	static double  _lct;
 	double  _dt;
 	static const double _minLct;
 	static const double _maxLct;

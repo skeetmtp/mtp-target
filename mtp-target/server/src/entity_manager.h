@@ -71,6 +71,7 @@ public:
 
 	bool connected(const std::string &name);
 	uint humanClientCount();
+
 		
 private:
 
@@ -78,6 +79,8 @@ private:
 
 	uint8		findNewId();
 	void		checkForcedClientCount();
+	void		sendUpdateList();
+
 		
 };
 

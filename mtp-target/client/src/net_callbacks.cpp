@@ -149,14 +149,14 @@ static void cbOpenClose(CNetMessage &msgin)
 		fprintf(SessionFile, "%hu OC\n", (uint16)eid);
 }
 
-static float serial8_8fp(CNetMessage &msgin)
+
+
+static float convert8_8fp(sint sx,uint rdx)
 {
 	float mx = 1;
-	sint8 rsx,sx,dx;
-	uint8 rdx;
 	bool dxisneg = false;
-	msgin.serial(sx);
-	msgin.serial(rdx);
+	sint8 dx;
+	
 	if(sx==0)
 		return 0;
 	dxisneg = sx&1 != 0;
@@ -186,6 +186,16 @@ static float serial8_8fp(CNetMessage &msgin)
 	return dx * mx;
 }
 
+static float serial8_8fp(CNetMessage &msgin)
+{
+	sint8 sx;
+	uint8 rdx;
+	msgin.serial(sx);
+	msgin.serial(rdx);
+
+	return convert8_8fp(sx,rdx);
+}
+
 
 static void cbUpdate(CNetMessage &msgin)
 {
@@ -202,15 +212,20 @@ static void cbUpdate(CNetMessage &msgin)
 
 	//msgin.serial (rsxTime);
 
-	while(msgin.getPos() < (sint32)msgin.length())
+	//while(msgin.getPos() < (sint32)msgin.length())
+	nlassert(CEntityManager::instance().updateListId.size());
+	std::list <uint8 >::iterator it;
+	for(it=CEntityManager::instance().updateListId.begin();it!=CEntityManager::instance().updateListId.end();it++)
 	{
+		eid = *it;
 		float deltaCoef = 100;
-		msgin.serial(eid);
+		//msgin.serial(eid);
 		dpos.x = serial8_8fp(msgin);
 		dpos.y = serial8_8fp(msgin);
 		dpos.z = serial8_8fp(msgin);
 		pos = CEntityManager::instance()[eid].LastSent2OthersPos + dpos;
 		CEntityManager::instance()[eid].LastSent2OthersPos = pos;
+		CEntityManager::instance()[eid].LastSent2MePos = pos;
 		if(DisplayDebug)
 			nlinfo("TCP update client %hu a %g %g %g ping %hu", (uint16)eid, pos.x, pos.y, pos.z);
 
@@ -237,15 +252,16 @@ static void cbUpdateOne(CNetMessage &msgin)
 	//uint16 ping;
 	
 	// reply to the update first (used for the ping)
-	CNetMessage msgout(CNetMessage::Update);
-	CNetworkTask::instance().send(msgout);
+	//CNetMessage msgout(CNetMessage::Update);
+	//CNetworkTask::instance().send(msgout);
 	
 	//msgin.serial (rsxTime);
 	
-	while(msgin.getPos() < (sint32)msgin.length())
+	//while(msgin.getPos() < (sint32)msgin.length())
 	{
 		float deltaCoef = 100;
-		msgin.serial(eid);
+		//msgin.serial(eid);
+		eid = CMtpTarget::instance().controler().getControledEntity();
 		dpos.x = serial8_8fp(msgin);
 		dpos.y = serial8_8fp(msgin);
 		dpos.z = serial8_8fp(msgin);
@@ -282,9 +298,15 @@ static void cbFullUpdate(CNetMessage &msgin)
 	
 	//msgin.serial (rsxTime);
 	
-	while(msgin.getPos() < (sint32)msgin.length())
+
+	//while(msgin.getPos() < (sint32)msgin.length())
+	nlassert(CEntityManager::instance().updateListId.size());
+	std::list <uint8 >::iterator it;
+	for(it=CEntityManager::instance().updateListId.begin();it!=CEntityManager::instance().updateListId.end();it++)
 	{
-		msgin.serial(eid, pos, ping);
+		eid = *it;
+		//msgin.serial(eid);
+		msgin.serial(pos, ping);
 		//pos = CEntityManager::instance()[eid].LastSentPos + dpos;
 		CEntityManager::instance()[eid].LastSent2MePos = pos;
 		CEntityManager::instance()[eid].LastSent2OthersPos = pos;
@@ -301,6 +323,19 @@ static void cbFullUpdate(CNetMessage &msgin)
 			nlstop;
 			nlwarning("Received a position of an unknown entity %hu", (uint16)eid);
 		}
+	}
+}
+
+
+static void cbUpdateList(CNetMessage &msgin)
+{
+	uint8 eid;
+	
+	CEntityManager::instance().updateListId.clear();
+	while(msgin.getPos() < (sint32)msgin.length())
+	{
+		msgin.serial(eid);
+		CEntityManager::instance().updateListId.push_back(eid);
 	}
 }
 
@@ -469,6 +504,7 @@ void netCallbacksHandler(CNetMessage &msgin)
 	SWITCH_CASE(OpenClose);
 	SWITCH_CASE(Update);
 	SWITCH_CASE(UpdateOne);
+	SWITCH_CASE(UpdateList);
 	SWITCH_CASE(FullUpdate);
 	SWITCH_CASE(UpdateElement);
 	SWITCH_CASE(Ready);

@@ -53,6 +53,7 @@ void CEntityManager::init()
 		Entities[i].id(i);
 		Entities[i].reset();
 	}
+	updateListId.clear();
 }
 
 void CEntityManager::update()
@@ -76,6 +77,7 @@ void CEntityManager::add(uint8 eid, const std::string &name, sint32 totalScore, 
 	nlassert(!exist(eid));
 
 	Entities[eid].init (CEntity::Player, name, totalScore, color, "pingoo", spectator);
+	nlinfo("CEntityManager::add(%d,%s)",eid,name.c_str());
 }
 
 void CEntityManager::remove(uint8 eid)

@@ -73,6 +73,7 @@ public:
 
 	uint8	size() const;
 
+	std::list <uint8 > updateListId;
 private:
 
 	CEntity		Entities[256];

@@ -267,6 +267,7 @@ void CEntity::init(TEntity type, const std::string &name, sint32 totalScore, CRG
 	Color = color;
 	MeshName = meshname;
 	Spectator = spectator;
+	interpolator().reset();
 	setIsLocal(false);
 	
 	CSoundManager::instance().registerEntity(SoundsDescriptor);
