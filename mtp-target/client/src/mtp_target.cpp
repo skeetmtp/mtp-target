@@ -190,7 +190,6 @@ void CMtpTarget::loadNewSession()
 	
 	CLevelManager::instance().loadLevel(NewLevelName);
 	
-	CLevelManager::instance().currentLevel().reset();
 	CEntityManager::instance().startSession();
 	
 	CMtpTarget::instance().controler().Camera.reset();
@@ -636,6 +635,7 @@ void mtpTarget::everybodyReady()
 {
 	// everybody is ok, let s count down
 	CMtpTarget::instance().State = CMtpTarget::eReady;
+	CLevelManager::instance().currentLevel().reset();
 }
 	
 void mtpTarget::endSession()
