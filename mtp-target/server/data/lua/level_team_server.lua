@@ -46,7 +46,7 @@ function CEntity:setTeamScore( score )
   end
   
   if(self.base:getCurrentScore()==0 and score~=0) then
-    self.bonusTime = getTimeRemaining() * 10;
+    self.bonusTime = getTimeRemaining() * 5;
     local bonus_string = "bonus time left : " .. self.bonusTime;
     self.base:displayText(0,4,1,255,255,0,bonus_string,15);
   end
@@ -79,6 +79,10 @@ function CEntity:setFinalScore()
   else
     self.base:setCurrentScore(teamBlueScore + self.bonusTime);
   end
+  local red_string = "red team score : " .. teamRedScore;
+  local blue_string = "blue team score : " .. teamBlueScore;
+  self.base:displayText(0,5,1,255,0,0,red_string,15);
+  self.base:displayText(0,5,1,100,100,255,blue_string,15);
     
 end
 
