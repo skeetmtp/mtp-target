@@ -60,9 +60,9 @@ using namespace NLNET;
 //
 
 /// association between cookie in string and username
-map<string, string> UserIdNameAssociations;
+static map<string, string> UserIdNameAssociations;
 
-string ListenAddr;
+static string ListenAddr;
 
 string getUserFromCookie(const string &cookie)
 {
@@ -73,148 +73,6 @@ string getUserFromCookie(const string &cookie)
 		return(*it).second;
 }
 
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////// CONNECTION TO THE FRONT END SERVICE ///////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/*
-void cbFESShardChooseShard (CMessage &msgin, const std::string &serviceName, uint16 sid)
-{
-	// the WS answer a user authorize
-	string reason;
-	CLoginCookie cookie;
-	string addr;
-
-	//
-	// S09: receive "SCS" message from FES and send the "SCS" message to the LS
-	//
-	
-	CMessage msgout ("SCS");
-
-	msgin.serial (reason);
-	msgout.serial (reason);
-
-	msgin.serial (cookie);
-	msgout.serial (cookie);
-	
-	if (reason.empty())
-	{
-		msgin.serial (addr);
-
-		// if we set the FontEndAddress in the welcome_service.cfg we use this address
-		if (FrontEndAddress.empty())
-		{
-			msgout.serial (addr);
-		}
-		else
-		{
-			msgout.serial (FrontEndAddress);
-		}
-	}
-	
-	CUnifiedNetwork::getInstance()->send ("LS", msgout);
-}
-
-// This function is call when a FES accepted a new client or lost a connection to a client
-void cbFESClientConnected (CMessage &msgin, const std::string &serviceName, uint16 sid)
-{
-	//
-	// S15: receive "CC" message from FES and send "CC" message to the "LS"
-	//
-
-	CMessage msgout ("CC");
-	
-	uint32 userid;
-	msgin.serial (userid);
-	msgout.serial (userid);
-
-	uint8 con;
-	msgin.serial (con);
-	msgout.serial (con);
-
-	CUnifiedNetwork::getInstance()->send ("LS", msgout);
-
-	// add or remove the user number really connected on this shard
-	for (list<CFES>::iterator it = FESList.begin(); it != FESList.end(); it++)
-	{
-		if ((*it).SId == sid)
-		{
-			if (con) (*it).NbUser++;
-			else (*it).NbUser--;
-			break;
-		}
-	}
-
-	if (con)
-	{
-		// we know that this user is on this FES
-		UserIdSockAssociations.insert (make_pair (userid, sid));
-
-	}
-	else
-	{
-		// remove the user
-		UserIdSockAssociations.erase (userid);
-	}
-}
-
-// a new front end connecting to me, add it
-void cbFESConnection (const std::string &serviceName, uint16 sid, void *arg)
-{
-	FESList.push_back (CFES ((TServiceId)sid));
-	nldebug("new FES connection: sid %u", sid);
-	displayFES ();
-}
-
-// a front end closes the connection, deconnect him
-void cbFESDisconnection (const std::string &serviceName, uint16 sid, void *arg)
-{
-	nldebug("new FES disconnection: sid %u", sid);
-
-	for (list<CFES>::iterator it = FESList.begin(); it != FESList.end(); it++)
-	{
-		if ((*it).SId == sid)
-		{
-			// send a message to the LS to say that all players from this FES are offline
-			map<uint32, TServiceId>::iterator itc = UserIdSockAssociations.begin();
-			map<uint32, TServiceId>::iterator nitc = itc;
-			while (itc != UserIdSockAssociations.end())
-			{
-				nitc++;
-				if ((*itc).second == sid)
-				{
-					// bye bye little player
-					uint32 userid = (*itc).first;
-					nldebug ("due to a frontend crash, removed the player %d", userid);
-					CMessage msgout ("CC");
-					msgout.serial (userid);
-					uint8 con = 0;
-					msgout.serial (con);
-					CUnifiedNetwork::getInstance()->send ("LS", msgout);
-					UserIdSockAssociations.erase (itc);
-				}
-				itc = nitc;
-			}
-
-			// remove the FES
-			FESList.erase (it);
-
-			break;
-		}
-	}
-
-	displayFES ();
-}
-
-// Callback Array for message from FES
-TUnifiedCallbackItem FESCallbackArray[] =
-{
-	{ "SCS", cbFESShardChooseShard },
-	{ "CC", cbFESClientConnected },
-};
-*/
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -310,7 +168,14 @@ void cbLSConnection(const std::string &serviceName, uint16 sid, void *arg)
 	// send online players
 
 	std::list <CEntity*> &ent = CEntityManager::instance().entities();
-	sint32 nbplayers = ent.size();
+	sint32 nbplayers = 0;
+	for(CEntityManager::EntityConstIt it = ent.begin(); it != ent.end(); it++)
+	{
+		if((*it)->type() == CEntity::Client)
+		{
+			nbplayers++;
+		}
+	}
 	msgout.serial(nbplayers);
 	for(CEntityManager::EntityConstIt it = ent.begin(); it != ent.end(); it++)
 	{
