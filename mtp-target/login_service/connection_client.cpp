@@ -344,7 +344,9 @@ static void cbClientChooseShard(CMessage &msgin, TSockId from, CCallbackNetBase 
 		msgout.serial(totalScore);
 		string userTexture = row[8];
 		msgout.serial(userTexture);
-		uint32 userColor = atoi(row2[9]);
+		string userColorStr = row[9];
+		uint32 userColor = 0xffffffff;
+		sscanf(userColorStr.c_str(),"0x%x",&userColor);
 		msgout.serial(userColor);
 		string userTrace = row[10];
 		msgout.serial(userTrace);
