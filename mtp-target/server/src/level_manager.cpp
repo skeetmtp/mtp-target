@@ -104,7 +104,7 @@ bool CLevelManager::newLevel()
 
 	nlinfo("newLevel (%d/%d)",LevelSessionCount,MaxLevelSessionCount );
 	
-	if(LevelSessionCount>MaxLevelSessionCount && CurrentLevel)
+	if(LevelSessionCount<MaxLevelSessionCount && CurrentLevel)
 	{
 		nlinfo("newLevel() : keeping level : '%s'",CurrentLevel->name().c_str());
 		resumePhysics();	
