@@ -99,7 +99,6 @@ void CFontManager::release()
 	if(!Material.empty())
 	{
 		C3DTask::instance().driver().deleteMaterial(Material);
-		//Material.detach();
 	}
 	if(Texture)
 	{

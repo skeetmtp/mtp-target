@@ -70,8 +70,6 @@ using namespace NL3D;
 CEntity::CEntity()
 {
 	Type = Unknown;
-	CloseMesh = 0;
-	OpenMesh = 0;
 	TraceParticle = 0;
 	Rank = 255;
 	LastSent2MePos = CVector::Null;
@@ -140,10 +138,11 @@ void CEntity::update()
 				
 	if(!OpenMesh.empty())
 		OpenMesh.setMatrix(interpolator().getMatrix());
+
 	if(!CloseMesh.empty())
 		CloseMesh.setMatrix(interpolator().getMatrix());
-	{
 
+	{
 /*ace todo		if (OnWater && WaterModel)
 		{
 			//nlinfo("water set pos begin");
@@ -234,24 +233,23 @@ void CEntity::id(uint8 nid)
 
 void CEntity::reset()
 {
-	nlinfo(">> 0x%p::CEntity::reset()",this);
+	//nlinfo(">> 0x%p::CEntity::reset() (eid %u)",this, Id);
 	interpolator().entity(this);
 	
 	if(!TraceParticle.empty())
 	{
 		C3DTask::instance().scene().deleteInstance(TraceParticle);
-		//TraceParticle.detach();
 	}
+
 	if(!CloseMesh.empty())
 	{
 		nlinfo(">>   C3DTask::instance().scene().deleteInstance(CloseMesh);");
 		C3DTask::instance().scene().deleteInstance(CloseMesh);
-		//CloseMesh.detach();
 	}
+	
 	if(!OpenMesh.empty())
 	{
 		C3DTask::instance().scene().deleteInstance(OpenMesh);
-		//OpenMesh.detach();
 	}
 
 	CSoundManager::instance().unregisterEntity(SoundsDescriptor);
@@ -304,31 +302,30 @@ void CEntity::load3d()
 	{
 		string res = CResourceManager::instance().get("entity_"+MeshName+"_close.shape");
 		CloseMesh = C3DTask::instance().scene().createInstance(res);
-		CloseMesh.show();
-		CloseMesh.setTransformMode (UTransformable::DirectMatrix);
 		for(uint i = 0; i < CloseMesh.getNumMaterials(); i++)
 		{
 			CloseMesh.getMaterial(i).setDiffuse(Color);
 			CloseMesh.getMaterial(i).setAmbient(Color);
-			if(!TextureFilename.empty())
+			if(!TextureFilename.empty() && i == 0)
 				CloseMesh.getMaterial(i).setTextureFileName(TextureFilename);
 		}
+		CloseMesh.show();
+		CloseMesh.setTransformMode (UTransformable::DirectMatrix);
 	}
 
 	if(OpenMesh.empty())
 	{
 		string res = CResourceManager::instance().get("entity_"+MeshName+"_open.shape");
 		OpenMesh = C3DTask::instance().scene().createInstance(res);
-		OpenMesh.hide();
-		OpenMesh.setTransformMode (UTransformable::DirectMatrix);
-		
 		for(uint i = 0; i < OpenMesh.getNumMaterials(); i++)
 		{
 			OpenMesh.getMaterial(i).setDiffuse(Color);
 			OpenMesh.getMaterial(i).setAmbient(Color);
-			if(!TextureFilename.empty())
+			if(!TextureFilename.empty() && i == 0)
 				OpenMesh.getMaterial(i).setTextureFileName(TextureFilename);
 		}
+		OpenMesh.hide();
+		OpenMesh.setTransformMode (UTransformable::DirectMatrix);
 	}
 
 	if(TraceParticle.empty() && CConfigFileTask::instance().configFile().getVar("DisplayParticle").asInt() == 1)

@@ -83,7 +83,6 @@ CStartPoint::~CStartPoint()
 	if(!Mesh.empty())
 	{
 		C3DTask::instance().scene().deleteInstance(Mesh);
-		//Mesh.detach();
 	}
 }
 

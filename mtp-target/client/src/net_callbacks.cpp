@@ -135,7 +135,8 @@ static void cbLogout(CNetMessage &msgin)
 	}
 	else
 	{
-		CChatTask::instance().addLine(toString("%s leaves !", CEntityManager::instance()[eid].name().c_str()));
+		if(CEntityManager::instance().exist(eid))
+			CChatTask::instance().addLine(toString("%s leaves !", CEntityManager::instance()[eid].name().c_str()));
 	}
 
 	CEntityManager::instance().remove(eid);
