@@ -1,7 +1,7 @@
 Name = "Wood"
 Author = "Wedgee and Skeet"
 ServerLua = "level_wood_server.lua"
-ReleaseLevel = 4
+ReleaseLevel = 2
 
 skyShapeFileName = "sky.shape";
 sunAmbientColor = CRGBA(82, 100, 133, 255);
