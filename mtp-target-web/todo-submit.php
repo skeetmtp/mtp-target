@@ -19,6 +19,7 @@ include_once("login.php");
           <option value="client">client</option>
           <option value="server">server</option>
           <option value="www">www</option>
+          <option value="release">release</option>
         </select>
       </td>
       <td bgcolor="#eeeeee"><textarea name="title" rows="7" cols="30" wrap="virtual" tabindex="1"></textarea></td>

@@ -23,7 +23,8 @@
      $table_todo_open_odd_color = "#ffdddd";
      $table_todo_close_even_color = "#ccffcc";
      $table_todo_close_odd_color = "#ddffdd";
-     
+     $table_todo_release_color = "#ffffdd";
+
      $code_bgcolor = "#ffffff";
      
 //home page

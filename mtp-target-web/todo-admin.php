@@ -35,6 +35,7 @@ include_once("login.php");
           <option value="client" <?php if(strcmp($ligne[7],"client")==0) echo "selected"; ?>>client</option>
           <option value="server" <?php if(strcmp($ligne[7],"server")==0) echo "selected"; ?>>server</option>
           <option value="www" <?php if(strcmp($ligne[7],"www")==0) echo "selected"; ?>>www</option>
+          <option value="release" <?php if(strcmp($ligne[7],"release")==0) echo "selected"; ?>>release</option>
           <option value="doc" <?php if(strcmp($ligne[7],"doc")==0) echo "selected"; ?>>doc</option>
         </select>
       </td>

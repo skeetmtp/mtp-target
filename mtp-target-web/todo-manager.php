@@ -64,6 +64,7 @@ function confirmLink(theLink)
             while ($ligne = mysql_fetch_array($resultat))
             {
                   $status = $ligne[1];
+                  $kind = $ligne[7];
                   printf("<tr>");
                   switch($status)
                   {
@@ -95,6 +96,8 @@ function confirmLink(theLink)
                            $color =$table_todo_wait_even_color;
                       break;
                   }
+                  if($kind=="release")
+                           $color =$table_todo_release_color;
                   printf("<td bgcolor=\"%s\">&nbsp;%s&nbsp;</td>",$color,$status);
                   printf("<td bgcolor=\"%s\">&nbsp;%s&nbsp;</td>",$color,$ligne[7]);
                   printf("<td bgcolor=\"%s\">&nbsp;<a href=\"%s&id=%s&order=%s\">%s</a>&nbsp;</td>",$color,$thisPage,$ligne[0],$order,$ligne[8]);
