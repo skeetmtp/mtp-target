@@ -239,10 +239,11 @@ end
 function levelEndSession()
   local entityCount = getEntityCount();
   for i=0,entityCount do
-    getEntity(i):parent():setFinalScore();
-  end
+    entity = getEntity(i);
+    entity:parent():setFinalScore();
     --TODO we can remove the following line when version >= 1.2.2 is out
     execLuaOnAllClient("getEntityByName(\""..entity:getName().."\"):setColor(255,255,255,255);");
+  end
 
 end
 
