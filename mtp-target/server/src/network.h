@@ -68,14 +68,19 @@ public:
 
 	uint32 version() { return Version; }
 
-private:
+	const NLNET::CInetAddress& hostAddress( NLNET::TSockId hostid )
+	{
+		return BufServer->hostAddress(hostid);
+	}
 
-	NLNET::CBufServer	*BufServer;
+
+private:
 
 	CNetwork();
 
 	friend class CSingleton<CNetwork>;
 
+	NLNET::CBufServer	*BufServer;
 	uint32 updateCount;
 	float MinDeltaToSendFullUpdate;
 	bool  DisableNetworkOptimization;

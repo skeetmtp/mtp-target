@@ -971,14 +971,15 @@ MTPT_COMMAND(ban, "ban a client from the server", "[<eid>|<name>] [duration]")
 
 	CMessage msgout("BC");
 
-	string ip = c->sock()->asString();
+	const CInetAddress inetAddr = CNetwork::instance().hostAddress(c->sock());
+	string ip = inetAddr.ipAddress();
 	string userName = c->name();
 	string kickerName = entity->name();
 	uint32 duration = 60;
 	msgout.serial(ip, userName, kickerName, duration);
 	
-	nlinfo("%s bans %s %s %d",entity->name().c_str(), userName.c_str(),ip.c_str(),duration);
-	CUnifiedNetwork::getInstance()->send("LS", msgout);
+	nlinfo("%s bans %s (%s) %d",entity->name().c_str(), userName.c_str(),ip.c_str(),duration);
+	//CUnifiedNetwork::getInstance()->send("LS", msgout);
 	
 	//TODO
 	
