@@ -262,7 +262,7 @@ void CNetwork::update()
 					break;
 				}
 			}
-			if(CEntityManager::instance().IdUpdateList.size()!=CEntityManager::instance().IdUpdateList.size())
+			if(acces.value().size()!=CEntityManager::instance().IdUpdateList.size())
 				sendUpdateList = true;
 			if(sendUpdateList)
 				CEntityManager::instance().sendUpdateList();
