@@ -29,6 +29,7 @@
 //
 // Includes
 //
+
 #include "gui.h"
 
 
@@ -57,10 +58,10 @@ public:
 	void updateConnectionOnLan();
 	
 	virtual std::string name() { return "CIntroTask"; }
-	void getShardListFromFile(const std::string &filename);
 		
 	void doConnectionOnLine(uint32 serverId);
 	void doConnectionOnLan();
+
 private:
 
 	enum TState { eMenu, eInit, eLoginOnline, eLoginOnlan, eServerList, eConnectionOnline, eConnectionOnlan, eNone };

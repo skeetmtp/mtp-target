@@ -122,50 +122,56 @@ static uint32 rand64 ()
 string cryptPassword (const string &password)
 {
 #if defined(NL_OS_UNIX) && CRYPT_PASSWORD
-	if (CryptPassword)
-	{
-		char Salt[3];
-		static char SaltString[65] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789./";
+	char Salt[3];
+	static char SaltString[65] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789./";
 
-		Salt[0] = SaltString[rand64()];
-		Salt[1] = SaltString[rand64()];
-		Salt[2] = '\0';
+	Salt[0] = SaltString[rand64()];
+	Salt[1] = SaltString[rand64()];
+	Salt[2] = '\0';
 
-		return string (crypt (password.c_str(), Salt));
-	}
-	else
-		return password;
+	return string (crypt (password.c_str(), Salt));
 #else
 	return password;
 #endif
 }
 
 // Check if a password is valid
-bool checkPassword (const string &password, const string &encrypted)
+string checkPassword (const string &password, const string &encrypted)
 {
-#if defined(NL_OS_UNIX) && CRYPT_PASSWORD
-	if (CryptPassword)
+	if(password.empty())
 	{
-		char Salt[3];
+		return "Bad password, it must not be empty";
+	}
 
-		if (encrypted.size() != EncryptedSize)
+	if(password.size() > 20)
+	{
+		return "Bad password, it must have less than 20 characters";
+	}
+
+	for(uint i = 0; i < password.size(); i++)
+	{
+		// switch to lower case
+		if(!nlisprint(password[i]) || password[i] == ' ' || password[i] == ',' || password[i] == '{' || password[i] == '}' || password[i] == ';' || password[i] == '/' || password[i] == '\\' || password[i] == '"' || isspace(password[i]))
 		{
-			nlwarning ("checkPassword(): \"%s\" is not a valid encrypted password", encrypted.c_str());
-			return false;
+			return toString("Bad password, character '%c' is not allowed", password[i]);
 		}
-
-		Salt[0] = encrypted[0];
-		Salt[1] = encrypted[1];
-		Salt[2] = '\0';
-
-		return encrypted == crypt (password.c_str(), Salt);
 	}
-	else
+
+#if defined(NL_OS_UNIX) && CRYPT_PASSWORD
+	char Salt[3];
+
+	if (encrypted.size() != EncryptedSize)
 	{
-		return encrypted == password;
+		return toString("Bad password, the encrypted pass size is %d and should be %d", encrypted.size(), EncryptedSize);
 	}
+
+	Salt[0] = encrypted[0];
+	Salt[1] = encrypted[1];
+	Salt[2] = '\0';
+
+	return (encrypted == crypt (password.c_str(), Salt))?"":"Bad password";
 #else
-	return encrypted == password;
+	return (encrypted == password)?"":"Bad password";
 #endif
 }
 
@@ -202,13 +208,26 @@ sint userToLog(sint userPos)
 }
 
 
-bool stringIsStandard(const string &str)
+string checkLogin(const string &login)
 {
-	for (sint i = 0; i < (sint) str.size(); i++)
+	if(login.empty())
 	{
-		if (!isalnum (str[i])) return false;
+		return "Bad login, it must not be empty";
 	}
-	return true;
+	
+	if(login.size() > 20)
+	{
+		return "Bad login, it must have less than 20 characters";
+	}
+	
+	for(uint i = 0; i < login.size(); i++)
+	{
+		if(!nlisprint(login[i]) || !isalnum(login[i]) && login[i] != '_' && login[i] != '-' && login[i] != '.' && login[i] != '[' && login[i] != ']')
+		{
+			return toString("Bad login, character '%c' is not allowed", login[i]);
+		}
+	}
+	return "";
 }
 
 bool havePrivilege (string userPriv, string shardPriv)
@@ -362,18 +381,14 @@ static void cbClientVerifyLoginPassword (CMessage &msgin, TSockId from, CCallbac
 
 	// check the login & pass
 
-	if (reason.empty() && !stringIsStandard (Login))
+	if (reason.empty())
 	{
-		// reject the new user, bad login format
-		reason = "Bad login format, only alphanumeric character";
-		Output->displayNL ("---: %3d Bad Login Format", userToLog(userPos));
-	}
-
-	if (reason.empty() && !stringIsStandard (Password))
-	{
-		// reject the new user, bad password format
-		reason = "Bad password format, only alphanumeric character";
-		Output->displayNL ("---: %3d Bad Password Format", userToLog(userPos));
+		reason = checkLogin (Login);
+		if(!reason.empty())
+		{
+			// reject the new user, bad login format
+			Output->displayNL ("---: %3d %s", userToLog(userPos), reason.c_str());
+		}
 	}
 
 	if (reason.empty())
@@ -402,18 +417,16 @@ static void cbClientVerifyLoginPassword (CMessage &msgin, TSockId from, CCallbac
 
 			if (!Users[userPos].Active)
 			{
-				reason = "Your account was disactivated";
-				Output->displayNL ("---: %3d Your account was disactivated", userToLog(userPos));
-			}
-			else if (!checkPassword (Password, Users[userPos].Password))
-			{
-				// error reason
-				reason = "Bad password";
-				Output->displayNL ("---: %3d Bad Password", userToLog(userPos));
+				reason = "Your account is unactive";
+				Output->displayNL ("---: %3d Your account is unactive", userToLog(userPos));
 			}
 			else
 			{
-				Output->displayNL ("---: %3d Ok", userToLog(userPos));
+				reason = checkPassword (Password, Users[userPos].Password);
+				if(reason.empty())
+					Output->displayNL ("---: %3d Ok", userToLog(userPos));
+				else
+					Output->displayNL ("---: %3d %s", userToLog(userPos), reason.c_str());
 			}
 		}
 	}
@@ -479,7 +492,7 @@ static void cbClientVerifyLoginPassword (CMessage &msgin, TSockId from, CCallbac
 				msgout.serial (shardname);
 				
 				// serial the address of the WS service
-				msgout.serial (Shards[i].WSAddr);
+				msgout.serial (Shards[i].ShardId);
 			}
 		}
 		netbase.send (msgout, from);
@@ -493,8 +506,8 @@ static void cbClientVerifyLoginPassword (CMessage &msgin, TSockId from, CCallbac
 		msgout.serial (ok);
 		msgout.serial (reason);
 		netbase.send (msgout, from);
-// FIX: On linux, when we disconnect now, sometime the other side doesnt receive the message sent just before.
-//      So it's the other side to disconnect
+// FIX: On GNU/Linux, when we disconnect now, sometime the other side doesn't receive the message sent just before.
+//      So it is the other side to disconnect
 //		netbase.disconnect (from);
 	}
 }
@@ -511,12 +524,12 @@ static void cbClientChooseShard (CMessage &msgin, TSockId from, CCallbackNetBase
 		if ((*it).Authorized && (*it).SockId == from)
 		{
 			// it's ok, so we found the wanted shard
-			string WSAddr;
-			msgin.serial (WSAddr);
+			uint32 ShardId;
+			msgin.serial (ShardId);
 
 			for (sint32 i = 0; i < (sint32) Shards.size (); i++)
 			{
-				if (Shards[i].Online && Shards[i].WSAddr == WSAddr && havePrivilege ((*it).ShardPrivilege, "::"))
+				if (Shards[i].Online && Shards[i].ShardId == ShardId && havePrivilege ((*it).ShardPrivilege, "::"))
 				{
 					CMessage msgout ("CS");
 					const CInetAddress &ia = netbase.hostAddress ((*it).SockId);

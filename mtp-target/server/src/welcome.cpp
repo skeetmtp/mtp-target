@@ -219,26 +219,26 @@ void cbLSChooseShard (CMessage &msgin, const std::string &serviceName, uint16 si
 
 	msgin.serial(cookie);
 	msgin.serial(userName);
-	
+
 	// always accept clients
 	string reason = "";
-	
+
 	//
 	// S09: receive "SCS" message from FES and send the "SCS" message to the LS
 	//
-	
+
 	CMessage msgout("SCS");
-	
+
 	msgout.serial(reason);
 	msgout.serial(cookie);
-	
+
 	if(reason.empty())
 		msgout.serial(ListenAddr);
 
 	CUnifiedNetwork::getInstance()->send("LS", msgout);
 
 	UserIdNameAssociations.insert(make_pair(cookie.setToString(), userName));
-	
+
 	nlinfo("Client %s will come with cookie %s to ip '%s'", userName.c_str(), cookie.toString().c_str(), ListenAddr.c_str());
 }
 

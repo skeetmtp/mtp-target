@@ -1,49 +1,53 @@
-/** \file login_client.cpp
- * CLoginClientMtp is the interface used by the client to identifies itself to the login_sytem and
- * connects to the shard.
+/* Copyright, 2003 Melting Pot
  *
- * $Id$
- *
- */
-
-/* Copyright, 2000 Nevrax Ltd.
- *
- * This file is part of NEVRAX NEL.
- * NEVRAX NEL is free software; you can redistribute it and/or modify
+ * This file is part of MTP Target.
+ * MTP Target is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
  * any later version.
 
- * NEVRAX NEL is distributed in the hope that it will be useful, but
+ * MTP Target is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * General Public License for more details.
 
  * You should have received a copy of the GNU General Public License
- * along with NEVRAX NEL; see the file COPYING. If not, write to the
+ * along with MTP Target; see the file COPYING. If not, write to the
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
  * MA 02111-1307, USA.
  */
 
+
+//
+// Includes
+//
+
 #include "stdpch.h"
 
-#include "nel/misc/system_info.h"
+#include <nel/misc/system_info.h>
 
-#include "nel/net/callback_client.h"
+#include <nel/net/callback_client.h>
+#include <nel/net/login_cookie.h>
+#include <nel/net/udp_sock.h>
 
-#include "nel/net/login_cookie.h"
 #include "login_client.h"
 
-#include "nel/net/udp_sock.h"
-
 #include "3d_task.h"
+
+
+//
+// Namespaces
+//
 
 using namespace std;
 using namespace NLMISC;
 using namespace NLNET;
 using namespace NL3D;
 
-//namespace NLNET {
+
+//
+// Variables
+//
 
 CLoginClientMtp::TShardList CLoginClientMtp::ShardList;
 
@@ -51,6 +55,10 @@ string CLoginClientMtp::_GfxInfos;
 
 CCallbackClient *CLoginClientMtp::_CallbackClient = 0;
 
+
+//
+// Functions
+//
 
 // Callback for answer of the login password.
 bool VerifyLoginPassword;
@@ -76,7 +84,7 @@ void cbVerifyLoginPassword (CMessage &msgin, TSockId from, CCallbackNetBase &net
 		{
 			CLoginClientMtp::CShardEntry se;
 			msgin.serial (se.ShardName);
-			msgin.serial (se.WSAddr);
+			msgin.serial (se.ShardId);
 			CLoginClientMtp::ShardList.push_back (se);
 		}		
 	}
@@ -123,9 +131,11 @@ string CLoginClientMtp::authenticate (const string &loginServiceAddr, const stri
 	//
 	try
 	{
-		nlassert (_CallbackClient == 0);
-		_CallbackClient = new CCallbackClient();
-		_CallbackClient->addCallbackArray (CallbackArray, sizeof(CallbackArray)/sizeof(CallbackArray[0]));
+		if(_CallbackClient == 0)
+		{
+			_CallbackClient = new CCallbackClient();
+			_CallbackClient->addCallbackArray (CallbackArray, sizeof(CallbackArray)/sizeof(CallbackArray[0]));
+		}
 		
 		string addr = loginServiceAddr;
 		if(addr.find(":") == string::npos)
@@ -156,6 +166,8 @@ string CLoginClientMtp::authenticate (const string &loginServiceAddr, const stri
 	msgout.serial (Proc);
 	msgout.serial (Mem);
 	_GfxInfos = C3DTask::instance().driver().getDriverInformation();
+	_GfxInfos += " / ";
+	_GfxInfos += C3DTask::instance().driver().getVideocardInformation();
 	msgout.serial (_GfxInfos);
 
 	_CallbackClient->send (msgout);
@@ -197,7 +209,7 @@ string CLoginClientMtp::confirmConnection (uint32 shardListIndex)
 
 	// send CS
 	CMessage msgout ("CS");
-	msgout.serial (ShardList[shardListIndex].WSAddr);
+	msgout.serial (ShardList[shardListIndex].ShardId);
 	_CallbackClient->send (msgout);
 
 	// wait the answer
@@ -213,7 +225,7 @@ string CLoginClientMtp::confirmConnection (uint32 shardListIndex)
 	{
 		delete _CallbackClient;
 		_CallbackClient = 0;
-		return "CLoginClientMtp::connectToShard(): LS disconnects me";
+		return "CLoginClientMtp::confirmConnection(): LS disconnects me";
 	}
 	else
 	{
@@ -229,7 +241,7 @@ string CLoginClientMtp::confirmConnection (uint32 shardListIndex)
 
 	// ok, we can try to connect to the good front end
 
-	nlinfo("addr:%s cookie:%s", ShardChooseShardAddr.c_str(), ShardChooseShardCookie.toString().c_str());
+	nlinfo("addr: '%s' cookie: %s", ShardChooseShardAddr.c_str(), ShardChooseShardCookie.toString().c_str());
 
 	return "";
 }
@@ -244,63 +256,3 @@ string CLoginClientMtp::connectToShard (uint32 shardListIndex, CInetAddress &ip,
 	
 	return "";
 }
-
-
-//} // NLNET
-
-/////////////////////////////////////////////
-/////////////////////////////////////////////
-/////////////////////////////////////////////
-/*
-using namespace NLMISC;
-using namespace NLNET;
-using namespace std;
-
-static uint32 ClientVersion = 1;
-
-#include <time.h>
-
-void main ()
-{
-	string res = CLoginClientMtp::authenticate ("localhost:49999", "login", "password", ClientVersion);
-
-	if (res.empty())
-	{
-		// ok
-		nlinfo("auth OK");
-
-		nlinfo("Shard list:");
-		for (uint i = 0; i < CLoginClientMtp::ShardList.size(); i++)
-		{
-			nlinfo(" > %s %s", CLoginClientMtp::ShardList[i].ShardName.c_str(), CLoginClientMtp::ShardList[i].WSAddr.c_str());
-		}
-		nlinfo("End shard list");
-
-		CCallbackClient cnx;
-		res = CLoginClientMtp::connectToShard (0, cnx);
-
-		if (res.empty())
-		{
-			// ok
-			nlinfo("cnx OK");
-
-			while (cnx.connected ())
-			{
-				cnx.update ();
-			}
-		}
-		else
-		{
-			// not ok, and reason
-			nlinfo("cnx FAILED: %s", res.c_str());
-		}
-	}
-	else
-	{
-		// not ok, and reason
-		nlinfo("auth FAILED: %s", res.c_str());
-	}
-
-	getchar ();
-}
-*/

@@ -28,41 +28,37 @@
 #ifndef LOGIN_CLIENT_H
 #define LOGIN_CLIENT_H
 
+
+//
+// Includes
+//
+
 #include <nel/misc/types_nl.h>
 
 #include <string>
 #include <vector>
 
 #include <nel/net/udp_sock.h>
-#include <nel/net/callback_client.h>
 #include <nel/net/login_cookie.h>
-
-//namespace NLNET
-//{
+#include <nel/net/callback_client.h>
 
 
-/**
- * Example:
- * \code
-	CLoginClient::connect ("itsalive.nevrax.org:49999");
-	string res = CLoginClient::authenticate ("login", "password");
-	if (!res.empty ()) nlerror ("Authentification failed: %s", res.c_str());
+//
+// Classes
+//
 
-	string res2 = CLoginClient::connectToShard (0, Connection);
-	if (!res2.empty ()) nlerror ("Connection failed: %s", res2.c_str());
- * \endcode
- * \author Vianney Lecroart
- * \author Nevrax France
- * \date 2001
- */
-class CLoginClientMtp {
+class CLoginClientMtp
+{
 public:
 
 	struct CShardEntry
 	{
+		CShardEntry() { }
+		CShardEntry(const std::string &name, uint32 sid) : ShardName(name), ShardId(sid)
+		{
+		}
 		std::string ShardName;
-		std::string WSAddr;
-		uint16 port;
+		uint32		ShardId;
 	};
 
 	typedef std::vector<CShardEntry> TShardList;
@@ -74,11 +70,11 @@ public:
 	//static void setInformations (std::string gfxInfos) { _GfxInfos = gfxInfos; }
 
 
-	/** Tries to connect to the authentification server.
+	/** Tries to connect to the authentication server.
 	 * Generates a ESocketConnectionFailed if it can't establish the connection.
 	 */
 	/** Tries to login with login and password.
-	 * If the authentification is ok, the function return an empty string else it returns the reason of the failure.
+	 * If the authentication is ok, the function return an empty string else it returns the reason of the failure.
 	 */
 	static std::string authenticate (const std::string &loginServiceAddr, const std::string &login, const std::string &password, uint32 clientVersion);
 
@@ -98,9 +94,6 @@ private:
 	static NLNET::CCallbackClient *_CallbackClient;
 
 };
-
-
-//} // NLNET
 
 #endif // LOGIN_CLIENT_H
 

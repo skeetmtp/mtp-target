@@ -349,7 +349,7 @@ static void cbWSIdentification (CMessage &msgin, const std::string &serviceName,
 			Shards[s].SId = sid;
 			Shards[s].ShardId = shardId;
 			Shards[s].Online = true;
-			Shards[s].WSAddr = row[1];
+			Shards[s].WSAddr = ia.ipAddress();
 			Shards[s].ShardName = row[3];
 		}
 		else
@@ -362,7 +362,7 @@ static void cbWSIdentification (CMessage &msgin, const std::string &serviceName,
 				return;
 			}
 
-			Shards.push_back (CShard (shardId, sid, row[1], true, row[3]));
+			Shards.push_back (CShard (shardId, sid, ia.ipAddress(), true, row[3]));
 		}
 
 		// ok, the shard is identified correctly
