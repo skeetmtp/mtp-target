@@ -4,7 +4,7 @@
 <h3>Changer la texture de l'avatar</h3>
 <ul>
 <li>Recuperez <a href="http://mtptarget.free.fr/download">object viewer</a>.</li>
-<li>Lancer le, et suivez les instruction d'installation</li>
+<li>Lancez le, et suivez les instruction d'installation</li>
 <li>Avec votre logiciel d'edition d'image preferé, modifiez <code>object-viewer/data/ping_ball_blue.tga</code> </li>
 <li>Verifiez l'aspect dans object viewer<br>
 Pour ouvrir un mesh :<br>
