@@ -284,7 +284,7 @@ static void cbWSClientConnected (CMessage &msgin, const std::string &serviceName
 	{
 		// new client on the shard
 
-		reason = sqlQuery("update user set State='Online' where UId="+toString(Id), nbrow2, row2, result2);
+		reason = sqlQuery("update user set State='Online', Cookie='' where UId="+toString(Id), nbrow2, row2, result2);
 		if(!reason.empty()) return;
 
 		reason = sqlQuery("update shard set NbPlayers=NbPlayers+1 where ShardId="+string(row[3]), nbrow2, row2, result2);
@@ -297,7 +297,7 @@ static void cbWSClientConnected (CMessage &msgin, const std::string &serviceName
 	{
 		// client removed from the shard (true is for potential other client with the same id that wait for a connection)
 
-		reason = sqlQuery("update user set State='Offline', ShardId=-1 where UId="+toString(Id), nbrow2, row2, result2);
+		reason = sqlQuery("update user set State='Offline', ShardId=-1, Cookie='' where UId="+toString(Id), nbrow2, row2, result2);
 		if(!reason.empty()) return;
 
 		reason = sqlQuery("update shard set NbPlayers=NbPlayers-1 where ShardId="+string(row[3]), nbrow2, row2, result2);
