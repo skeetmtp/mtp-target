@@ -52,7 +52,9 @@ public:
 	lua_State *session(){return _luaSession;};
 
 private:
-	
+	static int CLuaEngine::getSessionId(lua_State *L);
+	static uint32 _sessionId;
+		
 	lua_State *_luaSession;
 	CLevel *_level;
 	

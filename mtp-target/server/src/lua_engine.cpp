@@ -80,6 +80,8 @@ do \
 //
 //////////////////////////////////////////////////////////////////////////////////////
 
+uint32 CLuaEngine::_sessionId = 0;
+
 CLuaEngine::CLuaEngine()
 {
 	_luaSession = NULL;
@@ -97,12 +99,16 @@ void CLuaEngine::init(const std::string &filename)
 		nlwarning("LEVEL: luaOpenAndLoad() failed while trying to load level '%s'", filename.c_str());
 		return;
 	}
-
+	_sessionId++;
+	_sessionId = _sessionId % 1024;
+	
 	Lunar<CModuleProxy>::Register(_luaSession);
 	Lunar<CEntityProxy>::Register(_luaSession);
 	string path = CPath::lookup("helpers.lua", false, false);
 	luaLoad(_luaSession,path);
 	luaLoad(_luaSession,filename);
+
+	lua_register(_luaSession, "getSessionId", getSessionId);
 	
 }
 
@@ -165,5 +171,11 @@ void CLuaEngine::entityWaterCollideEvent(CEntity *entity)
 		nlwarning("error calling lua function");
 	*/
 
+}
+
+int CLuaEngine::getSessionId(lua_State *L)
+{
+	lua_pushnumber(L,_sessionId); 
+	return 1;
 }
 
