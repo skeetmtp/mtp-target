@@ -27,7 +27,7 @@ OutFile "${APPNAME}-${APPVERSION}.exe"
 
 Section "client" Section1
 	; Set Section properties
-	;SectionIn RO
+	SectionIn RO
 	SetOverwrite on
 	
 	SetOutPath "$INSTDIR\client"
@@ -69,7 +69,7 @@ Section "client" Section1
 	CreateShortCut "$SMPROGRAMS\${APPNAME}\Uninstall.lnk" "$INSTDIR\uninstall.exe"
 
 SectionEnd
-
+/*
 Section "server" Section2
 	; Set Section properties
 	SetOverwrite on
@@ -105,7 +105,7 @@ Section "server" Section2
 	CreateShortCut "$SMPROGRAMS\mtp-target\Launch dedicated server.lnk" "$INSTDIR\server\mtp_target_service.exe" "" "$INSTDIR\server\mtp_target_service.exe" 0
 
 SectionEnd
-
+*/
 
 Section -FinishSection
 
@@ -120,7 +120,7 @@ SectionEnd
 ; Modern install component descriptions
 !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
 	!insertmacro MUI_DESCRIPTION_TEXT ${Section1} "Client"
-	!insertmacro MUI_DESCRIPTION_TEXT ${Section2} "Server"
+;	!insertmacro MUI_DESCRIPTION_TEXT ${Section2} "Server"
 !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
 ;Uninstall section
@@ -131,7 +131,7 @@ Section Uninstall
 	DeleteRegKey HKLM "SOFTWARE\${APPNAME}"
 
 	RmDir /r "$INSTDIR\client"
-	RmDir /r "$INSTDIR\server"
+;	RmDir /r "$INSTDIR\server"
 
 	;Delete Start Menu Shortcuts
 	Delete "$SMPROGRAMS\${APPNAME}\*.*"
