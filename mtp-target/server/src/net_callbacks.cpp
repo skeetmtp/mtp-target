@@ -68,9 +68,10 @@ static void cbChat(CClient *c, CNetMessage &msgin)
 static void cbCommand(CClient *c, CNetMessage &msgin)
 {
 	nlinfo("cbCommand");
-	string cmd;
-	msgin.serial(cmd);
-	cmd = toLower(cmd);
+	string icmd;
+	msgin.serial(icmd);
+	//string cmd = toLower(icmd);
+	string cmd = icmd;//toLower(icmd);
 
 	if(cmd.substr(0,4)=="help")
 	{
@@ -92,14 +93,14 @@ static void cbCommand(CClient *c, CNetMessage &msgin)
 		return;
 	}
 
-	if(cmd.substr(0,7)=="votemap ")
+	if(cmd.substr(0,8)=="votemap ")
 	{
 		string arg = cmd.substr(8);
 		if(!arg.empty())
 			c->voteMap(arg);
 		CNetwork::instance().sendChat(c->name()+" executed: /"+cmd);
 	}
-	else if(cmd.substr(0,1)=="v ")
+	else if(cmd.substr(0,2)=="v ")
 	{
 		string arg = cmd.substr(2);
 		if(!arg.empty())
