@@ -67,7 +67,7 @@ private:
 	}
 	void release() 
 	{
-		bool del;
+		bool del = false;
 		if(counter)
 			del = counter->release();
 		if(del)
