@@ -51,3 +51,7 @@ Modules =
 	{ Position = CVector(0.000000,0.000000,0.300000), Scale = CVector(2.000000, 2.000000, 2.000000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_target_300", Shape="snow_target_300" },
 
 }
+
+Particles =
+{
+}
