@@ -32,6 +32,7 @@
 // Includes
 //
 
+#include <nel/misc/reader_writer.h>
 #include "entity.h"
 
 
@@ -42,7 +43,8 @@
 class CEntityManager : public CSingleton<CEntityManager>, public ITask
 {
 public:
-
+	typedef NLMISC::CRWSynchronized <std::vector <CEntity *> >	CEntities;
+	
 	virtual void init();
 	virtual void update();
 	virtual void render();
@@ -53,7 +55,7 @@ public:
 
 	void	add(uint8 eid, const std::string &name, sint32 totalScore, NLMISC::CRGBA &color, bool spectator);
 	void	remove(uint8 eid);
-	bool	exist(uint8 eid) const;
+	bool	exist(uint8 eid) ;
 
 	void	startSession();
 	void	reset();
@@ -66,19 +68,25 @@ public:
 
 	CEntity &operator [](uint8 eid);
 
-	void	getEIdSortedByScore(std::vector<uint8> &eids) const;
+	void	getEIdSortedByScore(std::vector<uint8> &eids) ;
 
-	uint8	findFirstEId() const;
-	uint8	findNextEId(uint8 eid) const;
-	uint8	findPreviousEId(uint8 eid) const;
+	uint8	findFirstEId() ;
+	uint8	findNextEId(uint8 eid) ;
+	uint8	findPreviousEId(uint8 eid) ;
 
-	uint8	size() const;
+	uint8	size();
 
 	std::list <uint8 > updateListId;
+	CEntities *entities() { return &Entities; }
+
+	friend class CSingleton<CEntityManager>;
+protected:
+	CEntityManager();
 private:
 
-	CEntity		Entities[256];
-
+	//CEntity		Entities[256];
+	CEntities Entities;
+	
 };
 
 #endif

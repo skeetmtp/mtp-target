@@ -171,7 +171,7 @@ void CEntity::update()
 		TraceParticle->setPos(interpolator().position());
 		
 		// we activate
-		if (TraceParticle != 0 && ParticuleActivated != -1 && TraceParticle->isSystemPresent())
+		if (ParticuleActivated != -1 && TraceParticle->isSystemPresent())
 		{
 			//if (ParticuleActivated == 0 || CMtpTarget::instance().controler().getControledEntity() != this)
 			TraceParticle->activateEmitters(ParticuleActivated==1);
