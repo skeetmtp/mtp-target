@@ -79,7 +79,7 @@ bool CNetMessage::send (NLNET::CBufClient *sock)
 #endif // OLD_NETWORK
 
 //	nlinfo("real send %"NL_I64"d", CTime::getLocalTime());
-	nldebug("NET: Send a message type %hu size %u", (uint16)buffer()[4], this->length());
+//	nldebug("NET: Send a message type %hu size %u", (uint16)buffer()[4], this->length());
 
 #if OLD_NETWORK
 	NLNET::CSock::TSockResult res = sock->send(buffer(), len, false);

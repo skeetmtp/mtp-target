@@ -343,7 +343,7 @@ void CNetwork::update()
 					if((*it)->type() != CEntity::Bot)
 					{
 						(*it)->LastSentPing.push(make_pair(pingnb, currentTime));
-						nlinfo("*********** send the ping %u %"NL_I64"u", pingnb, currentTime);
+//						nlinfo("*********** send the ping %u %"NL_I64"u", pingnb, currentTime);
 					}
 					
 					(*it)->LastSent2MePos = (*it)->Pos;
@@ -417,7 +417,7 @@ void CNetwork::update()
 							if((*it)->type() != CEntity::Bot)
 							{
 								(*it)->LastSentPing.push(make_pair(pingnb, currentTime));
-								nlinfo("*********** send the ping %u %"NL_I64"u", pingnb, currentTime);
+//								nlinfo("*********** send the ping %u %"NL_I64"u", pingnb, currentTime);
 							}
 
 							CVector newPos = (*it)->LastSent2OthersPos + sendDPos; 

@@ -491,8 +491,8 @@ next:
 	}
 
 	c->Ping.addValue((uint16)(CurrentTime - p.second));
-	nlinfo("*********** receive the pong %u %"NL_I64"u", pingnb, CurrentTime);
-	nlinfo("%"NL_I64"u Ping for '%s' is %d (%"NL_I64"d)", CurrentTime, c->name().c_str(), c->Ping.getSmoothValue(), CurrentTime - p.second);
+//	nlinfo("*********** receive the pong %u %"NL_I64"u", pingnb, CurrentTime);
+//	nlinfo("%"NL_I64"u Ping for '%s' is %d (%"NL_I64"d)", CurrentTime, c->name().c_str(), c->Ping.getSmoothValue(), CurrentTime - p.second);
 	c->LastSentPing.pop();
 }
 
@@ -507,7 +507,7 @@ next:
 
 void netCallbacksHandler(CClient *c, CNetMessage &msgin)
 {
-	nldebug("NET: Received message type %hu size %u from %hu '%s'", (uint16)msgin.type(), msgin.length(), c->id(), c->name().c_str());
+//	nldebug("NET: Received message type %hu size %u from %hu '%s'", (uint16)msgin.type(), msgin.length(), c->id(), c->name().c_str());
 
 	nlassert(c);
 	nlassert(c->type() == CEntity::Client);

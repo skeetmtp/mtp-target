@@ -393,7 +393,7 @@ static void cbFullUpdate(CNetMessage &msgin)
 	CNetMessage msgout(CNetMessage::Update);
 	msgout.serial(pingnb);
 	CNetworkTask::instance().send(msgout);
-	nlinfo("*********** send the pong %u %"NL_I64"u", pingnb, CTime::getLocalTime());
+//	nlinfo("*********** send the pong %u %"NL_I64"u", pingnb, CTime::getLocalTime());
 	
 	//msgin.serial (rsxTime);
 
@@ -705,7 +705,7 @@ static void cbTimeArrival(CNetMessage &msgin)
 
 void netCallbacksHandler(CNetMessage &msgin)
 {
-	nldebug("NET: %"NL_I64"u Received message type %hu size %u", CTime::getLocalTime(), (uint16)msgin.type(), msgin.length());
+//	nldebug("NET: %"NL_I64"u Received message type %hu size %u", CTime::getLocalTime(), (uint16)msgin.type(), msgin.length());
 
 	switch(msgin.type())
 	{
