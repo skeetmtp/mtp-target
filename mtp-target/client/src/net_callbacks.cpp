@@ -283,7 +283,7 @@ static void cbUpdate(CNetMessage &msgin)
 static void cbUpdateOne(CNetMessage &msgin)
 {
 	//nlinfo("cbUpdateOne %f",CTimeTask::instance().time());
-	float rsxTime;
+	float rsxTime = 0.0f;
 	uint8 eid;
 	CVector pos;
 	CVector dpos;

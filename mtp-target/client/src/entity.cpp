@@ -85,6 +85,8 @@ CEntity::CEntity()
 	showCollideWhenFlyPos = CVector(0,0,0);
 	addOpenCloseKey = false;
 	addCrashEventKey = CCrashEvent(false,CVector::Null);
+	FadeParticleDuration = 1.0f;
+	FadeParticleStartTime = 0.0f;
 }
 
 void CEntity::swapOpenClose()

@@ -117,7 +117,7 @@ static void cbLogin(CClient *c, CNetMessage &msgin)
 
 	login = strlwr(login);
 
-	nlinfo("cookie:%s login:%s pwd:%s texture:%s color:%d %d %d %d",cookie.c_str(),login.c_str(),password.c_str(),texture.c_str(),color.R,color.G,color.B,color.A);
+	nlinfo("cookie:%s login:%s texture:%s color:%d %d %d %d",cookie.c_str(),login.c_str(),texture.c_str(),color.R,color.G,color.B,color.A);
 	if(error.empty())
 	{
 		if(cookie.empty())

@@ -63,7 +63,7 @@ void CControler::reset()
 
 	MissedTime = 0.0f;
 	RotZ = 0.0f;
-
+	Pique = 0.0f;
 	Camera.reset();
 	Camera.setFollowedEntity(255);
 }
