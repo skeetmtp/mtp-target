@@ -128,8 +128,8 @@ void CWaterTask::init()
 {
 	nelWaterScene = C3DTask::instance().driver().createScene(false);
 
-	nelWaterScene->getCam ()->setPerspective(degToRad(CConfigFileTask::instance().configFile().getVar("Fov").asFloat()), 1.33f, 0.15f, 3000.0f);
-	nelWaterScene->getCam ()->setTransformMode (UTransformable::DirectMatrix);
+	nelWaterScene->getCam()->setPerspective(degToRad(CConfigFileTask::instance().configFile().getVar("Fov").asFloat()), 1.33f, 1.0f*GScale, 30000.0f*GScale);
+	nelWaterScene->getCam()->setTransformMode (UTransformable::DirectMatrix);
 
 ////
 	if(CConfigFileTask::instance().configFile().getVar("DisplayWater").asInt() == 2)
@@ -239,10 +239,12 @@ void CWaterTask::update()
 
 void CWaterTask::render()
 {
+	C3DTask::instance().driver().enableFog(true);
 	nelWaterScene->render ();
+	C3DTask::instance().driver().enableFog(false);
 	
 	// Must clear ZBuffer For incoming rendering.
-	C3DTask::instance().driver().clearZBuffer();
+	//C3DTask::instance().driver().clearZBuffer();
 }
 
 void CWaterTask::release()
