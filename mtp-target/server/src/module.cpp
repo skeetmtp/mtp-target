@@ -74,14 +74,14 @@ static int _dTriRayCallback(dGeomID TriMesh, dGeomID Ray, int TriangleIndex, dRe
 }
 
 CModule::CModule() : CModuleCommon()
-{ 
+{
+	luaProxy = NULL;
 }
 
 void CModule::init(const std::string &name,uint8 id, NLMISC::CVector position, NLMISC::CAngleAxis rotation)
 {
 	CModuleCommon::init(name,id,position,rotation);
-	pausePhysics();
-
+	
 	Geom = 0;
 	luaProxy = NULL;
 	_luaInit();
@@ -131,8 +131,6 @@ void CModule::init(const std::string &name,uint8 id, NLMISC::CVector position, N
 	dGeomSetCategoryBits(Geom, MT_SCENE_SPECTRUM);
 	dGeomSetCollideBits(Geom, MT_CLIENT_SPECTRUM);
 
-	resumePhysics();
-
 }
 
 
@@ -159,14 +157,15 @@ void CModule::_luaInit()
 
 CModule::~CModule()
 {
-	pausePhysics();
+	if(luaProxy)
+		delete luaProxy;
+	luaProxy = NULL;
 	if(Geom)
 	{
 		dGeomSetData(Geom, (void *)0xDEADBEEF);
 		dGeomDestroy(Geom);
 		Geom = 0;
 	}
-	resumePhysics();
 }
 
 /*
