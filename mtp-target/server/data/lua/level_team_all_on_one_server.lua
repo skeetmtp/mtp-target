@@ -52,9 +52,9 @@ end
 
 function CEntity:setFinalScore()
   if(self.team==0) then
-    self.base:setCurrentScore(teamRedScore*100);
+    self.base:setCurrentScore(teamRedScore);
   else
-    self.base:setCurrentScore(teamBlueScore*100);
+    self.base:setCurrentScore(teamBlueScore);
   end
     
 end
@@ -80,6 +80,7 @@ function Entity:init()
     teamBCount = teamBCount+1;
   end
 
+  self:displayText(0,5,1,255,255,255,"warning : Team share the score",10);
   if(t==0) then
   execLuaOnAllClient("getEntityByName(\""..self:getName().."\"):setColor(255,0,0,255);");
   	self:displayText(0,6,1,255,0,0,"You are in RED team",15);
@@ -144,7 +145,7 @@ function Module:collide( entity )
   if(entity:getIsOpen()==1 or self:getScore()<=0) then
     entity:setCurrentScore(0)
   else
-      entity:parent():setTeamScore(1)
+      entity:parent():setTeamScore(100)
   end
 end
 
@@ -169,14 +170,6 @@ function levelPreUpdate()
 end
 
 function levelPostUpdate()
-
-  if(currentTeamRedScore<currentTeamBlueScore) then
-  	currentTeamRedScore = 0;
-  end
-
-  if(currentTeamBlueScore<currentTeamRedScore) then
-  	currentTeamBlueScore = 0;
-  end
 
   if(currentTeamRedScore~=teamRedScore) then
     displayTextToAll(0,7,1,255,0,0,currentTeamRedScore,40);
