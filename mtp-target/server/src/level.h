@@ -32,6 +32,7 @@ extern "C"
 #include <lauxlib.h>
 };
 
+#include "start_point.h"
 #include "module.h"
 #include "../../common/lua_nel.h"
 
@@ -62,11 +63,11 @@ public:
 	CModule *getModule(uint32 id);
 	uint8 getModuleCount();
 	void updateModule(uint32 id,NLMISC::CVector pos,NLMISC::CVector rot);
-	/*
-	CModule *getStartPoint(uint32 id);
+	
+	CStartPoint *getStartPoint(uint32 id);
 	uint8 getStartPointCount();
 	void updateStartPoint(uint32 id,NLMISC::CVector pos,NLMISC::CVector rot);
-	*/
+	
 	
 	void save();
 	bool changed();
@@ -81,7 +82,8 @@ private:
 
 	static uint8				NextStartingPoint;
 
-	std::vector<CLuaVector>		StartPoints;
+	std::vector<CStartPoint *>	StartPoints;
+//	std::vector<CLuaVector>		StartPoints;
 	std::vector<CLuaVector>		Cameras;
 
 	// Level name

@@ -82,7 +82,6 @@ void CModule::init()
 	Friction = 5.0f;
 	LuaFunctionName = "";
 	luaProxy = NULL;
-	_changed = false;
 
 	_type = Module;
 }
@@ -92,7 +91,7 @@ CModule::CModule() : CEditableElement()
 	init(); 
 }
 
-CModule::CModule(const std::string &name, const CLuaVector &position, const CLuaAngleAxis &rotation, uint8 id) : CEditableElement()
+CModule::CModule(const std::string &name, const CVector &position, const CAngleAxis &rotation, uint8 id) : CEditableElement()
 {
 	nlinfo("Adding module '%s' at position %f %f %f", name.c_str(), position.x, position.y, position.z);
 	pausePhysics();
@@ -197,8 +196,11 @@ CModule::~CModule()
 	resumePhysics();
 }
 
+/*
 NLMISC::CVector CModule::position() const
 {
+	return Position;
+
 	CVector pos;
 	nlassert(Geom);
 	const dReal *p = dGeomGetPosition(Geom);
@@ -212,8 +214,10 @@ NLMISC::CVector CModule::position() const
 		pos = NLMISC::CVector::Null;
 
 	return pos;
+
 }
 
+*/
 void CModule::display(CLog *log) const
 {
 	CVector pos = position();
@@ -250,15 +254,11 @@ void CModule::update(CVector pos,CVector rot)
 }
 
 
-void CModule::save(FILE *fp)
+string &CModule::toLuaString()
 {
-	fprintf(fp,"{ Position = CVector(%f,%f,%f),Rotation = CAngleAxis(%f,%f,%f,%f), Name=\"%s\" }",Position.x,Position.y,Position.z,Rotation.Axis.x,Rotation.Axis.y,Rotation.Axis.z,Rotation.Angle,Name);
+	return toString("{ Position = CVector(%f,%f,%f),Rotation = CAngleAxis(%f,%f,%f,%f), Name=\"%s\" }",Position.x,Position.y,Position.z,Rotation.Axis.x,Rotation.Axis.y,Rotation.Axis.z,Rotation.Angle,Name.c_str());
 }
 
-bool CModule::changed()
-{
-	return _changed;
-}
 
 //
 //

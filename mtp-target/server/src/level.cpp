@@ -111,7 +111,17 @@ void CLevel::_luaInit()
 	}
 */
 
-	luaGetGlobalVector(_luaSession, StartPoints);
+	vector<CLuaVector> luaStartPoints;
+	luaGetGlobalVectorWithName(_luaSession, luaStartPoints,"StartPoints");
+	uint8 startPositionId = 0;
+	for(uint i = 0; i < luaStartPoints.size(); i++)
+	{
+		nlinfo("start point : %g %g %g", luaStartPoints[i].x, luaStartPoints[i].y, luaStartPoints[i].z);
+		CAngleAxis Rotation(CVector(1,0,0),0);
+		CStartPoint *startPosition = new CStartPoint("start pos",luaStartPoints[i],Rotation,startPositionId);
+		StartPoints.push_back(startPosition);		
+		startPositionId++;
+	}
 
 /*
 	nlinfo("%d Starting points", StartPoints.size());
@@ -186,7 +196,7 @@ void CLevel::update()
 void CLevel::nextStartingPoint(CVector &pos, uint8 &id)
 {
 	id = (NextStartingPoint++)%StartPoints.size();
-	pos = StartPoints[id];
+	pos = StartPoints[id]->position();
 }
 
 void CLevel::display(CLog *log) const
@@ -219,7 +229,7 @@ void CLevel::updateModule(uint32 id,CVector pos,CVector rot)
 	getModule(id)->update(pos,rot);
 }
 
-/*
+
 uint8 CLevel::getStartPointCount() 
 {
 	nlassert(Modules.size()<255);
@@ -227,19 +237,19 @@ uint8 CLevel::getStartPointCount()
 }
 
 
-CStartPosition *CLevel::getStartPoint(uint32 id)
+CStartPoint *CLevel::getStartPoint(uint32 id)
 {
 	nlassert(id<getStartPointCount());
-	return StartPositions[id];
+	return StartPoints[id];
 }
 
 
 void CLevel::updateStartPoint(uint32 id,CVector pos,CVector rot)
 {
-	//getStartPoint(id)->update(pos,rot);
+	getStartPoint(id)->update(pos,rot);
 }
 
-  */
+  
 bool isLuaSeparator(char c)
 {
 	return c==' ' || c=='\t' || c=='\n';
@@ -364,32 +374,58 @@ void CLevel::save()
 	}
 	fclose(fp);
 
+	bool found;
+
 	uint32 moduleStartPos;
 	uint32 moduleEndPos;
-	bool found = findLuaArrayDeclaration(luaStr,"Modules",moduleStartPos,moduleEndPos);
+	found = findLuaArrayDeclaration(luaStr,"Modules",moduleStartPos,moduleEndPos);
 	if(found)
 	{
 		string beforeModule = luaStr.substr(0,moduleStartPos);
 		string moduleStr = luaStr.substr(moduleStartPos,moduleEndPos-moduleStartPos);
 		string afterModule = luaStr.substr(moduleEndPos);
-
-		fp = fopen(fn.c_str(),"wt");
-		nlassert(fp!=NULL);
-		fwrite(beforeModule.c_str(),1,beforeModule.size(),fp);
+		
+		luaStr = "";
+		luaStr += beforeModule;
+		luaStr += "\n";
+		
 		uint32 i;
-		fprintf(fp,"\n");
 		for(i=0;i<Modules.size();i++)
 		{
-			fprintf(fp,"\t");
-			Modules[i]->save(fp);
-			if(i+1<Modules.size())
-				fprintf(fp,",\n");
+			luaStr += "\t" + Modules[i]->toLuaString() + ",\n";
 		}
-		fprintf(fp,"\n");
-		fwrite(afterModule.c_str(),1,afterModule.size(),fp);
-		fclose(fp);
+		luaStr += "\n";
+		luaStr += afterModule;
 	}
-
+	
+	uint32 StartPointsStartPos;
+	uint32 StartPointsEndPos;
+	found = findLuaArrayDeclaration(luaStr,"StartPoints",StartPointsStartPos,StartPointsEndPos);
+	if(found)
+	{
+		string beforeModule = luaStr.substr(0,StartPointsStartPos);
+		string moduleStr = luaStr.substr(StartPointsStartPos,StartPointsEndPos-StartPointsStartPos);
+		string afterModule = luaStr.substr(StartPointsEndPos);
+		
+		luaStr = "";
+		luaStr += beforeModule;
+		luaStr += "\n";
+		
+		uint32 i;
+		for(i=0;i<StartPoints.size();i++)
+		{
+			luaStr += "\t" + StartPoints[i]->toLuaString() + ",\n";
+		}
+		luaStr += "\n";
+		luaStr += afterModule;
+	}
+	
+	
+	fp = fopen(fn.c_str(),"wt");
+	nlassert(fp!=NULL);
+	fwrite(luaStr.c_str(),1,luaStr.size(),fp);
+	fclose(fp);
+	
 }
 
 bool CLevel::changed()
@@ -397,6 +433,11 @@ bool CLevel::changed()
 	for(uint32 i=0;i<Modules.size();i++)
 	{
 		if(Modules[i]->changed())
+			return true;
+	}
+	for(uint32 i=0;i<StartPoints.size();i++)
+	{
+		if(StartPoints[i]->changed())
 			return true;
 	}
 	return false;

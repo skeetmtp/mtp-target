@@ -45,7 +45,7 @@ class CModule : public CEditableElement
 public:
 
 	CModule();
-	CModule(const std::string &name, const CLuaVector &position, const CLuaAngleAxis &rotation, uint8 id);
+	CModule(const std::string &name, const NLMISC::CVector &position, const NLMISC::CAngleAxis &rotation, uint8 id);
 	
 	virtual ~CModule();
 
@@ -69,15 +69,12 @@ public:
 
 	std::string		name() const { return Name; }
 
-	NLMISC::CVector position() {return Position;}
-
-	void update(NLMISC::CVector pos,NLMISC::CVector rot);
-	void shapeName(const std::string n) { ShapeName = n; }
-	bool changed();
+	virtual void update(NLMISC::CVector pos,NLMISC::CVector rot);
 	
-	void save(FILE *fp);
+	void shapeName(const std::string n) { ShapeName = n; }
+	
+	virtual std::string &toLuaString();
 
-	NLMISC::CVector	position() const;
 
 	uint8 id() {return _id;}
 
@@ -102,9 +99,6 @@ private:
 
 	lua_State			*LuaState;
 	uint8 _id;
-	NLMISC::CVector		Position;
-	NLMISC::CAngleAxis	Rotation;
-	bool				_changed;
 	
 };
 

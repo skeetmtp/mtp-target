@@ -277,6 +277,14 @@ SOURCE=.\Src\module_lua_proxy.cpp
 
 SOURCE=.\Src\module_lua_proxy.h
 # End Source File
+# Begin Source File
+
+SOURCE=.\src\start_point.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\src\start_point.h
+# End Source File
 # End Group
 # Begin Group "lua"
 
