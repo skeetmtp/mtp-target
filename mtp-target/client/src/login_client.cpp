@@ -261,3 +261,17 @@ string CLoginClientMtp::connectToShard (uint32 shardListIndex, CInetAddress &ip,
 	
 	return "";
 }
+
+
+uint32 CLoginClientMtp::shardIdToIndex (uint32 shardId)
+{
+	TShardList::iterator it;
+	int index = 0;
+	for(it=ShardList.begin();it!=ShardList.end();it++)
+	{
+		if((*it).ShardId == shardId)
+			return index;
+		index++;
+	}
+	return 0;
+}

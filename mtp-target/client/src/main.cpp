@@ -58,6 +58,7 @@ using namespace NLMISC;
 bool DisplayDebug = false;
 bool FollowEntity = false;
 string ReplayFile;
+sint32 AutoServerId = -1;
 
 uint TaskManagerThreadId = 0;
 uint NetworkThreadId = 0;
@@ -75,15 +76,23 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	string cmd = lpCmdLine;
 
+	ReplayFile = "";
+	AutoServerId = -1;
+	string autoConnectFlag = "--autoconnect:";
+	
 	if (cmd.find ("\"") != string::npos)
 	{
 		// it s a replay, remove ""
 		ReplayFile = cmd.substr(1, cmd.size()-2);
 	}
-	else
+	else if(cmd.find(autoConnectFlag) != string::npos)
 	{
-		ReplayFile = cmd;
+		size_t startIndex = cmd.find(autoConnectFlag) + autoConnectFlag.size();
+		string strId = cmd.substr(startIndex,cmd.size()-startIndex);
+		fromString(strId,AutoServerId);
 	}
+	else
+		ReplayFile = cmd;
 
 	if(!IsDebuggerPresent() && !ReplayFile.empty())
 	{
@@ -117,6 +126,9 @@ int main(int argc, char **argv)
 	}
 
 #endif
+	
+	if(NLMISC::CFile::fileExists("log000.log"))
+		NLMISC::CFile::deleteFile("log000.log");
 
 	TaskManagerThreadId = getThreadId();
 	// add the main task

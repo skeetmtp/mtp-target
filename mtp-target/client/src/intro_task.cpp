@@ -137,6 +137,10 @@ void CIntroTask::init()
 {
 	CTaskManager::instance().add(CBackgroundTask::instance(), 59);
 	_autoLogin = CConfigFileTask::instance().configFile().getVar("AutoLogin").asInt();
+	if(_autoLogin!=0)
+		AutoServerId = CConfigFileTask::instance().configFile().getVar("AutoServerId").asInt();
+	else if(AutoServerId!=-1)
+		_autoLogin = 1; //auto online login
 	
 	reset();
 }
@@ -408,7 +412,7 @@ void CIntroTask::updateServerList()
 	if(State!=eServerList) return;
 
 	if(_autoLogin==1)
-		doConnectionOnLine(0);
+		doConnectionOnLine(CLoginClientMtp::shardIdToIndex(AutoServerId));
 
 	if(backButton2->pressed() || serverListBackButton->pressed())
 	{
