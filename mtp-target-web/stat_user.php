@@ -108,7 +108,7 @@ include_once("stat_map_graph_display.php");
 
 	$requete = "SELECT count(*),map.Id,map.LevelName FROM session,map,user_session WHERE map.LevelName=session.LevelName AND session.Id=user_session.SessionId AND user_session.UId=$uid GROUP BY session.LevelName;";
 	$result=exec_game_db_requete($requete);
-	drawMapUsage($html_fp,$result,1,15,"Level usage",array("", "Level"),"<a href=\"?page=stat_map.php&p_map_id=%d\">%s</a>");
+	drawMapUsage($html_fp,$result,1,32,"Level usage",array("", "Level"),"<a href=\"?page=stat_map.php&p_map_id=%d\">%s</a>");
 	
 
 	//fprintf($html_fp,"TODO:Maximum loss in a row<br>\n");
