@@ -397,16 +397,6 @@ static void cbBanClient(CMessage &msgin, const std::string &serviceName, uint16 
 	MYSQL_ROW row;
 	sint32 nbrow;
 
-	// find if the shard is valid
-	reason = sqlQuery("select * from shard where InternalId="+toString(sid), nbrow, row, result);
-	if(!reason.empty()) return;
-	if(nbrow != 1)
-	{
-		nlwarning("nbrow is %d", nbrow);
-		return;
-	}
-
-	sint32 shardId = atoi(row[0]);
 
 	string ip;
 	string userName;
@@ -427,6 +417,42 @@ static void cbBanClient(CMessage &msgin, const std::string &serviceName, uint16 
 	sqlQuery(request, nbrow, row, result);
 }
 
+static void cbKickClient(CMessage &msgin, const std::string &serviceName, uint16 sid)
+{
+	string reason;
+	CMysqlResult result;
+	MYSQL_ROW row;
+	sint32 nbrow;
+
+
+	string ip;
+	string userName;
+	string kickerName;
+	string info;
+	msgin.serial(ip, userName, kickerName, info);
+
+	string request = toString("insert into moderator_log (Moderator,Target,Command,Date) values ('%s','%s','%s',NOW());",kickerName.c_str(),userName.c_str(),"kick");
+	sqlQuery(request, nbrow, row, result);
+}
+
+static void cbReportClient(CMessage &msgin, const std::string &serviceName, uint16 sid)
+{
+	string reason;
+	CMysqlResult result;
+	MYSQL_ROW row;
+	sint32 nbrow;
+
+
+	string ip;
+	string userName;
+	string reporterName;
+	string info;
+	msgin.serial(ip, userName, reporterName, info);
+
+	string request = toString("insert into report (From,User,Info,Date) values ('%s','%s','%s',NOW());",reporterName.c_str(),userName.c_str(),info.c_str());
+	sqlQuery(request, nbrow, row, result);
+}
+
 static const TUnifiedCallbackItem WSCallbackArray[] =
 {
 	{ "CC", cbWSClientConnected },
@@ -434,6 +460,8 @@ static const TUnifiedCallbackItem WSCallbackArray[] =
 	{ "SCS", cbWSShardChooseShard },
 	{ "SU", cbScoreUpdate },
 	{ "BC", cbBanClient},
+	{ "KC", cbKickClient},
+	{ "RC", cbReportClient},
 };
 
 

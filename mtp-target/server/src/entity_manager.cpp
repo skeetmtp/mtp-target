@@ -909,7 +909,7 @@ NLMISC_COMMAND(displayEntities, "display info about all entities", "")
 	return true;
 }
 
-NLMISC_COMMAND(kick, "kick a client from the server", "[<eid>|<name>]")
+MTPT_COMMAND(kick, "kick a user from the server", "[<eid>|<name>]")
 {
 	if(args.size() != 1) return false;
 	
@@ -919,12 +919,16 @@ NLMISC_COMMAND(kick, "kick a client from the server", "[<eid>|<name>]")
 
 	if(e==NULL)
 		return true;
-	
+
+	CClient *c = NULL;
+	if(e->type() == CEntity::Client)
+		c = (CClient *)e;
+
 	uint8 eid = e->id();
 	if(e->isAdmin() || e->isModerator())
 		return true;
 
-	if(e->type() == CEntity::Client)
+	if(c)
 	{
 		string reason = toString("You have been kicked !");
 		CNetMessage msgout(CNetMessage::Error);
@@ -934,10 +938,27 @@ NLMISC_COMMAND(kick, "kick a client from the server", "[<eid>|<name>]")
 	
 	CEntityManager::instance().remove(eid);
 	
+	if(c)
+	{
+		CMessage msgout("KC");
+		const CInetAddress inetAddr = CNetwork::instance().hostAddress(c->sock());
+		string ip = inetAddr.ipAddress();
+		string userName = c->name();
+		string kickerName = entity->name();
+		string info = "";
+		for(uint i=1;i<args.size();i++)
+			info += args[i];
+		
+		msgout.serial(ip, userName, kickerName, info);
+		
+		nlinfo("%s kick %s (%s) %s",kickerName.c_str(), userName.c_str(),ip.c_str(),info.c_str());
+		CUnifiedNetwork::getInstance()->send("LS", msgout);
+	}
+
 	return true;
 }
 
-NLMISC_COMMAND(chat, "switch client chat on/off", "[<eid>|<name>]")
+NLMISC_COMMAND(chat, "switch user chat on/off", "[<eid>|<name>]")
 {
 	if(args.size() != 1) return false;
 	
@@ -954,7 +975,7 @@ NLMISC_COMMAND(chat, "switch client chat on/off", "[<eid>|<name>]")
 	return true;
 }
 
-MTPT_COMMAND(ban, "ban a client from the server", "[<eid>|<name>] [duration]")
+MTPT_COMMAND(ban, "ban a user from the server", "[<eid>|<name>] [duration]")
 {
 	if(args.size() != 2 && args.size() != 1) return false;
 	
@@ -984,7 +1005,43 @@ MTPT_COMMAND(ban, "ban a client from the server", "[<eid>|<name>] [duration]")
 
 	msgout.serial(ip, userName, kickerName, duration);
 	
-	nlinfo("%s bans %s (%s) %d",entity->name().c_str(), userName.c_str(),ip.c_str(),duration);
+	nlinfo("%s bans %s (%s) %d",kickerName.c_str(), userName.c_str(),ip.c_str(),duration);
+	CUnifiedNetwork::getInstance()->send("LS", msgout);
+	
+	//TODO
+	
+	return true;
+}
+
+
+MTPT_COMMAND(report, "report a problematic user", "[<eid>|<name>] [comment]")
+{
+	if(args.size() < 1) return false;
+	
+	CEntity *e = getByString(args[0]);
+
+	if(e==NULL)
+		return true;
+
+	CClient *c = NULL;
+	if(e->type()!=e->Client)
+		return true;
+
+	c = (CClient *)e;
+
+	CMessage msgout("RC");
+
+	const CInetAddress inetAddr = CNetwork::instance().hostAddress(c->sock());
+	string ip = inetAddr.ipAddress();
+	string userName = c->name();
+	string reporterName = entity->name();
+	string info = "";
+	for(uint i=1;i<args.size();i++)
+		info += args[i];
+	
+	msgout.serial(ip, userName, reporterName, info);
+	
+	nlinfo("%s report %s (%s) %s",reporterName.c_str(), userName.c_str(),ip.c_str(),info.c_str());
 	CUnifiedNetwork::getInstance()->send("LS", msgout);
 	
 	//TODO
