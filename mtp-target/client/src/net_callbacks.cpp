@@ -151,11 +151,14 @@ static void cbOpenClose(CNetMessage &msgin)
 
 
 
-static float convert8_8fp(sint sx,uint rdx)
+static float convert8_8fp(sint rsx,uint rdx)
 {
 	float mx = 1;
 	bool dxisneg = false;
 	sint8 dx;
+	sint8 sx = rsx - 31;
+
+	nlassert(fabs(sx)<32);
 	
 	if(sx==0)
 		return 0;
@@ -164,7 +167,7 @@ static float convert8_8fp(sint sx,uint rdx)
 	if(sx>0)
 		sx--;
 	dx = rdx;
-	dx += 32;
+	dx += 16;
 	if(dxisneg)
 		dx = -dx;
 	if(sx>0)

@@ -208,12 +208,15 @@ void CNetwork::reset()
 	updateCount = 0;	
 }
 
-static float convert8_8fp(sint sx,uint rdx)
+static float convert8_8fp(sint rsx,uint rdx)
 {
 	float mx = 1;
 	bool dxisneg = false;
 	sint8 dx;
+	sint8 sx = rsx - 31;
 	
+	nlassert(fabs(sx)<32);
+
 	if(sx==0)
 		return 0;
 	dxisneg = sx&1 != 0;
@@ -221,7 +224,7 @@ static float convert8_8fp(sint sx,uint rdx)
 	if(sx>0)
 		sx--;
 	dx = rdx;
-	dx += 32;
+	dx += 16;
 	if(dxisneg)
 		dx = -dx;
 	if(sx>0)
@@ -243,8 +246,45 @@ static float convert8_8fp(sint sx,uint rdx)
 	return dx * mx;
 }
 
+class packBit32
+{
+public:
+	packBit32()
+	{
+		currentAccess = 0;
+		this->bits = 0;
+	}
+	packBit32(uint32 bits)
+	{
+		this->bits = bits;
+		currentAccess = 32;
+	}
+	
+	void packBits(uint32 newBits,uint32 count)
+	{
+		currentAccess += count;
+		nlassert(currentAccess<=32);
+		bits = bits<<count;
+		bits = bits | newBits;
+	}
+	
+	void unpackBits(uint32 count,uint32 &res)
+	{
+		currentAccess -= count;
+		nlassert(currentAccess>=0);
+		uint32 mask = 0xffffffff;
+		mask = mask<<count;
+		res = bits & (~mask);
+		bits = bits >> count;
+	}
+	
+	uint32 bits;
+	sint32 currentAccess;
+protected:
+private:
+};
 
-#define F88_MAX_VALUE 64
+#define F88_MAX_VALUE 32
 static sint8 computeMantis8_8(float x,float &mx,uint8 &dx)
 {
 
@@ -252,14 +292,14 @@ static sint8 computeMantis8_8(float x,float &mx,uint8 &dx)
 	{
 		mx = 0;
 		dx = 0;
-		return 0;
+		return 31;
 	}
 	float ax = (float)fabs(x);
 	sint8 sx = 0;
 	mx = 1;
 	if(ax>(F88_MAX_VALUE))
 	{
-		while(ax*mx>(F88_MAX_VALUE))
+		while(ax*mx>(F88_MAX_VALUE) && sx>-14)
 		{
 			sx--;
 			mx /= 2;
@@ -267,7 +307,7 @@ static sint8 computeMantis8_8(float x,float &mx,uint8 &dx)
 	}
 	else
 	{
-		while(ax*mx<(F88_MAX_VALUE))
+		while(ax*mx<(F88_MAX_VALUE) && sx<14)
 		{
 			sx++;
 			mx *= 2;
@@ -280,7 +320,8 @@ static sint8 computeMantis8_8(float x,float &mx,uint8 &dx)
 		sx|=1;
 	dx = abs(sdx);
 	dx -= F88_MAX_VALUE/2;
-	return sx;	
+	nlassert(fabs(sx)<32);
+	return sx+31;	
 }
 
 static float serial8_8fp(CNetMessage &msgout,float x,uint8 &rdx,sint8 &rsx)
@@ -298,15 +339,17 @@ static float serial8_8fp(CNetMessage &msgout,float x,uint8 &rdx,sint8 &rsx)
 
 static FILE *fp = NULL;
 static int rpos;
+static int updateCount2 = 0;
 
 void CNetwork::update()
 {
 	if(CEntityManager::instance().humanClientCount()==0) return;
-	if(updateCount==0)
+	if(updateCount2==0)
 	{
 		fp = fopen("net.data","wb");
 		rpos = 0;//rand()%10;
 	}
+	updateCount2++;
 
 	if((updateCount%MT_NETWORK_FULL_UPDATE_PERIODE)==0)
 	{
@@ -370,6 +413,17 @@ void CNetwork::update()
 				CVector sendDPos;
 
 				sendDPos.x = serial8_8fp(msgout,dpos.x,dx,sx);
+				/*
+				if((*it)->id()==rpos && dpos.x!=0)
+				//if(dpos.x!=0)
+				{
+					sint8 dsx = sx;// - (*it)->LastSentSX;
+					//fwrite(&dx,1,1,fp);
+					fwrite(&dsx,1,1,fp);
+					fflush(fp);
+					(*it)->LastSentSX = sx;
+				}
+				*/
 				sendDPos.y = serial8_8fp(msgout,dpos.y,dx,sx);
 				sendDPos.z = serial8_8fp(msgout,dpos.z,dx,sx);
 				
@@ -430,18 +484,6 @@ void CNetwork::update()
 	updateCount++;
 }
 
-/*
-//				if((*it)->id()==rpos && dpos.x!=0)
-if(dpos.x!=0)
-{
-sint8 dsx = sx - (*it)->LastSentSX;
-//fwrite(&dx,1,1,fp);
-fwrite(&dsx,1,1,fp);
-fflush(fp);
-(*it)->LastSentSX = sx;
-}
-	
- */
 
 void CNetwork::release()
 {
