@@ -104,13 +104,13 @@ function Entity:init()
   self:setStartPointId(clientId+getSessionId()*2);
   local t = math.mod(clientId,2);
 
-  self:displayText(0,4,1,255,255,255,"warning : Team share the score",10);
+  self:displayText(0,5,1,255,255,255,"warning : Team share the score",10);
   if(t==0) then
-  	self:displayText(0,5,1,255,0,0,"You are in RED team",15);
-  	self:displayText(0,6,1,255,0,0,"Land on RED target !",20);
+  	self:displayText(0,6,1,255,0,0,"You are in RED team",15);
+  	self:displayText(0,7,1,255,0,0,"Land on RED target !",20);
   else
-  	self:displayText(0,5,1,100,100,255,"You are in BLUE team",15);
-  	self:displayText(0,6,1,100,100,255,"Land on BLUE target !",20);
+  	self:displayText(0,6,1,100,100,255,"You are in BLUE team",15);
+  	self:displayText(0,7,1,100,100,255,"Land on BLUE target !",20);
   end
 
   parent:setTeam(t);
@@ -211,12 +211,12 @@ end
 function levelPostUpdate()
 
   if(currentTeamRedScore~=teamRedScore) then
-    displayTextToAll(0,6,1,255,0,0,currentTeamRedScore,10);
+    displayTextToAll(0,7,1,255,0,0,currentTeamRedScore,10);
     teamRedScore = currentTeamRedScore;
   end
 
   if(currentTeamBlueScore~=teamBlueScore) then
-    displayTextToAll(0,7,1,100,100,255,currentTeamBlueScore,10);
+    displayTextToAll(0,8,1,100,100,255,currentTeamBlueScore,10);
     teamBlueScore = currentTeamBlueScore;
   end
 
