@@ -718,7 +718,7 @@ NLMISC_COMMAND(kick, "kick a client from the server", "[<eid>|<name>]")
 	{
 		CEntityManager::instance().remove(args[0]);
 		CEntity *e = CEntityManager::instance().getByName(args[0]);
-		if(e)
+		if(e && e->type() == CEntity::Client)
 			val = e->id();
 		else
 			val = 255;
