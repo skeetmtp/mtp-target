@@ -187,10 +187,12 @@ bool CLevelManager::newLevel(string &str1, string &str2)
 	if(voteCountNeeded<0)
 		voteCountNeeded=0;
 
-	if(maxCount>(uint)voteCountNeeded)
+	bool voteSucceed = false;
+	if(maxCount>=(uint)voteCountNeeded)
 	{
 		NextLevelId = maxCountId;
 		CNetwork::instance().sendChat("voteMap "+levels[maxCountId] + " succeed");
+		voteSucceed = true;
 	}
 	else if(maxCount>0)
 	{
@@ -250,6 +252,8 @@ bool CLevelManager::newLevel(string &str1, string &str2)
 			NextLevelId++;
 		}
 	}
+	if(voteSucceed) //a vote has occured, random next map
+		NextLevelId = rand()%levels.size();
 
 	nlwarning("newLevel() : no valid level found");
 	resumePhysics();

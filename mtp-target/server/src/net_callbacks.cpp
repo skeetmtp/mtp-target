@@ -87,22 +87,22 @@ static void cbCommand(CClient *c, CNetMessage &msgin)
 	if(cmd.substr(0,7)=="voteMap")
 	{
 		c->voteMap(cmd.substr(8));
-		CNetwork::instance().sendChat(c->name()+" executed: "+cmd);
+		CNetwork::instance().sendChat(c->name()+" executed: /"+cmd);
 	}
 	if(cmd.substr(0,1)=="v")
 	{
 		c->voteMap(cmd.substr(2));
-		CNetwork::instance().sendChat(c->name()+" executed: "+cmd);
+		CNetwork::instance().sendChat(c->name()+" executed: /"+cmd);
 	}
 	else if(c->isAdmin() || c->isModerator())
 	{
 		//CNetwork::instance().networkTask().addCommand(cmd);
 		ICommand::execute(cmd, *InfoLog);
-		CNetwork::instance().sendChat(c->name()+" executed: "+cmd);
+		CNetwork::instance().sendChat(c->name()+" executed: /"+cmd);
 	}
 	else
 	{
-		CNetwork::instance().sendChat(c->name()+" tried to execute the admin command "+cmd);
+		CNetwork::instance().sendChat(c->name()+" tried to execute the admin command /"+cmd);
 	}
 }
 
