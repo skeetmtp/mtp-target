@@ -40,7 +40,7 @@ end
 function Entity:init()
   local parent = CEntity:new();
   self:setUserData(parent);
-  self:setStartPointId(clientId);
+  self:setStartPointId(clientId+getSessionId()*2);
   local t = math.mod(clientId,2);
 
   if(t==0) then
