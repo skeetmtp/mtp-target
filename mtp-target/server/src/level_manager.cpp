@@ -102,13 +102,16 @@ bool CLevelManager::newLevel()
 	pausePhysics();
 	CEntityManager::instance().reset();
 
-
+	nlinfo("newLevel (%d/%d)",LevelSessionCount,MaxLevelSessionCount );
+	
 	if(LevelSessionCount>MaxLevelSessionCount && CurrentLevel)
 	{
 		nlinfo("newLevel() : keeping level : '%s'",CurrentLevel->name().c_str());
 		resumePhysics();	
 		return true;	
 	}
+
+	nextLevel();
 
 	uint i;
 	nlinfo("Find a new level");
@@ -174,8 +177,8 @@ uint32  CLevelManager::levelSessionCount()
 
 void  CLevelManager::maxLevelSessionCount(uint32 levelCount)
 {
+	nlinfo("maxLevelSessionCount(%d)",levelCount);
 	MaxLevelSessionCount = levelCount;	
-	LevelSessionCount = 1;
 }
 
 //
@@ -197,3 +200,9 @@ NLMISC_DYNVARIABLE(string, CurrentLevel, "")
 	}
 }
 
+void CLevelManager::nextLevel()
+{
+	NextLevelId++;
+	LevelSessionCount = 0;
+	MaxLevelSessionCount = 0;
+}

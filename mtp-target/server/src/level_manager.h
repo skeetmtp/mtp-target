@@ -46,6 +46,8 @@ public:
 	// find and load a new level
 	bool newLevel();
 
+	void nextLevel();
+	
 	std::string levelName();
 
 	// return true if a current level exists

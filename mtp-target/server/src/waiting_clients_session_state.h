@@ -36,9 +36,12 @@ class CWaitingClientsSessionState : public CSessionState, public CSingleton<CWai
 {
 public:
 	
+	virtual void enter() {	firstUpdate = true; }
 	virtual void update();
 	virtual std::string name() const { return "Waiting clients"; }
 	virtual std::string shortName() const { return "WC"; }
+private:
+	bool firstUpdate;
 };
 
 #endif

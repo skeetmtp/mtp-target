@@ -207,7 +207,7 @@ int CLuaEngine::getSessionId(lua_State *L)
 
 int CLuaEngine::getLevelSessionCount(lua_State *L)
 {
-	lua_Number levelSessionCount = 0;
+	lua_Number levelSessionCount = CLevelManager::instance().levelSessionCount();
 	lua_pushnumber(L,levelSessionCount); 
 	return 1;
 }
@@ -215,6 +215,7 @@ int CLuaEngine::getLevelSessionCount(lua_State *L)
 int CLuaEngine::setMaxLevelSessionCount(lua_State *L)
 {
 	lua_Number maxLevelSessionCount = luaL_checknumber(L,1);
+	CLevelManager::instance().maxLevelSessionCount((uint32)maxLevelSessionCount);
 	return 1;
 }
 

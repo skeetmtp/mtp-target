@@ -53,6 +53,5 @@ void CEndingSessionState::update()
 	if(currentTime > CSessionManager::instance().endTime()+(TTime)TimeBeforeRestart)
 	{
 		CSessionManager::instance().reset();
-		CLevelManager::instance().release();
 	}
 }
