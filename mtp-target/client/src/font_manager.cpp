@@ -245,8 +245,8 @@ void CFontManager::printf3D(const NLMISC::CRGBA &col, const NLMISC::CVector &pos
 	float dt = 1.0f / vv.norm();
 	dt /= 10.0f;
 
-	if (dt < 0.68f)
-		dt = 0.68f;
+	if (dt < 0.48f)
+		dt = 0.48f;
 	
 	cameraMatrix.invert();
 

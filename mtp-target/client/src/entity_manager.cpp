@@ -347,11 +347,34 @@ uint8 CEntityManager::size()
 
 void CEntityManager::renderNames()
 {
+	uint renderCount = 0;
+	CVector pos;
+	/*
 	for(uint i = 0; i < 256; i++)
 	{
 		if(entities()[i]->type() != CEntity::Unknown)
-			entities()[i]->renderName();
+		{
+			bool res = entities()[i]->namePosOnScreen(pos);
+			if(res)
+				renderCount++;
+		}
 	}	
+
+	if(renderCount<3)
+		for(uint i = 0; i < 256; i++)
+	*/
+		for(uint i = 0; i < 256 && renderCount<=3; i++)
+		{
+			if(entities()[i]->type() != CEntity::Unknown)
+			{
+				bool res = entities()[i]->namePosOnScreen(pos);
+				/*
+				if(res)
+					renderCount++;
+				*/
+				entities()[i]->renderName();
+			}
+		}	
 }
 
 void CEntityManager::render()

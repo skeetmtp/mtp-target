@@ -255,12 +255,42 @@ void CEntity::collisionWithWater(bool col)
 	}
 }
 
+bool CEntity::namePosOnScreen(CVector &res) 
+{
+	if(CMtpTarget::instance().controler().getControledEntity() != id() || !ReplayFile.empty())
+	{
+		CVector p = interpolator().position();
+		CVector dpos = p - CMtpTarget::instance().controler().Camera.getMatrix()->getPos();
+		CMatrix cameraMatrix = C3DTask::instance().scene().getCam().getMatrix();
+		if(dpos.norm()>1) return false;
+			
+		CVector vv = cameraMatrix.getPos() - p;
+		
+		cameraMatrix.invert();
+		
+		p = cameraMatrix * p;
+		
+		// the text is behind us, don't display it
+		if (p.y < 0.0f)
+			return false;
+		
+		p = C3DTask::instance().scene().getCam().getFrustum().project(p);
+		res = p;
+		return 0<p.x && p.x<1 && 0<p.y && p.y<1;
+		
+	}
+	return false;
+}
+
 void CEntity::renderName() const
 {
 	// display name of other people than me
 	if(CMtpTarget::instance().controler().getControledEntity() != id() || !ReplayFile.empty())
 	{
-		CFontManager::instance().printf3D(color(), interpolator().position(),0.01f, name().c_str());
+		CVector pos = interpolator().position();
+		CVector dpos = pos - CMtpTarget::instance().controler().Camera.getMatrix()->getPos();
+		if(dpos.norm()<1)
+			CFontManager::instance().printf3D(color(),pos,0.01f, name().c_str());
 	}
 }
 

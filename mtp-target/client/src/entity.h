@@ -121,7 +121,8 @@ public:
 
 	uint8				 startPointId() const { return StartPointId; }
 	void				 startPointId(uint8 spid);
-	
+	bool				 namePosOnScreen(CVector &res);
+		
 	
 	NL3D::UInstance CloseMesh, OpenMesh;
 	CEntityProxy		*luaProxy;
