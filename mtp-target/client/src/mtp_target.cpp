@@ -40,6 +40,7 @@
 
 #include <nel/net/email.h>
 
+#include "main.h"
 #include "global.h"
 #include "entity.h"
 #include "3d_task.h"
@@ -215,15 +216,24 @@ bool CMtpTarget::displayTutorialInfo()
 
 void CMtpTarget::loadNewSession()
 {
+	bool paused = pauseAllThread();
+	if(!paused)
+		return;
+	
 	nlassert(NewSession);
 	CEntityManager::instance().everybodyReady(false);
 	
 	NewSession = false;
-	nlinfo("loadNewSession() %s",NewLevelName.c_str());
+	nlinfo("loadNewSession() '%s'",NewLevelName.c_str());
 	
 	if(NewLevelName.empty())
+	{
+		nlwarning("CMtpTarget::loadNewSession() : NewLevelName is empty");
+		resumeAllThread();
 		return;
+	}
 
+	resumeAllThread();
 	if(TimeBeforeSessionStart != 0.0f)
 	{
 		// i'm in the new session and all other entities, reset spectator
