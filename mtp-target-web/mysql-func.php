@@ -63,6 +63,7 @@ function validInput($input)
 
 function validPage($page)
 {
+	if(strncmp($page,"/",1)==0)	return false;
 	if(strstr($page,".."))	return false;
   	if(strlen($page)>128) return false;
     if(!ereg("^[_/\.A-Za-z0-9\-]+$",$page))
