@@ -36,6 +36,9 @@
 
 #include <nel/misc/smart_ptr.h> 
 
+#include "load_mesh.h"
+#include "editable_element_common.h"
+
 /*
 #include "bot.h"
 #include "main.h"
@@ -55,20 +58,114 @@ using namespace NLNET;
 using namespace NLMISC;
 
 
+
+CAutoEdge::CAutoEdge()
+{
+	_center = CVector::Null;
+	_normal = CVector::Null;
+	_faceCount = 0;
+}
+
+CAutoEdge::~CAutoEdge()
+{
+
+}
+
+void CAutoEdge::addFace(NLMISC::CVector center,NLMISC::CVector normal)
+{
+	nlassert(normal.norm()>0);
+	normal.normalize();
+	//nlinfo("CAutoEdge::addFace #%d",_faceCount);
+	//nlinfo("CAutoEdge::addFace c = %f %f %f",center.x,center.y,center.z);
+	//nlinfo("CAutoEdge::addFace n = %f %f %f",normal.x,normal.y,normal.z);
+	
+	if(!_faceCount)
+	{
+		_center = center;
+		_normal = normal;
+		_faceCount++;
+		return;
+	}
+
+	_center += center;
+	CVector n = _normal /  (float)_faceCount;
+	n.normalize();
+	float dp = n * normal;
+	if(dp<0.9f)
+	{
+		nlwarning("CAutoEdge::addFace new face does'nt have the same normal the previous one had");
+		nlwarning("CAutoEdge::addFace new = %f %f %f / old = %f %f %f",normal.x,normal.y,normal.z,n.x,n.y,n.z);
+		_normal += normal;
+	}
+	_faceCount++;
+}
+
+bool CAutoEdge::compute(CEditableElementCommon *aeFixedEditableElement,CEditableElementCommon *aeMoveEditableElement,CVector &translation,CVector &rotation)
+{
+	vector<CAutoEdge> &aeMove  = aeMoveEditableElement->AutoEdges;
+	vector<CAutoEdge> &aeFixed = aeFixedEditableElement->AutoEdges;
+	float dpEpsilon = 0.1f;
+	float offsetEpsilon = 0.5f;
+	for(uint i=0;i<aeMove.size();i++)
+	{
+		for(uint j=0;j<aeFixed.size();j++)
+		{
+			CMatrix aeFixedRotMat;
+			aeFixedRotMat.identity();
+			aeFixedRotMat.setRot(aeFixedEditableElement->rotation());
+			CMatrix aeMoveRotMat;
+			aeMoveRotMat.identity();
+			aeMoveRotMat.setRot(aeMoveEditableElement->rotation());
+
+			float dp = (aeFixedRotMat*aeFixed[i].normal()) * (aeMoveRotMat*aeMove[j].normal());
+			CVector voffset = aeFixedEditableElement->transformMatrix()*aeFixed[j].center() - aeMoveEditableElement->transformMatrix()*aeMove[i].center();
+			float offset = voffset.norm();
+			//nlinfo(">>dp = %f , offset = %f %f %f ",dp,voffset.x,voffset.y,voffset.z);
+			if(dp>(-1.0f-dpEpsilon) && dp<(-1.0f+dpEpsilon) && fabs(offset)<offsetEpsilon) //normals should be near opposed
+			{
+				translation = voffset;//aeFixed[j]._center - aeMove[i]._center;
+				//rotation = ???
+				return 	true;
+			}
+		}
+	}
+			
+	return false;
+}
+
+CVector CAutoEdge::center()
+{
+	if(!_faceCount) return CVector::Null;
+	return _center / (float)_faceCount;
+}
+
+CVector CAutoEdge::normal()
+{
+	if(!_faceCount) return CVector::Null;
+	CVector res = _normal / (float)_faceCount;
+	res.normalize();
+	return res;
+}
+
+
+
+
 //
 // Functions
 //
 
 
-uint32 loadMesh(const std::string &meshFileName, std::vector<NLMISC::CVector> &vertices, std::vector<NLMISC::CVector> &normals, std::vector<int> &indices, bool applyPreTransform)
+uint32 loadMesh(const std::string &meshFileName, std::vector<NLMISC::CVector> &vertices, std::vector<NLMISC::CVector> &normals, std::vector<int> &indices, std::vector<CAutoEdge> &autoEdges, bool applyPreTransform)
 {
 	uint32 nbFaces = 0;
 
 	vertices.clear();
 	indices.clear();
+	autoEdges.clear();
 
 	//return 0;
 
+	//nlinfo("loading mesh : %s",meshFileName.c_str());
 	NL3D::registerSerial3d();
 
 	if(CPath::lookup(meshFileName, false).empty())
@@ -104,39 +201,12 @@ uint32 loadMesh(const std::string &meshFileName, std::vector<NLMISC::CVector> &v
 		tmat.setPos(gpos);
 		tmat.setRot(grot);
 		tmat.scale(gscale);
+		//nlinfo("gpos   = %f %f %f",gpos.x,gpos.y,gpos.z);
+		//nlinfo("grot   = %f %f %f",grot.x,grot.y,grot.z);
+		//nlinfo("gscale = %f %f %f",gscale.x,gscale.y,gscale.z);
 	}
 	
-	uint nbmb = mg.getNbMatrixBlock();
-	for(uint i = 0; i < nbmb; i++)
-	{
-		uint nbrp = mg.getNbRdrPass(i);
-		for(uint j = 0; j < nbrp; j++)
-		{
-			const CIndexBuffer &ib = mg.getRdrPassPrimitiveBlock(i, j);
-			uint32 materialId = mg.getRdrPassMaterial(i,j);
-			const CMaterial &material = m->getMaterial(materialId);
-			int kk;
-			for(kk=0;kk<material.getNumUsedTextureStages();kk++)
-			{
-				ITexture *tex = material.getTexture(kk);
-				std::string sharedName = tex->getShareName();
-				nlinfo(">> shared texture name : %s",sharedName.c_str());
-			}
-
-			CIndexBufferRead iba;
-			ib.lock(iba);
-			const uint32 *ibptr = iba.getPtr();
-			uint nbi = ib.getNumIndexes();
-			for(uint k = 0; k < nbi; k++)
-			{
-				indices.push_back(ibptr[k]);
-				if((k%3)==2)
-					nbFaces++;
-				//				nlinfo("%d %d %d %d", k, ptr[k+0], ptr[k+1], ptr[k+2]);
-			}
-		}
-	}
-	
+	CVector center = CVector::Null;
 
 	{
 		const CVertexBuffer &vb = mg.getVertexBuffer();
@@ -154,10 +224,82 @@ uint32 loadMesh(const std::string &meshFileName, std::vector<NLMISC::CVector> &v
 			//		{
 			vertices.push_back(tmat * v);
 			normals.push_back(n);
+			center = tmat * v;
 			//		}
 			//		if(j)
 		}
+		center /= (float)nbv;
 	}
+	
+	uint nbmb = mg.getNbMatrixBlock();
+	uint aeCount = 0;
+	//nlinfo(">> getNbMatrixBlock = %d ",nbmb);
+	for(uint i = 0; i < nbmb; i++)
+	{
+		uint nbrp = mg.getNbRdrPass(i);
+		//nlinfo(">> getNbRdrPass = %d ",nbrp);
+		for(uint j = 0; j < nbrp; j++)
+		{
+			const CIndexBuffer &ib = mg.getRdrPassPrimitiveBlock(i, j);
+			uint32 materialId = mg.getRdrPassMaterial(i,j);
+			const CMaterial &material = m->getMaterial(materialId);
+			uint kk;
+			bool autoEdge = false;
+			for(kk=0;kk<material.getNumUsedTextureStages();kk++)
+			{
+				ITexture *tex = material.getTexture(kk);
+				std::string sharedName = tex->getShareName();
+				//nlinfo(">> shared texture name : %s",sharedName.c_str());
+				if(strstr(sharedName.c_str(),"autoedge"))
+					autoEdge = true;
+			}
+
+			if(autoEdge)
+			{
+				CAutoEdge ae;
+				autoEdges.push_back(ae);
+			}
+			
+			CIndexBufferRead iba;
+			ib.lock(iba);
+			const uint32 *ibptr = iba.getPtr();
+			uint nbi = ib.getNumIndexes();
+			nlassert((nbi%3)==0);
+			uint nbf = nbi/3;
+			for(uint k = 0; k < nbf; k++)
+			{
+				uint32 ia = ibptr[k*3+0];
+				uint32 ib = ibptr[k*3+1];
+				uint32 ic = ibptr[k*3+2];
+				indices.push_back(ia);
+				indices.push_back(ib);
+				indices.push_back(ic);
+				if(autoEdge)
+				{
+					//nlinfo("face %d x=%f",k,vertices[ia].x);
+					//nlinfo("face %d x=%f",k,vertices[ib].x);
+					//nlinfo("face %d x=%f",k,vertices[ic].x);
+					CVector faceNormal  = (normals[ia] + normals[ib] + normals[ic]) / 3;
+					CVector faceCenter  = (vertices[ia] + vertices[ib] + vertices[ic]) / 3;
+					autoEdges[aeCount].addFace(faceCenter,faceNormal);
+				}
+			}
+			nbFaces+=nbf;
+			//nlinfo("nb faces = %d",nbf);
+			if(autoEdge)
+			{
+				/*
+				nlinfo("auto edge = pos=%f %f %f norm=%f %f %f / mesh center = %f %f %f",
+					autoEdges[aeCount].center().x, autoEdges[aeCount].center().y, autoEdges[aeCount].center().z,
+					autoEdges[aeCount].normal().x, autoEdges[aeCount].normal().y, autoEdges[aeCount].normal().z,
+					center.x,center.y,center.z);
+					*/
+				aeCount++;
+			}
+		}
+	}
+	
+
 
 
 	delete m;

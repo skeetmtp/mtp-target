@@ -31,6 +31,7 @@
 #include "lua_utility.h"
 #include "lua_nel.h"
 #include "lunar.h"
+#include "load_mesh.h"
 
 
 //
@@ -58,7 +59,9 @@ public:
 	
 	virtual NLMISC::CVector position() const {return Position;}
 	virtual void position(NLMISC::CVector pos) {Position = pos; _changed = true;}
-
+	virtual NLMISC::CMatrix transformMatrix();
+	virtual NLMISC::CAngleAxis rotation();
+	
 	TType type() { return _type;}
 	uint8 id() {return _id;}
 	const std::string	&name() const { return Name; }
@@ -74,6 +77,7 @@ public:
 	void hide();
 #endif
 
+	std::vector<CAutoEdge> AutoEdges;
 protected:
 	std::vector<NLMISC::CVector> Normals;
 	std::vector<NLMISC::CVector> Vertices;
@@ -87,6 +91,7 @@ protected:
 	bool				_changed;	
 	TType				_type;
 	uint8				_id;
+
 	
 #ifndef MTPT_SERVER
 	NL3D::UInstance *Mesh;

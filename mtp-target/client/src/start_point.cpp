@@ -96,7 +96,7 @@ void CStartPoint::init(const std::string &name,uint8 id, NLMISC::CVector positio
 	CStartPointCommon::init(name,id,position,rotation);
 
 	ShapeName = CResourceManager::instance().get("col_box.shape");
-	NbFaces = loadMesh(ShapeName, Vertices, Normals, Indices);
+	NbFaces = loadMesh(ShapeName, Vertices, Normals, Indices, AutoEdges);
 
 	Mesh = C3DTask::instance().scene().createInstance (ShapeName);
 	if (Mesh == 0)

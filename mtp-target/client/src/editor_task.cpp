@@ -251,6 +251,22 @@ void CEditorTask::update()
 		{
 			CVector oldPos = selectedElement()->position();
 			selectedElement()->position(oldPos + dv);
+			if(selectedElement()->type()==CEditableElementCommon::TType::Module)
+			{
+				for(uint i=0;i<CLevelManager::instance().currentLevel().getModuleCount();i++)
+				{
+					CModule *module = CLevelManager::instance().currentLevel().getModule(i);
+					if(module && module!=selectedElement())
+					{
+						CVector translation;
+						CVector rotation;
+						bool res = CAutoEdge::compute(module,selectedElement(),translation,rotation);
+						if(res)
+							selectedElement()->position(oldPos + dv + translation);
+					}
+				}
+			}
+			
 		}
 
 		double time = CTimeTask::instance().time();

@@ -61,6 +61,8 @@ StartPoints =
 Modules =
 {
 	{ Position = CVector(0.000000,0.000000,0.500000),Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Name="arena" },
+	{ Position = CVector(0.0,0.0,1.000000),Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Name="boxae" },
+	{ Position = CVector(2.000000,0.000000,1.000000),Rotation = CAngleAxis(0.000000,0.000000,1.000000,3.141500), Name="boxae" },
 
 }
 

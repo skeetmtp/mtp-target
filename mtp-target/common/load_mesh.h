@@ -22,10 +22,35 @@
 #define MTPT_LOAD_MESH
 
 
+
+class CEditableElementCommon;
+
+class CAutoEdge
+{
+public:
+	CAutoEdge();
+	~CAutoEdge();
+
+	CAutoEdge(const CAutoEdge &ae) : _center(ae._center) , _normal(ae._normal), _faceCount(ae._faceCount) {};
+
+	void addFace(NLMISC::CVector center,NLMISC::CVector normal);
+	NLMISC::CVector center();
+	NLMISC::CVector normal();
+	
+
+	static bool compute(CEditableElementCommon *aeFixedEditableElement,CEditableElementCommon *aeMoveEditableElement,NLMISC::CVector &translation, NLMISC::CVector &rotation);
+protected:
+private:
+	NLMISC::CVector _center;
+	NLMISC::CVector _normal;
+	uint			_faceCount;
+};
+
+
 //
 // Functions
 //
 
-uint32 loadMesh(const std::string &meshFileName, std::vector<NLMISC::CVector> &vertices, std::vector<NLMISC::CVector> &normals, std::vector<int> &indices, bool applyPreTransform=false);
+uint32 loadMesh(const std::string &meshFileName, std::vector<NLMISC::CVector> &vertices, std::vector<NLMISC::CVector> &normals, std::vector<int> &indices, std::vector<CAutoEdge> &autoEdges, bool applyPreTransform=false);
 
 #endif

@@ -126,6 +126,20 @@ bool CEditableElementCommon::intersect(NLMISC::CVector rayStart,NLMISC::CVector 
 	return false;
 }
 
+CMatrix CEditableElementCommon::transformMatrix()
+{
+	CMatrix res;
+	res.identity();
+	res.setPos(Position);
+	res.setRot(Rotation);
+	
+	return res;
+}
+
+CAngleAxis CEditableElementCommon::rotation()
+{
+	return Rotation;
+}
 
 
 #ifndef MTPT_SERVER

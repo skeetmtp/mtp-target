@@ -102,7 +102,7 @@ void CModule::init(const string &name,uint8 id, CVector position, CAngleAxis rot
 //	loadMesh(ShapeName, Vertices, Normals, Indices,false);
 	
 	ShapeName = CResourceManager::instance().get(Name+".shape");
-	NbFaces = loadMesh(ShapeName, Vertices, Normals, Indices);
+	NbFaces = loadMesh(ShapeName, Vertices, Normals, Indices, AutoEdges);
 	
 	
 	Mesh = C3DTask::instance().scene().createInstance (ShapeName);
