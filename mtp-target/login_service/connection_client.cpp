@@ -194,7 +194,7 @@ static void cbClientVerifyLoginPassword(CMessage &msgin, TSockId from, CCallback
 			if(AcceptNewUsers)
 			{
 				// we accept new user, add it
-				reason = sqlQuery("insert into user (Login, Password, Registered) values ('"+login+"', '"+cpassword+"', NOW()", nbrow, row, result);
+				reason = sqlQuery("insert into user (Login, Password, Registered) values ('"+login+"', '"+cpassword+"', NOW())", nbrow, row, result);
 				if(!reason.empty()) break;
 			}
 			else
