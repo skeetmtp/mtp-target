@@ -296,6 +296,17 @@ void CEntityManager::reset()
 	}
 }
 
+void CEntityManager::luaInit()
+{
+	for(uint i = 0; i < 256; i++)
+	{
+		if(entities()[i]->type() != CEntity::Unknown)
+		{
+			entities()[i]->luaInit();
+		}
+	}
+}
+
 void CEntityManager::resetSpectator()
 {
 	for(uint i = 0; i < 256; i++)
@@ -351,6 +362,16 @@ void CEntityManager::load3d()
 		if(entities()[i]->type() != CEntity::Unknown && !entities()[i]->spectator())
 			entities()[i]->load3d();
 	}
+}
+
+CEntity *CEntityManager::getByName(string &name)
+{
+	for(uint i = 0; i < 256; i++)
+	{
+		if(entities()[i]->type() != CEntity::Unknown && entities()[i]->name()==name)
+			return entities()[i];
+	}	
+	return NULL;
 }
 
 //

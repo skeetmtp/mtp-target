@@ -96,7 +96,8 @@ public:
 
 	void	startSession();
 	void	reset();
-	
+	void	luaInit();
+		
 	// set all spectator to no more spectator
 	void	resetSpectator();
 	void	everybodyReady(bool state);
@@ -104,6 +105,7 @@ public:
 	void	load3d();
 
 	CEntity &operator [](uint8 eid);
+	CEntity *getByName(std::string &name);
 	
 	void	getEIdSortedByScore(std::vector<uint8> &eids) ;
 

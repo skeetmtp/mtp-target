@@ -158,6 +158,14 @@ SOURCE=.\Src\entity.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\src\entity_lua_proxy.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\src\entity_lua_proxy.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\Src\entity_manager.cpp
 # End Source File
 # Begin Source File

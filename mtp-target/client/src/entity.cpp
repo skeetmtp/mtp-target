@@ -58,6 +58,7 @@
 #include "time_task.h"
 #include "mtp_target.h"
 #include "font_manager.h"
+#include "level_manager.h"
 #include "config_file_task.h"
 #include "../../common/constant.h"
 
@@ -76,6 +77,7 @@ CEntity::CEntity()
 	LastSent2OthersPos = CVector::Null;
 	_interpolator = NULL;
 	Ready = false;
+	luaProxy = NULL;
 }
 
 void CEntity::swapOpenClose()
@@ -289,6 +291,22 @@ void CEntity::init(TEntity type, const std::string &name, sint32 totalScore, CRG
 	CSoundManager::instance().registerEntity(SoundsDescriptor);
 }
 
+void CEntity::luaInit()
+{
+	if(luaProxy)
+	{
+		delete luaProxy;
+		luaProxy = 0;
+	}
+	if(CLevelManager::instance().levelPresent())
+	{
+		luaProxy = new CEntityProxy(CLevelManager::instance().currentLevel().luaState(),this);	
+		nlinfo("CEntity::luaInit(), luaState=0x%p , proxy = 0x%p",CLevelManager::instance().currentLevel().luaState(),luaProxy);
+	}
+	else
+		nlwarning("lua init : no level loaded");
+}
+
 void CEntity::load3d()
 {
 	nlinfo(">> 0x%p::CEntity::load3d()",this);
@@ -385,3 +403,25 @@ void CEntity::fadeParticleColorUpdate()
 		TraceParticle.setUserColor(newCol);
 }
 
+
+void  CEntity::color(const NLMISC::CRGBA &col) 
+{ 
+	Color = col; 
+	if(!CloseMesh.empty())
+	{
+		for(uint i = 0; i < CloseMesh.getNumMaterials(); i++)
+		{
+			CloseMesh.getMaterial(i).setDiffuse(Color);
+			CloseMesh.getMaterial(i).setAmbient(Color);
+		}
+	}
+	if(!OpenMesh.empty())
+	{
+		for(uint i = 0; i < CloseMesh.getNumMaterials(); i++)
+		{
+			OpenMesh.getMaterial(i).setDiffuse(Color);
+			OpenMesh.getMaterial(i).setAmbient(Color);
+		}
+	}
+	
+}

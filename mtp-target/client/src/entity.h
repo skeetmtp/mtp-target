@@ -57,6 +57,7 @@
 
 #include "sound_manager.h"
 #include "interpolator.h"
+#include "entity_lua_proxy.h"
 
 
 //
@@ -72,6 +73,7 @@ using NLMISC::CMatrix;
 //
 
 class CEntityManager;
+class CEntityProxy;
 
 class CEntity
 {
@@ -100,6 +102,7 @@ public:
 	sint32				 totalScore() const { return TotalScore; }
 	void				 totalScore(sint32 score) { TotalScore = score; }
 	const NLMISC::CRGBA	&color() const { return Color; }
+	void  color(const NLMISC::CRGBA &col);
 	const std::string	&texture() const { return Texture; }
 	uint16				 ping() const { return Ping; }
 	void				 ping(uint16 ping) { Ping = ping; }
@@ -118,7 +121,8 @@ public:
 
 	
 	NL3D::UInstance CloseMesh, OpenMesh;
-
+	CEntityProxy		*luaProxy;
+	
 	NL3D::UParticleSystemInstance TraceParticle;
 	
 	NLMISC::CVector		 LastSent2MePos;
@@ -149,6 +153,7 @@ private:
 	virtual ~CEntity() { delete _interpolator; _interpolator = NULL; }
 
 	void reset();
+	void luaInit();
 	void init(TEntity type, const std::string &name, sint32 totalScore, NLMISC::CRGBA &color, const std::string &texture, const std::string &meshname, bool spectator, bool isLocal);
 	void id(uint8 nid);
 	void fadeParticleColorUpdate();
