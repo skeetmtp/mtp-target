@@ -189,7 +189,7 @@ static void cbWSIdentification (CMessage &msgin, const std::string &serviceName,
 		}
 		else
 		{
-			string query = "update shard set Online=1 where ShardId="+toString(shardId);
+			string query = "update shard set State='Online' where ShardId="+toString(shardId);
 			sint ret = mysql_query (DatabaseConnection, query.c_str ());
 			if (ret != 0)
 			{
