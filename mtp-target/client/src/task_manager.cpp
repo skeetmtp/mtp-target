@@ -57,6 +57,7 @@ void CTaskManager::execute()
 //		nlinfo("***** new frame, update");
 		for(list<ITask*>::iterator it = OrderSortedTasks.begin(); it != OrderSortedTasks.end(); it++)
 		{
+			ITask *task = *it;
 			if((*it)->Execute)
 			{
 //				nlinfo("Update %s", (*it)->name().c_str());
