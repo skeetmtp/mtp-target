@@ -95,6 +95,9 @@ void CRunningSessionState::update()
 			}
 		}
 
+		if(everybodyStopped)
+			nlinfo("everybodyStopped");
+
 		if(CSessionManager::instance().forceEnding() || everybodyStopped)
 		{
 
