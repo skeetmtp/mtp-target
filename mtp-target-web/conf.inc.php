@@ -38,7 +38,7 @@
 
 //email
      //$contact_email = "mailto:lecroart@noos.fr?subject=mtp target";
-     $contact_email = "mailto:acemtp@free.fr?subject=mtp target";
+     $contact_email = "mailto:contact@mtp-target.org?subject=mtp-target";
      
 //special link
      $user_texture = "http://mtp-target.dyndns.org/mtp-target/";
