@@ -152,6 +152,7 @@ void CEntityManager::addClient(NLNET::CTcpSock *sock)
 		CEntities::CWriteAccessor acces(entities());
 		acces.value().push_back(e);
 	}
+	checkForcedClientCount();
 }
 
 
