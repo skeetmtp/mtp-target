@@ -95,10 +95,17 @@ uint32 loadMesh(const std::string &meshFileName, std::vector<NLMISC::CVector> &v
 
 	if(applyPreTransform)
 	{
+		CAnimatedValueBlock avBlock;
+
+		//dynamic_cast<const CAnimatedValueVector &>(m->getDefaultPos()->getValue()).Value;
+		CVector gpos = dynamic_cast<const CAnimatedValueVector &>(m->getDefaultPos()->eval(m->getDefaultPos()->getBeginTime(),avBlock)).Value;
+		CQuat grot = dynamic_cast<const CAnimatedValueBlendable<CQuat> &>(m->getDefaultRotQuat()->eval(m->getDefaultRotQuat()->getBeginTime(),avBlock)).Value;
+		CVector gscale = dynamic_cast<const CAnimatedValueVector &>(m->getDefaultScale()->eval(m->getDefaultScale()->getBeginTime(),avBlock)).Value;
+/*
 		CVector gpos = dynamic_cast<const CAnimatedValueVector &>(m->getDefaultPos()->getValue()).Value;
 		CQuat grot = dynamic_cast<const CAnimatedValueBlendable<CQuat> &>(m->getDefaultRotQuat()->getValue()).Value;
 		CVector gscale = dynamic_cast<const CAnimatedValueVector &>(m->getDefaultScale()->getValue()).Value;
-		
+*/		
 		tmat.setPos(gpos);
 		tmat.setRot(grot);
 		tmat.scale(gscale);
