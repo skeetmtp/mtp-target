@@ -2,6 +2,7 @@
   include_once("conf.inc.php");
   include_once("config.php");
   include_once("mysql-func.php");
+  include_once("ingame_stats.php");
 
   if(!validPage($page)) unset($page);
   if(!validInput($login)) unset($login);
@@ -84,6 +85,14 @@
         <a href="?page=<?php echo $page;?>&lang=en"><img src="<?php echo $image_dir; ?>/en.png" ALT="English"></a>
         <a href="?page=<?php echo $page;?>&lang=fr"><img src="<?php echo $image_dir; ?>/fr.png" ALT="French"></a>
     </td>
+</tr>
+<tr>
+        <td width="5%"><center><div id="menu">
+        <?php
+		getStats($nbop, $nbrp);
+		echo "<b>$nbrp registered players</b> | <b>$nbop online players</b>";
+        ?>
+        </div></center></td>
 </tr>
 <tr>
         <td width="5%"><center><div id="menu">
