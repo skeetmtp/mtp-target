@@ -288,6 +288,8 @@ void CEntityManager::login(CEntity *e)
 		msgout.serial(e->Texture);
 		bool s = e->spectator();
 		msgout.serial(s);
+		bool oc  = e->isOpen();
+		msgout.serial(oc);
 		CNetwork::instance().sendAllExcept(nid, msgout);
 
 		if(e->type() == CEntity::Client)
@@ -315,11 +317,17 @@ void CEntityManager::login(CEntity *e)
 		msgout.serial(e->Texture);
 		bool s = e->spectator();
 		msgout.serial(s);
+		bool oc  = e->isOpen();
+		msgout.serial(oc);
+
 		string CurrentLevel="";
-		/* currently client crash when startsession on login, btw startsession on login is a bad idea
-		if(CLevelManager::instance().haveCurrentLevel())// && CNetwork::instance().version()>=2)
-			CurrentLevel = CLevelManager::instance().currentLevel().fileName();
-		*/
+		// version 5 client can't handle statsession on login 
+		if(e->networkVersion>=6) //TODO remove this when server version will be >= 6 
+		{
+			if(CLevelManager::instance().haveCurrentLevel())
+				CurrentLevel = CLevelManager::instance().currentLevel().fileName();
+		}
+		
 		msgout.serial(CurrentLevel);
 		float timeBeforeTimeout;
 		if (CSessionManager::instance().startTime() == 0)
@@ -363,8 +371,10 @@ void CEntityManager::login(CEntity *e)
 					msgout.serial((*it)->Score);
 					msgout.serial((*it)->Color);
 					msgout.serial((*it)->Texture);
-					bool s = e->spectator();
+					bool s = (*it)->spectator();
 					msgout.serial(s);
+					bool oc  = (*it)->isOpen();
+					msgout.serial(oc);
 					CNetwork::instance().send(nid, msgout);
 				}
 			}

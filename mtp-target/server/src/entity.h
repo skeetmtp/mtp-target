@@ -152,6 +152,7 @@ public:
 	NLMISC::CVector		 LastSent2MePos;
 	NLMISC::CVector		 LastSent2OthersPos;
 	sint8				 LastSentSX;
+	uint32				 networkVersion;
 	
 	bool				 OnTheWater;
 

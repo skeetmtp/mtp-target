@@ -127,11 +127,10 @@ static void cbLogin(CClient *c, CNetMessage &msgin)
 	
 	nlinfo("New client login");
 	
-	// first, check the password
-
+	// first, check the version used by client
 	msgin.serial(networkVersion); 
 
-	if(networkVersion != CNetwork::instance().version())
+	if(networkVersion < CNetwork::instance().version())
 	{
 		nlinfo("bad client version %d should be %d",networkVersion,CNetwork::instance().version());
 		string reason = toString("login failed: bad client version(%d)! Get latest one on Mtp Target web site", networkVersion);
@@ -140,10 +139,12 @@ static void cbLogin(CClient *c, CNetMessage &msgin)
 		CNetwork::instance().send(c->id(), msgout);
 		return;
 	}
+	c->networkVersion = networkVersion;
 
 	nlinfo("Version ok");
 	// now we know the version is compatible, get them
 
+	// check the password
 	msgin.serial(cookie, login, password, color, texture);
 
 	login = strlwr(login);
