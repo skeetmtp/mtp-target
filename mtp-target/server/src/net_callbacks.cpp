@@ -70,6 +70,7 @@ static void cbCommand(CClient *c, CNetMessage &msgin)
 	nlinfo("cbCommand");
 	string cmd;
 	msgin.serial(cmd);
+	cmd = toLower(cmd);
 
 	if(cmd.substr(0,4)=="help")
 	{
@@ -77,6 +78,9 @@ static void cbCommand(CClient *c, CNetMessage &msgin)
 		{
 			CNetwork::instance().sendChat(c->id(),string("/reset (CTRL+F6): hard reset of session (could crash)"));
 			CNetwork::instance().sendChat(c->id(),string("/reparsePath"));
+			CNetwork::instance().sendChat(c->id(),string("/playerList"));
+			CNetwork::instance().sendChat(c->id(),string("/report nick info"));
+			CNetwork::instance().sendChat(c->id(),string("/ban nick duration"));
 			CNetwork::instance().sendChat(c->id(),string("/kick nick"));
 			CNetwork::instance().sendChat(c->id(),string("/forceEnd (CTRL+F5): force end of session (safe)"));
 			CNetwork::instance().sendChat(c->id(),string("/forceMap mapname : try to force this map for next level"));
@@ -88,7 +92,7 @@ static void cbCommand(CClient *c, CNetMessage &msgin)
 		return;
 	}
 
-	if(cmd.substr(0,7)=="voteMap ")
+	if(cmd.substr(0,7)=="votemap ")
 	{
 		string arg = cmd.substr(8);
 		if(!arg.empty())

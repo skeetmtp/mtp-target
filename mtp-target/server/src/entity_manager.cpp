@@ -891,13 +891,13 @@ CEntity *getByString(std::string ident)
 // Commands
 //
 
-NLMISC_COMMAND(addBot, "add a bot", "[<name>]")
+NLMISC_COMMAND(addbot, "add a bot", "[<name>]")
 {
 	CEntityManager::instance().addBot((args.size() > 0) ? args[0] : "bot", false);
 	return true;
 }
  
-NLMISC_COMMAND(displayEntities, "display info about all entities", "")
+NLMISC_COMMAND(displayentities, "display info about all entities", "")
 {
 	if(args.size() != 0) return false;
 	
@@ -1066,12 +1066,6 @@ MTPT_COMMAND(report, "report a problematic user", "[<eid>|<name>] [comment]")
 	return true;
 }
 
-
-NLMISC_CATEGORISED_COMMAND(commands,bof, "watch a client", "[<eid>]")
-{
-
-	return true;
-}
 
 NLMISC_COMMAND(watch, "watch a client", "[<eid>]")
 {

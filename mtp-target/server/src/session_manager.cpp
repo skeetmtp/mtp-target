@@ -110,14 +110,14 @@ NLMISC_COMMAND(reset, "reset the session brutally", "")
 	return true;
 }
 
-NLMISC_COMMAND(forceEnd, "end the session en display the score", "")
+NLMISC_COMMAND(forceend, "end the session en display the score", "")
 {
 	CSessionManager::instance().forceEnding(true);
 	log.displayNL("forceEnd");
 	return true;
 }
 
-NLMISC_COMMAND(reparsePath, "reparse path for new file", "")
+NLMISC_COMMAND(reparsepath, "reparse path for new file", "")
 {
 	reparsePath();
 	log.displayNL("reparsePath");

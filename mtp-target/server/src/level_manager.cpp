@@ -366,14 +366,14 @@ void CLevelManager::forceMap(const std::string &mapName)
 // Commands
 //
 
-NLMISC_COMMAND(displayLevel, "display the current level", "")
+NLMISC_COMMAND(displaylevel, "display the current level", "")
 {
 	if(args.size() != 0) return false;
 	CLevelManager::instance().display(&log);
 	return true;
 }
 
-NLMISC_COMMAND(forceMap, "try to force this map for next level", "")
+NLMISC_COMMAND(forcemap, "try to force this map for next level", "")
 {
 	if(args.size() != 1) return false;
 	
