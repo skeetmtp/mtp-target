@@ -69,6 +69,9 @@ public:
 
 	CVector		 project(const CVector &point);
 
+	float		 minDistFromStartPointToMove();
+	void		 minDistFromStartPointToMove(float dist);
+	
 	float		 ForcedSpeed;
 
 private:
@@ -104,6 +107,7 @@ private:
 	float		 CurrentTargetBackDist;
 
 	float		 CurrentHeightSpeed;
+	float		 MinDistFromStartPointToMove;
 	
 };
 

@@ -107,6 +107,7 @@ CCamera::CCamera()
 
 	ActiveMatrix = &MatrixFollow;
 	Facing = 0;
+	MinDistFromStartPointToMove = 0.01f;
 
 #if STAT
 	filestat = fopen ("campos.csv", "wt");
@@ -257,7 +258,7 @@ bool CCamera::updateRampe(float backDist,float height,float targetBackDist,float
 
 	CVector distFromStart = CEntityManager::instance()[EId].interpolator().position() - CLevelManager::instance().currentLevel().startPosition(CEntityManager::instance()[EId].rank());
 	float facing;
-	if(distFromStart.norm()>1.0f)
+	if(distFromStart.norm()>MinDistFromStartPointToMove)
 		facing = rotLerp(Facing, (float)CEntityManager::instance()[EId].interpolator().facing(), (float)lpos);
 	else
 	{
@@ -332,4 +333,15 @@ CMatrix *CCamera::getMatrixFollow()
 CVector CCamera::project(const CVector &point)
 {
 	return CVector::Null;
+}
+
+
+float CCamera::minDistFromStartPointToMove()
+{
+	return MinDistFromStartPointToMove;
+}
+
+void CCamera::minDistFromStartPointToMove(float dist)
+{
+	MinDistFromStartPointToMove = dist;
 }
