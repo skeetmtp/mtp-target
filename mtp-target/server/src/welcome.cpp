@@ -96,8 +96,11 @@ void cbLSChooseShard (CMessage &msgin, const std::string &serviceName, uint16 si
 
 	string cookie, userName;
 	sint32 totalScore;
+	string userTexture = "";
 
 	msgin.serial(cookie, userName, totalScore);
+	if(msgin.getPos() < (sint32)msgin.length())
+		msgin.serial(userTexture);
 
 	// always accept clients
 	string reason = "";
@@ -118,7 +121,7 @@ void cbLSChooseShard (CMessage &msgin, const std::string &serviceName, uint16 si
 
 	UserIdNameAssociations.insert(make_pair(cookie, make_pair(userName,totalScore)));
 
-	nlinfo("Client %s will come with cookie %s to ip '%s' with total score %d", userName.c_str(), cookie.c_str(), ListenAddr.c_str(), totalScore);
+	nlinfo("Client %s will come with cookie %s to ip '%s' with total score %d userTexture '%s'", userName.c_str(), cookie.c_str(), ListenAddr.c_str(), totalScore,userTexture.c_str());
 }
 
 void cbFailed(CMessage &msgin, const std::string &serviceName, uint16 sid)
