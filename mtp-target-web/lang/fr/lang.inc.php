@@ -51,6 +51,8 @@
   $contact_by_email = "Vous pouvez nous contacter nous par ";
   $contact_by_irc   = "Si vous voulez parler de NeL ou Mtp Target, <a href=\"http://www.irchelp.org/irchelp/misc/frnew2irc.html\">par IRC</a>, venez sur le channel #nel sur le server irc.freenode.net";
 
+//menu stat
+  $menuStat = "<b>%d joueurs inscris</b> | <b>%d joueurs en ligne</b> | <b>%d parties jouées</b>";
 
 //menu
   $menuLinkText_News = "News";

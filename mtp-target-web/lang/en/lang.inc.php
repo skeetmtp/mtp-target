@@ -50,6 +50,9 @@ Please verify that the solution to your bug/problem is not in the ";
   $contact_by_email = "Contact us by ";
   $contact_by_irc   = "If you want to talk about NeL or Mtp Target, <a href=\"http://www.irchelp.org/\">using IRC</a>, come to #nel channel on irc.freenode.net";
 
+//menu stat
+  $menuStat = "<b>%d registered players</b> | <b>%d online players</b> | <b>%d played sessions</b>";
+
 //menu
   $menuLinkText_News = "News";
   $menuLinkText_Home = "About";
