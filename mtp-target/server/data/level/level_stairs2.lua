@@ -1,7 +1,7 @@
 Name = "Stairs 2"
 Author = "Skeet"
 ServerLua = "level_stairs_server.lua"
-ReleaseLevel = 2
+ReleaseLevel = 3
 
 skyShapeFileName = "sky.shape";
 sunAmbientColor = CRGBA(82, 100, 133, 255);

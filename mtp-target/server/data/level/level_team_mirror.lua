@@ -1,7 +1,7 @@
 Name = "Snow team mirror"
 Author = "Skeet"
 ServerLua = "level_team_server.lua"
-ReleaseLevel = 2
+ReleaseLevel = 3
 
 skyShapeFileName = "sky.shape"
 
