@@ -1,6 +1,7 @@
 <?php
 include_once("stat_function.php");
 include_once("stat_game.php");
+include_once("helpers.php");
 
 	$cacheFileName = $cache_dir."/stat_player_of_the_day.html";
 	if(isCacheFileUpToDate($cacheFileName))
