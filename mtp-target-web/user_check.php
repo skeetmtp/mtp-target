@@ -36,36 +36,10 @@ if ((!isset ($user_login) || !validInput($user_login)) || (!isset ($user_passwor
 } 
 else 
 {
-
-	$requete = "SELECT * FROM user WHERE Login='".$user_login."';";
-	$resultat = exec_game_db_requete($requete);
-
-	if ($ligne = mysql_fetch_array($resultat)) 
-	{
-		//echo "user found in db<br>";
-		$user_login = $ligne[1];
-		$user_crypted = $ligne[2];
-		$user_id = userName2Uid($user_login);
-		setcookie("mtp_target_user_id", $user_id, time() + 3600 * 24 * 30);
-		setcookie("mtp_target_user_login", $user_login, time() + 3600 * 24 * 30);
-		setcookie("mtp_target_user_password", $user_password, time() + 3600 * 24 * 30);
-		/*
-		echo "user  : ".$user_login;
-		echo "<br>";
-		echo "pass  : ".$user_password;
-		echo "<br>";
-		echo "crypt : ".$user_crypted;
-		*/
-		$user_logged = crypt($user_password, $user_crypted) == $user_crypted;
-	}
-	else 
-	{
-		if ($fromLoginPage)
-			echo "invalid login or password";
-		unset ($user_login);
-		unset ($user_password);
-		unset ($user_crypted);
-	}
+	$user_logged = checkLoginPasswordCookie($user_login,$user_password);
+	if ($fromLoginPage && !$user_logged)
+		echo "invalid login or password";
+	
 }
 
 if (!$user_logged)

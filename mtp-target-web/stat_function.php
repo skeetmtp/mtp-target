@@ -60,7 +60,7 @@ function userNameExist($user_name)
 	  return false;	
 }
 
-function userName2Uid($user_name)
+function userName2UidLS($user_name)
 {
 	  $requete = "SELECT UId FROM user WHERE Login='".$user_name."';";
 	  $resultat=exec_game_db_requete($requete);
@@ -72,6 +72,18 @@ function userName2Uid($user_name)
 	  echo "user name not found : ".$user_name;
 	  exit;
 	  return -1;	
+}
+
+function userName2Uid($user_name)
+{
+	  $requete = "SELECT UId FROM game_user WHERE Login='".$user_name."';";
+	  $resultat=exec_requete($requete);
+	
+	  if($ligne = mysql_fetch_array($resultat))
+	  {
+	  	return $ligne[0];
+	  }
+	  return userName2UidLS($user_name);
 }
 
 function userId2Name($user_id)
