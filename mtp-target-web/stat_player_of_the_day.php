@@ -44,6 +44,7 @@ include_once("helpers.php");
 			fprintf($html_fp,"<br>");
 		}
 	
+		fprintf($html_fp,"</div>");
 		fclose($html_fp);	  
 		include($cacheFileName);
 	}
@@ -58,6 +59,5 @@ include_once("helpers.php");
 	}
 	*/
 
-	printf("</div>");
 	boxEnd();
 ?>
