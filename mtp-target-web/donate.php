@@ -69,7 +69,8 @@ Valeur du don:<br>
 <h3>Virement bancaire</h3>
 
 <p>Le virement bancaire vous permet d'être sûr que tout l'argent que vous
-donnez nous revient. Voici le compte à créditer:</p>
+donnez nous revient (si votre banque ne prend pas de commissions sur les virements).
+Voici le compte à créditer:</p>
 
 <p>RIB (uniquement pour la France):
 <?php boxBegin(false); ?>
