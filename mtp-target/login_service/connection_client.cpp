@@ -316,7 +316,7 @@ static void cbClientChooseShard(CMessage &msgin, TSockId from, CCallbackNetBase 
 		while(row != 0)
 		{
 			CLoginCookie lc;
-			lc.setFromString(row[6]);
+			lc.setFromString(row[5]);
 			if(lc.getUserAddr() == (uint32)from)
 			{
 				ok = true;
@@ -353,7 +353,7 @@ static void cbClientChooseShard(CMessage &msgin, TSockId from, CCallbackNetBase 
 		if(!reason.empty()) break;
 		
 		CMessage msgout("CS");
-		string cookie = row[6];
+		string cookie = row[5];
 		msgout.serial(cookie);
 		string name = row[1];
 		msgout.serial(name);
@@ -403,7 +403,7 @@ static void cbClientDisconnection (TSockId from, void *arg)
 	while(row != 0)
 	{
 		CLoginCookie lc;
-		lc.setFromString(row[6]);
+		lc.setFromString(row[5]);
 		if(lc.getUserAddr() == (uint32)from)
 		{
 			// got it, if he is not in waiting state, it s not normal, remove all

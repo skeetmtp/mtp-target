@@ -211,7 +211,7 @@ static void cbWSIdentification (CMessage &msgin, const std::string &serviceName,
 		{
 			sint32 uid;
 			msgin.serial(uid);
-			sqlQuery("update user set State='Online', ShardId="+toString(shardId)+" Cookie='' where UId="+toString(uid), nbrow2, row2, result2);
+			sqlQuery("update user set State='Online', ShardId="+toString(shardId)+", Cookie='' where UId="+toString(uid), nbrow2, row2, result2);
 		}
 
 		return;
