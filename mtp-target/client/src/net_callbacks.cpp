@@ -269,6 +269,7 @@ static void cbDisplayText(CNetMessage &msgin)
 
 	CHudMessage m = CHudMessage(x,y,s,message,col,duration);
 	CHudTask::instance().messages.push_back(m);
+	nlinfo("display text(during %f sec) : %s",duration,message.c_str());
 	
 }
 
