@@ -204,6 +204,23 @@ function userTexture($uid)
 	
 }
 
+function textureGetUploader($textureName)
+{
+	$requete = sprintf("SELECT UploadBy FROM texture WHERE Name='%s';",$textureName);
+	$resultat=exec_game_db_requete($requete);
+	if($ligne = mysql_fetch_array($resultat))
+	{
+		if($ligne[0]=="")
+			return "";
+		else
+			return $ligne[0];
+	}
+	else 
+		return "";
+	
+}
+
+
 function userOverallStat($uid,&$totalScore,&$currentScore,&$totalSession,&$sessionPlayedDuration)
 {
 	$requete = sprintf("SELECT user.Score,user.Registered FROM user WHERE UId='%d';",$uid);

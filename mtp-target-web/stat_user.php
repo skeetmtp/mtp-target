@@ -46,8 +46,9 @@ include_once("stat_map_graph_display.php");
 
 	fprintf($html_fp,"<td >\n");
 	$userTextureName = userTexture($uid);
+	$userTextureUploader = textureGetUploader($userTextureName);
 	$userTextureUrl = $userTexturePath.$userTextureStartName.$userTextureName.".jpg";
-	fprintf($html_fp,"<img src=\"%s\" ALT=\"user texture : %s\"><br>\n",$userTextureUrl,$userTextureUrl);
+	fprintf($html_fp,"<img src=\"%s\" ALT=\"user texture : %s'\"><br>\n",$userTextureUrl,$userTextureUrl);
 	fprintf($html_fp,"</td>\n");
 
 	fprintf($html_fp,"<td valign=\"bottom\">\n");
@@ -63,6 +64,10 @@ include_once("stat_map_graph_display.php");
 	fprintf($html_fp,"about %.0f seconds per game<br>\n",$sessionPlayedDuration/$sessionPlayedCount);
 	fprintf($html_fp,"about %.0f points per game<br>\n",$totalScore/$sessionPlayedCount);
 	fprintf($html_fp,"about %.0f%% successful landing<br>\n",100.0*$sessionWithScoreCount/$sessionPlayedCount);
+	if($userTextureUploader=="")
+		fprintf($html_fp,"user texture : %s",$userTextureName);
+	else
+		fprintf($html_fp,"user texture : %s (uploaded by %s)",$userTextureName,$userTextureUploader);
 	fprintf($html_fp,"</td>\n");
 
 	fprintf($html_fp,"</tr>\n");
