@@ -343,6 +343,7 @@ void initWelcome()
 
 void clientConnected(const string &cookie, bool connected)
 {
+	nlinfo("clientConnected('%s',%d)", cookie.c_str(), connected);
 	CLoginCookie c;
 	c.setFromString(cookie);
 	

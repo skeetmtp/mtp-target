@@ -392,9 +392,9 @@ static void cbWSClientConnected (CMessage &msgin, const std::string &serviceName
 	msgin.serial (con);	// con=1 means a client is connected on the shard, 0 means a client disconnected
 
 	if(con)
-		nlinfo ("Received a validation that a client is connected on the frontend");
+		nlinfo ("Received a validation that client %u is connected on the frontend", Id);
 	else
-		nlinfo ("Received a validation that a client is disconnected on the frontend");
+		nlinfo ("Received a validation that client %u is disconnected on the frontend", Id);
 	
 	string query = "select * from user where UId="+toString(Id);
 	sint ret = mysql_query (DatabaseConnection, query.c_str ());
