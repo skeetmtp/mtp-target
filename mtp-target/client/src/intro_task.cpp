@@ -117,6 +117,8 @@ void CIntroTask::error(string &reason)
 	guiSPG<CGuiText>  errorServerReason = (CGuiText *)xml->get("errorServerReason");
 	CGuiObjectManager::instance().objects.push_back(_errorServerFrame);
 
+	errorServerReason->text = reason;
+	/*
 	string::size_type pos = reason.find("failed");
 	if(pos == string::npos)
 	{
@@ -129,6 +131,7 @@ void CIntroTask::error(string &reason)
 		errorServerReason->text += reason.substr(pos+6);
 		
 	}
+	*/
 }
 
 

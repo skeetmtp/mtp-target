@@ -98,10 +98,21 @@ static void cbLogin(CClient *c, CNetMessage &msgin)
 	string login, password;
 	sint32 score;
 	CRGBA color;
-
+	uint32 networkVersion = MTPT_NETWORK_VERSION;
+	
 	nlinfo("New client login");
 
-	msgin.serial(cookie, login, password, color);
+	msgin.serial(cookie, login, password, color,networkVersion);
+
+	if(networkVersion!=MTPT_NETWORK_VERSION)
+	{
+		string reason = toString("'%s' login failed: bad client version(%d)! Get latest one on Mtp Target web site", login.c_str(), networkVersion);
+		CNetMessage msgout(CNetMessage::Error);
+		msgout.serial(reason);
+		CNetwork::instance().send(c->id(), msgout);
+		return;
+	}
+	
 	
 	string res;
 	if(cookie.empty())

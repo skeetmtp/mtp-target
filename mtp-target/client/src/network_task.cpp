@@ -181,7 +181,8 @@ string CNetworkTask::connect(CInetAddress *ip)
 		Login = CConfigFileTask::instance().configFile().getVar("Login").asString();
 		string password = CConfigFileTask::instance().configFile().getVar("Password").asString();
 		CRGBA color(CConfigFileTask::instance().configFile().getVar("Color").asInt(0), CConfigFileTask::instance().configFile().getVar("Color").asInt(1), CConfigFileTask::instance().configFile().getVar("Color").asInt(2));
-		msgout.serial(Cookie, Login, password, color);
+		uint32 networkVersion = MTPT_NETWORK_VERSION;
+		msgout.serial(Cookie, Login, password, color,networkVersion);
 		CNetworkTask::instance().send(msgout);
 	}
 	catch (Exception &e)
