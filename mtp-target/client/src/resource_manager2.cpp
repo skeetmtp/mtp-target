@@ -503,7 +503,7 @@ void CResourceManager::update3DWhileDownloading()
 
 string CResourceManager::get(const string &filename, bool &ok)
 {
-	string unk;
+	string unk = "";
 	ok = false;
 
 	if(filename.empty())
@@ -523,7 +523,7 @@ string CResourceManager::get(const string &filename, bool &ok)
 	}
 
 	
-	string fn = CFile::getFilename(filename);
+	string fn = strlwr(CFile::getFilename(filename).c_str());
 
 	string path = CPath::lookup(fn, false, false);
 	string fns = CFile::getFilename(path);
@@ -615,7 +615,18 @@ string CResourceManager::get(const string &filename, bool &ok)
 		}
 		string path = CPath::lookup(fn, false, false);
 		if(path.empty())
-			return unk;
+		{
+			if(!unk.empty()) //we can provide defautl file
+			{
+				nlinfo("return default filename : '%s'",unk.c_str());
+				return unk;
+			}
+			else
+			{
+				string msg = toString("Cannot get file from server : '%s'",fn.c_str());
+				CMtpTarget::instance().error(msg);	
+			}
+		}
 		loadChildren(path);
 		ok = true;
 		return path;
