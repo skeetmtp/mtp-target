@@ -189,6 +189,7 @@ void C3DTask::init()
 	Scene->setGroupLoadMaxPolygon("Fx", CConfigFileTask::instance().configFile().getVar("FxNbMaxPoly").asInt());
 
 
+	LevelParticle = NULL;
 	//too much particles , no left to trace.ps
 	/*
 	if(CConfigFileTask::instance().configFile().getVar("DisplayParticle").asInt() == 1)
