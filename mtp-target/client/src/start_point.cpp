@@ -59,7 +59,7 @@
 #include "3d/water_height_map.h"
 #include "3d/water_pool_manager.h"
 
-#include "editable_element.h"
+#include "start_point.h"
 #include "global.h"
 #include "3d_task.h"
 #include "time_task.h"
