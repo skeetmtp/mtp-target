@@ -100,7 +100,12 @@ void CBot::getBotDelta(NLMISC::CVector &delta)
 		delta = CVector::Null;
 		return;
 	}
-
+	if(delta.norm() > 10.0f)
+	{
+		delta = CVector::Null;
+		return;
+	}
+	
 	delta *= OpenClose ? BotAccuracyOpen : BotAccuracyClose;
 	if(delta.norm()>0.001f)
 	{
