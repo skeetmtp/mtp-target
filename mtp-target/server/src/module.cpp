@@ -73,23 +73,17 @@ static int _dTriRayCallback(dGeomID TriMesh, dGeomID Ray, int TriangleIndex, dRe
 	return 0;
 }
 
-void CModule::init()
-{
-	CModuleCommon::init();
-	Geom = 0;
-	luaProxy = NULL;
-}
-
 CModule::CModule() : CModuleCommon()
 { 
-	init(); 
 }
 
-CModule::CModule(const std::string &name, const CVector &position, const CAngleAxis &rotation, uint8 id) : CModuleCommon(name, position, rotation, id)
+void CModule::init(const std::string &name,uint8 id, NLMISC::CVector position, NLMISC::CAngleAxis rotation)
 {
-	nlinfo("Adding module '%s' at position %f %f %f", name.c_str(), position.x, position.y, position.z);
+	CModuleCommon::init(name,id,position,rotation);
 	pausePhysics();
-	init();
+
+	Geom = 0;
+	luaProxy = NULL;
 	_luaInit();
 	
 	// vertices must be multiple of 3
@@ -140,6 +134,7 @@ CModule::CModule(const std::string &name, const CVector &position, const CAngleA
 	resumePhysics();
 
 }
+
 
 void CModule::_luaInit()
 {

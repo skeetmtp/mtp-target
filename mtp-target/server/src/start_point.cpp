@@ -63,9 +63,11 @@ CStartPoint::CStartPoint() : CStartPointCommon()
 {
 }
 
+/*
 CStartPoint::CStartPoint(const std::string &name, const CVector &position, const CAngleAxis &rotation, uint8 id) : CStartPointCommon(name, position, rotation, id)
 {
 }
+*/
 
 CStartPoint::~CStartPoint()
 {

@@ -57,6 +57,7 @@ using namespace NLMISC;
 // Functions
 //
 
+/*
 void CModuleCommon::init()
 {
 	Bounce = true;
@@ -66,31 +67,29 @@ void CModuleCommon::init()
 
 	_type = Module;
 }
+*/
 
 CModuleCommon::CModuleCommon() : CEditableElementCommon()
 { 
-	init(); 
-}
-
-CModuleCommon::CModuleCommon(const std::string &name, const CVector &position, const CAngleAxis &rotation, uint8 id) : CEditableElementCommon()
-{
-	nlinfo("Adding module '%s' at position %f %f %f", name.c_str(), position.x, position.y, position.z);
-	_id = id;
-	init();
-	ShapeName = name+".shape";
-	Name = name;
-	Position = position;
-	Rotation = rotation;
-	
-	// Get collision faces
-	loadMesh(ShapeName, Vertices, Indices);
-	
-
+	_type = Module;
 }
 
 CModuleCommon::~CModuleCommon()
 {
 }
+
+void CModuleCommon::init(const string &name,uint8 id, CVector position, CAngleAxis rotation)
+{
+	CEditableElementCommon::init(name,id,position,rotation);
+	nlinfo("Adding module '%s' at position %f %f %f", name.c_str(), position.x, position.y, position.z);
+	ShapeName = name+".shape";
+	
+	// Get collision faces
+	loadMesh(ShapeName, Vertices, Indices);
+
+}
+
+
 void CModuleCommon::display(CLog *log) const
 {
 	CVector pos = position();

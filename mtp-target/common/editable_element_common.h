@@ -54,6 +54,7 @@ public:
 	bool changed();
 	TType type() { return _type;}
 	NLMISC::CVector position() const {return Position;}
+	virtual void init(const std::string &name,uint8 id, NLMISC::CVector position, NLMISC::CAngleAxis rotation);
 
 	virtual void update(NLMISC::CVector pos,NLMISC::CVector rot) = 0;
 	virtual std::string toLuaString() = 0;
@@ -61,10 +62,12 @@ public:
 	bool isKindOf(TType type);
 protected:
 	
+	std::string			Name;
 	NLMISC::CVector		Position;
 	NLMISC::CAngleAxis	Rotation;
 	bool				_changed;	
-	TType _type;
+	TType				_type;
+	uint8				_id;
 	
 };
 

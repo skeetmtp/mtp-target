@@ -41,12 +41,12 @@ class CModule : public CModuleCommon
 public:
 
 	CModule();
-	CModule(const std::string &name, const NLMISC::CVector &position, const NLMISC::CAngleAxis &rotation, uint8 id);
 	
 	virtual ~CModule();
 
 	void initBeforeStartLevel();
 		
+	virtual void init(const std::string &name,uint8 id, NLMISC::CVector position, NLMISC::CAngleAxis rotation);
 	virtual void update(NLMISC::CVector pos,NLMISC::CVector rot);
 	void update();
 	
@@ -54,7 +54,7 @@ public:
 	CModuleProxy		*luaProxy;
 private:
 
-	virtual void init();
+//	virtual void init();
 	void _luaInit();
 
 	std::vector<dReal>	OdeVertices;	// 3 entries for one vertex (x,y,z)

@@ -118,7 +118,8 @@ void CLevel::_luaInit()
 	{
 		nlinfo("start point : %g %g %g", luaStartPoints[i].x, luaStartPoints[i].y, luaStartPoints[i].z);
 		CAngleAxis Rotation(CVector(1,0,0),0);
-		CStartPoint *startPosition = new CStartPoint("start pos",luaStartPoints[i],Rotation,startPositionId);
+		CStartPoint *startPosition = new CStartPoint();
+		startPosition->init("start pos",startPositionId,luaStartPoints[i],Rotation);
 		StartPoints.push_back(startPosition);		
 		startPositionId++;
 	}
@@ -164,7 +165,9 @@ void CLevel::_luaInit()
 		nlinfo("name %s", Name.c_str());
 		lua_pop(_luaSession, 1);  // removes `value'; keeps `key' for next iteration
 
-		Modules.push_back(new CModule(Name, Position, Rotation,moduleId));
+		CModule *mod = new CModule();
+		mod->init(Name, moduleId, Position, Rotation);
+		Modules.push_back(mod);
 		moduleId++;
 	}
 	lua_pop(_luaSession, 1);  // removes `key'

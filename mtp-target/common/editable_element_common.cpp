@@ -77,3 +77,13 @@ bool CEditableElementCommon::isKindOf(TType type)
 {
 	return _type == type;
 }
+
+
+void CEditableElementCommon::init(const std::string &name,uint8 id, NLMISC::CVector position, NLMISC::CAngleAxis rotation)
+{
+	_changed = false;
+	Name = name;
+	Position = position;
+	Rotation = rotation;
+	_id = id;
+}

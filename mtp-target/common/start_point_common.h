@@ -42,9 +42,9 @@ class CStartPointCommon : public CEditableElementCommon
 {
 public:
 	CStartPointCommon();
-	CStartPointCommon(const std::string &name, const NLMISC::CVector &position, const NLMISC::CAngleAxis &rotation, uint8 id);
 	virtual ~CStartPointCommon();
 
+	virtual void init(const std::string &name,uint8 id, NLMISC::CVector position, NLMISC::CAngleAxis rotation);
 	virtual void update(NLMISC::CVector pos,NLMISC::CVector rot);
 	virtual std::string toLuaString();
 	

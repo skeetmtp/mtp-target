@@ -61,15 +61,14 @@ CStartPointCommon::CStartPointCommon() : CEditableElementCommon()
 	_type = StartPosition;
 }
 
-CStartPointCommon::CStartPointCommon(const std::string &name, const CVector &position, const CAngleAxis &rotation, uint8 id) : CEditableElementCommon()
-{
-	_type = StartPosition;	
-	Position = position;
-}
-
 CStartPointCommon::~CStartPointCommon()
 {
 	
+}
+
+void CStartPointCommon::init(const std::string &name,uint8 id, NLMISC::CVector position, NLMISC::CAngleAxis rotation)
+{
+	CEditableElementCommon::init(name,id,position,rotation);
 }
 
 

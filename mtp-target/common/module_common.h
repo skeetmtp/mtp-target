@@ -45,10 +45,10 @@ class CModuleCommon : public CEditableElementCommon
 public:
 
 	CModuleCommon();
-	CModuleCommon(const std::string &name, const NLMISC::CVector &position, const NLMISC::CAngleAxis &rotation, uint8 id);
 	
 	virtual ~CModuleCommon();
 
+	virtual void init(const std::string &name,uint8 id, NLMISC::CVector position, NLMISC::CAngleAxis rotation);
 	void display(NLMISC::CLog *log = NLMISC::InfoLog) const;
 		
 	// accessors
@@ -74,18 +74,17 @@ public:
 	uint8 id() {return _id;}
 
 protected:
-	virtual void init();
+	//virtual void init();
 
-	std::string			Name;
 	std::string			ShapeName;
 	bool				Bounce;
 	sint32				Score;
 	float				Accel;
 	float				Friction;
-	uint8				_id;
 
-	std::vector<NLMISC::CVector>		Vertices;
-	std::vector<int>			Indices;
+	std::vector<NLMISC::CVector> Normals;
+	std::vector<NLMISC::CVector> Vertices;
+	std::vector<int>			 Indices;
 private:
 	
 };

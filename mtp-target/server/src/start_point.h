@@ -38,7 +38,6 @@ class CStartPoint : public CStartPointCommon
 {
 public:
 	CStartPoint();
-	CStartPoint(const std::string &name, const NLMISC::CVector &position, const NLMISC::CAngleAxis &rotation, uint8 id);
 	virtual ~CStartPoint();
 
 	

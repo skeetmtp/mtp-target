@@ -111,7 +111,7 @@ void CSessionManager::saveAllValidReplay(CEntityManager::CEntities::CReadAccesso
 				fprintf(c->ReplayFile, "%d AU %.1f %s %d\n", c->id(), 0.0f, c->name().c_str(), c->CurrentScore);
 				fclose(c->ReplayFile);
 				c->ReplayFile = 0;
-				if(c->CurrentScore <(uint32)IService::getInstance()->ConfigFile.getVar("SavedReplayMinimumScore").asInt())
+				if(c->CurrentScore <IService::getInstance()->ConfigFile.getVar("SavedReplayMinimumScore").asInt())
 					CFile::deleteFile(c->ReplayFilename.c_str());
 			}
 		}
