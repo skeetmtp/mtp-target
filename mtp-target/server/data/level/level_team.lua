@@ -1,6 +1,7 @@
 Name = "Snow team"
 Author = "Skeet"
 ServerLua = "level_team_server.lua"
+ReleaseLevel = 1
 
 skyShapeFileName = "sky.shape"
 
