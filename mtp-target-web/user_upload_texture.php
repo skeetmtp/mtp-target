@@ -1,3 +1,20 @@
+<?php
+	include_once("stat_function.php");
+	
+	if(!$user_logged)
+	{
+		printf("<br>\n");
+		printf("<br>\n");
+		printf("<center><h2>You must be logged to upload texture !<center></h2>\n");
+		printf("<br>\n");
+		printf("<br>\n");
+		printf("<br>\n");
+		printf("<br>\n");
+		return;
+	}
+
+?>
+
 <p>This page allow you to upload a <a href="view_custom.php">user texture</a> for your pingoo!</p>
 
 <p>Please, read well the rules or it'll not work correctly:</p>
