@@ -103,6 +103,7 @@ void CMtpTarget::init()
 	Error = false;
 	DoError = false;
 	// setup default task
+	nlinfo("setting up default tasks");
 	CTaskManager::instance().add(CConfigFileTask::instance(), 10);
 	CTaskManager::instance().add(CTimeTask::instance(), 20);
 	CTaskManager::instance().add(CEntityManager::instance(), 24);
@@ -116,11 +117,13 @@ void CMtpTarget::init()
 
 	if(CConfigFileTask::instance().configFile().getVar("Sound").asInt() == 1)
 		CTaskManager::instance().add(CSoundManager::instance(), 50);
+	nlinfo("default tasks set");
 	
 	Controler = new CControler;
 
 	if (!ReplayFile.empty() && 1)
 	{
+		nlinfo("loading replay file : %s",ReplayFile.c_str());		
 		string levelName = "";
 		FILE *fp = fopen (ReplayFile.c_str(), "rt");
 		if (fp != 0)
@@ -228,6 +231,8 @@ void CMtpTarget::init()
 			
 			fclose (fp);
 		}
+		else
+			nlwarning("connot open replay file");
 		
 		//CMtpTarget::instance().State = CMtpTarget::eReady;
 		CTaskManager::instance().add(CGameTask::instance(), 60);
