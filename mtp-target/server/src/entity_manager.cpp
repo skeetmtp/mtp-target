@@ -288,7 +288,6 @@ void CEntityManager::remove(const string &name)
 		}
 	}
 	remove(eid);
-	sendUpdateList();
 }
 
 void CEntityManager::remove(uint8 eid)
@@ -302,8 +301,9 @@ void CEntityManager::remove(uint8 eid)
 	CEntity *c = 0;
 
 	{
+		EntityIt it;
 		CEntities::CWriteAccessor acces(entities());
-		for(EntityIt it = acces.value().begin(); it != acces.value().end(); it++)
+		for( it = acces.value().begin(); it != acces.value().end(); it++)
 		{
 			if((*it)->id() == eid)
 			{
@@ -313,8 +313,15 @@ void CEntityManager::remove(uint8 eid)
 				break;
 			}
 		}
+		CNetMessage msgout(CNetMessage::UpdateList);
+		for( it = acces.value().begin(); it != acces.value().end(); it++)
+		{
+			uint8 eid = (*it)->id();
+			msgout.serial(eid);
+		}
+		CNetwork::instance().send(msgout);
 	}
-
+	
 	if(!c)
 	{
 		nlwarning("Can't remove client because eid %hu is not found", (uint16)eid);
