@@ -43,6 +43,7 @@
 #include "chat_task.h"
 #include "gui_task.h"
 #include "mtp_target.h"
+#include "task_manager.h"
 #include "swap_3d_task.h"
 #include "network_task.h"
 #include "font_manager.h"
@@ -174,8 +175,12 @@ bool CResourceManager::waitNetworkMessage(bool stopFlag,bool &received, bool dis
 		CChatTask::instance().update();
 		CGuiTask::instance().update();
 		
-		if (C3DTask::instance().kbPressed(KeyESCAPE))
+		if (C3DTask::instance().kbPressed(KeyESCAPE) || !C3DTask::instance().driver().isActive() || !CNetworkTask::instance().connected())
+		{
+			exit(1);
+			received = false;
 			return false;
+		}
 		
 		//			mt3dUpdate();
 		//			mtpTarget::instance().updateTime ();
@@ -229,6 +234,7 @@ string CResourceManager::get(const string &filename)
 
 	string ext = CFile::getExtension(filename);
 	if(ext == "shape") unk = CPath::lookup("unknown.shape", false);
+	else if(ext == "lua") unk = CPath::lookup("unknown.lua", false);
 	else if(ext == "tga") unk = CPath::lookup("unknown.tga", false);
 	else if(ext == "dds") unk = CPath::lookup("unknown.tga", false);
 	else if(ext == "png") unk = CPath::lookup("unknown.tga", false);
@@ -281,7 +287,7 @@ string CResourceManager::get(const string &filename)
 				bool messageReceived;
 				while(waitNetworkMessage(CRCReceived,messageReceived));
 				if(!messageReceived)
-					exit(1);
+					return unk;
 				if(it!=CRCCheckTimes.end())
 					CRCCheckTimes.erase(it);
 				CRCCheckTimes.insert(filename2LastCRCCheckTime::value_type(fn,currentTime));
