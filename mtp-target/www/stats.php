@@ -5,6 +5,7 @@
 	$userCountPerHourTotal;
 	$userCountPerHourToday;
 	$userCountPerHourTodayMax;
+	$userCountPerMinuteTodayMax;
 	$lastHour = 0;
 	$lastDay = 0;
 	
@@ -16,7 +17,8 @@
 		$userCountPerHourToday[$i]=0;
 		$userCountPerHourTodayMax[$i]=0;
 	}
-
+	for($i=0;$i<60;$i++)
+		$userCountPerMinuteTodayMax[i]=0;
 	
 	$playerCount = 0;
 	while (!feof($fp)):
@@ -38,6 +40,8 @@
 			{
 				//printf("%dh0 = %d<br>",$lastHour,$userCountPerHourTotal[$lastHour]);
 				$lastHour=$hour;
+				for($i=0;$i<60;$i++)
+					$userCountPerMinuteTodayMax[i]=0;
 			}
 			
 			if($lastDay!=$day)
@@ -58,6 +62,9 @@
 				$userCountPerHourToday[$hour]++;
 				if($playerCount>$userCountPerHourTodayMax[$hour])
 					$userCountPerHourTodayMax[$hour] = $playerCount;
+				if($playerCount>$userCountPerMinuteTodayMax[$min])
+					$userCountPerMinuteTodayMax[$min] = $playerCount;
+					
 				//printf("%d:%d [%s] comes(%d,%d) in<br>",$hour,$min,$name,$playerCount,$userCountPerHourToday[$hour]);
 			}
 			else if($inout=='#')
@@ -211,6 +218,47 @@ Today Max simultaneous user :
 		printf("<td><img src=\"./img/hr%d.png\" width=\"10\"/></td>\n",($i%12)+1);
 	}
 	printf("</tr>\n");	
+?>
+</table>
+
+<br>
+<br>
+
+Last hour max simultaneous user :
+<table>
+<tr valign="bottom">
+<?php
+	$maxHourMax = 0;
+	
+	for($i=0;$i<60;$i++)
+	{
+		if($userCountPerMinuteTodayMax[$i]>$maxHourMax)
+			$maxHourMax = $userCountPerMinuteTodayMax[$i];
+		
+	}
+	
+	for($i=0;$i<60;$i++)
+	{
+		printf("<td valign=\"bottom\">\n");
+		if($maxToday!=0)
+			printf("\t<img align=\"bottom\" src=\"./img/vp.png\" height=\"%d\" width=\"6\" alt='today simultaneous user : %d' title='today simultaneous user : %d' />\n",$userCountPerMinuteTodayMax[$i]*100/$maxHourMax,$userCountPerMinuteTodayMax[$i],$userCountPerMinuteTodayMax[$i]);
+		printf("</td>\n");
+	}
+	printf("</tr>\n");
+	/*
+	printf("<tr>\n");
+	for($i=0;$i<24;$i++)
+	{
+		printf("<td>%d</td>\n",$i);
+	}
+	printf("</tr>\n");	
+	printf("<tr>\n");
+	for($i=0;$i<24;$i++)
+	{
+		printf("<td><img src=\"./img/hr%d.png\" width=\"10\"/></td>\n",($i%12)+1);
+	}
+	printf("</tr>\n");
+	*/
 ?>
 </table>
 
