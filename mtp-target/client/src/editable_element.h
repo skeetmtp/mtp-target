@@ -75,51 +75,25 @@ using NLMISC::CMatrix;
 class CEditableElement
 {
 public:
-	enum TType
-	{
-		Unknown = 0,
-		Module,
-		StartPosition,
-	};		
-
 	CEditableElement();
 	virtual ~CEditableElement();
 
-	virtual void init(const std::string &name,uint8 id, NLMISC::CVector position, NLMISC::CAngleAxis rotation);
-	
-	virtual bool intersect(NLMISC::CVector rayStart,NLMISC::CVector rayEnd,NLMISC::CVector &rayHit);
+	//todo merge with common update()
+	//void update(NLMISC::CVector pos,NLMISC::CVector rot,uint32 selectedBy);
+
+	//virtual void init(const std::string &name,uint8 id, NLMISC::CVector position, NLMISC::CAngleAxis rotation);
 
 	NL3D::UInstance *mesh();
 	virtual void renderSelection();
 
 	void show();
 	void hide();
-	void update(NLMISC::CVector pos,NLMISC::CVector rot,uint32 selectedBy);
-	const std::string	&name() const { return Name; }
-	void position(NLMISC::CVector pos);
-	CVector position();
 
-	uint8 id() {return _id;}
-	bool changed() {return _changed;}
-	void changed(bool c) {_changed = c;}
+	//virtual void position(NLMISC::CVector pos);
 
-	TType type() { return _type;}
-	
 protected:
-	std::vector<NLMISC::CVector> vertices;
-	std::vector<NLMISC::CVector> normals;
-	std::vector<uint32> indices;
-	uint32 NbFaces;
-	
-	std::string		Name;
 	NL3D::UInstance *Mesh;
-	NLMISC::CVector Position;
-	NLMISC::CAngleAxis Rotation;
 	NL3D::UMaterial *mat;
-	uint8 _id;
-	bool  _changed;
-
-	TType _type;
 };
 
 

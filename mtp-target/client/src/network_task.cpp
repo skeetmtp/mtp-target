@@ -235,7 +235,7 @@ void CNetworkTask::force(const NLMISC::CVector &force)
 	send(msgout);
 }
 
-void CNetworkTask::updateEditableElement(CEditableElement *element)
+void CNetworkTask::updateEditableElement(CEditableElementCommon *element)
 {
 	CNetMessage msgout(CNetMessage::UpdateElement);
 	uint8 elementId = element->id();

@@ -71,20 +71,14 @@ public:
 	virtual std::string toLuaString();
 
 
-	uint8 id() {return _id;}
-
 protected:
 	//virtual void init();
 
-	std::string			ShapeName;
 	bool				Bounce;
 	sint32				Score;
 	float				Accel;
 	float				Friction;
 
-	std::vector<NLMISC::CVector> Normals;
-	std::vector<NLMISC::CVector> Vertices;
-	std::vector<int>			 Indices;
 private:
 	
 };

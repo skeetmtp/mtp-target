@@ -69,6 +69,8 @@
 #include "font_manager.h"
 #include "config_file_task.h"
 
+#include "../../common/load_mesh.h"
+
 using namespace std;
 using namespace NLMISC;
 using namespace NL3D;
@@ -78,7 +80,6 @@ using namespace NL3D;
 CEditableElement::CEditableElement()
 {
 	mat = C3DTask::instance().driver().createMaterial();
-	_type = Unknown;
 }
 
 
@@ -89,19 +90,12 @@ CEditableElement::~CEditableElement()
 }
 
 
+/*
 void CEditableElement::init(const string &name,uint8 id, CVector position, CAngleAxis rotation)
 {
-	Name = name;
-	_id = id;
-	_changed = false;
-	
-	Position = position;
-	Rotation = rotation;
+//	CEditableElementCommon::init(name,id,position,rotation);
 
-	string MeshName = CResourceManager::instance().get("col_box.shape");
-	
 
-	NbFaces = 0;
 	NLMISC::CIFile i(CPath::lookup(MeshName, false).c_str());
 	CShapeStream ss;
 	i.serial(ss);
@@ -150,9 +144,9 @@ void CEditableElement::init(const string &name,uint8 id, CVector position, CAngl
 	}
 	
 	//C3DTask::instance().scene().deleteInstance(Mesh);
-
 	
-	string res = CResourceManager::instance().get(MeshName);
+	
+	string res = CResourceManager::instance().get(ShapeName);
 	Mesh = C3DTask::instance().scene().createInstance (res);
 	if (!Mesh)
 	{
@@ -164,39 +158,7 @@ void CEditableElement::init(const string &name,uint8 id, CVector position, CAngl
 	Mesh->setPos(position);
 	
 }
-
-
-bool CEditableElement::intersect(NLMISC::CVector rayStart,NLMISC::CVector rayEnd,NLMISC::CVector &rayHit)
-{
-	//return true;
-	CMatrix mat = mesh()->getMatrix();
-	CMatrix imat = mat;
-	imat.invert();
-	//rayEnd = imat * rayEnd;
-	//rayStart = imat * rayStart;
-	
-	uint32 i;
-	for(i = 0; i<NbFaces; i++)
-	{
-		CTriangle tri;
-		tri.V0 = mat * vertices[indices[i*3+0]];
-		tri.V1 = mat * vertices[indices[i*3+1]];
-		tri.V2 = mat * vertices[indices[i*3+2]];
-		
-		CPlane p;
-		p.make(tri.V0,tri.V1,tri.V2);
-		CVector hit;
-		bool res = tri.intersect(rayStart,rayEnd,hit,p);
-		if(res)
-		{
-			rayHit = hit;
-			return true;
-		}
-	}
-	
-	
-	return false;
-}
+*/
 
 
 
@@ -303,6 +265,7 @@ void CEditableElement::hide()
 	Mesh->hide();
 }
 
+/*
 void CEditableElement::position(CVector pos)
 {
 	Position = pos;
@@ -310,19 +273,17 @@ void CEditableElement::position(CVector pos)
 	_changed = true;
 	CLevelManager::instance().currentLevel().changed(true);
 }
-
-CVector CEditableElement::position()
-{
-	return Position;
-}
+*/
 
 UInstance *CEditableElement::mesh()
 {
 	return Mesh;
 }
 
+/*
 void CEditableElement::update(NLMISC::CVector pos,NLMISC::CVector rot,uint32 selectedBy)
 {
 	position(pos);
 }
+*/
 

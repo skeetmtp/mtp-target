@@ -66,6 +66,7 @@
 #include "mtp_target.h"
 #include "font_manager.h"
 #include "config_file_task.h"
+#include "../../common/load_mesh.h"
 
 using namespace std;
 using namespace NLMISC;
@@ -75,9 +76,8 @@ using namespace NL3D;
 
 
 
-CModule::CModule()
+CModule::CModule():CEditableElement(),CModuleCommon()
 {
-	_type = CEditableElement::Module;
 }
 
 
@@ -90,69 +90,13 @@ CModule::~CModule()
 
 void CModule::init(const string &name,uint8 id, CVector position, CAngleAxis rotation)
 {
-	Name = name;
-	_id = id;
-	_changed = false;
-	
-	Position = position;
-	Rotation = rotation;
-	
-	string MeshName = CResourceManager::instance().get(Name+".shape");
-	
-	vertices.clear();
-	indices.clear();
-	
-	NbFaces = 0;
-	NLMISC::CIFile i(CPath::lookup(MeshName, false).c_str());
-	CShapeStream ss;
-	i.serial(ss);
-	i.close();
+	CModuleCommon::init(name,id,position,rotation);
+
+	ShapeName = CResourceManager::instance().get(Name+".shape");
+	loadMesh(ShapeName, Vertices, Normals, Indices);
 	
 	
-	
-	CMesh *m = (CMesh*)ss.getShapePointer();
-	const CMeshGeom &mg = m->getMeshGeom();
-	
-	uint nbmb = mg.getNbMatrixBlock();
-	for(uint i = 0; i < nbmb; i++)
-	{
-		uint nbrp = mg.getNbRdrPass(i);
-		for(uint j = 0; j < nbrp; j++)
-		{
-			const CPrimitiveBlock &pb = mg.getRdrPassPrimitiveBlock(i, j);
-			const uint32 *ptr = pb.getTriPointer();
-			uint nbt = pb.getNumTri();
-			NbFaces += nbt;
-			for(uint k = 0; k < nbt*3; k+=3)
-			{
-				indices.push_back(ptr[k+0]);
-				indices.push_back(ptr[k+1]);
-				indices.push_back(ptr[k+2]);
-				//				nlinfo("%d %d %d %d", k, ptr[k+0], ptr[k+1], ptr[k+2]);
-			}
-		}
-	}
-	
-	const CVertexBuffer &vb = mg.getVertexBuffer();
-	uint32 nbv = vb.getNumVertices();
-	for(uint i = 0; i < nbv; i++)
-	{
-		const void *nn = vb.getNormalCoordPointer(i);
-		CVector n = *(CVector*)nn;
-		const void *vv = vb.getVertexCoordPointer(i);
-		CVector v = *(CVector*)vv;
-		//		uint j;
-		//		for(j = 0; j < vertices.c_str(); j++)
-		//		{
-		vertices.push_back(v);
-		normals.push_back(n);
-		//		}
-		//		if(j)
-	}
-	
-	//C3DTask::instance().scene().deleteInstance(Mesh);
-	
-	Mesh = C3DTask::instance().scene().createInstance (MeshName);
+	Mesh = C3DTask::instance().scene().createInstance (ShapeName);
 	if (mesh == 0)
 	{
 		nlwarning ("Can't load '%s.shape'", Name.c_str());
@@ -183,9 +127,9 @@ void CModule::renderSelection()
 	for(i = 0; i<NbFaces; i++)
 	{
 		CTriangle tri;
-		tri.V0 = matrix * (vertices[indices[i*3+0]] + grow * normals[indices[i*3+0]]);
-		tri.V1 = matrix * (vertices[indices[i*3+1]] + grow * normals[indices[i*3+1]]);
-		tri.V2 = matrix * (vertices[indices[i*3+2]] + grow * normals[indices[i*3+2]]);
+		tri.V0 = matrix * (Vertices[Indices[i*3+0]] + grow * Normals[Indices[i*3+0]]);
+		tri.V1 = matrix * (Vertices[Indices[i*3+1]] + grow * Normals[Indices[i*3+1]]);
+		tri.V2 = matrix * (Vertices[Indices[i*3+2]] + grow * Normals[Indices[i*3+2]]);
 
 #if 0
 		C3DTask::instance().driver().drawTriangle(tri,*mat);
@@ -201,4 +145,10 @@ void CModule::renderSelection()
 		
 	}
 	
+}
+
+void CModule::update(NLMISC::CVector pos,NLMISC::CVector rot)
+{
+	//TODO rot
+	position(pos);
 }

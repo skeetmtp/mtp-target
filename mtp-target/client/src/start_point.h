@@ -73,11 +73,12 @@ using NLMISC::CMatrix;
 // Classes
 //
 
-class CStartPoint : public CEditableElement
+class CStartPoint : public CEditableElement, public CStartPointCommon
 {
 public:
 	CStartPoint();
 	virtual ~CStartPoint();
+	virtual void init(const std::string &name,uint8 id, NLMISC::CVector position, NLMISC::CAngleAxis rotation);
 	
 private:
 };

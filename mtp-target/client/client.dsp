@@ -209,6 +209,14 @@ SOURCE=.\Src\editable_element.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\common\editable_element_common.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\common\editable_element_common.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\Src\module.cpp
 # End Source File
 # Begin Source File
@@ -217,11 +225,27 @@ SOURCE=.\Src\module.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\common\module_common.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\common\module_common.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\src\start_point.cpp
 # End Source File
 # Begin Source File
 
 SOURCE=.\src\start_point.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\common\start_point_common.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\common\start_point_common.h
 # End Source File
 # End Group
 # Begin Source File
@@ -239,6 +263,14 @@ SOURCE=.\Src\level_manager.cpp
 # Begin Source File
 
 SOURCE=.\Src\level_manager.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\common\load_mesh.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\common\load_mesh.h
 # End Source File
 # End Group
 # Begin Group "lua"

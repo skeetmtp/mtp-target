@@ -53,7 +53,7 @@ public:
 	void reset();
 	
 	
-	CEditableElement *selectedModule() {return _selectedModule;}
+	CEditableElementCommon *selectedElement() {return _selectedElement;}
 	
 private:
 
@@ -61,7 +61,7 @@ private:
 		
 	bool _enable;
 	guiSPG<CGuiFrame> _testFrame;
-	CEditableElement *_selectedModule;
+	CEditableElementCommon *_selectedElement;
 	float	_mouseX;
 	float	_mouseY;
 	double  _lastUpdateTime;

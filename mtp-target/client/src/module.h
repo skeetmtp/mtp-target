@@ -73,7 +73,7 @@ using NLMISC::CMatrix;
 // Classes
 //
 
-class CModule : public CEditableElement
+class CModule : public CEditableElement, public CModuleCommon
 {
 public:
 	CModule();
@@ -81,6 +81,7 @@ public:
 	
 	virtual void init(const std::string &name,uint8 id, NLMISC::CVector position, NLMISC::CAngleAxis rotation);
 	virtual void renderSelection();
+	virtual void update(NLMISC::CVector pos,NLMISC::CVector rot);
 	
 
 

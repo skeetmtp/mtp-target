@@ -382,7 +382,8 @@ uint32 CLevel::getModuleCount()
 
 void CLevel::updateModule(uint32 id,CVector pos,CVector rot,uint32 selectedBy)
 {
-	getModule(id)->update(pos,rot,selectedBy);
+	//TODO selectedBy
+	getModule(id)->update(pos,rot);//,selectedBy);
 }
 
 CStartPoint *CLevel::getStartPoint(uint32 index)
@@ -399,6 +400,7 @@ uint32 CLevel::getStartPointCount()
 
 void CLevel::updateStartPoint(uint32 id,CVector pos,CVector rot,uint32 selectedBy)
 {
-	getStartPoint(id)->update(pos,rot,selectedBy);
+	//TODO selectedBy
+	getStartPoint(id)->update(pos,rot);//,selectedBy);
 }
 

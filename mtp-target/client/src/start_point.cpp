@@ -66,6 +66,7 @@
 #include "mtp_target.h"
 #include "font_manager.h"
 #include "config_file_task.h"
+#include "../../common/load_mesh.h"
 
 using namespace std;
 using namespace NLMISC;
@@ -75,9 +76,8 @@ using namespace NL3D;
 
 
 
-CStartPoint::CStartPoint()
+CStartPoint::CStartPoint():CEditableElement(),CStartPointCommon()
 {
-	_type = CEditableElement::StartPosition;	
 }
 
 
@@ -85,8 +85,25 @@ CStartPoint::~CStartPoint()
 {
 }
 
+void CStartPoint::init(const std::string &name,uint8 id, NLMISC::CVector position, NLMISC::CAngleAxis rotation)
+{
+	CStartPointCommon::init(name,id,position,rotation);
+
+	ShapeName = CResourceManager::instance().get("col_box.shape");
+	loadMesh(ShapeName, Vertices, Normals, Indices);
+
+	Mesh = C3DTask::instance().scene().createInstance (ShapeName);
+	if (mesh == 0)
+	{
+		nlwarning ("Can't load '%s.shape'", Name.c_str());
+	}
+	Mesh->setTransformMode(UTransformable::RotQuat);
+	Mesh->setRotQuat(CQuat(rotation));
+	Mesh->setPos(position);
+	
 
 
+}
 
 
 

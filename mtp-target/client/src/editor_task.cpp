@@ -53,7 +53,7 @@ void CEditorTask::init()
 {
 	_enable = false;
 	_testFrame = NULL;
-	_selectedModule = NULL;
+	_selectedElement = NULL;
 	_mouseX = 0;
 	_mouseY = -0.5f;
 	_lastUpdateTime = 0;
@@ -75,7 +75,7 @@ void CEditorTask::_mouseSelectModule()
 	uint32 i;
 	if(mousePressed)
 	{
-		_selectedModule = NULL;
+		_selectedElement = NULL;
 		//nlinfo("editor ray test");
 		CViewport vp = C3DTask::instance().scene().getViewport();
 		CMatrix camMat = C3DTask::instance().scene().getCam()->getMatrix();
@@ -91,7 +91,7 @@ void CEditorTask::_mouseSelectModule()
 		rayTestEnd = rayEnd;
 		rayTestStart = rayStart;
 		
-		list<CEditableElement *> bboxModules;
+		list<CEditableElementCommon *> bboxModules;
 		for(i=0;i<CLevelManager::instance().currentLevel().getModuleCount();i++)
 		{
 			CModule *module = CLevelManager::instance().currentLevel().getModule(i);
@@ -109,45 +109,46 @@ void CEditorTask::_mouseSelectModule()
 		
 		for(i=0;i<CLevelManager::instance().currentLevel().getStartPointCount();i++)
 		{
-			CEditableElement *module = CLevelManager::instance().currentLevel().getStartPoint(i);
-			UInstance *mesh = module->mesh();
+			CStartPoint *startpoint = CLevelManager::instance().currentLevel().getStartPoint(i);
+			UInstance *mesh = startpoint->mesh();
 			CAABBox bbox;
 			mesh->getShapeAABBox(bbox);
 			CAABBox tbbox = CAABBox::transformAABBox(mesh->getMatrix(),bbox);
 			bool intersect = tbbox.intersect(rayStart,rayEnd);
 			if(intersect)
 			{
-				bboxModules.push_back(module);
-				nlinfo("bbox intersect %s 0x%p ",module->name().c_str(),module);
+				bboxModules.push_back(startpoint);
+				nlinfo("bbox intersect %s 0x%p ",startpoint->name().c_str(),startpoint);
 			}
 		}
 		
 		//test plus precis :
 		
-		CEditableElement *nearestModule = NULL;
-		float nearestModuleDist = 10000.0f;
-		list<CEditableElement *>::iterator it;
+		CEditableElementCommon *nearestElement = NULL;
+		float nearestElmentDist = 10000.0f;
+		list<CEditableElementCommon *>::iterator it;
 		for(it=bboxModules.begin();it!=bboxModules.end();it++)
 		{
-			CEditableElement *module = *it;
+			CEditableElementCommon *element = *it;
 			CVector rayHit;
-			bool intersect = module->intersect(rayStart,rayEnd,rayHit);
+			CEditableElement *editElement = (CEditableElement *)element;
+			bool intersect = element->intersect(rayStart,rayEnd,rayHit,editElement->mesh()->getMatrix());
 			if(intersect)
 			{
 				CVector rayDirHit = rayHit - rayStart;
 				float dist = rayDirHit * rayDir;
-				if(dist>0.0f && dist<nearestModuleDist)
+				if(dist>0.0f && dist<nearestElmentDist)
 				{
-					nearestModuleDist = dist;
-					nearestModule = module;
+					nearestElmentDist = dist;
+					nearestElement = element;
 				}
-				nlinfo("tri intersect %s 0x%p dist = %f (%f %f %f)",nearestModule->name().c_str(),nearestModule,nearestModuleDist,rayHit.x,rayHit.y,rayHit.z);
+				nlinfo("tri intersect %s 0x%p dist = %f (%f %f %f)",nearestElement->name().c_str(),nearestElement,nearestElmentDist,rayHit.x,rayHit.y,rayHit.z);
 			}
 		}
-		if(nearestModule && _selectedModule != nearestModule)
+		if(nearestElement && _selectedElement != nearestElement)
 		{
-			nlinfo("tri intersect %s 0x%p dist = %f",nearestModule->name().c_str(),nearestModule,nearestModuleDist);
-			_selectedModule = nearestModule;		
+			nlinfo("tri intersect %s 0x%p dist = %f",nearestElement->name().c_str(),nearestElement,nearestElmentDist);
+			_selectedElement = nearestElement;		
 		}
 	}
 }
@@ -169,8 +170,8 @@ void CEditorTask::update()
 			CMatrix camMat = C3DTask::instance().scene().getCam()->getMatrix();
 			CVector camDir = camMat.getJ();
 			CAABBox bbox;
-			_selectedModule->mesh()->getShapeAABBox(bbox);
-			ControlerFreeLookPos = _selectedModule->position()  - camDir * (bbox.getRadius() + 0.1f);
+			((CEditableElement *)_selectedElement)->mesh()->getShapeAABBox(bbox);
+			ControlerFreeLookPos = _selectedElement->position()  - camDir * (bbox.getRadius() + 0.1f);
 		}
 		
 
@@ -244,10 +245,10 @@ void CEditorTask::update()
 		//			nlinfo("set camera matrix");
 		C3DTask::instance().scene().getCam()->setMatrix(ControlerCamMatrix);			
 
-		if(selectedModule() && dv.norm()!=0.0f)
+		if(selectedElement() && dv.norm()!=0.0f)
 		{
-			CVector oldPos = selectedModule()->position();
-			selectedModule()->position(oldPos + dv);
+			CVector oldPos = selectedElement()->position();
+			selectedElement()->position(oldPos + dv);
 		}
 
 		double time = CTimeTask::instance().time();
@@ -271,9 +272,9 @@ void CEditorTask::render()
 {
 	C3DTask::instance().driver().setFrustum(C3DTask::instance().scene().getCam()->getFrustum());
 	C3DTask::instance().driver().setMatrixMode3D(*C3DTask::instance().scene().getCam());
-	if(_selectedModule)
+	if(_selectedElement)
 	{
-		_selectedModule->renderSelection();
+		((CEditableElement *)_selectedElement)->renderSelection();
 	}
 
 	CLine l;
@@ -316,6 +317,6 @@ bool CEditorTask::enable()
 
 void CEditorTask::reset()
 {
-	_selectedModule = NULL;
+	_selectedElement = NULL;
 }
 

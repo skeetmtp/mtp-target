@@ -77,7 +77,7 @@ public:
 	void openClose();
 	void ready();
 	void force(const NLMISC::CVector &force);
-	void updateEditableElement(CEditableElement *element);
+	void updateEditableElement(CEditableElementCommon *element);
 	void setEditMode(uint8 editMode);
 		
 	bool connected();

@@ -211,7 +211,7 @@ static void cbUpdateElement(CNetMessage &msgin)
 	CVector eulerRot;
 	msgin.serial(eulerRot);
 
-	if(elementType==CEditableElement::Module)
+	if(elementType==CEditableElementCommon::Module)
 		CLevelManager::instance().currentLevel().updateModule(elementId,pos,eulerRot,selectedBy);
 }
 	
