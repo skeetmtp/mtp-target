@@ -244,6 +244,12 @@ public:
 	// Init the service, load the universal time.
 	void init()
 	{
+		if(NLMISC::CFile::fileExists("log000.log"))
+			NLMISC::CFile::deleteFile("log000.log");
+		
+		if(NLMISC::CFile::fileExists("login_service000.stat"))
+			NLMISC::CFile::deleteFile("login_service000.stat");
+				
 		Output = new CLog;
 		Output->addDisplayer (&Fd);
 		if (WindowDisplayer != 0) Output->addDisplayer (WindowDisplayer);

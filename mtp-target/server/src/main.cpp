@@ -90,6 +90,12 @@ public:
 
 	void init()
 	{
+		if(NLMISC::CFile::fileExists("log000.log"))
+			NLMISC::CFile::deleteFile("log000.log");
+		
+		if(NLMISC::CFile::fileExists("mtp_target_service000.log"))
+			NLMISC::CFile::deleteFile("mtp_target_service000.log");
+		
 		{
 			FILE *fp = fopen("connection.stat", "ab");
 			if(fp)
