@@ -44,7 +44,7 @@ public:
 	void display(NLMISC::CLog *log = NLMISC::InfoLog) const;
 
 	// find and load a new level
-	bool newLevel();
+	bool newLevel(std::string &str1, std::string &str2);
 
 	void nextLevel();
 	
@@ -63,6 +63,8 @@ public:
 
 	double timeTimeout();
 	void timeTimeout(double timeout);
+
+	std::string updateStats(const std::string &name, sint32 score, float time, bool &breakTime);
 	
 private:
 

@@ -210,7 +210,7 @@ void CMtpTarget::init()
 		
 		//CMtpTarget::instance().State = CMtpTarget::eReady;
 		CTaskManager::instance().add(CGameTask::instance(), 60);
-		CMtpTarget::instance().startSession(1, 60, levelName);
+		CMtpTarget::instance().startSession(1, 60, levelName, "", "");
 	}
 	else
 	{
@@ -405,7 +405,7 @@ void CMtpTarget::loadNewSession()
 		
 }
 
-void CMtpTarget::startSession(float timeBeforeSessionStart, float timeBeforeTimeout, const string &levelName)
+void CMtpTarget::startSession(float timeBeforeSessionStart, float timeBeforeTimeout, const string &levelName, const std::string &str1, const std::string &str2)
 {
 	nlinfo("level '%s' loaded, it timeouts in %g seconds", levelName.c_str(), timeBeforeTimeout);
 	
@@ -414,6 +414,8 @@ void CMtpTarget::startSession(float timeBeforeSessionStart, float timeBeforeTime
 	TimeBeforeSessionStart = timeBeforeSessionStart;
 	TimeBeforeTimeout = timeBeforeTimeout;
 	NewLevelName = levelName;
+	String1 = str1;
+	String2 = str2;
 }
 
 void CMtpTarget::resetFollowedEntity()

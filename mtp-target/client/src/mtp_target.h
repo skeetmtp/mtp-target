@@ -79,7 +79,7 @@ public:
 	void	loadNewSession();
 
 	// called by the net thread
-	void	startSession(float timeBeforeSessionStart, float timeBeforeTimeout, const std::string &levelName);
+	void	startSession(float timeBeforeSessionStart, float timeBeforeTimeout, const std::string &levelName, const std::string &str1, const std::string &str2);
 	void	resetFollowedEntity();
 
 	float	timeBeforeSessionStart() const { return TimeBeforeSessionStart; }
@@ -89,7 +89,8 @@ public:
 	enum TState { eLoginPassword, eConnect, eBeforeFirstSession, eStartSession, eReady, eGame, eEndSession };
 	
 	TState State;
-
+	std::string		String1, String2;
+	
 	void displayTutorialInfo(bool b);
 	bool displayTutorialInfo();
 	

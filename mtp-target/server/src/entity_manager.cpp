@@ -763,7 +763,7 @@ string CEntityManager::check(const string &login, const string &password, bool d
 	}
 	
 	CConfigFile::CVar &accounts = IService::getInstance()->ConfigFile.getVar("Accounts");
-	
+
 	for(uint i = 0; i < (uint)accounts.size(); i += 3)
 	{
 		if(accounts.asString(i) == login)

@@ -141,7 +141,8 @@ void CRunningSessionState::update()
 				if((*it)->type() == CEntity::Client)
 				{
 					bool breakTime = false; // ace set to false
-					string res;//ace = mtLevelManager::updateStats((*it)->name(), (*it)->CurrentScore, (*it)->Time, breakTime, true);
+//					string res;//ace = mtLevelManager::updateStats((*it)->name(), (*it)->CurrentScore, (*it)->Time, breakTime, true);
+					string res = CLevelManager::instance().updateStats((*it)->name(), (*it)->CurrentScore, (*it)->ArrivalTime, breakTime);
 					if(!res.empty())
 					{
 						chat.push_back(res);

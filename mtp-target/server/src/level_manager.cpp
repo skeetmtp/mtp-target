@@ -99,14 +99,14 @@ void CLevelManager::release()
 	CLevelManager::uninstance();
 }
 
-bool CLevelManager::newLevel()
+bool CLevelManager::newLevel(string &str1, string &str2)
 {
 	LevelSessionCount++;
 	pausePhysics();
 	CNetwork::instance().reset();
 	CEntityManager::instance().reset();
 
-	nlinfo("newLevel (%d/%d)",LevelSessionCount,MaxLevelSessionCount );
+	nlinfo("newLevel (%d/%d)",LevelSessionCount,MaxLevelSessionCount);
 	if(CurrentLevel)
 		CurrentLevel->save();
 	
@@ -120,7 +120,7 @@ bool CLevelManager::newLevel()
 	nextLevel();
 	BonusTime = true;
 	RecordBest = true;
-	
+
 	uint i;
 	nlinfo("Find a new level");
 
@@ -138,7 +138,6 @@ bool CLevelManager::newLevel()
 
 	nlassert(levels.size() > 0);
 
-
 	if(CurrentLevel)
 	{
 		delete CurrentLevel;
@@ -150,8 +149,27 @@ bool CLevelManager::newLevel()
 		if(newLevel->valid())
 		{
 			CurrentLevel = newLevel;
+
+			// load scores
+
+			CConfigFile::CVar &stats = IService::getInstance()->ConfigFile.getVar("LevelStats");
+			nlassert(stats.size() % 5 == 0);
+
+			for(uint i = 0; i < (uint)stats.size(); i += 5)
+			{
+				if(stats.asString(i) == CFile::getFilename(CurrentLevel->fileName()))
+				{
+					str1 = toString("Best time: %s with %s seconds", stats.asString(i+1).c_str(), stats.asString(i+2).c_str());
+					str2 = toString("Best score: %s with %s points", stats.asString(i+3).c_str(), stats.asString(i+4).c_str());
+					break;
+				}
+			}
+
+			nlinfo(str1.c_str());
+			nlinfo(str2.c_str());
+
 			nlinfo("'%s' level loaded",newLevel->name().c_str());
-			resumePhysics();	
+			resumePhysics();
 			return true;
 		}
 		else
@@ -162,8 +180,65 @@ bool CLevelManager::newLevel()
 	}
 
 	nlwarning("newLevel() : no valid level found");
-	resumePhysics();	
+	resumePhysics();
 	return false;
+}
+
+string CLevelManager::updateStats(const std::string &name, sint32 score, float time, bool &breakTime)
+{
+	string res;
+	CConfigFile::CVar &stats = IService::getInstance()->ConfigFile.getVar("LevelStats");
+	nlassert(stats.size() % 5 == 0);
+	
+	if(CurrentLevel == NULL) return "";
+
+	string levelname = CFile::getFilename(CurrentLevel->fileName());
+
+	if(levelname.empty()) return "";
+	
+	for(uint i = 0; i < (uint)stats.size(); i += 5)
+	{
+		if(stats.asString(i) == levelname)
+		{
+			if(score > 0 && int(time*100.0) < int(stats.asFloat(i+2)*100.0f))
+			{
+				stats.setAsString(name, i+1);
+				stats.setAsString(toString("%.2f",time), i+2);
+				breakTime = true;
+				res = toString("%s has broken the time record with %.2f seconds.", name.c_str(), time);
+				nlinfo("best time");
+			}
+			if(score > 0 && score > stats.asInt(i+4))
+			{
+				stats.setAsString(name, i+3);
+				stats.setAsString(toString("%d",score), i+4);
+				nlinfo("best score");
+				if(res.empty())
+					res = toString("%s has broken the score record with %d points.", name.c_str(), score);
+				else
+					res = toString("%s has broken the score and time record with %d points and %.2f seconds.", name.c_str(), score, time);
+			}
+			return res;
+		}
+	}
+
+	// stat not found for this level, add them
+	nlinfo("size %d", stats.size());
+	if(stats.size() == 0)
+	{
+		stats.forceAsString(levelname);
+	}
+	else
+	{
+		stats.setAsString(levelname, stats.size());
+	}
+	stats.SaveWrap = 5;
+	stats.setAsString(name, stats.size());
+	stats.setAsString(toString("%.2f",time), stats.size());
+	stats.setAsString(name, stats.size());
+	stats.setAsString(toString("%d",score), stats.size());
+	nlinfo("new stat");
+	return res;
 }
 
 void CLevelManager::display(CLog *log) const

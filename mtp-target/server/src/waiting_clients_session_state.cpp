@@ -62,7 +62,7 @@ void CWaitingClientsSessionState::update()
 		string string1, string2;
 //ace		mtLevelManager::newLevel(CurrentLevel, string1, string2);
 
-		CLevelManager::instance().newLevel();
+		CLevelManager::instance().newLevel(string1, string2);
 		string CurrentLevel = CLevelManager::instance().currentLevel().fileName();
 
 //ace		string luaCodeFilename = CPath::lookup(CurrentLevel+".lua", false);
@@ -145,14 +145,14 @@ void CWaitingClientsSessionState::update()
 				CNetwork::instance().send(msgout);
 			}
 		}
-			
+
 /*
 		for(it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
 		{
 			CLuaEngine::clientInit(*it);
 		}
 */
-		
+
 //		CollisionEntityListIt eit;
 //		for(eit = CollisionEntityList.begin(); eit != CollisionEntityList.end(); eit++)
 //		{

@@ -126,7 +126,7 @@ static void cbLogin(CNetMessage &msgin)
 		nlinfo("levelName='%s' timeBeforeTimeout=%f", levelName.c_str(), timeBeforeTimeout);
 		
 		if (!levelName.empty())
-			CMtpTarget::instance().startSession(0, timeBeforeTimeout/1000.0f, levelName);
+			CMtpTarget::instance().startSession(0, timeBeforeTimeout/1000.0f, levelName, "", "");
 		else
 			CMtpTarget::instance().timeBeforeTimeout(timeBeforeTimeout/1000.0f);
 	}
@@ -558,8 +558,8 @@ static void cbStartSession(CNetMessage &msgin)
 	string levelName, str1, str2;
 	vector<uint8> ranks;
 	vector<uint8> eids;
-	
-	msgin.serial(timebeforestart, timeout, levelName, str1, str2);	
+
+	msgin.serial(timebeforestart, timeout, levelName, str1, str2);
 	msgin.serialCont(ranks);
 	msgin.serialCont(eids);
 	
@@ -571,7 +571,7 @@ static void cbStartSession(CNetMessage &msgin)
 	for(uint32 i=0;i<eids.size();i++)
 		CEntityManager::instance()[eids[i]].rank(ranks[i]);
 	
-	CMtpTarget::instance().startSession(timebeforestart / 1000.0f, timeout / 1000.0f, levelName);
+	CMtpTarget::instance().startSession(timebeforestart / 1000.0f, timeout / 1000.0f, levelName, str1, str2);
 
 	/*
 	msgin.serial (mtpTarget::instance().Interface2d.LevelName);

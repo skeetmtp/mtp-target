@@ -248,6 +248,10 @@ void CHudTask::render()
 			str = "Author: " + CLevelManager::instance().currentLevel().author();
 			len = str.size();
 			CFontManager::instance().printf(CRGBA(255, 255, 255, 255), 1 * fontWidth, 12.0f * fontHeight,1, str.c_str());
+
+			CFontManager::instance().printf(CRGBA(245, 238, 141, 255), 1 * fontWidth, 16.0f * fontHeight,1, CMtpTarget::instance().String1.c_str());
+			CFontManager::instance().printf(CRGBA(253, 207, 85, 255), 1 * fontWidth, 18.0f * fontHeight,1, CMtpTarget::instance().String2.c_str());
+			
 			/*
 			CFontManager::instance().printf(CRGBA(245, 238, 141, 255), 1 * fontWidth, 14 * fontHeight,1, "Best score:");
 			CFontManager::instance().printf(CRGBA(253, 207, 85, 255), 3 * fontWidth, 15 * fontHeight,1, string1.c_str());
