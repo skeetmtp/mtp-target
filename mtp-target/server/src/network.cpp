@@ -119,7 +119,6 @@ void CNetworkTask::run()
 		}
 
 		checkNetworkPaused();
-		CEntityManager::instance().flushAddRemoveList();
 		
 		if(FD_ISSET(ListenSock.descriptor(), &readers) != 0)
 		{
@@ -168,7 +167,8 @@ void CNetworkTask::run()
 			}
 		}
 
-
+		CEntityManager::instance().flushAddRemoveList();
+		
 	}
 }
 

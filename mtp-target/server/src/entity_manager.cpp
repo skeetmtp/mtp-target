@@ -101,6 +101,7 @@ void CEntityManager::remove(uint8 eid)
 		ClientToRemoveMainThread.push_back(eid);
 	else
 		ClientToRemoveNetworkThread.push_back(eid);
+
 }
 
 void CEntityManager::_add(std::list<CEntity *> &addList)
@@ -205,6 +206,49 @@ void CEntityManager::release()
 uint8 CEntityManager::findNewId()
 {
 	uint8 ni = 0;
+	uint8 baseId = 0;
+	uint tid = getThreadId();
+	nlassert(tid==MainThreadId || tid==NetworkThreadId);
+
+	if(tid==NetworkThreadId)
+		baseId=128;
+
+	bool nidFound = false;
+	for(ni=baseId;ni<baseId+127;ni++)
+	{
+		bool nidOk = true;
+		EntityConstIt it;
+		for(it = entities().begin(); it != entities().end() && nidOk; it++)
+		{
+			if((*it)->id() == ni)
+				nidOk = false;
+		}
+		if(tid==MainThreadId)
+		{
+			list<CEntity *>::iterator it2;
+			for(it2=ClientToAddMainThread.begin(); it2!=ClientToAddMainThread.end() && nidOk;it2++)
+			{
+				CEntity *e = *it2;
+				if(e->id()==ni)
+					nidOk = false;
+			}
+		}
+		else
+		{
+			list<CEntity *>::iterator it2;
+			for(it2=ClientToAddNetworkThread.begin(); it2!=ClientToAddNetworkThread.end() && nidOk;it2++)
+			{
+				CEntity *e = *it2;
+				if(e->id()==ni)
+					nidOk = false;
+			}			
+		}
+		if(nidOk)
+			return ni;
+	}
+	nlerror("More than 127 entities, can't add a new one");
+
+	/*
 	while(true)
 	{
 		EntityConstIt it;
@@ -221,6 +265,8 @@ uint8 CEntityManager::findNewId()
 			nlerror("More than 254 entities, can't add a new one");
 		}	
 	}
+	*/
+	return 255;
 }
 
 void CEntityManager::addBot(const string &name, bool isAutomaticBot)

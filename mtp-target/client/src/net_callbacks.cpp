@@ -84,7 +84,7 @@ static void cbLogin(CNetMessage &msgin)
 	bool spec;
 
 	msgin.serial(self, eid, name, totalScore, color, spec);
-	nlinfo("Adding player %hu , list.size = %d", (uint16)eid,CEntityManager::instance().size());
+	nlinfo("cbLogin : Adding player %hu(%s) , list.size = %d", (uint16)eid,name.c_str(),CEntityManager::instance().size());
 	
 	CEntityManager::instance().add(eid, name, totalScore, color, spec);
 
