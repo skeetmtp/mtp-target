@@ -211,12 +211,12 @@ end
 function levelPostUpdate()
 
   if(currentTeamRedScore~=teamRedScore) then
-    displayTextToAll(0,7,1,255,0,0,currentTeamRedScore,10);
+    displayTextToAll(0,7,1,255,0,0,currentTeamRedScore,40);
     teamRedScore = currentTeamRedScore;
   end
 
   if(currentTeamBlueScore~=teamBlueScore) then
-    displayTextToAll(0,8,1,100,100,255,currentTeamBlueScore,10);
+    displayTextToAll(0,8,1,100,100,255,currentTeamBlueScore,40);
     teamBlueScore = currentTeamBlueScore;
   end
 
