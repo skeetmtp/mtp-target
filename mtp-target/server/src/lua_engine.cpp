@@ -130,7 +130,9 @@ void CLuaEngine::init(const std::string &filename)
 		lua_register(session(), "setLevelHasBonusTime", setLevelHasBonusTime);
 		lua_register(session(), "setLevelRecordBest", setLevelRecordBest);
 		lua_register(session(), "setLevelTimeout", setLevelTimeout);
+		lua_register(session(), "getLevelTimeout", getLevelTimeout);
 		lua_register(session(), "getTimeRemaining", getTimeRemaining);
+		lua_register(session(), "execLuaOnAllClient", execLuaOnAllClient);
 	}
 	
 	Lunar<CModuleProxy>::Register(session());
@@ -208,6 +210,18 @@ void CLuaEngine::entityWaterCollideEvent(CEntity *entity)
 	*/
 
 }
+
+void CLuaEngine::entityLeaveEvent(CEntity *entity)
+{
+	if(!session())
+		return;
+	int res ;
+	//	nlinfo("CLuaEngine::entityWaterCollideEvent(0x%p)",entity);
+	lua_getglobal(session(), "entityLeaveEvent");
+	Lunar<CEntityProxy>::push(session(), entity->luaProxy);
+	res = lua_pcall (session(),1,0,0);	
+}
+
 
 void CLuaEngine::levelInit()
 {
@@ -361,14 +375,40 @@ int CLuaEngine::setLevelTimeout(lua_State *L)
 	return 0;	
 }
 
+int CLuaEngine::getLevelTimeout(lua_State *L)
+{
+	lua_Number res = CLevelManager::instance().timeTimeout() / 1000;
+	lua_pushnumber(L,res); 
+	return 1;
+}
+
 int CLuaEngine::getTimeRemaining(lua_State *L)
 {
-	TTime timeRemaining = CSessionManager::instance().startTime()+(TTime)CLevelManager::instance().timeTimeout() - CTime::getLocalTime();
-	lua_Number res = timeRemaining / 1000;
+	TTime startTime = CSessionManager::instance().startTime();
+	TTime localtime = CTime::getLocalTime();
+	TTime timeRemaining = startTime+(TTime)CLevelManager::instance().timeTimeout() - localtime;
+	if(CSessionManager::instance().currentStateName()!="Running")
+		timeRemaining = (TTime)CLevelManager::instance().timeTimeout();
+	lua_Number res = (lua_Number)(timeRemaining / 1000);
 	if(res<0)
 		res = 0;
 	lua_pushnumber(L,res); 
 	return 1;
+}
+
+int CLuaEngine::execLuaOnAllClient(lua_State *L)
+{
+	unsigned int len;
+	const char *text = luaL_checklstring(L, 1, &len);
+	string code(text);
+	if(MTPT_NETWORK_VERSION>=2)
+	{
+		CNetMessage msgout(CNetMessage::ExecLua);
+		msgout.serial(code);
+		CNetwork::instance().send(msgout);
+	}
+
+	return 0;		
 }
 
 

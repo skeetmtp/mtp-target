@@ -65,11 +65,15 @@ public:
 	int getStartPointId(lua_State *luaSession);
 	int setStartPointId(lua_State *luaSession);
 	int getIsSpectator(lua_State *luaSession);
-	
 	int getName(lua_State *luaSession);
 	int displayText(lua_State *luaSession);
 	int setCurrentScore(lua_State *luaSession);
 	int getCurrentScore(lua_State *luaSession);
+	int setDensity(lua_State *luaSession);
+	int setDefaultAccel(lua_State *luaSession);
+	int getDefaultAccel(lua_State *luaSession);
+	int setDefaultFriction(lua_State *luaSession);
+	int getDefaultFriction(lua_State *luaSession);
 	
 	static const char className[];	
 	static Lunar<CEntityProxy>::RegType methods[];	

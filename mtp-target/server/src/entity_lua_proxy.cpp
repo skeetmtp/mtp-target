@@ -67,6 +67,11 @@ Lunar<CEntityProxy>::RegType CEntityProxy::methods[] =
 		bind_method(CEntityProxy, setCurrentScore),	
 		bind_method(CEntityProxy, getCurrentScore),	
 		bind_method(CEntityProxy, displayText),	
+		bind_method(CEntityProxy, setDensity),	
+		bind_method(CEntityProxy, setDefaultAccel),	
+		bind_method(CEntityProxy, getDefaultAccel),	
+		bind_method(CEntityProxy, setDefaultFriction),	
+		bind_method(CEntityProxy, getDefaultFriction),	
 	{0,0}
 };
 
@@ -124,7 +129,6 @@ int CEntityProxy::setOpenCloseMax(lua_State *luaSession)
 {
 	uint32 moc = (uint32)luaL_checknumber(luaSession,1);
 	_entity->MaxOpenClose = moc;
-	nlinfo("set max open close : %d",moc);
 	return 0;
 }
 
@@ -242,6 +246,7 @@ int CEntityProxy::getCurrentScore(lua_State *luaSession)
 	return 1;
 }
 
+
 int CEntityProxy::displayText(lua_State *luaSession)
 {
 	float x = (float)luaL_checknumber(luaSession,1);
@@ -275,3 +280,42 @@ int CEntityProxy::displayText(lua_State *luaSession)
 	return 0;
 }
 
+int CEntityProxy::setDensity(lua_State *luaSession)
+{
+	lua_Number density = luaL_checknumber(luaSession,1);
+	dMass m;
+	dReal radius = 0.01f;
+	dMassSetSphere(&m, (dReal)density, radius);
+	dBodySetMass(_entity->Body, &m);
+	return 0;
+}
+
+
+int CEntityProxy::setDefaultAccel(lua_State *luaSession)
+{
+	lua_Number daccel = luaL_checknumber(luaSession,1);
+	_entity->defaultAccel((float)daccel);
+	return 0;
+}
+
+int CEntityProxy::getDefaultAccel(lua_State *luaSession)
+{
+	lua_Number daccel = _entity->defaultAccel();
+	lua_pushnumber(luaSession, daccel); 
+	return 1;
+}
+
+
+int CEntityProxy::setDefaultFriction(lua_State *luaSession)
+{
+	lua_Number dfric= luaL_checknumber(luaSession,1);
+	_entity->DefaultFriction = (float)dfric;
+	return 0;	
+}
+
+int CEntityProxy::getDefaultFriction(lua_State *luaSession)
+{
+	lua_Number dfric = _entity->DefaultFriction;
+	lua_pushnumber(luaSession, dfric); 
+	return 1;	
+}

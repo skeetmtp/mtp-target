@@ -50,7 +50,8 @@ public:
 	void entityEntityCollideEvent(CEntity *client1, CEntity *client2);
 	void entitySceneCollideEvent(CEntity *client, CModule *module);
 	void entityWaterCollideEvent(CEntity *client);
-
+	void entityLeaveEvent(CEntity *client);
+	
 	void levelInit();
 	void levelPreUpdate();
 	void levelPostUpdate();
@@ -72,7 +73,10 @@ private:
 	static int setLevelHasBonusTime(lua_State *L);
 	static int setLevelRecordBest(lua_State *L);
 	static int setLevelTimeout(lua_State *L);
+	static int getLevelTimeout(lua_State *L);
 	static int getTimeRemaining(lua_State *L);
+
+	static int execLuaOnAllClient(lua_State *L);
 	
 	static uint32 _sessionId;
 		
