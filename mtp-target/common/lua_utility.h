@@ -91,7 +91,9 @@ IMP_GET_VAR_INT(sint8);
 
 inline void luaGetVariable(lua_State *L, std::string &var)
 {
-	var = lua_tostring(L, -1);
+	int isString = lua_isstring(L,-1);
+	if(isString)
+		var = lua_tostring(L, -1);
 	lua_pop(L, 1);
 }
 

@@ -78,6 +78,7 @@ using namespace NLMISC;
 
 void luaGetStrVariable(lua_State *L, std::string &var)
 {
+	int isString = lua_isstring(L,-1);
 	const char *res = lua_tostring(L, -1);
 	var = res;
 	lua_pop(L, 1);
@@ -96,10 +97,6 @@ CLevel::CLevel(const string &filename)
 	LuaState = luaOpenAndLoad(filename);
 
 	string skyName;
-	lua_pushstring(LuaState, "skyName");
-	lua_gettable(LuaState, LUA_GLOBALSINDEX);
-	luaGetStrVariable(LuaState,skyName);
-	luaGetGlobalVariable(LuaState, skyName);
 	nlinfo("skyName '%s'", skyName.c_str());
 	
 	luaGetGlobalVariable(LuaState, Name);
