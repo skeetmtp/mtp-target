@@ -14,7 +14,7 @@
 
 <?php
 
-        $fp = fopen("../server/connection.stat", "r");
+        $fp = fopen("../adv_server/connection.stat", "r");
         while (!feof($fp))
 	{
                 $line = fgets($fp, 2048);
