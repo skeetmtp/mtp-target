@@ -495,6 +495,13 @@ void CNetwork::sendChat(const string &msg)
 	CNetwork::instance().send(msgout);
 }
 
+void CNetwork::sendChat(uint8 eid,const string &msg)
+{
+	CNetMessage msgout(CNetMessage::Chat);
+	msgout.serial(const_cast<string&>(msg));
+	CNetwork::instance().send(eid,msgout);
+}
+
 
 
 void checkNetworkPaused()

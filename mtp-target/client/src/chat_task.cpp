@@ -121,6 +121,7 @@ void CChatTask::update()
 					}
 					else if(ChatInput.substr(0,5)=="/help")
 					{
+						CNetworkTask::instance().command(ChatInput.substr(1));
 						addLine("/help : this help");
 						addLine("/replay [comment] : mark a replay with the comment");
 					}

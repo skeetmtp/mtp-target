@@ -67,6 +67,17 @@ static void cbCommand(CClient *c, CNetMessage &msgin)
 	string cmd;
 	msgin.serial(cmd);
 
+	if(cmd.substr(0,4)=="help")
+	{
+		if(c->isAdmin() || c->isModerator())
+		{
+			CNetwork::instance().sendChat(c->id(),string("/reset (CTRL+F6): hard reset of session (could crash)"));
+			CNetwork::instance().sendChat(c->id(),string("/kick nick"));
+			CNetwork::instance().sendChat(c->id(),string("/forcend (CTRL+F5): force end of session (safe)"));
+		}
+		return;
+	}
+
 	if(c->isAdmin() || c->isModerator())
 	{
 		//CNetwork::instance().networkTask().addCommand(cmd);

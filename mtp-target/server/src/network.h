@@ -76,7 +76,10 @@ public:
 
 	// send a message to all connected clients
 	void sendChat(const std::string &msg);
-
+	
+	// send a message to 1 client
+	void sendChat(uint8 eid, const std::string &msg);
+	
 	CNetworkTask &networkTask() {return *NetworkTask;};
 
 	uint32 version() {return Version;}
