@@ -827,7 +827,7 @@ string CEntityManager::check(const string &login, const string &password, bool d
 		if(accounts.asString(i) == login)
 		{
 			if(dontCheck || accounts.asString(i+1) == password)
-			{
+			{		
 				// check if not already online
 				if(connected(login))
 				{
