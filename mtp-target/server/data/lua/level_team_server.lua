@@ -80,8 +80,8 @@ end
 ---------------------- Module ----------------------
 CModule = {}
 CModule_mt = {}
-function CModule:new(t)
-  return setmetatable({ team = t or 0, id = 0 }, CModule_mt)
+function CModule:new(s,t)
+  return setmetatable({ team = t or 0, id = 0, son=s }, CModule_mt)
 end
 
 function CModule:getTeam()
@@ -92,6 +92,9 @@ function CModule:setTeam( t )
   self.team = t;
 end
 
+function CModule:disable()
+  self.son:setEnabled(0);
+end
 
 CModule_mt.__index = CModule
 
@@ -115,6 +118,7 @@ function Module:collide( entity )
   --print(entity:getName());
   --print(entity:parent():getTeam());
   --entity:setCurrentScore(self:getScore());
+  self:parent():disable();
 end
 
 

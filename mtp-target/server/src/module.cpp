@@ -28,9 +28,10 @@
 
 #include "module.h"
 #include "physics.h"
+#include "network.h"
+#include "lua_engine.h"
 #include "../../common/load_mesh.h"
 #include "../../common/lua_utility.h"
-#include "lua_engine.h"
 
 //
 // Namespaces
@@ -222,6 +223,19 @@ void CModule::update(CVector pos,CVector rot)
 	resumePhysics();
 	Position = pos;
 	_changed = true;
+}
+
+void CModule::enabled(bool e) 
+{
+	if(Enabled==e) return;
+
+	CModuleCommon::enabled(e);
+
+	CNetMessage msgout(CNetMessage::ShowElement);
+	msgout.serial(_id);
+	msgout.serial(e);
+	CNetwork::instance().send(msgout);
+	nlinfo("enable element %s to %s",name().c_str(),e?"true":"false");
 }
 
 

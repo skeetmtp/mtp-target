@@ -51,6 +51,10 @@ public:
 	void update();
 	
 
+	virtual void	enabled(bool b);
+	
+	
+
 	CModuleProxy		*luaProxy;
 private:
 

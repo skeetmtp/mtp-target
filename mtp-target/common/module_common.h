@@ -55,6 +55,9 @@ public:
 	bool			bounce() const { return Bounce; }
 	void			bounce(bool b);
 	
+	virtual bool	enabled() const { return Enabled; }
+	virtual void	enabled(bool b);
+	
 	sint32			score() const { return Score; }
 	void			score(sint32 s) { Score = s; }
 
@@ -78,6 +81,7 @@ protected:
 	sint32				Score;
 	float				Accel;
 	float				Friction;
+	bool				Enabled;
 
 private:
 	

@@ -58,6 +58,7 @@ public:
 	int getScore(lua_State *L);
 	int setAccel(lua_State *L);
 	int setFriction(lua_State *L);
+	int setEnabled(lua_State *L);
 	int getName(lua_State *luaSession);
 	int setShapeName(lua_State *luaSession);
 	

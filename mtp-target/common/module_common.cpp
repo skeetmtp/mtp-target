@@ -104,6 +104,12 @@ void CModuleCommon::bounce(bool b)
 	Bounce = b; 
 }
 
+void CModuleCommon::enabled(bool e) 
+{
+	if(Enabled==e) return;
+	Enabled = e; 
+}
+
 
 string CModuleCommon::toLuaString()
 {

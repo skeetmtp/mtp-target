@@ -4,4 +4,4 @@ module:setAccel(0.0001);
 module:setFriction(5.0);
 module:setShapeName("team_target_300_red.shape");
 
-module:setUserData(CModule:new(0)); --new CModule , init team to 0
+module:setUserData(CModule:new(module,0)); --new CModule , init team to 0

@@ -51,6 +51,7 @@ Lunar<CModuleProxy>::RegType CModuleProxy::methods[] =
 		bind_method(CModuleProxy, getScore),	
 		bind_method(CModuleProxy, setAccel),	
 		bind_method(CModuleProxy, setFriction),	
+		bind_method(CModuleProxy, setEnabled),	
 		bind_method(CModuleProxy, getName),	
 		bind_method(CModuleProxy, setShapeName),	
 	{0,0}
@@ -116,6 +117,14 @@ int CModuleProxy::setFriction(lua_State *L)
 { 
 	lua_Number friction = luaL_checknumber(L,1);
 	_module->friction((float)friction); 
+	return 0; 
+}
+
+int CModuleProxy::setEnabled(lua_State *L)
+{ 
+	lua_Number enabled = luaL_checknumber(L,1);
+	bool e = enabled==1;
+	_module->enabled(e); 
 	return 0; 
 }
 
