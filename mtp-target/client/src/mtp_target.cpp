@@ -123,9 +123,10 @@ void CMtpTarget::init()
 	reset();
 }
 
-void CMtpTarget::error()
+void CMtpTarget::error(string &reason)
 {
 	DoError = true;
+	ErrorReason = reason;
 }
 
 void CMtpTarget::reset()
@@ -146,7 +147,7 @@ void CMtpTarget::_error()
 	CEditorTask::instance().enable(false);
 	CBackgroundTask::instance().restart();
 	//CIntroTask::instance().reset();
-	CIntroTask::instance().error(string("Server lost !"));
+	CIntroTask::instance().error(ErrorReason);
 	CIntroTask::instance().restart();
 	CLevelManager::instance().release();
 	DoError = false;

@@ -69,7 +69,8 @@ static void cbError(CNetMessage &msgin)
 {
 	string msg;
 	msgin.serial(msg);
-	nlerror(msg.c_str());
+	CMtpTarget::instance().error(msg);	
+	//nlerror(msg.c_str());
 }
 
 static void cbLogin(CNetMessage &msgin)

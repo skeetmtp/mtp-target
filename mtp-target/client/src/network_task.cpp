@@ -98,7 +98,7 @@ public:
 				default:
 					nlinfo("Lost the server");
 					//nlerror("Received failed: %s (code %u)", NLNET::CSock::errorString(NLNET::CSock::getLastError()).c_str(), NLNET::CSock::getLastError());
-					CMtpTarget::instance().error();
+					CMtpTarget::instance().error(string("Server lost !"));
 					stopNetwork = true;
 					break;
 				}
