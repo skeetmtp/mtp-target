@@ -275,6 +275,7 @@ void CEntity::reset()
 	SendCollideWhenFly = false;
 	CollideWhenFlyPos = CVector(0,0,0);
 	ForceReceived = true;
+	StatPing.clear();
 }
 
 void CEntity::update() 

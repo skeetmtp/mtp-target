@@ -29,6 +29,7 @@
 
 #include "bot.h"
 #include "main.h"
+#include "entity.h"
 #include "client.h"
 #include "network.h"
 #include "welcome.h"
@@ -64,6 +65,9 @@ using namespace NLNET;
 //
 
 static uint8 WatchingId = 0;
+
+CVariable<bool> SavePingStat("SavePingStat", "1 if you want to save the ping stat", false, 0, true);
+
 
 //
 // Functions
@@ -162,8 +166,26 @@ void CEntityManager::remove(uint8 eid)
 
 void CEntityManager::reset()
 {
-	EntityConstIt it;
-	for(it = entities().begin(); it != entities().end(); it++)
+	if(SavePingStat)
+	{
+		TTime current = CTime::getLocalTime();
+		for(EntityConstIt it = entities().begin(); it != entities().end(); it++)
+		{
+			if((*it)->type() == CEntity::Client)
+			{
+				CClient *c = (CClient *)(*it);
+				string name = toString("ping_state_%"NL_I64"u_%s_%s.csv", current, CLevelManager::instance().levelFilename().c_str(), c->name().c_str());
+				FILE *fp = fopen(name.c_str(), "wb");
+				if(fp)
+				{
+					for(uint i = 0; i < c->StatPing.size(); i++)
+						fprintf(fp, "%"NL_I64"u;%d\n", c->StatPing[i].first, c->StatPing[i].second);
+				}
+				fclose(fp);
+			}
+		}
+	}
+	for(EntityConstIt it = entities().begin(); it != entities().end(); it++)
 	{
 		(*it)->reset();
 	}

@@ -488,6 +488,9 @@ next:
 		return;
 	}
 
+	if(SavePingStat)
+		c->StatPing.push_back(make_pair(CurrentTime,CurrentTime - p.second));
+
 	c->Ping.addValue((uint16)(CurrentTime - p.second));
 //	nlinfo("*********** receive the pong %u %"NL_I64"u", pingnb, CurrentTime);
 //	nlinfo("%"NL_I64"u Ping for '%s' is %d (%"NL_I64"d)", CurrentTime, c->name().c_str(), c->Ping.getSmoothValue(), CurrentTime - p.second);

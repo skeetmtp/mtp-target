@@ -25,12 +25,14 @@
 // Includes
 //
 
-#include <queue>
-#include <ode/ode.h>
 #include <set>
+#include <queue>
+#include <vector>
+#include <ode/ode.h>
 
 #include <nel/misc/value_smoother.h>
 #include <nel/misc/rgba.h>
+#include <nel/misc/time_nl.h>
 
 #include <nel/net/tcp_sock.h>
 
@@ -160,17 +162,17 @@ public:
 	bool				 ForceReceived;
 	uint32				 AfkCount;
 	
+	// store all ping for
+	std::vector<std::pair<NLMISC::TTime, uint32> >	StatPing;
+	
 private:
 
 	void init ();
-		
+
 	TEntity				 Type;				// type of entity
 	uint8				 Id;
 	std::string			 Name;				// empty name mean that the client not already send login information
 	float				 MaxLinearVelocity;
 };
-
-
-
 
 #endif

@@ -26,9 +26,17 @@
 //
 
 #include <nel/misc/reader_writer.h>
+#include <nel/misc/variable.h>
 
 #include "entity.h"
 #include "client.h"
+
+
+//
+// Variables
+//
+
+extern NLMISC::CVariable<bool> SavePingStat;
 
 
 //
