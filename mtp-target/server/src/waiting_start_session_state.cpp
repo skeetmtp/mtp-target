@@ -56,12 +56,6 @@ void CWaitingStartSessionState::update()
 	
 	if(CSessionManager::instance().forceEnding() || currentTime > CSessionManager::instance().startTime())
 	{
-		changeState(CRunningSessionState::instance());
-
-		// set gravity if the game started
-		dWorldSetGravity(World, 0.0f, 0.0f, Gravity);
-		nlinfo("set gravity : on");
-
 		CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
 		CEntityManager::EntityConstIt it;
 		for(it = acces.value().begin(); it != acces.value().end(); it++)
@@ -85,5 +79,10 @@ void CWaitingStartSessionState::update()
 				b->loadBotReplay();
 			}
 		}
+		changeState(CRunningSessionState::instance());
+		// set gravity if the game started
+		dWorldSetGravity(World, 0.0f, 0.0f, Gravity);
+		nlinfo("set gravity : on");
+		
 	}
 }
