@@ -143,16 +143,26 @@ void C3DTask::init()
 #endif
 	nlassert(Driver);
 
-	// Create the window with config file values
-	if (!Driver->setDisplay (UDriver::CMode(ScreenWidth, ScreenHeight,
-		CConfigFileTask::instance().configFile().getVar("ScreenDepth").asInt(),
-		CConfigFileTask::instance().configFile().getVar("Fullscreen").asInt()==0,
-		CConfigFileTask::instance().configFile().getVar("ScreenFrequency").asInt())))
+	bool displayOk = false;
+	
+	try
 	{
-		nlwarning ("Can't set display mode %d %d %d %d %d", ScreenWidth, ScreenHeight,
-			CConfigFileTask::instance().configFile().getVar("ScreenDepth").asInt(),
-			CConfigFileTask::instance().configFile().getVar("Fullscreen").asInt(),
-			CConfigFileTask::instance().configFile().getVar("ScreenFrequency").asInt());
+		displayOk = Driver->setDisplay (UDriver::CMode(ScreenWidth, ScreenHeight, CConfigFileTask::instance().configFile().getVar("ScreenDepth").asInt(), CConfigFileTask::instance().configFile().getVar("Fullscreen").asInt()==0, CConfigFileTask::instance().configFile().getVar("ScreenFrequency").asInt()));
+	}
+	catch (EBadDisplay e) 
+	{
+		nlwarning ("Can't set display mode %d %d %d %d %d", ScreenWidth, ScreenHeight, CConfigFileTask::instance().configFile().getVar("ScreenDepth").asInt(), CConfigFileTask::instance().configFile().getVar("Fullscreen").asInt(), CConfigFileTask::instance().configFile().getVar("ScreenFrequency").asInt());
+		nlwarning ("%s",e.what());
+#ifdef NL_OS_WINDOWS
+		MessageBox (NULL, toString("Please, update your video card drivers\n reason : %s",e.what()).c_str(), "Drivers", MB_OK);
+#endif
+		exit(1);
+	}
+
+	// Create the window with config file values
+	if (!displayOk)
+	{
+		nlwarning ("Can't set display mode %d %d %d %d %d", ScreenWidth, ScreenHeight, CConfigFileTask::instance().configFile().getVar("ScreenDepth").asInt(), CConfigFileTask::instance().configFile().getVar("Fullscreen").asInt(), CConfigFileTask::instance().configFile().getVar("ScreenFrequency").asInt());
 
 		std::vector<UDriver::CMode> modes;
 		bool res = Driver->getModes(modes);
