@@ -45,8 +45,12 @@ function isCacheFileUpToDateDuration($filename,$duration)
 
 function isCacheFileUpToDate($filename)
 {
-	//return false;
-	return(isCacheFileUpToDateDuration($filename,5*60));
+	global $cache_dir;
+	if(!file_exists($cache_dir))
+		mkdir($cache_dir);
+	//chmod($cache_dir, 0777)
+	$res = isCacheFileUpToDateDuration($filename,5*60);
+	return $res;
 }
 
 
