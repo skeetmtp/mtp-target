@@ -40,6 +40,7 @@ Section "client" Section1
 	FILE "..\wpkg\bin\stlport_vc645.dll"
 	; Set Section Files and Shortcuts
 	CreateDirectory "$SMPROGRAMS\${APPNAME}"
+	CreateShortCut "$DESKTOP\mtp-target.lnk" "$INSTDIR\client\mtp-target.exe"
 	CreateShortCut "$SMPROGRAMS\${APPNAME}\Play Mtp-Target.lnk" "$INSTDIR\client\mtp-target.exe"
 	CreateShortCut "$SMPROGRAMS\${APPNAME}\About.lnk" "http://mtptarget.free.fr/" "" "$INSTDIR\client\mtp-target.exe" 0
 	
@@ -134,6 +135,7 @@ Section Uninstall
 
 	;Delete Start Menu Shortcuts
 	Delete "$SMPROGRAMS\${APPNAME}\*.*"
+	Delete "$DESKTOP\mtp-target.lnk" 
   RmDir "$SMPROGRAMS\${APPNAME}"
 
   RMDir "$INSTDIR"
