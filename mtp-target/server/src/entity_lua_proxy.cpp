@@ -48,6 +48,8 @@ Lunar<CEntityProxy>::RegType CEntityProxy::methods[] =
 		bind_method(CEntityProxy, getUserData),	
 		bind_method(CEntityProxy, setUserData),	
 		bind_method(CEntityProxy, getName),	
+		bind_method(CEntityProxy, getStartPointId),	
+		bind_method(CEntityProxy, setStartPointId),	
 		bind_method(CEntityProxy, getIsOpen),	
 		bind_method(CEntityProxy, setIsOpen),	
 		bind_method(CEntityProxy, setCurrentScore),	
@@ -94,6 +96,20 @@ int CEntityProxy::setUserData(lua_State *luaSession)
 {
 	LuaUserData = lua_touserdata(luaSession, 1); // get arg
 	LuaUserDataRef = lua_ref(luaSession,1); //get ref id and lock it
+	return 0; // no return value
+}
+
+int CEntityProxy::getStartPointId(lua_State *luaSession)
+{
+	lua_Number id = _entity->StartingPointId;
+	lua_pushnumber(luaSession, id); 
+	return 1;
+}
+
+int CEntityProxy::setStartPointId(lua_State *luaSession)
+{
+	uint8 id = (uint8)luaL_checknumber(luaSession,1);
+	_entity->startPointId(id);
 	return 0; // no return value
 }
 

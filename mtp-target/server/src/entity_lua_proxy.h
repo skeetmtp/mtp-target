@@ -52,6 +52,8 @@ public:
 	int setUserData(lua_State *luaSession);
 	int getIsOpen(lua_State *luaSession);
 	int setIsOpen(lua_State *luaSession);
+	int getStartPointId(lua_State *luaSession);
+	int setStartPointId(lua_State *luaSession);
 	
 	int getName(lua_State *luaSession);
 	int displayText(lua_State *luaSession);

@@ -107,7 +107,7 @@ void CWaitingClientsSessionState::update()
 			(*it)->OpenClose = false;
 			(*it)->FreezeCommand = false;
 			(*it)->NbOpenClose = 0;
-			(*it)->InSession = true;
+			(*it)->InGame = false;
 			(*it)->Ready = false;
 			(*it)->Time = 0.0f;
 			(*it)->StopedScore = 0;
@@ -121,7 +121,8 @@ void CWaitingClientsSessionState::update()
 				(*it)->LastVel[i] = 0;
 			
 			(*it)->LastVelPos = 0;
-
+			(*it)->initBeforeStartLevel();
+			
 			// bot are always ready
 			if((*it)->type() == CEntity::Bot)
 			{

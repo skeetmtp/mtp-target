@@ -390,7 +390,7 @@ static void nearCallback(void *data, dGeomID o1, dGeomID o2)
 					entity->CurrentScore = 0;
 					entity->NbOpenClose = (uint32) MaxOpenClose;
 					entity->FreezeCommand = true;
-					entity->InSession = false;
+					entity->InGame = false;
 					dBodySetLinearVel(entity->Body, 0.0f, 0.0f, 0.0f);
 					entity->Force = CVector::Null;
 				}
@@ -406,7 +406,7 @@ static void nearCallback(void *data, dGeomID o1, dGeomID o2)
 				if(!entity->FreezeCommand)
 				{
 					if(entity->OpenClose)
-						entity->InSession = false;
+						entity->InGame = false;
 
 					entity->NbOpenClose = (uint32) MaxOpenClose;
 					//entity->FreezeCommand = true;
@@ -485,7 +485,7 @@ class PhysicsThread : public IRunnable
 
 						e->ColState = "";
 
-						if(!e->InSession)
+						if(!e->InGame)
 						{
 							dBodySetLinearVel(e->Body, 0, 0, 0);
 						}
@@ -557,7 +557,7 @@ class PhysicsThread : public IRunnable
 						}
 						e->Friction = 0;
 	//					e->jointed = false;
-						if(e->type()==CEntity::Bot && !e->FreezeCommand && e->InSession && e->NbOpenClose<MaxOpenClose)
+						if(e->type()==CEntity::Bot && !e->FreezeCommand && e->InGame && e->NbOpenClose<MaxOpenClose)
 						{
 							CVector v;
 							CBot *b = (CBot *)e;

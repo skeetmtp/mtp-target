@@ -72,9 +72,11 @@ void CWaitingReadySessionState::update()
 		
 		CNetMessage msgout(CNetMessage::Ready);
 		CNetwork::instance().send(msgout);
+		/*
 		for(it = acces.value().begin(); it != acces.value().end(); it++)
 		{
 			(*it)->initBeforeStartLevel();
 		}
+		*/
 	}
 }

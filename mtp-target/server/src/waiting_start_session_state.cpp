@@ -66,6 +66,7 @@ void CWaitingStartSessionState::update()
 		CEntityManager::EntityConstIt it;
 		for(it = acces.value().begin(); it != acces.value().end(); it++)
 		{
+			(*it)->InGame = true;
 			if((*it)->type() == CEntity::Client)
 			{
 				CClient *c = (CClient *)(*it);

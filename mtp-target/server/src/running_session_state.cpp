@@ -70,7 +70,7 @@ void CRunningSessionState::update()
 			for(it = acces.value().begin(); it != acces.value().end(); it++)
 			{
 				CEntity *c = *it;
-				if(c->InSession)
+				if(c->InGame)
 				{
 					const dReal *vel = dBodyGetLinearVel(c->Body);
 					c->LastVel[(*it)->LastVelPos%10]  =(float)fabs(vel[0]);

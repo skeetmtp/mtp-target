@@ -73,6 +73,7 @@ public:
 	uint8					 id() const { return Id; }
 	const std::string		&name() const { return Name; }
 	void					 name(const std::string &name) { Name = name; }
+	void startPointId(uint8 id);
 
 	TEntity					 type() const { return Type; }
 
@@ -107,7 +108,7 @@ public:
 
 	bool				 Spectator;
 
-	bool				 InSession;
+	bool				 InGame;
 	bool				 Ready;
 	//	bool jointed;
 	float				 Accel;

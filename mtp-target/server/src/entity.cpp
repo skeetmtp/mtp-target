@@ -31,6 +31,7 @@
 #include "physics.h"
 #include "variables.h"
 #include "session_manager.h"
+#include "level_manager.h"
 #include "entity_lua_proxy.h"
 #include "lua_engine.h"
 
@@ -75,7 +76,7 @@ void CEntity::init ()
 	OpenClose = false;
 	NbOpenClose = 0;
 	FreezeCommand = true;
-	InSession = false;
+	InGame = false;
 	Ready = false;
 	LastVelPos = 0;
 	StartingPointId = 255;
@@ -169,6 +170,14 @@ CEntity::~CEntity()
 		Body = 0;
 	}
 	resumePhysics();
+}
+
+void CEntity::startPointId(uint8 id)
+{
+	StartingPointId = id % CLevelManager::instance().currentLevel().getStartPointCount();
+	CVector startPos = CLevelManager::instance().currentLevel().getStartPoint(StartingPointId)->position();
+	dBodySetPosition(Body, startPos.x, startPos.y, startPos.z);
+	dGeomSetPosition(Geom, startPos.x, startPos.y, startPos.z);
 }
 
 void CEntity::update() 

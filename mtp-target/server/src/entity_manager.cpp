@@ -582,7 +582,7 @@ NLMISC_DYNVARIABLE(string, Watch2, "")
 				*pointer += " TotScore:"+NLMISC::toString((*it)->Score);
 				if((*it)->FreezeCommand) *pointer += " FreezeCommand";
 				if((*it)->OnTheWater) *pointer += " OnTheWater";
-				if((*it)->InSession) *pointer += " InSession";
+				if((*it)->InGame) *pointer += " InGame";
 				else *pointer += " OutSession";
 				if((*it)->OpenClose) *pointer += " Open";
 				else *pointer += " Close";
