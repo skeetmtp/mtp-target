@@ -262,14 +262,27 @@ void CControler::update()
 			}
 		}
 
-		if (C3DTask::instance().kbPressed(KeyF5))
-			CNetworkTask::instance().command("forceEnd");
+		if (C3DTask::instance().kbDown(KeyCONTROL))
+		{
+			if (C3DTask::instance().kbPressed(KeyF5))
+				CNetworkTask::instance().command("forceEnd");
 			//mtNetSendCommand("forceEnd");
-
-		if (C3DTask::instance().kbPressed(KeyF6))
-			CNetworkTask::instance().command("reset");
+			
+			if (C3DTask::instance().kbPressed(KeyF6))
+				CNetworkTask::instance().command("reset");
 			//mtNetSendCommand("reset");
-
+		}
+		else
+		{
+			if (C3DTask::instance().kbPressed(KeyF5))
+				CNetworkTask::instance().command("addBot");
+			//mtNetSendCommand("forceEnd");
+			
+			if (C3DTask::instance().kbPressed(KeyF6))
+				CNetworkTask::instance().command("kick bot");
+			//mtNetSendCommand("reset");
+		}
+		
 		if (C3DTask::instance().kbPressed(KeyF7))
 		{
 			FollowEntity = !FollowEntity;
