@@ -458,6 +458,7 @@ static void cbRequestCRCKey(CNetMessage &msgin)
 	CHashKey hashKey;
 	msgin.serial(hashKey);
 	CResourceManager::instance().receivedCRC(fn);
+	nlinfo("cbRequestCRCKey res = %s",fn.c_str());
 }
 
 static void cbRequestDownload(CNetMessage &msgin)

@@ -47,6 +47,8 @@ extern "C"
 #include "entity_manager.h"
 #include "lens_flare_task.h"
 #include "entity_lua_proxy.h"
+#include "module_lua_proxy.h"
+#include "particles_lua_proxy.h"
 #include "config_file_task.h"
 #include "resource_manager.h"
 #include "../../common/lua_nel.h"
@@ -144,7 +146,63 @@ CLevel::CLevel(const string &filename)
 		startPositionId++;
 	}
 
+	// Load particles
+	lua_getglobal(LuaState, "Particles");
+	lua_pushnil(LuaState);
+	uint8 particlesId = 0;
+	while(lua_next(LuaState, -2) != 0)
+	{
+		// `key' is at index -2 and `value' at index -1
+		CLuaVector Position;
+		lua_pushstring(LuaState,"Position");
+		lua_gettable(LuaState, -2);
+		luaGetVariable(LuaState, Position);		
+		nlinfo("pos %g %g %g", Position.x, Position.y, Position.z);
+		lua_pop(LuaState, 1);  // removes `value'; keeps `key' for next iteration
+		
+		// Get module Scale
+		CLuaVector Scale;
+		lua_pushstring(LuaState,"Scale");
+		lua_gettable(LuaState, -2);
+		luaGetVariable(LuaState, Scale);		
+		nlinfo("scale %g %g %g", Scale.x, Scale.y, Scale.z);
+		lua_pop(LuaState, 1);  // removes `value'; keeps `key' for next iteration
+		
+		// Get module rotation
+		CLuaAngleAxis Rotation;
+		lua_pushstring(LuaState,"Rotation");
+		lua_gettable(LuaState, -2);
+		luaGetVariable(LuaState, Rotation);		
+		nlinfo("rot %g %g %g %g", Rotation.Axis.x , Rotation.Axis.y, Rotation.Axis.z, Rotation.Angle);
+		lua_pop(LuaState, 1);  // removes `value'; keeps `key' for next iteration
+		
 
+		// Get particles Name
+		string Name;
+		lua_pushstring(LuaState,"Name");
+		lua_gettable(LuaState, -2);
+		luaGetVariable(LuaState, Name);		
+		nlinfo("Name  %s", Name.c_str());
+		lua_pop(LuaState, 1);  // removes `value'; keeps `key' for next iteration
+		
+		// Get particles FileName
+		string FileName;
+		lua_pushstring(LuaState,"FileName");
+		lua_gettable(LuaState, -2);
+		luaGetVariable(LuaState, FileName);		
+		nlinfo("FileName  %s", FileName.c_str());
+		lua_pop(LuaState, 1);  // removes `value'; keeps `key' for next iteration
+
+		CParticles *particles = new CParticles();
+		particles->init(Name,FileName,particlesId,Position,Scale,Rotation);
+		particlesId++;
+		if(!DisplayLevel)
+			particles->hide();
+		
+		Particles.push_back(particles);
+		lua_pop(LuaState, 1);
+		
+	}		
 	// Load modules
 	lua_getglobal(LuaState, "Modules");
 	lua_pushnil(LuaState);
@@ -182,7 +240,7 @@ CLevel::CLevel(const string &filename)
 		lua_pushstring(LuaState,"Lua");
 		lua_gettable(LuaState, -2);
 		luaGetVariable(LuaState, Lua);		
-		nlinfo("lua  %s", Name.c_str());
+		nlinfo("lua  %s", Lua.c_str());
 		lua_pop(LuaState, 1);  // removes `value'; keeps `key' for next iteration
 
 		// Get module name
@@ -417,7 +475,11 @@ void CLevel::reset()
 	lua_pop(LuaState, 1);  // removes `key'
 	*/
 	Lunar<CEntityProxy>::Register(LuaState);
+	Lunar<CModuleProxy>::Register(LuaState);
+	Lunar<CParticlesProxy>::Register(LuaState);
 	lua_register(LuaState, "getEntityByName", getEntityByName);	
+	lua_register(LuaState, "getModuleByName", getModuleByName);	
+	lua_register(LuaState, "getParticlesByName", getParticlesByName);	
 	CEntityManager::instance().luaInit();
 }
 
@@ -476,9 +538,37 @@ CModule *CLevel::getModule(uint32 index)
 	return Modules[index];
 }
 
+CModule *CLevel::getModule(std::string &name)
+{
+	for(uint i = 0; i<getModuleCount();i++)
+		if(Modules[i]->name()==name)
+			return Modules[i];
+	return NULL;
+}
+
+CParticles *CLevel::getParticles(uint32 id)
+{
+	nlassert(id<getParticlesCount());
+	return Particles[id];
+	
+}
+
+CParticles *CLevel::getParticles(std::string &name)
+{
+	for(uint i = 0; i<getParticlesCount();i++)
+		if(Particles[i]->name()==name)
+			return Particles[i];
+		return NULL;		
+}
+
+
+uint32 CLevel::getParticlesCount()
+{
+	return Particles.size();
+}
+
 uint32 CLevel::getModuleCount()
 {
-	nlassert(Modules.size()<255);
 	return Modules.size();
 }
 
@@ -538,6 +628,28 @@ int CLevel::getEntityByName(lua_State *L)
 	}
 	else
 		Lunar<CEntityProxy>::push(L, e->luaProxy);
+	return 1;
+}
+
+
+int CLevel::getModuleByName(lua_State *L)
+{
+	unsigned int len;
+	const char *moduleName = luaL_checklstring(L, 1, &len);
+	string name(moduleName);
+	CModule *m = NULL;
+	Lunar<CModuleProxy>::push(L, m->luaProxy);
+	return 1;
+}
+
+
+int CLevel::getParticlesByName(lua_State *L)
+{
+	unsigned int len;
+	const char *particlesName = luaL_checklstring(L, 1, &len);
+	string name(particlesName);
+	CParticles *p = NULL;
+	Lunar<CParticlesProxy>::push(L, p->luaProxy);
 	return 1;
 }
 

@@ -228,7 +228,8 @@ void CNetworkTask::send(CNetMessage &msg)
 		double fbrceiv = (double)Sock.bytesReceived();
 		double dfbsent = fbsent - sendStartCount;
 		double dfbrceiv = fbrceiv - rceivStartCount;
-		nlinfo("during %f, up = %fB/s (%f) down = %fB/s (%f)",dtime,dfbsent/dtime,dfbsent,dfbrceiv/dtime,dfbrceiv);
+		if(dtime>0.1)
+			nlinfo("during %f, up = %fB/s (%f) down = %fB/s (%f)",dtime,dfbsent/dtime,dfbsent,dfbrceiv/dtime,dfbrceiv);
 		sendStartTime = CTimeTask::instance().time();
 		sendStartCount = fbsent;
 		rceivStartCount = fbrceiv;

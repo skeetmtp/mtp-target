@@ -241,6 +241,38 @@ SOURCE=..\common\module_common.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\src\module_lua_proxy.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\src\module_lua_proxy.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\src\particles.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\src\particles.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\common\particles_common.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\common\particles_common.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\src\particles_lua_proxy.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\src\particles_lua_proxy.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\src\start_point.cpp
 # End Source File
 # Begin Source File

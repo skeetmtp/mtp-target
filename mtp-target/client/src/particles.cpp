@@ -1,0 +1,151 @@
+/* Copyright, 2003 Melting Pot
+ *
+ * This file is part of MTP Target.
+ * MTP Target is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2, or (at your option)
+ * any later version.
+
+ * MTP Target is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License
+ * along with MTP Target; see the file COPYING. If not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+ * MA 02111-1307, USA.
+ */
+
+
+//
+// Includes
+//
+
+#include "stdpch.h"
+
+#include <deque>
+#include <string>
+
+#include <3d/mesh.h>
+#include <3d/shape.h>
+#include <3d/material.h>
+#include <3d/register_3d.h>
+
+#include <nel/misc/quat.h>
+#include <nel/misc/common.h>
+
+#include <nel/3d/u_instance_material.h>
+
+#include "3d/water_height_map.h"
+#include "3d/water_pool_manager.h"
+
+#include "global.h"
+#include "entity.h"
+#include "network_task.h"
+#include "mtp_target.h"
+#include "resource_manager.h"
+#include "level_manager.h"
+
+#include "stdpch.h"
+
+#include <deque>
+
+#include <nel/misc/quat.h>
+#include <nel/misc/common.h>
+
+#include <nel/3d/u_instance_material.h>
+
+#include <3d/water_height_map.h>
+#include <3d/water_pool_manager.h>
+
+#include "module.h"
+#include "global.h"
+#include "3d_task.h"
+#include "time_task.h"
+#include "mtp_target.h"
+#include "font_manager.h"
+#include "config_file_task.h"
+#include "../../common/load_mesh.h"
+
+using namespace std;
+using namespace NLMISC;
+using namespace NL3D;
+
+
+
+
+
+CParticles::CParticles() : CParticlesCommon()
+{
+	mat = C3DTask::instance().driver().createMaterial();
+}
+
+
+CParticles::~CParticles()
+{
+	if(!Mesh.empty())
+	{
+		C3DTask::instance().scene().deleteInstance(Mesh);
+	}
+}
+
+
+void CParticles::init(const string &name, const std::string &fileName, uint8 id, const CVector &position, const CVector &scale, const CAngleAxis &rotation)
+{
+	CParticlesCommon::init(name, fileName, id, position, scale, rotation); 
+
+	// Get collision faces
+//	loadMesh(ShapeName, Vertices, Normals, Indices,false);
+	
+	ShapeName = CResourceManager::instance().get(fileName+".ps");
+
+	string res = CResourceManager::instance().get(ShapeName);
+	Mesh = C3DTask::instance().scene().createInstance(res);
+	if (Mesh.empty())
+	{
+		nlwarning ("Can't load '%s'", ShapeName.c_str());
+	}
+	Particle.cast(Mesh);
+	Particle.setTransformMode (UTransformable::RotQuat);
+	Particle.setOrderingLayer(2);
+	Particle.activateEmitters(true);
+	Particle.show();
+	Particle.setPos(position);
+}
+
+
+void CParticles::renderSelection()
+{
+	mat.setColor(CRGBA(255,255,255,200));
+	mat.setZWrite(true);
+	mat.setZFunc(UMaterial::always);
+	mat.setBlend(true);
+	mat.setBlendFunc(UMaterial::srcalpha,UMaterial::invsrcalpha);
+	
+	CMatrix matrix = mesh().getMatrix();
+
+	
+}
+
+void CParticles::update(const NLMISC::CVector &pos, const NLMISC::CVector &rot)
+{
+	//TODO rot
+	position(pos);
+}
+
+
+void CParticles::enabled(bool b)
+{
+	if(Enabled==b) return;
+
+	CParticlesCommon::enabled(b);
+	Particle.activateEmitters(b);
+
+	nlinfo("%s %s",b?"show":"hide",name().c_str());
+}
+
+void CParticles::position(const NLMISC::CVector &pos) 
+{
+	Position = pos; _changed = true; Mesh.setPos(pos);
+}

@@ -34,6 +34,7 @@ extern "C"
 
 #include "../../common/lua_nel.h"
 
+#include "particles.h"
 #include "module.h"
 #include "start_point.h"
 
@@ -72,8 +73,14 @@ public:
 	NLMISC::CVector startPosition(uint32 id);
 
 	CModule *getModule(uint32 id);
+	CModule *getModule(std::string &name);
 	uint32 getModuleCount();
 	void updateModule(uint32 id,const NLMISC::CVector &pos, const NLMISC::CVector &rot,uint32 selectedBy);
+
+	CParticles *getParticles(uint32 id);
+	CParticles *getParticles(std::string &name);
+	uint32 getParticlesCount();
+		
 	CStartPoint *getStartPoint(uint32 id);
 	uint32 getStartPointCount();
 	void updateStartPoint(uint32 id, const NLMISC::CVector &pos, const NLMISC::CVector &rot,uint32 selectedBy);
@@ -84,6 +91,8 @@ public:
 
 
 	static int getEntityByName(lua_State *L);
+	static int getModuleByName(lua_State *L);
+	static int getParticlesByName(lua_State *L);
 	
 	
 private:
@@ -101,7 +110,8 @@ private:
 
 //	std::vector<NL3D::UInstance *>	Meshes;
 	std::vector<CModule *>			Modules;
-//	std::vector<NL3D::UInstance *>	StartPositions;
+	std::vector<CParticles *>		Particles;
+	//	std::vector<NL3D::UInstance *>	StartPositions;
 	std::vector<CStartPoint *>	StartPoints;
 	
 	bool							DisplayStartPositions;

@@ -289,6 +289,7 @@ string CResourceManager::get(const string &filename, bool &ok)
 				checkingFilename->text = fn;
 				CGuiObjectManager::instance().objects.push_back(mainFrame);
 
+				nlinfo("CResourceManager::get(%s) sending RequestCRCKey and waiting result",fn.c_str());
 				CHashKey hashKey = getSHA1(path);
 				CNetMessage msgout(CNetMessage::RequestCRCKey);
 				msgout.serial(fns);

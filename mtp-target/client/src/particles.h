@@ -22,8 +22,8 @@
 // This class manages an entity (player or bot)
 //
 
-#ifndef MTPT_MODULE
-#define MTPT_MODULE
+#ifndef MTPT_PARTICLE
+#define MTPT_PARTICLE
 
 
 //
@@ -58,8 +58,8 @@
 #include "sound_manager.h"
 #include "interpolator.h"
 #include "editable_element.h"
-#include "../../common/module_common.h"
-#include "module_lua_proxy.h"
+#include "../../common/particles_common.h"
+#include "particles_lua_proxy.h"
 
 
 //
@@ -70,28 +70,30 @@ using NLMISC::CVector;
 using NLMISC::CMatrix;
 
 
-class CModuleProxy;
+class CParticlesProxy;
 
 //
 // Classes
 //
 
-class CModule : public CModuleCommon
+class CParticles : public CParticlesCommon
 {
 public:
-	CModule();
-	virtual ~CModule();
+	CParticles();
+	virtual ~CParticles();
 	
 	virtual void enabled(bool b);
 
-	virtual void init(const std::string &name, const std::string &shapeName, uint8 id, const NLMISC::CVector &position, const NLMISC::CVector &scale, const NLMISC::CAngleAxis &rotation);
+	virtual void init(const std::string &name, const std::string &fileName, uint8 id, const NLMISC::CVector &position, const NLMISC::CVector &scale, const NLMISC::CAngleAxis &rotation);
 	virtual void renderSelection();
 	virtual void update(const NLMISC::CVector &pos, const NLMISC::CVector &rot);
 	
-	virtual void position(const NLMISC::CVector &pos) {Position = pos; _changed = true; Mesh.setPos(pos);}
+	virtual void position(const NLMISC::CVector &pos);
 
-	CModuleProxy *luaProxy;
+	CParticlesProxy *luaProxy;
+	
 private:
+	NL3D::UParticleSystemInstance Particle;
 };
 
 

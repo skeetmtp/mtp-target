@@ -5,7 +5,7 @@
 setLevelRecordBest(0);
 setLevelTimeout(60);
 
-
+local arrivedCount = 0;
 ---------------------- Entity ----------------------
 CEntity = {}
 CEntity_mt = {}

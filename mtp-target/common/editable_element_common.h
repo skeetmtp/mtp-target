@@ -47,8 +47,9 @@ public:
 	enum TType
 	{
 		Unknown = 0,
-		Module,
-		StartPosition,
+			Module,
+			StartPosition,
+			Particles,
 	};		
 	
 	CEditableElementCommon();

@@ -15,7 +15,13 @@ CModuleFinish_mt.__index = CModuleFinish
 
 function CModuleFinish:onCollide( entity )
   if(entity:parent().team == 1) then
-    entity:displayText(0,5,1,255,255,0,"Finish",3);
+    arrivedCount = arrivedCount + 1;
+    --local arrivedBonus = 0;
+    --if(arrivedCount<4) then
+    --  arrivedBonus = (arrivedCount - 3) * 100;
+    --end
+    --entity:displayText(0,5,1,255,255,0,"Finish : number "..arrivedCount.." bonus : "..arrivedBonus,3);
+    entity:displayText(0,5,1,255,255,0,"Finish : number "..arrivedCount,3);
     entity:setCurrentScore(getTimeRemaining()*10);
     entity:displayText(0,6,1,255,255,0,entity:getCurrentScore(),3);
     entity:parent().team = 2;
