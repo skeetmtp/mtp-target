@@ -936,8 +936,6 @@ MTPT_COMMAND(kick, "kick a user from the server", "[<eid>|<name>]")
 		CNetwork::instance().send(eid, msgout);
 	}
 	
-	CEntityManager::instance().remove(eid);
-	
 	if(c)
 	{
 		CMessage msgout("KC");
@@ -955,6 +953,7 @@ MTPT_COMMAND(kick, "kick a user from the server", "[<eid>|<name>]")
 		CUnifiedNetwork::getInstance()->send("LS", msgout);
 	}
 
+	CEntityManager::instance().remove(eid);
 	return true;
 }
 
