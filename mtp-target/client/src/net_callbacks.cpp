@@ -447,7 +447,8 @@ static void cbEnableElement(CNetMessage &msgin)
 	msgin.serial(enabled);
 
 
-	CLevelManager::instance().currentLevel().getModule(elementId)->enabled(enabled);
+	if(CLevelManager::instance().levelPresent())
+		CLevelManager::instance().currentLevel().getModule(elementId)->enabled(enabled);
 }
 
 static void cbRequestCRCKey(CNetMessage &msgin)
