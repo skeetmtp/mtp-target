@@ -1,7 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="<?php echo $lang ?>">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>mtp-target</title>
+<link rel="stylesheet" type="text/css" href="mtptarget.css">
+</head>
+<body>
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
+<tr align="center">
+    <td colspan="<?php echo count($menu_array);?>">
+        <a href="http://www.mtp-target.org"><img src="logo.png" ALT="Logo"></a>
+    </td>
+</tr>
+<tr>
+<td colspan="<?php echo count($menu_array);?>" valign="top" align="left">
+<div id="main">
+
 <?php
-
-
-include_once("lang.php");
+  include_once("conf.inc.php");
+  include_once("config.php");
+  include_once("lang.php");
 
 echo "<h3>$menuLinkText_Download</h3>";
 ?>
@@ -82,4 +101,8 @@ echo "<h3>$menuLinkText_Download</h3>";
 
 
 
-
+</div>
+</td></tr>
+</table>
+</body>
+</html>
