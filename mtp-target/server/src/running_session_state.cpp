@@ -109,25 +109,29 @@ void CRunningSessionState::update()
 					bestit3 = it;
 				}
 			}
-			switch(CEntityManager::instance().entities().size())
+			if(CLevelManager::instance().bonusTime())
 			{
-			case 0:
-			case 1:
-				break;
-			case 2:
-				if(bestit1 != CEntityManager::instance().entities().end()) (*bestit1)->CurrentScore +=  50;
-				break;
-			case 3:
-				if(bestit1 != CEntityManager::instance().entities().end()) (*bestit1)->CurrentScore += 100;
-				if(bestit2 != CEntityManager::instance().entities().end()) (*bestit2)->CurrentScore +=  50;
-				break;
-			default:
-				if(bestit1 != CEntityManager::instance().entities().end()) (*bestit1)->CurrentScore += 150;
-				if(bestit2 != CEntityManager::instance().entities().end()) (*bestit2)->CurrentScore += 100;
-				if(bestit3 != CEntityManager::instance().entities().end()) (*bestit3)->CurrentScore +=  50;
-				break;
+				switch(CEntityManager::instance().entities().size())
+				{
+				case 0:
+				case 1:
+					break;
+				case 2:
+					if(bestit1 != CEntityManager::instance().entities().end()) (*bestit1)->CurrentScore +=  50;
+					break;
+				case 3:
+					if(bestit1 != CEntityManager::instance().entities().end()) (*bestit1)->CurrentScore += 100;
+					if(bestit2 != CEntityManager::instance().entities().end()) (*bestit2)->CurrentScore +=  50;
+					break;
+				default:
+					if(bestit1 != CEntityManager::instance().entities().end()) (*bestit1)->CurrentScore += 150;
+					if(bestit2 != CEntityManager::instance().entities().end()) (*bestit2)->CurrentScore += 100;
+					if(bestit3 != CEntityManager::instance().entities().end()) (*bestit3)->CurrentScore +=  50;
+					break;
+				}
 			}
 
+			CLuaEngine::instance().levelEndSession();
 //			CMessage msgout("END_SESSION");
 			CNetMessage msgout(CNetMessage::EndSession);
 //			uint8 nb = CEntityManager::instance().entities().size();

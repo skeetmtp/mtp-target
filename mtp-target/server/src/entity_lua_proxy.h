@@ -58,6 +58,7 @@ public:
 	int setOpenCloseMax(lua_State *luaSession);
 	int getMaxLinearVelocity(lua_State *luaSession);
 	int setMaxLinearVelocity(lua_State *luaSession);
+	int getEid(lua_State *luaSession);
 	int getPos(lua_State *luaSession);
 	int setPos(lua_State *luaSession);
 	int getStartPointPos(lua_State *luaSession);
@@ -68,6 +69,7 @@ public:
 	int getName(lua_State *luaSession);
 	int displayText(lua_State *luaSession);
 	int setCurrentScore(lua_State *luaSession);
+	int getCurrentScore(lua_State *luaSession);
 	
 	static const char className[];	
 	static Lunar<CEntityProxy>::RegType methods[];	

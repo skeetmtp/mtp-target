@@ -472,6 +472,43 @@ CEntity *CEntityManager::getByName(const std::string &name)
 	return res;
 }
 
+void CEntityManager::displayText(float x,float y, float scale, CRGBA col, double duration, const string &text)
+{
+	string message = text;
+	
+	CNetMessage msgout(CNetMessage::DisplayText);
+	msgout.serial(x);
+	msgout.serial(y);
+	msgout.serial(scale);
+	msgout.serial(message);
+	msgout.serial(col);
+	msgout.serial(duration);
+	CNetwork::instance().send(msgout);
+	nlinfo("display message : %s to all",message.c_str());
+}
+
+
+void CEntityManager::displayText(uint8 eid, float x,float y, float scale, CRGBA col, double duration, const string &text)
+{
+	CEntity *e = getById(eid);
+	if(e==0)
+		return;
+
+	if(e->type() == CEntity::Client)
+	{
+		string message = text;
+		
+		CNetMessage msgout(CNetMessage::DisplayText);
+		msgout.serial(x);
+		msgout.serial(y);
+		msgout.serial(scale);
+		msgout.serial(message);
+		msgout.serial(col);
+		msgout.serial(duration);
+		CNetwork::instance().send(e->id(),msgout);
+		nlinfo("display message : %s to %s",message.c_str(),e->name().c_str());
+	}
+}
 
 void CEntityManager::remove(const string &name)
 {
@@ -611,6 +648,24 @@ uint8 CEntityManager::nbEntities()
 	}
 	return nb;
 }
+
+CEntity *CEntityManager::getNthEntity(uint8 number)
+{
+	uint8  num = 0;
+	CEntity *res = NULL;
+	EntityIt it;
+	for( it = entities().begin(); it != entities().end(); it++)
+	{
+		res = (*it);
+		if(num==number)
+			return res;
+		num++;
+	}
+
+	return NULL;
+}
+
+
 
 bool CEntityManager::connected(const std::string &name)
 {

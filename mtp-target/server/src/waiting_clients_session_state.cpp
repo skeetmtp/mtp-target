@@ -64,6 +64,7 @@ void CWaitingClientsSessionState::update()
 
 		CLevelManager::instance().newLevel();
 		string CurrentLevel = CLevelManager::instance().currentLevel().fileName();
+		CLuaEngine::instance().levelInit();
 
 //ace		string luaCodeFilename = CPath::lookup(CurrentLevel+".lua", false);
 //		CLuaEngine::loadLevelCode(luaCodeFilename);

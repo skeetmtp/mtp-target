@@ -33,6 +33,7 @@
 #include "entity.h"
 #include "lua_engine.h"
 #include "level_manager.h"
+#include "entity_manager.h"
 
 
 //
@@ -121,6 +122,12 @@ void CLuaEngine::init(const std::string &filename)
 		lua_register(session(), "getSessionId", getSessionId);
 		lua_register(session(), "getLevelSessionCount", getLevelSessionCount);
 		lua_register(session(), "setMaxLevelSessionCount", setMaxLevelSessionCount);
+		lua_register(session(), "getEntityCount", getEntityCount);
+		lua_register(session(), "getEntity", getEntity);
+		lua_register(session(), "sendChat", sendChat);
+		lua_register(session(), "displayTextToAll", displayTextToAll);
+		lua_register(session(), "setLevelHasBonusTime", setLevelHasBonusTime);
+		lua_register(session(), "setLevelRecordBest", setLevelRecordBest);
 	}
 	
 	Lunar<CModuleProxy>::Register(session());
@@ -199,6 +206,69 @@ void CLuaEngine::entityWaterCollideEvent(CEntity *entity)
 
 }
 
+void CLuaEngine::levelInit()
+{
+	if(!session())
+		return;
+	int res ;
+//	nlinfo("CLuaEngine::entityWaterCollideEvent(0x%p)",entity);
+	lua_getglobal(session(), "levelInit");
+	res = lua_pcall (session(),0,0,0);
+	/*
+	if(res<0)
+		nlwarning("error calling lua function");
+	*/
+
+}
+
+
+void CLuaEngine::levelPreUpdate()
+{
+	if(!session())
+		return;
+	int res ;
+//	nlinfo("CLuaEngine::entityWaterCollideEvent(0x%p)",entity);
+	lua_getglobal(session(), "levelPreUpdate");
+	res = lua_pcall (session(),0,0,0);
+	/*
+	if(res<0)
+		nlwarning("error calling lua function");
+	*/
+
+}
+
+void CLuaEngine::levelPostUpdate()
+{
+	if(!session())
+		return;
+	int res ;
+//	nlinfo("CLuaEngine::entityWaterCollideEvent(0x%p)",entity);
+	lua_getglobal(session(), "levelPostUpdate");
+	res = lua_pcall (session(),0,0,0);
+	/*
+	if(res<0)
+		nlwarning("error calling lua function");
+	*/
+
+}
+
+void CLuaEngine::levelEndSession()
+{
+	if(!session())
+		return;
+	int res ;
+//	nlinfo("CLuaEngine::entityWaterCollideEvent(0x%p)",entity);
+	lua_getglobal(session(), "levelEndSession");
+	res = lua_pcall (session(),0,0,0);
+	/*
+	if(res<0)
+		nlwarning("error calling lua function");
+	*/
+
+}
+
+
+
 int CLuaEngine::getSessionId(lua_State *L)
 {
 	lua_pushnumber(L,_sessionId); 
@@ -216,8 +286,71 @@ int CLuaEngine::setMaxLevelSessionCount(lua_State *L)
 {
 	lua_Number maxLevelSessionCount = luaL_checknumber(L,1);
 	CLevelManager::instance().maxLevelSessionCount((uint32)maxLevelSessionCount);
+	return 0;
+}
+
+
+int CLuaEngine::getEntityCount(lua_State *L)
+{
+	lua_pushnumber(L,CEntityManager::instance().nbEntities()); 
 	return 1;
 }
+
+int CLuaEngine::getEntity(lua_State *L)
+{
+	lua_Number entityNumber = luaL_checknumber(L,1);
+	CEntity *e = CEntityManager::instance().getNthEntity((uint8)entityNumber);
+	if(e==NULL)
+		nlwarning("getNthEntity(%d)==NULL",entityNumber);
+	else
+		Lunar<CEntityProxy>::push(L, e->luaProxy);
+	return 1;
+}
+
+int CLuaEngine::sendChat(lua_State *L)
+{
+	unsigned int len;
+	const char *text = luaL_checklstring(L, 1, &len);
+	string chatMsg(text);
+	CNetwork::instance().sendChat(chatMsg);
+	return 0;
+}	
+
+int CLuaEngine::displayTextToAll(lua_State *L)
+{
+	float x = (float)luaL_checknumber(L,1);
+	float y = (float)luaL_checknumber(L,2);
+	float scale = (float)luaL_checknumber(L,3);
+	
+	uint8 r = (uint8 )luaL_checknumber(L,4);
+	uint8 g = (uint8 )luaL_checknumber(L,5);
+	uint8 b = (uint8 )luaL_checknumber(L,6);
+	unsigned int len;
+	const char *text = luaL_checklstring(L, 7, &len);
+	
+	CRGBA col(r,g,b,255);
+	double duration = luaL_checknumber(L,8);
+	
+	string message(text);
+	CEntityManager::instance().displayText(x,y,scale,col,duration,message);
+	
+	return 0;
+}	
+
+int CLuaEngine::setLevelHasBonusTime(lua_State *L)
+{
+	bool hasBonuseTime = luaL_checknumber(L,1) == 1;
+	CLevelManager::instance().bonusTime(hasBonuseTime);
+	return 0;
+}
+
+int CLuaEngine::setLevelRecordBest(lua_State *L)
+{
+	bool hasRecord = luaL_checknumber(L,1) == 1;
+	CLevelManager::instance().recordBest(hasRecord);
+	return 0;
+}
+
 
 int CLuaEngine::lua_ALERT(lua_State *L)
 {

@@ -55,6 +55,7 @@ Lunar<CEntityProxy>::RegType CEntityProxy::methods[] =
 		bind_method(CEntityProxy, setOpenCloseMax),	
 		bind_method(CEntityProxy, getMaxLinearVelocity),	
 		bind_method(CEntityProxy, setMaxLinearVelocity),	
+		bind_method(CEntityProxy, getEid),	
 		bind_method(CEntityProxy, getPos),	
 		bind_method(CEntityProxy, setPos),	
 		bind_method(CEntityProxy, getStartPointPos),	
@@ -64,6 +65,7 @@ Lunar<CEntityProxy>::RegType CEntityProxy::methods[] =
 		bind_method(CEntityProxy, getIsOpen),	
 		bind_method(CEntityProxy, setIsOpen),	
 		bind_method(CEntityProxy, setCurrentScore),	
+		bind_method(CEntityProxy, getCurrentScore),	
 		bind_method(CEntityProxy, displayText),	
 	{0,0}
 };
@@ -153,6 +155,13 @@ int CEntityProxy::setOpenCloseCount(lua_State *luaSession)
 	return 0;
 }
 
+int CEntityProxy::getEid(lua_State *luaSession)
+{
+	lua_Number eid = _entity->id();
+	lua_pushnumber(luaSession, eid); 
+	return 1;
+}
+
 int CEntityProxy::getPos(lua_State *luaSession)
 {
 	entityPos = _entity->position();
@@ -225,11 +234,18 @@ int CEntityProxy::setCurrentScore(lua_State *luaSession)
 	return 0;
 }
 
+int CEntityProxy::getCurrentScore(lua_State *luaSession)
+{
+	lua_Number score = _entity->CurrentScore;
+	lua_pushnumber(luaSession, score); 
+	return 1;
+}
+
 int CEntityProxy::displayText(lua_State *luaSession)
 {
 	float x = (float)luaL_checknumber(luaSession,1);
 	float y = (float)luaL_checknumber(luaSession,2);
-	float s = (float)luaL_checknumber(luaSession,3);
+	float scale = (float)luaL_checknumber(luaSession,3);
 
 	uint8 r = (uint8 )luaL_checknumber(luaSession,4);
 	uint8 g = (uint8 )luaL_checknumber(luaSession,5);
@@ -247,7 +263,7 @@ int CEntityProxy::displayText(lua_State *luaSession)
 		CNetMessage msgout(CNetMessage::DisplayText);
 		msgout.serial(x);
 		msgout.serial(y);
-		msgout.serial(s);
+		msgout.serial(scale);
 		msgout.serial(message);
 		msgout.serial(col);
 		msgout.serial(duration);

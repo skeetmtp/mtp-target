@@ -55,12 +55,20 @@ public:
 	uint32 levelSessionCount();
 	void maxLevelSessionCount(uint32 levelCount);
 	
+	bool bonusTime();
+	void bonusTime(bool b);
+	
+	bool recordBest();
+	void recordBest(bool b);
+	
 private:
 
 	uint8						NextLevelId;
 	uint32						MaxLevelSessionCount;
 	uint32						LevelSessionCount;
-		
+	bool						BonusTime;
+	bool						RecordBest;
+	
 	CLevel						*CurrentLevel;
 
 	// private ctor due to singleton pattern

@@ -51,13 +51,27 @@ public:
 	void entitySceneCollideEvent(CEntity *client, CModule *module);
 	void entityWaterCollideEvent(CEntity *client);
 
+	void levelInit();
+	void levelPreUpdate();
+	void levelPostUpdate();
+	void levelEndSession();
+		
 	lua_State *session();
 
 private:
 	static int lua_ALERT(lua_State *L);
+
 	static int getSessionId(lua_State *L);
 	static int getLevelSessionCount(lua_State *L);
 	static int setMaxLevelSessionCount(lua_State *L);
+
+	static int getEntityCount(lua_State *L);
+	static int getEntity(lua_State *L);
+	static int sendChat(lua_State *L);
+	static int displayTextToAll(lua_State *L);
+	static int setLevelHasBonusTime(lua_State *L);
+	static int setLevelRecordBest(lua_State *L);
+	
 	static uint32 _sessionId;
 		
 	lua_State *_luaSession;

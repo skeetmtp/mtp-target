@@ -475,3 +475,5 @@ bool CLevel::valid()
 { 
 	return Valid && !CLuaEngine::instance().hasError(); 
 }
+
+

@@ -73,6 +73,8 @@ CLevelManager::CLevelManager()
 	CurrentLevel = 0;
 	LevelSessionCount = 0;
 	MaxLevelSessionCount = 0;
+	BonusTime = true;
+	RecordBest = true;
 }
 
 void CLevelManager::init()
@@ -115,7 +117,9 @@ bool CLevelManager::newLevel()
 	}
 
 	nextLevel();
-
+	BonusTime = true;
+	RecordBest = true;
+	
 	uint i;
 	nlinfo("Find a new level");
 
@@ -209,3 +213,25 @@ void CLevelManager::nextLevel()
 	LevelSessionCount = 0;
 	MaxLevelSessionCount = 0;
 }
+
+bool CLevelManager::bonusTime()
+{
+	return BonusTime;
+}
+
+void CLevelManager::bonusTime(bool b)
+{
+	BonusTime = b;
+}
+
+
+bool CLevelManager::recordBest()
+{
+	return RecordBest;
+}
+
+void CLevelManager::recordBest(bool b)
+{
+	RecordBest = b;
+}
+

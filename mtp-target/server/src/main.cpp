@@ -43,6 +43,7 @@
 #include "level_manager.h"
 #include "entity_manager.h"
 #include "session_manager.h"
+#include "lua_engine.h"
 #include "../../common/constant.h"
 
 
@@ -124,13 +125,15 @@ public:
 	bool	update()
 	{
 		CNetwork::instance().update();
+		CLuaEngine::instance().levelPreUpdate();
 		CEntityManager::instance().update();
 		
 		// Update the current session
 		CSessionManager::instance().update();
 
 		CLevelManager::instance().update();
-
+		CLuaEngine::instance().levelPostUpdate();
+		
 		checkServicePaused();
 		CEntityManager::instance().flushAddRemoveList();
 
