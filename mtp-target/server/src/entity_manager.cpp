@@ -159,6 +159,7 @@ void CEntityManager::addClient(NLNET::CTcpSock *sock)
 
 void CEntityManager::sendUpdateList()
 {
+	nlinfo("send new id update list");
 	CNetMessage msgout(CNetMessage::UpdateList);
 	{
 		CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());

@@ -241,7 +241,7 @@ void CNetwork::update()
 			npos.z = (float)pos[2];
 			
 			uint8 eid = (*it)->id();
-			if(i>CEntityManager::instance().IdUpdateList.size() || eid!=CEntityManager::instance().IdUpdateList[i])
+			if(i>=CEntityManager::instance().IdUpdateList.size() || eid!=CEntityManager::instance().IdUpdateList[i])
 				sendUpdateList = true;
 			uint16 ping = (*it)->Ping.getSmoothValue();
 			//msgout.serial(eid);
