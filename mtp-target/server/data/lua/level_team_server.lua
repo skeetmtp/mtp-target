@@ -14,7 +14,7 @@ local currentTeamBlueScore = 0;
 CEntity = {}
 CEntity_mt = {}
 function CEntity:new(baseEntity)
-  return setmetatable({base=baseEntity, team = 0, id = 0, bonusTime = 0 }, CEntity_mt)
+  return setmetatable({base=baseEntity, team = 0, id = 0, bonusTime = 0, waterBonusResetOnce = 0 }, CEntity_mt)
 end
 
 function CEntity:print()
@@ -135,11 +135,14 @@ function entityEntityCollideEvent ( entity1, entity2 )
 end
 
 function entityWaterCollideEvent ( entity )
-  entity:parent():setTeamScore(0);
   pos = CVector(1,2,3.456);
   pos = entity:getStartPointPos();
   --entity:setPos(pos);
   --entity:setOpenCloseCount(0);
+  if(entity:parent().waterBonusResetOnce == 0) then
+    entity:parent():setTeamScore(0);
+    entity:parent().waterBonusResetOnce = 1;
+  end
 end
 
 ---------------------- Module ----------------------
