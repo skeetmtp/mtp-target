@@ -359,7 +359,7 @@ void CIntroTask::updateConnectionOnLine()
 		return;
 	}
 
-	reason = CNetworkTask::instance().connect(ip, cookie.toString());
+	reason = CNetworkTask::instance().connect(ip, cookie.setToString());
 	if(!reason.empty())
 	{
 		_autoLogin = 0;

@@ -152,7 +152,7 @@ static void cbWSDisconnection (const std::string &serviceName, uint16 sid, void 
 			nlinfo("ShardId %d with IP '%s' is offline!", Shards[i].ShardId, ia.asString ().c_str());
 			nlinfo("*** ShardId %3d NbPlayers %3d -> %3d", Shards[i].ShardId, Shards[i].NbPlayers, 0);
 			
-			string query = "update shard set Online=Online-1, NbPlayers=NbPlayers-"+toString(Shards[i].NbPlayers)+" where ShardId="+toString(Shards[i].ShardId);
+			string query = "update shard set Online=0, NbPlayers=0 where ShardId="+toString(Shards[i].ShardId);
 			sint ret = mysql_query (DatabaseConnection, query.c_str ());
 			if (ret != 0)
 			{
@@ -165,7 +165,7 @@ static void cbWSDisconnection (const std::string &serviceName, uint16 sid, void 
 
 			// put users connected on this shard offline
 
-			query = "update user set State=Offline, ShardId=-1 where ShardId="+toString(Shards[i].ShardId);
+			query = "update user set State='Offline', ShardId=-1 where ShardId="+toString(Shards[i].ShardId);
 			ret = mysql_query (DatabaseConnection, query.c_str ());
 			if (ret != 0)
 			{

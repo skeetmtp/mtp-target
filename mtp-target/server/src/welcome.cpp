@@ -308,9 +308,14 @@ TUnifiedCallbackItem LSCallbackArray[] =
 	{ "FAILED", cbFailed },
 };
 
+static uint ThreadId = 0;
+static CSynchronized<vector<pair<uint32, uint8> > > ConnectedClients("ConnectedClients");
+
 /// Init the service, load the universal time.
 void initWelcome()
 {
+	ThreadId = getThreadId();
+	
 	if(IService::getInstance()->ConfigFile.getVar("DontUseLS").asInt() == 1)
 		return;
 
@@ -343,23 +348,68 @@ void initWelcome()
 
 void clientConnected(const string &cookie, bool connected)
 {
-	nlinfo("clientConnected('%s',%d)", cookie.c_str(), connected);
-	CLoginCookie c;
-	c.setFromString(cookie);
-	
-	if(!c.isValid())
+	if(ThreadId == getThreadId())
 	{
-		nlwarning("Invalid cookie '%s'", cookie.c_str());
-		return;
+		CLoginCookie c;
+		c.setFromString(cookie);
+		
+		if(!c.isValid())
+		{
+			nlwarning("Invalid cookie '%s'", cookie.c_str());
+			return;
+		}
+
+		CMessage msgout("CC");
+		
+		uint32 userid = c.getUserId();
+		msgout.serial(userid);
+		
+		uint8 con = connected?1:0;
+		msgout.serial(con);
+		
+		nlinfo("clientConnected(%s, %d) uid %u direct send", cookie.c_str(), connected, userid);
+
+		CUnifiedNetwork::getInstance()->send("LS", msgout);
+	}
+	else
+	{
+		CLoginCookie c;
+		c.setFromString(cookie);
+		
+		if(!c.isValid())
+		{
+			nlwarning("Invalid cookie '%s'", cookie.c_str());
+			return;
+		}
+		
+		uint32 userid = c.getUserId();
+		uint8 con = connected?1:0;
+		
+		nlinfo("clientConnected(%s, %d) uid %u delayed send", cookie.c_str(), connected, userid);
+
+		CSynchronized<vector<pair<uint32, uint8> > >::CAccessor access(&ConnectedClients);
+		access.value().push_back(make_pair(userid,con));
+	}
+}
+
+void updateConnectedClients()
+{
+	CSynchronized<vector<pair<uint32, uint8> > >::CAccessor access(&ConnectedClients);
+
+	for(uint i = 0; i < access.value().size(); i++)
+	{
+		CMessage msgout("CC");
+		
+		uint32 userid = access.value()[i].first;
+		msgout.serial(userid);
+		
+		uint8 con = access.value()[i].second;
+		msgout.serial(con);
+		
+		nlinfo("updateConnectedClient %d uid %u send delayed client", con, userid);
+		
+		CUnifiedNetwork::getInstance()->send("LS", msgout);
 	}
 
-	CMessage msgout("CC");
-	
-	uint32 userid = c.getUserId();
-	msgout.serial(userid);
-	
-	uint8 con = connected?1:0;
-	msgout.serial(con);
-	
-	CUnifiedNetwork::getInstance()->send("LS", msgout);
+	access.value().clear();
 }
