@@ -413,7 +413,7 @@ static void cbBanClient(CMessage &msgin, const std::string &serviceName, uint16 
 	uint32 duration;
 	msgin.serial(ip, userName, kickerName, duration);
 
-	sqlQuery("insert into ban (Ip) values ("+ip+")", nbrow, row, result);
+	sqlQuery("insert into ban (Ip) values ('"+ip+"')", nbrow, row, result);
 	//sqlQuery("update user set Score=Score+"+toString(score)+" where UId="+toString(uid), nbrow, row, result);
 }
 
