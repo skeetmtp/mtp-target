@@ -72,9 +72,10 @@ static void cbCommand(CClient *c, CNetMessage &msgin)
 		if(c->isAdmin() || c->isModerator())
 		{
 			CNetwork::instance().sendChat(c->id(),string("/reset (CTRL+F6): hard reset of session (could crash)"));
-			CNetwork::instance().sendChat(c->id(),string("/kick nick"));
 			CNetwork::instance().sendChat(c->id(),string("/reparsePath"));
-			CNetwork::instance().sendChat(c->id(),string("/forcEnd (CTRL+F5): force end of session (safe)"));
+			CNetwork::instance().sendChat(c->id(),string("/kick nick"));
+			CNetwork::instance().sendChat(c->id(),string("/forceEnd (CTRL+F5): force end of session (safe)"));
+			CNetwork::instance().sendChat(c->id(),string("/votemap mapname : try to start this map for next level"));
 		}
 		return;
 	}

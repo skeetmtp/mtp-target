@@ -124,6 +124,7 @@ NLMISC_COMMAND(reparsePath, "reparse path for new file", "")
 	return true;
 }
 
+
 NLMISC_DYNVARIABLE(string, CurrentState, "")
 {
 	if(get)

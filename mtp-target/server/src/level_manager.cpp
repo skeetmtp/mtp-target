@@ -146,6 +146,19 @@ bool CLevelManager::newLevel(string &str1, string &str2)
 		delete CurrentLevel;
 		CurrentLevel = 0;
 	}
+	if(preferedMap.size()>0)
+	{
+		for(i = 0; i < levels.size(); i++)
+		{
+			if(levels[i].find(preferedMap)!=string::npos)
+			{
+				NextLevelId = i;
+				preferedMap = "";
+				break;
+			}
+		}
+	}
+	
 	for(i = 0; i < levels.size(); i++)
 	{
 		CLevel *newLevel = new CLevel(levels[(NextLevelId)%levels.size()]);
@@ -283,6 +296,12 @@ void  CLevelManager::maxLevelSessionCount(uint32 levelCount)
 	MaxLevelSessionCount = levelCount;	
 }
 
+void CLevelManager::voteMap(const std::string &mapName)
+{
+	preferedMap = mapName;
+}
+
+
 //
 // Commands
 //
@@ -291,6 +310,15 @@ NLMISC_COMMAND(displayLevel, "display the current level", "")
 {
 	if(args.size() != 0) return false;
 	CLevelManager::instance().display(&log);
+	return true;
+}
+
+NLMISC_COMMAND(voteMap, "try to start this map for next level", "")
+{
+	if(args.size() != 1) return false;
+	
+	log.displayNL("votemap %s", args[0].c_str());
+	CLevelManager::instance().voteMap(args[0]);
 	return true;
 }
 

@@ -67,6 +67,7 @@ public:
 
 	std::string updateStats(const std::string &name, sint32 score, float time, bool &breakTime);
 	
+	void voteMap(const std::string &mapName);
 private:
 
 	uint8						NextLevelId;
@@ -77,6 +78,7 @@ private:
 	
 	CLevel						*CurrentLevel;
 	double						TimeTimeout;
+	std::string					preferedMap;
 
 	// private ctor due to singleton pattern
 	CLevelManager();
