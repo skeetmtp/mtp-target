@@ -321,7 +321,7 @@ void CEntityManager::login(CEntity *e)
 		msgout.serial(oc);
 
 		string CurrentLevel="";
-		// version 5 client can't handle statsession on login 
+		// version 5 client can't handle startsession on login 
 		if(e->networkVersion>=6) //TODO remove this when server version will be >= 6 
 		{
 			if(CLevelManager::instance().haveCurrentLevel())
