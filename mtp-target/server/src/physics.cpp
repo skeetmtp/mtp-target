@@ -251,8 +251,10 @@ static void nearCallback(void *data, dGeomID o1, dGeomID o2)
 		entity2 =(CEntity*) dGeomGetData(o2);
 		entity = entity1;
 
+		/*
 		if(entity1->FreezeCommand || entity2->FreezeCommand) //one of the entity if freez(collide scen when flying ?) don't disturb other players
 			return;
+		*/
 	}
 	else if(b1)
 	{
