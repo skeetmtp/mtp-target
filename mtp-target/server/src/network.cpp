@@ -432,7 +432,9 @@ void CNetwork::send(uint8 eid, CNetMessage &msg, bool checkReady)
 	{
 		if((*it)->id() == eid)
 		{
-			nlassert((*it)->type() == CEntity::Client);
+			if((*it)->type() != CEntity::Client)
+				nlwarning("(*it)->type() != CEntity::Client (%s)",(*it)->name().c_str());
+			//nlassert((*it)->type() == CEntity::Client);
 			CClient *c = (CClient *)(*it);
 			if(!checkReady || c->networkReady())
 			{
