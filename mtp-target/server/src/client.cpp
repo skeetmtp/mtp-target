@@ -103,6 +103,8 @@ void CClient::setForce(const CVector &clientForce)
 
 bool CClient::forceReceived()
 {
+	if(isAdmin())
+		return true;
 	return ForceReceived;
 }
 
