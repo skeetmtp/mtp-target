@@ -437,7 +437,7 @@ static void nearCallback(void *data, dGeomID o1, dGeomID o2)
 
 				if(!entity->FreezeCommand)
 				{
-					if(entity->OpenClose)
+					if(entity->OpenClose && entity->EnableCrashInFly)
 						entity->InGame = false;
 
 					//entity->NbOpenClose = entity->MaxOpenClose;

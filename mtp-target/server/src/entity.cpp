@@ -450,6 +450,8 @@ void CEntity::position(NLMISC::CVector pos)
 	pausePhysics();
 	dBodySetPosition(Body, Pos.x, Pos.y, Pos.z);
 	dGeomSetPosition(Geom, Pos.x, Pos.y, Pos.z);
+	dBodySetLinearVel(Body, 0.0f, 0.0f, 0.0f);
+	Force = CVector::Null;
 	resumePhysics();
 }
 

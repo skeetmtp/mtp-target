@@ -164,6 +164,17 @@ int CEntityProxy::getOpenCloseCount(lua_State *luaSession)
 int CEntityProxy::setOpenCloseCount(lua_State *luaSession)
 {
 	uint32 noc = (uint32)luaL_checknumber(luaSession,1);
+	
+	bool oldOpenCloseState = (_entity->NbOpenClose%2)==1;
+	bool newOpenCloseState = (noc%2)==1;
+	if(oldOpenCloseState!=newOpenCloseState)
+	{
+		CNetMessage msgout(CNetMessage::OpenClose);
+		uint8 eid = _entity->id();
+		msgout.serial(eid);
+		CNetwork::instance().send(msgout);
+	}
+	
 	_entity->NbOpenClose = noc;
 	return 0;
 }

@@ -1,7 +1,7 @@
 Name = "Extra ball"
 Author = "Skeet"
 ServerLua = "level_extra_ball_server.lua"
-ReleaseLevel = 2
+ReleaseLevel = 3
 
 skyShapeFileName = "sky.shape";
 sunAmbientColor = CRGBA(82, 100, 133, 255);
@@ -57,5 +57,5 @@ Particles =
 
 ExternalCameras =
 {
-	{ Position = CVector(-0.173854, -15.405266, 2.845124), Rotation = CAngleAxis(-0.007905, 0.002636, -0.316335, 0.948611) },
+
 }
