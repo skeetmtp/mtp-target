@@ -102,18 +102,6 @@ CLevel::CLevel(const string &filename)
 	
 	Cameras.clear();
 	luaGetGlobalVector(LuaState, Cameras);
-	
-	for(uint i = 0; i < Cameras.size(); i++)
-	{
-		nlinfo("camera %g %g %g", Cameras[i].x, Cameras[i].y, Cameras[i].z);
-
-		uint8 eid = CMtpTarget::instance().controler().getControledEntity();
-		CEntityManager::instance()[eid].startPointId(CEntityManager::instance()[eid].rank());
-		if (i == 0 || eid != 255 && CEntityManager::instance()[eid].startPointId() == (uint8)i)
-		{
-			CMtpTarget::instance().controler().Camera.setInitialPosition(Cameras[i]);
-		}
-	}
 
 	vector<CLuaVector> luaStartPoints;
 	luaGetGlobalVectorWithName(LuaState, luaStartPoints, "StartPoints");
@@ -147,6 +135,27 @@ CLevel::CLevel(const string &filename)
 		*/
 		startPositionId++;
 	}
+
+	if(Cameras.size()>0)
+	{
+		CLuaVector defaultCam = Cameras[0];
+		for(int i=Cameras.size();i<startPositionId;i++)
+			Cameras.push_back(defaultCam);
+	}
+	
+	for(uint i = 0; i < Cameras.size(); i++)
+	{
+		nlinfo("camera %g %g %g", Cameras[i].x, Cameras[i].y, Cameras[i].z);
+		
+		uint8 eid = CMtpTarget::instance().controler().getControledEntity();
+		CEntityManager::instance()[eid].startPointId(CEntityManager::instance()[eid].rank());
+		if (i == 0 || eid != 255 && CEntityManager::instance()[eid].startPointId() == (uint8)i)
+		{
+			CMtpTarget::instance().controler().Camera.setInitialPosition(Cameras[i]);
+		}
+	}
+	
+	
 
 	// Load particles
 	lua_getglobal(LuaState, "Particles");
