@@ -44,6 +44,10 @@ function CEntity:setTeamScore( score )
   if(score==0) then
     self.bonusTime = 0;
   end
+  if(self.base:getCurrentScore() and score==0) then
+    self.bonusTime = 0;
+    self.base:displayText(0,5,1,255,255,0,"bonus time left : 0",15);
+  end
   
   if(self.base:getCurrentScore()==0 and score~=0) then
     self.bonusTime = getTimeRemaining() * 5;
@@ -79,10 +83,6 @@ function CEntity:setFinalScore()
   else
     self.base:setCurrentScore(teamBlueScore + self.bonusTime);
   end
-  local red_string = "red team score : " .. teamRedScore;
-  local blue_string = "blue team score : " .. teamBlueScore;
-  self.base:displayText(0,5,1,255,0,0,red_string,15);
-  self.base:displayText(0,5,1,100,100,255,blue_string,15);
     
 end
 
@@ -208,12 +208,12 @@ end
 function levelPostUpdate()
 
   if(currentTeamRedScore~=teamRedScore) then
-    displayTextToAll(0,5,1,255,0,0,teamRedScore,1);
+    displayTextToAll(0,6,1,255,0,0,currentTeamRedScore,10);
     teamRedScore = currentTeamRedScore;
   end
 
   if(currentTeamBlueScore~=teamBlueScore) then
-    displayTextToAll(0,6,1,100,100,255,teamBlueScore,1);
+    displayTextToAll(0,7,1,100,100,255,currentTeamBlueScore,10);
     teamBlueScore = currentTeamBlueScore;
   end
 
@@ -222,10 +222,6 @@ end
 
 function levelEndSession()
   local entityCount = getEntityCount();
-  
-  print("end sesssion");
-  print(teamRedScore);
-  print(teamBlueScore);
   
   for i=0,entityCount do
     getEntity(i):parent():setFinalScore();
