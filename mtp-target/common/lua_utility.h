@@ -35,6 +35,7 @@ extern "C"
 };
 
 #include "luna.h"
+#include "lunar.h"
 
 
 //
