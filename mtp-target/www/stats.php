@@ -296,14 +296,21 @@ Last hour max simultaneous user :
 	}
 	printf("</tr>\n");
 	
-	/*
+	
 	printf("<tr>\n");
 	for($i=0;$i<60 && $i<=$lastMinute;$i++)
 	{
-		printf("<td>%d</td>\n",$i);
+		printf("<td>%d</td>\n",$userCountPerMinuteTodayMax[$i]);
 	}
 	printf("</tr>\n");	
-	*/
+	
+	printf("<tr>\n");
+	for($i=0;$i<60 && $i<=$lastMinute;$i++)
+	{
+		printf("<td>%02d</td>\n",$i);
+	}
+	printf("</tr>\n");	
+	
 	
 	/*
 	printf("<tr>\n");
