@@ -26,7 +26,7 @@
 #define MTP_TARGET_H
 
 #define MTPT_RELEASE_VERSION_NUMBER "1.0.1"
-#define MTPT_RELEASE_VERSION_NAME ""
+#define MTPT_RELEASE_VERSION_NAME "beta"
 
 
 //
