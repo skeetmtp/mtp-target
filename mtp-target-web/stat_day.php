@@ -1,9 +1,13 @@
 <?php
 include_once("stat_function.php");
 include_once("stat_game.php");
+include_once("stat_map_graph_display.php");
 
 	if(!isset($p_uid) || $p_uid==0)
+	{
 		$uid = 0;
+		$user_name = "";
+	}
 	else
 	{
 		assertValidNumber($p_uid);
@@ -26,6 +30,8 @@ include_once("stat_game.php");
 	}
 	
 	$html_fp = fopen($cacheFileName, "wt");
+	
+	fprintf($html_fp,"<center><b>%s %s</b> stats</center>",$user_name,date("M-d-Y", mktime(0, 0, 0, $monthToStat, $dayToStat, $yearToStat)));
 
 	fprintf($html_fp,"<script type='text/javascript' src='js/switchcontent.js'></script>");
 	fprintf($html_fp,"<b><a href=\"javascript:toggleElementByName('expandable')\">expand stats</a></b>");
@@ -54,6 +60,13 @@ include_once("stat_game.php");
 		drawGraphLink($html_fp,$result,true,0,24,sprintf("%s : max players on ONE server by hour",date("M-d-Y", mktime(0, 0, 0, $monthToStat, $dayToStat, $yearToStat))),"","Hour",$link);
 	}
 
+	if($user_id==0)
+		$requete = "SELECT count(*),map.Id,map.LevelName FROM session,map WHERE map.LevelName=session.LevelName AND TO_DAYS('$dayString')=TO_DAYS(session.Date) GROUP BY session.LevelName;";
+	else
+		$requete = "SELECT count(*),map.Id,map.LevelName FROM user_session,session,map WHERE map.LevelName=session.LevelName AND TO_DAYS('$dayString')=TO_DAYS(session.Date) AND session.Id=user_session.SessionId AND user_session.UId=$uid GROUP BY session.LevelName;";
+	$result=exec_game_db_requete($requete);
+	drawMapUsage($html_fp,$result,1,30,"Level usage",array("", "Level"),"<a href=\"?page=stat_map.php&p_map_id=%d\">%s</a>");
+	
 
 	fclose($html_fp);	  
 	include($cacheFileName);	
