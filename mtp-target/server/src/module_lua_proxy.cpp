@@ -59,6 +59,7 @@ Lunar<CModuleProxy>::RegType CModuleProxy::methods[] =
 
 bool CModuleProxy::call(string funcName)
 { 
+//	nlinfo("CModuleProxy::call(%s)",funcName.c_str());
 	int res;
 	lua_State *L = CLuaEngine::instance().session();
 	if(L==NULL)

@@ -98,12 +98,8 @@ void CLuaEngine::init(const std::string &filename)
 		return;
 	}
 
-	nlinfo("CLuaEngine::init()::register CModuleProxy Begin");
 	Lunar<CModuleProxy>::Register(_luaSession);
-	nlinfo("CLuaEngine::init()::register CModuleProxy End");
-	nlinfo("CLuaEngine::init()::register CEntityProxy Begin");
 	Lunar<CEntityProxy>::Register(_luaSession);
-	nlinfo("CLuaEngine::init()::register CEntityProxy End");
 	string path = CPath::lookup("helpers.lua", false, false);
 	luaLoad(_luaSession,path);
 	luaLoad(_luaSession,filename);
@@ -144,7 +140,7 @@ void CLuaEngine::entitySceneCollideEvent(CEntity *entity, CModule *module)
 	if(!_luaSession)
 		return;
 	int res ;
-	nlinfo("CLuaEngine::entitySceneCollideEvent(0x%p[0x%p],0x%p[0x%p](%s)",entity,entity->luaProxy,module,module->luaProxy,module->name().c_str());
+//	nlinfo("CLuaEngine::entitySceneCollideEvent(0x%p[0x%p],0x%p[0x%p](%s)",entity,entity->luaProxy,module,module->luaProxy,module->name().c_str());
 	lua_getglobal(_luaSession, "entitySceneCollideEvent");
 	Lunar<CEntityProxy>::push(_luaSession, entity->luaProxy);
 	Lunar<CModuleProxy>::push(_luaSession, module->luaProxy);

@@ -776,7 +776,7 @@ NLMISC_COMMAND(displayLevel, "display the current level", "")
 
 void pausePhysics()
 {
-	//nlinfo(">> begin pausePhysics");
+	//nlinfo(">> pausePhysics");
 	bool pause;
 	{
 		CSynchronized<PauseFlags>::CAccessor acces(&pauseFlags);
@@ -800,17 +800,17 @@ void pausePhysics()
 			}
 		}
 	}
-	//nlinfo(">> end pausePhysics");
+//	nlinfo("<< pausePhysics");
 }
 
 void resumePhysics()
 {
-	//nlinfo(">> begin resumePhysics");
+	//nlinfo(">> resumePhysics");
 	CSynchronized<PauseFlags>::CAccessor acces(&pauseFlags);
 	if(acces.value().pause) 
 	{
 		acces.value().pause = false;
 		acces.value().ackPaused = false;
 	}	
-	//nlinfo(">> end resumePhysics");
+//	nlinfo("<< resumePhysics");
 }

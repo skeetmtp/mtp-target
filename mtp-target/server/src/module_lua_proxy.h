@@ -26,22 +26,25 @@ class CModuleProxy
 {
 	
 public:
-	CModuleProxy(lua_State *luaSession, CModule *module)
+	CModuleProxy(lua_State *luaSession)
 	{
-		_module = module;
+//		nlinfo("new CModuleProxy0 0x%p",this);
+		_module = NULL;
 		LuaUserData = 0;
 		LuaUserDataRef = 0;
 	}
 	
-	CModuleProxy(lua_State *luaSession)
+	CModuleProxy(lua_State *luaSession, CModule *module)
 	{
-		_module = NULL;
+//		nlinfo("new CModuleProxy1 0x%p(0x%p)",this,module);
+		_module = module;
 		LuaUserData = 0;
 		LuaUserDataRef = 0;
 	}
 	
 	~CModuleProxy()
 	{
+//		nlinfo("delete CModuleProxy 0x%p",this);
 	}
 	
 	bool call(std::string funcName);
