@@ -92,6 +92,7 @@ private:
 
 	uint32 updateCount;
 	float MinDeltaToSendFullUpdate;
+	bool  DisableNetworkOptimization;
 	uint32 Version;
 };
 

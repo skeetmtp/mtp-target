@@ -205,6 +205,7 @@ void CNetwork::init()
 	updateCount = 0;
 
 	MinDeltaToSendFullUpdate = NLNET::IService::getInstance()->ConfigFile.getVar("MinDeltaToSendFullUpdate").asFloat();
+	DisableNetworkOptimization = NLNET::IService::getInstance()->ConfigFile.getVar("DisableNetworkOptimization").asInt()!=0;
 	Version = NLNET::IService::getInstance()->ConfigFile.getVar("NetworkVersion").asInt();
 }
 
@@ -255,7 +256,7 @@ void CNetwork::update()
 			}
 		}
 		
-		if((updateCount%MT_NETWORK_FULL_UPDATE_PERIODE)==0)
+		if((updateCount%MT_NETWORK_FULL_UPDATE_PERIODE)==0 || DisableNetworkOptimization)
 	//	if(updateCount==0)
 		{
 			CNetMessage msgout(CNetMessage::FullUpdate);
