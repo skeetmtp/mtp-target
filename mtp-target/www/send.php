@@ -10,7 +10,7 @@ if($_FILES['userfile']['size'] > $maxfilesize)
    die("FAILED! The file you tried to upload is too big (can't be more than ".maxfilesize." bytes)");
 }
 
-if(file_exists($uploadfile) || $uploadfile == "ping_ball_blue.tga")
+if(file_exists($uploadfile) || $uploadfilename == "ping_ball_blue.tga")
 {
    die("FAILED! The file you tried to upload already exists, please, use another name");
 }

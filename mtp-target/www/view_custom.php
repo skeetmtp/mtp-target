@@ -12,8 +12,36 @@
 <tr><td>
 </tr></td>
 
-	<tr><td bgcolor="<?php echo $table_news_head_color;?>"><b>&nbsp;Custom Textures available : &nbsp;</b></td></tr>
-	<?php
+<?php
+
+        $fp = fopen("../server/connection.stat", "r");
+        while (!feof($fp))
+	{
+                $line = fgets($fp, 2048);
+                $out = substr($line,0,strlen($line)-1); //remove \n
+		$array = explode(" ", $out);
+		if(count($array)>=9 && $array[7] == '+')
+		{
+			$ut = str_replace("'","",$array[9]);
+			if(strlen($ut)>0)
+			{
+				$namecount[$ut] = $namecount[$ut] + 1;
+			}
+		}
+	}
+
+	arsort($namecount, SORT_NUMERIC);
+	reset($namecount);
+        echo "<h3>Most used user textures:</h3>";
+	$i = 0;	
+	while (list($key, $val) = each($namecount))
+	{
+		echo "<a href=\"../user_texture/ping_ball_$key.tga\"><img width=64 src=\"../user_texture/ping_ball_$key.jpg\" ALT=\"file\"></a>";
+		echo "Name: ping_ball_$key.tga Used: $val<br>\n";
+		$i=$i+1;
+		if($i==5) break;
+	}
+	echo "<h3>All user textures available</h3>";
 
 		$dirname = "../user_texture/";
 		$d = dir($dirname);
