@@ -74,6 +74,66 @@ string DatabaseName, DatabaseHost, DatabaseLogin, DatabasePassword;
 MYSQL *DatabaseConnection = 0;
 
 
+
+
+CMysqlResult::CMysqlResult() 
+{ 
+	//nlinfo("CMysqlResult::construct 0x%p",this);
+	_result = NULL;
+}
+CMysqlResult::CMysqlResult(const CMysqlResult &mysqlResult) 
+{ 
+	nlwarning("CMysqlResult::copy1 not implemented");
+	if(_result!=NULL)
+	{
+		//nlinfo("mysql_free_result3 0x%p 0x%p",this,_result);
+		mysql_free_result(_result);
+	}
+	_result=mysqlResult._result; 
+}
+
+CMysqlResult::CMysqlResult(MYSQL_RES *result) 
+{ 
+	//nlinfo("CMysqlResult::construct2  0x%p 0x%p->0x%p",this,_result,result);
+	if(_result!=NULL)
+	{
+		//nlinfo("mysql_free_result2 0x%p 0x%p",this,_result);
+		mysql_free_result(_result);
+	}
+	_result = result; 
+};
+
+
+CMysqlResult::~CMysqlResult()
+{
+	//nlinfo("mysql_free_result1 0x%p 0x%p",this,_result);
+	mysql_free_result(_result);
+}
+
+CMysqlResult& CMysqlResult::operator=(CMysqlResult &mysqlResult)
+{
+	nlwarning("CMysqlResult::copy2 not implemented");
+	if(_result!=NULL)
+	{
+		//nlinfo("mysql_free_result4 0x%p 0x%p",this,_result);
+		mysql_free_result(_result);
+	}
+	_result=mysqlResult._result; 
+	return *this;		
+}
+
+CMysqlResult& CMysqlResult::operator=(MYSQL_RES *result)
+{
+	if(_result!=NULL)
+	{
+		//nlinfo("mysql_free_result3 0x%p 0x%p",this,_result);
+		mysql_free_result(_result);
+	}
+	_result = result;
+	return *this;
+}
+
+
 //
 // Functions
 //

@@ -44,27 +44,19 @@ extern MYSQL *DatabaseConnection;
 class CMysqlResult
 {
 public:
-	CMysqlResult() 
-	{ 
-		_result = NULL;
-	}
-	CMysqlResult(CMysqlResult &mysqlResult) 
-	{ 
-		nlwarning("CMysqlResult copy not implemented");
-		_result=mysqlResult._result; 
-	}
-	~CMysqlResult()
-	{
-		mysql_free_result(_result);
-	}
+	CMysqlResult();
+	CMysqlResult(const CMysqlResult &mysqlResult);
+	CMysqlResult(MYSQL_RES *result);
+	~CMysqlResult();
 
-	CMysqlResult(MYSQL_RES *result) 
+	CMysqlResult& operator=(CMysqlResult &mysqlResult);
+	CMysqlResult& operator=(MYSQL_RES *result);
+	
+	operator MYSQL_RES*()
 	{ 
-		if(_result!=NULL)
-			mysql_free_result(_result);
-		_result = result; 
+		//nlinfo("CMysqlResult : get result 0x%p 0x%p",this,_result);
+		return _result; 
 	};
-	operator MYSQL_RES*() { return _result; };
 private:
 	MYSQL_RES *_result;
 };
