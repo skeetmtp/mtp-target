@@ -313,16 +313,16 @@ static void cbWSShardChooseShard(CMessage &msgin, const std::string &serviceName
 	//
 	// S10: receive "SCS" message from WS
 	//
-	
+
 	CMessage msgout("SCS");
 
 	string reason;
 	msgin.serial(reason);
 	msgout.serial(reason);
-	
+
 	string cookie;
 	msgin.serial(cookie);
-	
+
 	if (reason.empty())
 	{
 		msgout.serial(cookie);
@@ -331,7 +331,18 @@ static void cbWSShardChooseShard(CMessage &msgin, const std::string &serviceName
 		msgin.serial(addr);
 		msgout.serial(addr);
 	}
-	
+
+	MYSQL_RES *result;
+	MYSQL_ROW row;
+	sint32 nbrow;
+	reason = sqlQuery("select * from user where Cookie="+cookie, nbrow, row, result);
+	if(!reason.empty()) return;
+	if(nbrow != 1)
+	{
+		nlwarning("cookie %s is not associated to anybody", cookie.c_str());
+		return;
+	}
+
 	CLoginCookie lc;
 	lc.setFromString(cookie);
 	sendToClient(msgout, (TSockId)lc.getUserAddr());
