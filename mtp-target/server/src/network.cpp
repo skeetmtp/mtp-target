@@ -263,6 +263,7 @@ void CNetwork::init()
 	MinDeltaToSendFullUpdate = NLNET::IService::getInstance()->ConfigFile.getVar("MinDeltaToSendFullUpdate").asFloat();
 	DisableNetworkOptimization = NLNET::IService::getInstance()->ConfigFile.getVar("DisableNetworkOptimization").asInt()!=0;
 	Version = NLNET::IService::getInstance()->ConfigFile.getVar("NetworkVersion").asInt();
+	NextUpdateTime = 0;
 }
 
 void CNetwork::reset()
@@ -287,54 +288,6 @@ void CNetwork::update()
 	//		rpos = 0;//rand()%10;
 	//	}
 	//	updateCount2++;
-#else
-	BufServer->update();
-	while(BufServer->dataAvailable())
-	{
-		TSockId sockid;
-		CNetMessage msg(CNetMessage::Unknown, true);
-		BufServer->receive(msg, &sockid);
-
-		try
-		{
-			uint32 nbs = 0;
-			msg.serial(nbs);
-
-			uint8 t = 0;
-			msg.serial(t);
-			msg.type((CNetMessage::TType)t);
-
-			{
-				for(CEntityManager::EntityConstIt it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
-				{
-					nlassert(*it);
-					CClient *c = (CClient *)(*it);
-					
-#if OLD_NETWORK
-					if((*it)->type() != CEntity::Client || CEntityManager::instance().inRemoveList(c->id()))
-						continue;
-#else
-					if((*it)->type() != CEntity::Client)
-						continue;
-#endif // OLD_NETWORK
-
-					nlassert(c->sock());
-
-					if(c->sock() != sockid)
-						continue;
-
-					netCallbacksHandler(c, msg);
-				}
-			}
-			
-			//TODO SKEET : check why we cannot let only main thread loop do the flush job ?
-			//CEntityManager::instance().flushAddRemoveList();
-		}
-		catch(Exception &e)
-		{
-			nlwarning("Malformed Message type '%hu' : %s", (uint16)msg.type(), e.what());
-		}
-	}
 #endif // OLD_NETWORK
 
 	{
@@ -531,6 +484,101 @@ void CNetwork::update()
 	updateCount++;
 }
 
+void CNetwork::sleep(TTime timeout)
+{
+	H_AUTO(CNetworkSleep);
+
+	TTime t0 = CTime::getLocalTime ();
+
+	if (timeout > 0)
+	{
+		if (NextUpdateTime == 0)
+		{
+			NextUpdateTime = t0 + timeout;
+		}
+		else
+		{
+			TTime err = t0 - NextUpdateTime;
+			NextUpdateTime += timeout;
+			
+			// if we are too late, resync to the next value
+			while (err > timeout)
+			{
+				err -= timeout;
+				NextUpdateTime += timeout;
+			}
+			
+			timeout -= err;
+			if (timeout < 0) timeout = 0;
+		}
+	}
+
+	while (true)
+	{
+		BufServer->update();
+		while(BufServer->dataAvailable())
+		{
+			TSockId sockid;
+			CNetMessage msg(CNetMessage::Unknown, true);
+			BufServer->receive(msg, &sockid);
+			
+			try
+			{
+				uint32 nbs = 0;
+				msg.serial(nbs);
+				
+				uint8 t = 0;
+				msg.serial(t);
+				msg.type((CNetMessage::TType)t);
+				
+				{
+					for(CEntityManager::EntityConstIt it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
+					{
+						nlassert(*it);
+						CClient *c = (CClient *)(*it);
+						
+#if OLD_NETWORK
+						if((*it)->type() != CEntity::Client || CEntityManager::instance().inRemoveList(c->id()))
+							continue;
+#else
+						if((*it)->type() != CEntity::Client)
+							continue;
+#endif // OLD_NETWORK
+						
+						nlassert(c->sock());
+						
+						if(c->sock() != sockid)
+							continue;
+						
+						netCallbacksHandler(c, msg);
+					}
+				}
+				
+				//TODO SKEET : check why we cannot let only main thread loop do the flush job ?
+				//CEntityManager::instance().flushAddRemoveList();
+			}
+			catch(Exception &e)
+			{
+				nlwarning("Malformed Message type '%hu' : %s", (uint16)msg.type(), e.what());
+			}
+		}
+		// If it's the end, don't nlSleep()
+		TTime remainingTime = t0 + timeout - CTime::getLocalTime();
+		if ( remainingTime <= 0 )
+			break;
+
+#ifdef NL_OS_UNIX
+		// Sleep until the time expires or we receive a message
+		H_BEFORE(UserSleep);
+		BufServer->sleepUntilDataAvailable( remainingTime * 1000); break; // accurate sleep with select()
+		H_AFTER(UserSleep);
+#else
+		// Enable windows multithreading before rescanning all connections
+		H_TIME(UserSleep, nlSleep(1);); // 0 (yield) would be too harmful to other applications
+#endif
+	
+	}
+}
 
 void CNetwork::release()
 {

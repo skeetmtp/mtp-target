@@ -130,7 +130,7 @@ public:
 
 		CSessionManager::instance().init();
 
-		setUpdateTimeout(MT_NETWORK_MY_UPDATE_PERIODE_MS);
+		//setUpdateTimeout(MT_NETWORK_MY_UPDATE_PERIODE_MS);
 
 		initWelcome();
 
@@ -155,6 +155,8 @@ public:
 #endif // OLD_NETWORK
 
 		updateConnectedClients();
+
+		CNetwork::instance().sleep(MT_NETWORK_MY_UPDATE_PERIODE_MS);
 
 		return true;
 	}

@@ -63,6 +63,8 @@ public:
 	void release();
 
 	void reset();
+
+	void sleep(NLMISC::TTime timeout);
 		
 	// send a message to a specific client
 	void send(uint8 eid, CNetMessage &msg, bool checkReady=false);
@@ -102,6 +104,8 @@ private:
 	float MinDeltaToSendFullUpdate;
 	bool  DisableNetworkOptimization;
 	uint32 Version;
+
+	NLMISC::TTime NextUpdateTime;
 };
 
 bool pauseNetwork(bool waitAck=true);
