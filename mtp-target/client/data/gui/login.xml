@@ -13,6 +13,10 @@
 						<alignment>eAlignCenterHorizontal|eAlignCenterVertical</alignment>
 						<string> Mtp Target Login </string>
 					</object>
+					<object class="CGuiText" name="loginTitle">
+						<alignment>eAlignCenterHorizontal|eAlignCenterVertical</alignment>
+						<string> 20 characters max, only a-z A-Z [ ] _ - </string>
+					</object>
 					<object class="CGuiHBox" name="hbox1">
 						<alignment>eAlignExpandHorizontal|eAlignCenterVertical</alignment>
 						<element>

@@ -99,6 +99,7 @@ const char *mtpTargetConfigFilename = "mtp_target.cfg";
 
 void CMtpTarget::init()
 {
+	SessionFileName = "";
 	Error = false;
 	DoError = false;
 	// setup default task
@@ -401,14 +402,17 @@ void CMtpTarget::loadNewSession()
 	// create the session replay
 	
 	if (SessionFile)
+	{
 		fclose (SessionFile);
+	}
 	
 	if(!NLMISC::CFile::isDirectory("replay"))
 		NLMISC::CFile::createDirectory("replay");
 	
 	if(ReplayFile.empty() && CConfigFileTask::instance().configFile().getVar("GenerateReplay").asInt() == 1)
 	{
-		SessionFile = fopen (NLMISC::CFile::findNewFile("replay/session.mtr").c_str(), "wt");
+		SessionFileName = NLMISC::CFile::findNewFile("replay/session.mtr");
+		SessionFile = fopen (SessionFileName.c_str(), "wt");
 		nlassert (SessionFile != 0);
 	}
 	
@@ -468,6 +472,16 @@ void CMtpTarget::resetFollowedEntity()
 
 
 
+
+void CMtpTarget::moveReplay(bool b)
+{
+	MoveReplay = b;
+}
+
+bool CMtpTarget::moveReplay(void)
+{
+	return MoveReplay;
+}
 
 
 
@@ -799,4 +813,5 @@ void CMtpTarget::resetFollowedEntity()
 //	}
 }
 */
+
 

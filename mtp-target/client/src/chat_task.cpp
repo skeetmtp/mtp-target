@@ -30,6 +30,7 @@
 #include "time_task.h"
 #include "game_task.h"
 #include "chat_task.h"
+#include "mtp_target.h"
 #include "intro_task.h"
 #include "network_task.h"
 #include "font_manager.h"
@@ -38,9 +39,7 @@
 #include "config_file_task.h"
 #include "resource_manager.h"
 
-#ifdef NL_OS_WINDOWS
-#define strtime _strtime
-#endif
+extern FILE *SessionFile;
 
 //
 // Namespaces
@@ -105,7 +104,29 @@ void CChatTask::update()
 			if (ChatInput.length() > 0)
 			{
 				if (ChatInput[0] == '/')
-					CNetworkTask::instance().command(ChatInput.substr(1));
+				{
+					if(ChatInput.substr(0,7)=="/replay")
+					{
+						if(SessionFile)
+						{
+							string comment = ChatInput.substr(8);
+							fprintf(SessionFile,"0 CM %s\n",comment.c_str());
+							addLine(">> you marked this replay(" + CMtpTarget::instance().sessionFileName()+") : " + comment);
+							CMtpTarget::instance().moveReplay(true);
+						}
+						else
+						{
+							addLine(">> no replay to mark");
+						}
+					}
+					else if(ChatInput.substr(0,5)=="/help")
+					{
+						addLine("/help : this help");
+						addLine("/replay [comment] : mark a replay with the comment");
+					}
+					else
+						CNetworkTask::instance().command(ChatInput.substr(1));
+				}
 				else
 					CNetworkTask::instance().chat(ChatInput);
 			}
@@ -183,9 +204,11 @@ void CChatTask::addLine(const std::string &text)
 	}
 	if(logChat && fp)
 	{
-		char tbuffer [9];
-		strtime( tbuffer );
-		fprintf(fp,"%s %s\n",tbuffer,text.c_str());
+		time_t aclock;
+		time( &aclock );
+		struct tm *newtime;
+		newtime = localtime( &aclock );
+		fprintf(fp,"%02d:%02d:%02d %s\n",newtime->tm_hour,newtime->tm_min,newtime->tm_sec,text.c_str());
 		fflush(fp);
 	}
 }

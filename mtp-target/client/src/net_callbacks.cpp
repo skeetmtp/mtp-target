@@ -629,6 +629,15 @@ static void cbEndSession(CNetMessage &msgin)
 	{
 		fclose (SessionFile);
 		SessionFile = 0;
+		if(CMtpTarget::instance().moveReplay())
+		{
+			string markedReplayDir = "replay/marked/";
+			if(!NLMISC::CFile::isDirectory(markedReplayDir))
+				NLMISC::CFile::createDirectory(markedReplayDir);
+			string newFilename = markedReplayDir + NLMISC::CFile::getFilename(CMtpTarget::instance().sessionFileName());
+			NLMISC::CFile::moveFile(newFilename.c_str(),CMtpTarget::instance().sessionFileName().c_str());
+		}
+		CMtpTarget::instance().moveReplay(false);
 	}
 }
 

@@ -94,6 +94,10 @@ public:
 	
 	void displayTutorialInfo(bool b);
 	bool displayTutorialInfo();
+
+	bool moveReplay();
+	void moveReplay(bool b);
+	std::string	sessionFileName() {return SessionFileName;}
 	
 private:
 
@@ -107,8 +111,10 @@ private:
 	
 	void _error();
 	std::string		ErrorReason;
+	std::string		SessionFileName;
 	bool			DisplayTutorialInfo;
 	bool			Error;
+	bool			MoveReplay;
 };
 
 

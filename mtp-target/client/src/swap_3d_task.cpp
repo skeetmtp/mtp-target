@@ -25,8 +25,9 @@
 #include "stdpch.h"
 
 #include "3d_task.h"
-#include "config_file_task.h"
+#include "mtp_target.h"
 #include "swap_3d_task.h"
+#include "config_file_task.h"
 
 
 //
@@ -60,7 +61,11 @@ void CSwap3DTask::render()
 		CBitmap btm;
 		C3DTask::instance().driver().getBuffer (btm);
 //		btm.flipV();
-		string filename = CFile::findNewFile ("screenshot.jpg");
+		string filename = "";
+		if(CMtpTarget::instance().sessionFileName().size())
+			filename = CFile::findNewFile(CFile::getFilenameWithoutExtension(CMtpTarget::instance().sessionFileName())+"_.jpg");
+		else
+			filename = CFile::findNewFile ("screenshot.jpg");
 		COFile fs (filename);
 		btm.writeJPG(fs);
 		nlinfo("Screenshot '%s' saved", filename.c_str());
