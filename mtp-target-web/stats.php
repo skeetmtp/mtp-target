@@ -15,6 +15,7 @@
 <h3>Servers statistics</h3>
 <ul>
 <li><a href="?page=scores.php">Highscores</a></li>
+<li><a href="?page=logged.php">Players online</a></li>
 </ul>
 
 <h3>Other statistics</h3>
