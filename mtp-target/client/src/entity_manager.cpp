@@ -280,13 +280,13 @@ void CEntityManager::resetSpectator()
 	}
 }
 
-void CEntityManager::resetReady()
+void CEntityManager::everybodyReady(bool state)
 {
 	for(uint i = 0; i < 256; i++)
 	{
 		if(entities()[i]->type() != CEntity::Unknown)
 		{
-			entities()[i]->ready(false);
+			entities()[i]->ready(state);
 		}
 	}
 }

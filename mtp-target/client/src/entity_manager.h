@@ -99,7 +99,7 @@ public:
 	
 	// set all spectator to no more spectator
 	void	resetSpectator();
-	void	resetReady();
+	void	everybodyReady(bool state);
 		
 	void	load3d();
 

@@ -198,7 +198,7 @@ void CMtpTarget::update()
 void CMtpTarget::loadNewSession()
 {
 	nlassert(NewSession);
-	CEntityManager::instance().resetReady();
+	CEntityManager::instance().everybodyReady(false);
 	
 	NewSession = false;
 	
@@ -664,6 +664,7 @@ void mtpTarget::everybodyReady()
 	// everybody is ok, let s count down
 	CMtpTarget::instance().State = CMtpTarget::eReady;
 	CLevelManager::instance().currentLevel().reset();
+	CEntityManager::instance().everybodyReady(true);
 }
 	
 void mtpTarget::endSession()
