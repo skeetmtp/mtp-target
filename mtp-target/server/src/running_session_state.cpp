@@ -184,12 +184,12 @@ void CRunningSessionState::update()
 			}*/
 
 
+			CEntityManager::instance().saveAllValidReplay();
 			changeState(CEndingSessionState::instance());
 			CSessionManager::instance().endTime(currentTime);
 			CSessionManager::instance().forceEnding(false);
 		}
 	}
-	CEntityManager::instance().saveAllValidReplay();
 	
 	// chat must be call outside the client accessor
 	for(uint i = 0; i < chat.size(); i++)
