@@ -4,7 +4,7 @@
 !define APPOLDVERSION "1.0.0"
 !define APPNAMEANDVERSION "${APPNAME} ${APPVERSION}"
 
-Function IsMtpInstalled
+Function IsMtptInstalled
  Push $R0
  ClearErrors
  ReadRegStr $R0 HKCU "Software\${APPNAME}" "version"

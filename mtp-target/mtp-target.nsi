@@ -64,6 +64,16 @@ Section "server" Section2
 	FILE "server\ReleaseDebug\mtp_target_service.exe"
 	FILE "server\mtp_target_service_default.cfg"
 
+	SetOutPath "$INSTDIR\data"
+	FILE "server\data\level\*.lua"
+	FILE "server\data\lua\*.lua"
+	FILE "server\data\misc\*.lua"
+	FILE "server\data\module\*.lua"
+	FILE "server\data\particle\*.ps"
+	FILE "server\data\shape\*.shape"
+	FILE "server\data\texture\*.dds"
+	FILE "server\data\texture\*.tga"
+
 	; Set Section Files and Shortcuts
 	CreateDirectory "$SMPROGRAMS\${APPNAME}"
 	CreateShortCut "$SMPROGRAMS\mtp-target\Launch dedicated server.lnk" "$INSTDIR\mtp_target_service.exe" "" "$INSTDIR\mtp_target_service.exe" 0

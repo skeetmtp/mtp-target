@@ -24,7 +24,7 @@ OutFile "${APPNAME}-update-${APPOLDVERSION}-${APPVERSION}.exe"
 !insertmacro MUI_RESERVEFILE_LANGDLL
 
 Section "base" Section1
-	call IsMtpInstalled
+	call IsMtptInstalled
 	; Set Section properties
 	SectionIn RO
 	SetOverwrite on
@@ -45,7 +45,7 @@ Section "base" Section1
 SectionEnd
 
 Section "server" Section2
-	call IsMtpInstalled
+	call IsMtptInstalled
 	; Set Section properties
 	SetOverwrite on
 	
