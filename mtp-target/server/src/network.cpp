@@ -227,10 +227,11 @@ void CNetwork::update()
 
 	{
 		CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
-		
+		bool sendUpdateList = false;
 		TTime currentTime = CTime::getLocalTime();
-		
-		for(CEntityManager::EntityConstIt it = acces.value().begin(); it != acces.value().end(); it++)
+		unsigned int i;
+		CEntityManager::EntityConstIt it;
+		for(i=0,it = acces.value().begin(); it != acces.value().end(); it++,i++)
 		{
 			const dReal *pos = dBodyGetPosition((*it)->Body);
 			CVector npos;
@@ -240,6 +241,8 @@ void CNetwork::update()
 			npos.z = (float)pos[2];
 			
 			uint8 eid = (*it)->id();
+			if(i>CEntityManager::instance().IdUpdateList.size() || eid!=CEntityManager::instance().IdUpdateList[i])
+				sendUpdateList = true;
 			uint16 ping = (*it)->Ping.getSmoothValue();
 			//msgout.serial(eid);
 			
@@ -250,6 +253,8 @@ void CNetwork::update()
 				break;
 			}
 		}
+		if(sendUpdateList)
+			CEntityManager::instance().sendUpdateList();
 	}
 	
 	if((updateCount%MT_NETWORK_FULL_UPDATE_PERIODE)==0)

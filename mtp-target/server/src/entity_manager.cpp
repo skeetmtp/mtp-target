@@ -160,15 +160,16 @@ void CEntityManager::addClient(NLNET::CTcpSock *sock)
 void CEntityManager::sendUpdateList()
 {
 	CNetMessage msgout(CNetMessage::UpdateList);
-
 	{
 		CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
+		IdUpdateList.clear();
 		
 		TTime currentTime = CTime::getLocalTime();
 		
 		for(CEntityManager::EntityConstIt it = acces.value().begin(); it != acces.value().end(); it++)
 		{
 			uint8 eid = (*it)->id();
+			IdUpdateList.push_back(eid);
 			msgout.serial(eid);
 		}
 		CNetwork::instance().send(msgout);
@@ -264,7 +265,6 @@ void CEntityManager::login(CEntity *e)
 		((CClient*)e)->networkReady(true);
 	}
 
-	sendUpdateList();
 }
 
 void CEntityManager::remove(const string &name)
@@ -301,27 +301,18 @@ void CEntityManager::remove(uint8 eid)
 	CEntity *c = 0;
 
 	{
-		CNetMessage msgout(CNetMessage::UpdateList);
+		EntityIt it;
+		CEntities::CWriteAccessor acces(entities());
+		for( it = acces.value().begin(); it != acces.value().end(); it++)
 		{
-			EntityIt it;
-			CEntities::CWriteAccessor acces(entities());
-			for( it = acces.value().begin(); it != acces.value().end(); it++)
+			if((*it)->id() == eid)
 			{
-				if((*it)->id() == eid)
-				{
-					// only unlink the client from the list
-					c = (*it);
-					acces.value().erase(it);
-					break;
-				}
-			}
-			for( it = acces.value().begin(); it != acces.value().end(); it++)
-			{
-				uint8 eid = (*it)->id();
-				msgout.serial(eid);
+				// only unlink the client from the list
+				c = (*it);
+				acces.value().erase(it);
+				break;
 			}
 		}
-		CNetwork::instance().send(msgout);
 	}
 	
 	if(!c)

@@ -74,15 +74,16 @@ public:
 
 	bool connected(const std::string &name);
 	uint humanClientCount();
-
+	void sendUpdateList();
+	
 		
+	std::vector<uint8> IdUpdateList;
 private:
 
 	CEntities Entities;
 
 	uint8		findNewId();
 	void		checkForcedClientCount();
-	void		sendUpdateList();
 	std::vector<uint8> IdToRemove;
 	
 		
