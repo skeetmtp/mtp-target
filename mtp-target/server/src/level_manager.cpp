@@ -104,6 +104,8 @@ bool CLevelManager::newLevel()
 	CEntityManager::instance().reset();
 
 	nlinfo("newLevel (%d/%d)",LevelSessionCount,MaxLevelSessionCount );
+	if(CurrentLevel)
+		CurrentLevel->save();
 	
 	if(LevelSessionCount<MaxLevelSessionCount && CurrentLevel)
 	{

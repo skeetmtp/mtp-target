@@ -181,7 +181,6 @@ void CLevel::_luaInit()
 
 CLevel::~CLevel()
 {
-	save();
 	CLuaEngine::instance().release();
 	
 	for(uint i = 0; i < Modules.size(); i++)
