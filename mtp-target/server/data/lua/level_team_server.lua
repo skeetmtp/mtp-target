@@ -14,7 +14,7 @@ local currentTeamBlueScore = 0;
 CEntity = {}
 CEntity_mt = {}
 function CEntity:new(baseEntity)
-  return setmetatable({base=baseEntity, team = 0, id = 0 }, CEntity_mt)
+  return setmetatable({base=baseEntity, team = 0, id = 0, bonusTime = 0 }, CEntity_mt)
 end
 
 function CEntity:print()
@@ -41,6 +41,15 @@ function CEntity:setTeamScore( score )
   --print("setTeamScore");
   --print(self.base:getCurrentScore());
   --print(score);
+  if(score==0) then
+    self.bonusTime = 0;
+  end
+  
+  if(self.base:getCurrentScore()==0 and score~=0) then
+    self.bonusTime = getTimeRemaining() * 10;
+    local bonus_string = "bonus time left : " .. self.bonusTime;
+    self.base:displayText(0,4,1,255,255,0,bonus_string,15);
+  end
   
   --if(self.base:getCurrentScore()==score) then
   --  return;
@@ -66,9 +75,9 @@ end
 
 function CEntity:setFinalScore()
   if(self.team==0) then
-    self.base:setCurrentScore(teamRedScore);
+    self.base:setCurrentScore(teamRedScore + self.bonusTime);
   else
-    self.base:setCurrentScore(teamBlueScore);
+    self.base:setCurrentScore(teamBlueScore + self.bonusTime);
   end
     
 end

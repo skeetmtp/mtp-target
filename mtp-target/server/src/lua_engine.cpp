@@ -33,6 +33,7 @@
 #include "entity.h"
 #include "lua_engine.h"
 #include "level_manager.h"
+#include "session_manager.h"
 #include "entity_manager.h"
 
 
@@ -129,6 +130,7 @@ void CLuaEngine::init(const std::string &filename)
 		lua_register(session(), "setLevelHasBonusTime", setLevelHasBonusTime);
 		lua_register(session(), "setLevelRecordBest", setLevelRecordBest);
 		lua_register(session(), "setLevelTimeout", setLevelTimeout);
+		lua_register(session(), "getTimeRemaining", getTimeRemaining);
 	}
 	
 	Lunar<CModuleProxy>::Register(session());
@@ -358,6 +360,17 @@ int CLuaEngine::setLevelTimeout(lua_State *L)
 	CLevelManager::instance().timeTimeout(timeout*1000);
 	return 0;	
 }
+
+int CLuaEngine::getTimeRemaining(lua_State *L)
+{
+	TTime timeRemaining = CSessionManager::instance().startTime()+(TTime)CLevelManager::instance().timeTimeout() - CTime::getLocalTime();
+	lua_Number res = timeRemaining / 1000;
+	if(res<0)
+		res = 0;
+	lua_pushnumber(L,res); 
+	return 1;
+}
+
 
 int CLuaEngine::lua_ALERT(lua_State *L)
 {
