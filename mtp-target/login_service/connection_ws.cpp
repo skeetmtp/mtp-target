@@ -150,6 +150,7 @@ static void cbWSIdentification (CMessage &msgin, const std::string &serviceName,
 	MYSQL_ROW row;
 	sint32 nbrow;
 	
+
 	reason = sqlQuery("select * from shard where ShardId="+toString(shardId), nbrow, row, result);
 	if(!reason.empty()) { refuseShard(sid, reason.c_str()); return; }
 
@@ -413,7 +414,15 @@ static void cbBanClient(CMessage &msgin, const std::string &serviceName, uint16 
 	uint32 duration;
 	msgin.serial(ip, userName, kickerName, duration);
 
-	sqlQuery("insert into ban (Ip) values ('"+ip+"')", nbrow, row, result);
+	reason = sqlQuery("select * from ban where Ip='"+ip+"';", nbrow, row, result);
+	if(!reason.empty()) 
+		return;
+
+	if(nbrow == 0)
+	{
+		string request = toString("insert into ban (Ip,Date,Duration) values ('%s',NOW(),%d);",ip.c_str(),duration);
+		sqlQuery(request, nbrow, row, result);
+	}
 	//sqlQuery("update user set Score=Score+"+toString(score)+" where UId="+toString(uid), nbrow, row, result);
 }
 

@@ -179,12 +179,26 @@ static void cbClientVerifyLoginPassword(CMessage &msgin, TSockId from, CCallback
 
 	breakable
 	{
-		reason = checkLogin(login);
-		if(!reason.empty()) break;
-
 		CMysqlResult result;
 		MYSQL_ROW row;
 		sint32 nbrow;
+		const CInetAddress &ia = netbase.hostAddress (from);
+
+		reason = sqlQuery("DELETE FROM ban WHERE Date+Duration<=NOW();", nbrow, row, result);
+		if(!reason.empty()) break;
+		string ip = ia.ipAddress();
+		reason = sqlQuery("select * from ban where Ip='"+ip+"';", nbrow, row, result);
+		if(!reason.empty()) break;
+		if(nbrow!=0)
+		{
+			reason = "User banned";
+			break;
+		}
+
+
+		reason = checkLogin(login);
+		if(!reason.empty()) break;
+
 
 		reason = sqlQuery("select * from user where Login='"+login+"'", nbrow, row, result);
 		if(!reason.empty()) break;
@@ -212,7 +226,6 @@ static void cbClientVerifyLoginPassword(CMessage &msgin, TSockId from, CCallback
 
 		uid = atoi(row[0]);
 
-		const CInetAddress &ia = netbase.hostAddress (from);
 		Output->displayNL("***: %3d Login '%s' Ip '%s'", uid, login.c_str(), ia.asString().c_str());
 
 		string OS, Proc, Mem, Gfx;
