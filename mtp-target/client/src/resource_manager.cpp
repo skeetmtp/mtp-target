@@ -395,16 +395,14 @@ string CResourceManager::get(const string &filename, bool &ok)
 	
 	string dlfn = CacheDirectory + fn;
 	string packedfn = dlfn + ".gz";
-	string destfn = CacheDirectory + ReceivedFilename;
 	
 	if(updatingMessage)
 		updatingMessage->text = "Please wait while dowloading : ";
 
 	if(CFile::fileExists(packedfn))
 		CFile::deleteFile(packedfn);
-	
-	if(CFile::fileExists(destfn))
-		CFile::deleteFile(destfn);
+	if(CFile::fileExists(dlfn))
+		CFile::deleteFile(dlfn);
 	
 	while(!Eof)
 	{
@@ -470,8 +468,11 @@ string CResourceManager::get(const string &filename, bool &ok)
 		}
 	}
 
+	string destfn = CacheDirectory + ReceivedFilename;
 	nlinfo("Received the whole file '%s'", destfn.c_str());
-
+	if(CFile::fileExists(destfn))
+		CFile::deleteFile(destfn);
+		
 	vector<uint8> buf;
 	buf.resize(8000);
 	uint8 *ptr = &(*(buf.begin()));
