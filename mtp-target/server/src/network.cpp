@@ -407,7 +407,6 @@ void CNetwork::update()
 		}
 	}
 	updateCount++;
-	CEntityManager::instance().flushRemoveList();
 }
 
 

@@ -60,7 +60,9 @@ public:
 	void login(CEntity *c);
 
 	void addClientToRemoveList(CClient *c);
-	void flushRemoveList();
+	void addClientToAddList(CClient *c);
+	void flushAddRemoveList();
+
 	void remove(uint8 eid);
 	void remove(const std::string &name);
 	CEntity *getByName(const std::string &name);
@@ -80,6 +82,8 @@ public:
 	bool nameExist(std::string name);
 	void saveAllValidReplay();
 	bool everyBodyReady();
+
+	float slowerVelocity();
 		
 		
 	std::vector<uint8> IdUpdateList;
@@ -90,7 +94,9 @@ private:
 	void add(CEntity *entity);
 	uint8		findNewId();
 	void		checkForcedClientCount();
-	std::vector<uint8> IdToRemove;
+
+	std::list<uint8> IdToRemove;
+	std::list<CEntity *> EntitiesToAdd;
 	
 		
 };

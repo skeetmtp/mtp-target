@@ -68,16 +68,21 @@ static uint8 WatchingId = 0;
 
 void CEntityManager::init()
 {
+	EntitiesToAdd.clear();
+	IdToRemove.clear();
 	checkForcedClientCount();
 }
 
 void CEntityManager::update()
 {
-	CEntities::CReadAccessor acces(entities());
-	EntityConstIt it;
-	for(it = acces.value().begin(); it != acces.value().end(); it++)
+	flushAddRemoveList();
 	{
-		(*it)->update();
+		CEntities::CReadAccessor acces(entities());
+		EntityConstIt it;
+		for(it = acces.value().begin(); it != acces.value().end(); it++)
+		{
+			(*it)->update();
+		}
 	}
 }
 
@@ -175,6 +180,7 @@ void CEntityManager::sendUpdateList()
 		}
 		CNetwork::instance().send(msgout);
 	}
+	nlinfo("new id update list sent");
 }
 
 
@@ -770,13 +776,27 @@ void CEntityManager::addClientToRemoveList(CClient *c)
 	IdToRemove.push_back(c->id());	
 }
 
-void CEntityManager::flushRemoveList()
+void CEntityManager::addClientToAddList(CClient *c)
 {
-	for(uint i = 0; i < IdToRemove.size(); i++)
+	EntitiesToAdd.push_back(c);	
+}
+
+void CEntityManager::flushAddRemoveList()
+{
+	list<uint8>::iterator it1;
+	for(it1=IdToRemove.begin(); it1!=IdToRemove.end();it1++)
 	{
-		CEntityManager::instance().remove(IdToRemove[i]);
+		CEntityManager::instance().remove(*it1);
 	}
-	IdToRemove.clear();	
+	IdToRemove.clear();
+
+	list<CEntity *>::iterator it2;
+	for(it2=EntitiesToAdd.begin(); it2!=EntitiesToAdd.end();it2++)
+	{
+		CEntity *e = *it2;
+		CEntityManager::instance().add(e);
+	}
+	EntitiesToAdd.clear();	
 }
 
 bool CEntityManager::nameExist(std::string name)
@@ -835,4 +855,27 @@ bool CEntityManager::everyBodyReady()
 		}
 	}	
 	return true;
+}
+
+
+float slowerVelocity()
+{
+
+	float res = 1000;
+	CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
+	CEntityManager::EntityConstIt it;
+	
+	for(it = acces.value().begin(); it != acces.value().end(); it++)
+	{
+		CEntity *c = *it;
+
+		float val = c->meanVelocity();
+		{
+			if(val<res)
+				res = val;
+		}
+	}
+	
+
+	return res;
 }

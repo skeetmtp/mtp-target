@@ -71,7 +71,8 @@ public:
 
 	void maxLinearVelocity(float maxLinVel);
 	float maxLinearVelocity();
-	
+	float meanVelocity();
+		
 	// accessors
 
 	uint8					 id() const { return Id; }
@@ -101,7 +102,7 @@ public:
 	
 	sint32				 CurrentScore;		// the current score of the current session
 	sint32				 Score;				// the total score off all session
-	float				 Time;				// time in second before total stop
+	float				 ArrivalTime;				// time in second before total stop
 	NLMISC::CVector		 Pos;				// position of the client
 	NLMISC::CVector		 Force;				// the current client force received
 

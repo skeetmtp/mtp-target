@@ -59,7 +59,7 @@ void CRunningSessionState::update()
 		CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
 		CEntityManager::EntityConstIt it;
 
-		bool end = true;
+		bool everybodyStopped = true;
 
 		if(currentTime > CSessionManager::instance().startTime()+(TTime)TimeTimeout)
 		{
@@ -72,25 +72,17 @@ void CRunningSessionState::update()
 				CEntity *c = *it;
 				if(c->InGame)
 				{
-					const dReal *vel = dBodyGetLinearVel(c->Body);
-					c->LastVel[c->LastVelPos%10]  =(float)fabs(vel[0]);
-					c->LastVel[c->LastVelPos%10] +=(float)fabs(vel[1]);
-					c->LastVel[c->LastVelPos%10] +=(float)fabs(vel[2]);
-					c->LastVelPos++;
-
-					float val = 0.0f;
-					for(uint i = 0; i < 10; i++)
-						val += c->LastVel[i];
+					float val = c->meanVelocity();
 					
 					if(val>MinVelBeforeEnd) //si le client bouge
 					{
-						end = false;
+						everybodyStopped = false;
 					}
 					else //si il est arrete
 					{
-						if(c->Time == 0)
+						if(c->ArrivalTime == 0)
 						{
-							c->Time =(float)(currentTime - CSessionManager::instance().startTime())/1000.0f;
+							c->ArrivalTime =(float)(currentTime - CSessionManager::instance().startTime())/1000.0f;
 							//nlinfo("setting time %s %f",(*it)->Name.c_str(),(*it)->Time);
 						}
 					}
@@ -98,22 +90,22 @@ void CRunningSessionState::update()
 			}
 		}
 
-		if(CSessionManager::instance().forceEnding() || end)
+		if(CSessionManager::instance().forceEnding() || everybodyStopped)
 		{
 			CEntityManager::EntityConstIt  bestit1 = acces.value().end();
 			CEntityManager::EntityConstIt  bestit2 = acces.value().end();
 			CEntityManager::EntityConstIt  bestit3 = acces.value().end();
 			for(it = acces.value().begin(); it != acces.value().end(); it++)
 			{
-				if((*it)->CurrentScore > 0 && (bestit1 == acces.value().end() || (*bestit1)->Time >(*it)->Time))
+				if((*it)->CurrentScore > 0 && (bestit1 == acces.value().end() || (*bestit1)->ArrivalTime >(*it)->ArrivalTime))
 				{
 					bestit1 = it;
 				}
-				else if((*it)->CurrentScore > 0 && (bestit2 == acces.value().end() || (*bestit2)->Time >(*it)->Time))
+				else if((*it)->CurrentScore > 0 && (bestit2 == acces.value().end() || (*bestit2)->ArrivalTime >(*it)->ArrivalTime))
 				{
 					bestit2 = it;
 				}
-				else if((*it)->CurrentScore > 0 && (bestit3 == acces.value().end() || (*bestit3)->Time > (*it)->Time))
+				else if((*it)->CurrentScore > 0 && (bestit3 == acces.value().end() || (*bestit3)->ArrivalTime > (*it)->ArrivalTime))
 				{
 					bestit3 = it;
 				}

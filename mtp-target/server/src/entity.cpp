@@ -73,7 +73,7 @@ void CEntity::init ()
 	Id = 255;
 	CurrentScore = 0;
 	Score = 0;
-	Time = 0.0f;
+	ArrivalTime = 0.0f;
 	OpenClose = false;
 	NbOpenClose = 0;
 	MaxOpenClose = (uint32)DefaultMaxOpenClose;
@@ -367,6 +367,24 @@ float CEntity::maxLinearVelocity()
 	return MaxLinearVelocity;
 }
 
+
+
+float CEntity::meanVelocity()
+{
+	float res = 0;
+	if(InGame)
+	{
+		const dReal *vel = dBodyGetLinearVel(Body);
+		LastVel[LastVelPos%10]  =(float)fabs(vel[0]);
+		LastVel[LastVelPos%10] +=(float)fabs(vel[1]);
+		LastVel[LastVelPos%10] +=(float)fabs(vel[2]);
+		LastVelPos++;
+		
+		for(uint i = 0; i < 10; i++)
+			res += LastVel[i];
+	}
+	return res;
+}	
 //
 // Commands
 //
@@ -375,3 +393,5 @@ float CEntity::maxLinearVelocity()
 //
 //
 //
+
+

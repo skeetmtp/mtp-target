@@ -96,7 +96,7 @@ void CWaitingClientsSessionState::update()
 			(*it)->NbOpenClose = 0;
 			(*it)->InGame = false;
 			(*it)->Ready = false;
-			(*it)->Time = 0.0f;
+			(*it)->ArrivalTime = 0.0f;
 			(*it)->OnTheWater = false;
 			(*it)->spectator(false);
 
