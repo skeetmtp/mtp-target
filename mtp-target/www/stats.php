@@ -263,13 +263,13 @@ function generateHtml()
 	}
 	fprintf($html_fp,"</tr>\n");	
 	
-	fprintf($html_fp,"</table bgcolor=\"#FFFAEA\">\n");
+	fprintf($html_fp,"</table>\n");
 	fprintf($html_fp,"<br>\n");
 	fprintf($html_fp,"<br>\n");
 	
 	
 	fprintf($html_fp,"Today Max simultaneous user :\n");
-	fprintf($html_fp,"<table>\n");
+	fprintf($html_fp,"<table bgcolor=\"#FFFAEA\">\n");
 	fprintf($html_fp,"<tr valign=\"bottom\">\n");
 
 	$maxTodayMax = 0;
@@ -311,12 +311,12 @@ function generateHtml()
 	}
 	fprintf($html_fp,"</tr>\n");	
 	
-	fprintf($html_fp,"</table bgcolor=\"#FFFAEA\">\n");
+	fprintf($html_fp,"</table>\n");
 	fprintf($html_fp,"<br>\n");
 	fprintf($html_fp,"<br>\n");
 	
 	fprintf($html_fp,"Last hour max simultaneous user :\n");
-	fprintf($html_fp,"<table>\n");
+	fprintf($html_fp,"<table bgcolor=\"#FFFAEA\">\n");
 	fprintf($html_fp,"<tr valign=\"bottom\">\n");
 
 	$maxHourMax = 0;
