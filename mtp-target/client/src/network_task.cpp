@@ -80,7 +80,8 @@ public:
 
 	virtual void run()
 	{
-		while(true)
+		stopNetwork = false;
+		while(!stopNetwork)
 		{
 			if (CNetworkTask::instance().sock().connected())
 			{
@@ -94,10 +95,11 @@ public:
 					netCallbacksHandler(msg);
 					break;
 				case NLNET::CSock::ConnectionClosed:
-					nlinfo("Lost the server");
-					break;
 				default:
-					nlerror("Received failed: %s (code %u)", NLNET::CSock::errorString(NLNET::CSock::getLastError()).c_str(), NLNET::CSock::getLastError());
+					nlinfo("Lost the server");
+					//nlerror("Received failed: %s (code %u)", NLNET::CSock::errorString(NLNET::CSock::getLastError()).c_str(), NLNET::CSock::getLastError());
+					CMtpTarget::instance().error();
+					stopNetwork = true;
 					break;
 				}
 			}
@@ -109,7 +111,7 @@ public:
 	}
 
 private:
-
+	bool stopNetwork;
 };
 
 
@@ -137,7 +139,7 @@ void CNetworkTask::release()
 {
 	if(!NetworkThread || !NetworkRunnable)
 		return;
-	
+	//NetworkThread->terminate();
 	delete NetworkThread;
 	NetworkThread = 0;
 	delete NetworkRunnable;
