@@ -64,6 +64,7 @@ public:
 	//void		 updateAir(float deltaTime);
 	
 	CMatrix		*getMatrix();
+	CMatrix		*getMatrixNoZoom();
 	CMatrix		*getMatrixQuake();
 	CMatrix		*getMatrixFollow();
 
@@ -78,6 +79,7 @@ public:
 
 private:
 
+	CMatrix		 MatrixFollowNoZoom;
 	CMatrix		 MatrixFollow;
 	CMatrix		 MatrixQuake;
 	CMatrix		*ActiveMatrix;

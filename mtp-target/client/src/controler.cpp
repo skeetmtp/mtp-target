@@ -121,7 +121,7 @@ void CControler::update()
 	float	speed = CEntityManager::instance()[EId].interpolator().currentSpeed().norm();
 	float	speedRatio = 2.0f;
 	{
-		CMatrix *mat = Camera.getMatrix();
+		CMatrix *mat = Camera.getMatrixNoZoom();
 		CVector lookAt;
 		CVector right;
 		lookAt = mat->getJ();

@@ -289,6 +289,7 @@ bool CCamera::updateRampe(float backDist,float height,float targetBackDist,float
 	Facing = facing;
 
 	CMatrix rotMat;
+	CMatrix rotMatNoZoom;
 	rotMat.identity();
 	rotMat.rotateZ(Facing);
 
@@ -311,8 +312,10 @@ bool CCamera::updateRampe(float backDist,float height,float targetBackDist,float
 		if (C3DTask::instance().mouseListener().MouseWheel < 0)
 			C3DTask::instance().mouseListener().MouseWheel = 0;
 		
-		CVector zoomTans = -getMatrix()->getJ()*(float)(C3DTask::instance().mouseListener().MouseWheel)/2.0f;
-		zoomTans.x = 0;
+		//CVector zoomTans = -getMatrix()->getJ()*(float)(C3DTask::instance().mouseListener().MouseWheel)/2.0f;
+		//zoomTans.x = 0;
+		rotMatNoZoom = rotMat;
+		CVector zoomTans = CVector(0,(float)(C3DTask::instance().mouseListener().MouseWheel)/2.0f,0);
 		rotMat.translate(zoomTans);
 
 		float minMouseAngleToDisplayPart = 0.35f;
@@ -328,6 +331,14 @@ bool CCamera::updateRampe(float backDist,float height,float targetBackDist,float
 		*/
 	}
 	
+	Position = CEntityManager::instance()[EId].interpolator().currentPosition() + CurrentHeight * CVector(0,0,1) + CurrentBackDist * (rotMatNoZoom * CVector(0,1,0));
+	CurrentLookAt = CEntityManager::instance()[EId].interpolator().currentPosition() + CurrentTargetHeight * CVector(0,0,1)  + CurrentTargetBackDist * (rotMatNoZoom * CVector(0,1,0));
+	CVector up(0.0f, 0.0f, 1.0f);
+	if((CurrentLookAt) !=up)
+		lookAt(MatrixFollowNoZoom, Position, CurrentLookAt, up);
+	else
+		lookAt(MatrixFollowNoZoom, Position, CurrentLookAt + CVector(0,0.00001f, 0), up);
+
 	Position = CEntityManager::instance()[EId].interpolator().currentPosition() + CurrentHeight * CVector(0,0,1) + CurrentBackDist * (rotMat * CVector(0,1,0));
 	CurrentLookAt = CEntityManager::instance()[EId].interpolator().currentPosition() + CurrentTargetHeight * CVector(0,0,1)  + CurrentTargetBackDist * (rotMat * CVector(0,1,0));
 	return res;
@@ -337,6 +348,11 @@ bool CCamera::updateRampe(float backDist,float height,float targetBackDist,float
 CMatrix *CCamera::getMatrix()
 {
 	return ActiveMatrix;
+}
+
+CMatrix *CCamera::getMatrixNoZoom()
+{
+	return &MatrixFollowNoZoom;
 }
 
 CMatrix *CCamera::getMatrixQuake()
