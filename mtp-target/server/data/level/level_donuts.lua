@@ -1,6 +1,7 @@
 Name = "Give me the donuts"
 Author = "erendis"
 ServerLua = "level_donuts_server.lua"
+ReleaseLevel = 2
 
 skyShapeFileName = "sky.shape";
 sunAmbientColor = CRGBA(82, 100, 133, 255);
