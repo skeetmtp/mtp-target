@@ -80,6 +80,7 @@ void CEntity::init ()
 	FreezeCommand = true;
 	InGame = false;
 	Ready = false;
+	WaitingReady = false;
 	LastVelPos = 0;
 	StartingPointId = 255;
 	OnTheWater = false;

@@ -206,6 +206,7 @@ static void cbUpdateElement(CClient *c, CNetMessage &msgin)
 static void cbReady(CClient *c, CNetMessage &msgin)
 {
 	c->Ready = true;
+	c->WaitingReady = false;
 	nlinfo("Client '%s' is ready to play", c->name().c_str());
 	CNetMessage msgout(CNetMessage::Ready);
 	uint8 eid = c->id();

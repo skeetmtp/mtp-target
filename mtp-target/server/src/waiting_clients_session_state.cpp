@@ -96,6 +96,7 @@ void CWaitingClientsSessionState::update()
 			(*it)->NbOpenClose = 0;
 			(*it)->InGame = false;
 			(*it)->Ready = false;
+			(*it)->WaitingReady = true;
 			(*it)->ArrivalTime = 0.0f;
 			(*it)->OnTheWater = false;
 			(*it)->spectator(false);
@@ -108,7 +109,10 @@ void CWaitingClientsSessionState::update()
 			
 			// bot are always ready
 			if((*it)->type() == CEntity::Bot)
+			{
 				(*it)->Ready = true;
+				(*it)->WaitingReady = false;
+			}
 		}
 		
 		CNetMessage msgout(CNetMessage::StartSession);

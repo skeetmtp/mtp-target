@@ -120,6 +120,7 @@ public:
 
 	bool				 InGame;
 	bool				 Ready;
+	bool				 WaitingReady;
 	//	bool jointed;
 	float				 Accel;
 	float				 Friction;
