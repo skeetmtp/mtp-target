@@ -40,7 +40,7 @@ end
 function Entity:init()
   local parent = CEntity:new();
   self:setUserData(parent);
-  clientId = clientId + 1;
+  self:setStartPointId(clientId);
   local t = math.mod(clientId,2);
 
   if(t==0) then
@@ -54,6 +54,7 @@ function Entity:init()
   parent:setTeam(t);
   print(self:getName());
   parent:printTeam();
+  clientId = clientId + 1;
 end
 
 function Entity:update()
