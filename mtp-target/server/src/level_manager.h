@@ -44,7 +44,7 @@ public:
 	void display(NLMISC::CLog *log = NLMISC::InfoLog) const;
 
 	// find and load a new level
-	void newLevel();
+	bool newLevel();
 
 	std::string levelName();
 

@@ -29,9 +29,10 @@
 
 //#include "main.h"
 #include "network.h"
-#include "lua_engine.h"
 #include "module.h"
 #include "entity.h"
+#include "lua_engine.h"
+#include "level_manager.h"
 
 
 //
@@ -73,7 +74,6 @@ do \
 }while(false)
 
 
-
 //////////////////////////////////////////////////////////////////////////////////////
 //
 //
@@ -85,55 +85,74 @@ uint32 CLuaEngine::_sessionId = 0;
 CLuaEngine::CLuaEngine()
 {
 	_luaSession = NULL;
+	_error = true;
+}
+
+lua_State *CLuaEngine::session()
+{
+	if(_error)
+		return NULL;
+	return _luaSession;
 }
 
 
 void CLuaEngine::init(const std::string &filename)
 {
-	if(_luaSession)
+	if(_luaSession && !_error)
 		luaClose(_luaSession);
 
+	_error = false;
+	
 	_luaSession = luaOpen();
 	if(!_luaSession)
 	{
 		nlwarning("LEVEL: luaOpenAndLoad() failed while trying to load level '%s'", filename.c_str());
 		return;
 	}
+
+	lua_register(session(), "_ALERT", lua_ALERT);
+	
 	_sessionId++;
 	_sessionId = _sessionId % 1024;
 	
-	Lunar<CModuleProxy>::Register(_luaSession);
-	Lunar<CEntityProxy>::Register(_luaSession);
+	Lunar<CModuleProxy>::Register(session());
+	Lunar<CEntityProxy>::Register(session());
 	string path = CPath::lookup("helpers.lua", false, false);
-	luaLoad(_luaSession,path);
-	luaLoad(_luaSession,filename);
+	luaLoad(session(),path);
+	luaLoad(session(),filename);
 
-	lua_register(_luaSession, "getSessionId", getSessionId);
+	if(session())
+		lua_register(session(), "getSessionId", getSessionId);
 	
 }
 
 void CLuaEngine::update()
 {
+	
+}
 
+void CLuaEngine::error()
+{
+	_error = true;
 }
 
 void CLuaEngine::release()
 {
-	if(_luaSession)
+	if(_luaSession && !_error)
 		luaClose(_luaSession);
 	_luaSession = NULL;
 }
 
 void CLuaEngine::entityEntityCollideEvent(CEntity *entity1, CEntity *entity2)
 {
-	if(!_luaSession)
+	if(!session())
 		return;
 	int res ;
 //	nlinfo("CLuaEngine::entityEntityCollideEvent(0x%p[0x%p],0x%p[0x%p])",entity1,entity1->luaProxy,entity2,entity2->luaProxy);
-	lua_getglobal(_luaSession, "entityEntityCollideEvent");
-	Lunar<CEntityProxy>::push(_luaSession, entity1->luaProxy);
-	Lunar<CEntityProxy>::push(_luaSession, entity2->luaProxy);
-	res = lua_pcall (_luaSession,2,0,0);
+	lua_getglobal(session(), "entityEntityCollideEvent");
+	Lunar<CEntityProxy>::push(session(), entity1->luaProxy);
+	Lunar<CEntityProxy>::push(session(), entity2->luaProxy);
+	res = lua_pcall (session(),2,0,0);
 	/*
 	if(res<0)
 		nlwarning("error calling lua function");
@@ -143,14 +162,14 @@ void CLuaEngine::entityEntityCollideEvent(CEntity *entity1, CEntity *entity2)
 
 void CLuaEngine::entitySceneCollideEvent(CEntity *entity, CModule *module)
 {
-	if(!_luaSession)
+	if(!session())
 		return;
 	int res ;
 //	nlinfo("CLuaEngine::entitySceneCollideEvent(0x%p[0x%p],0x%p[0x%p](%s)",entity,entity->luaProxy,module,module->luaProxy,module->name().c_str());
-	lua_getglobal(_luaSession, "entitySceneCollideEvent");
-	Lunar<CEntityProxy>::push(_luaSession, entity->luaProxy);
-	Lunar<CModuleProxy>::push(_luaSession, module->luaProxy);
-	res = lua_pcall (_luaSession,2,0,0);
+	lua_getglobal(session(), "entitySceneCollideEvent");
+	Lunar<CEntityProxy>::push(session(), entity->luaProxy);
+	Lunar<CModuleProxy>::push(session(), module->luaProxy);
+	res = lua_pcall (session(),2,0,0);
 	/*
 	if(res<0)
 		nlwarning("error calling lua function");
@@ -159,13 +178,13 @@ void CLuaEngine::entitySceneCollideEvent(CEntity *entity, CModule *module)
 
 void CLuaEngine::entityWaterCollideEvent(CEntity *entity)
 {
-	if(!_luaSession)
+	if(!session())
 		return;
 	int res ;
 //	nlinfo("CLuaEngine::entityWaterCollideEvent(0x%p)",entity);
-	lua_getglobal(_luaSession, "entityWaterCollideEvent");
-	Lunar<CEntityProxy>::push(_luaSession, entity->luaProxy);
-	res = lua_pcall (_luaSession,1,0,0);
+	lua_getglobal(session(), "entityWaterCollideEvent");
+	Lunar<CEntityProxy>::push(session(), entity->luaProxy);
+	res = lua_pcall (session(),1,0,0);
 	/*
 	if(res<0)
 		nlwarning("error calling lua function");
@@ -178,4 +197,25 @@ int CLuaEngine::getSessionId(lua_State *L)
 	lua_pushnumber(L,_sessionId); 
 	return 1;
 }
+
+int CLuaEngine::lua_ALERT(lua_State *L)
+{
+	const char *msg = lua_tostring(L,1);
+	char ch[1024];
+	size_t i=0;
+	while(msg[i]!='\0' && i<strlen(msg))
+	{
+		size_t j=0;
+		while(msg[i]!='\0' && msg[i]!='\n' && i<strlen(msg))
+			ch[j++]=msg[i++];
+		if(msg[i]=='\n')
+			i++;
+		ch[j++]='\0';
+		nlwarning("LUA_ALERT: %s",ch);
+	}
+	lua_pop(L,1);
+	CLuaEngine::instance().error();
+	return 0;
+}
+
 

@@ -91,7 +91,7 @@ void CLevelManager::release()
 	}
 }
 
-void CLevelManager::newLevel()
+bool CLevelManager::newLevel()
 {
 	pausePhysics();
 	CEntityManager::instance().reset();
@@ -113,20 +113,25 @@ void CLevelManager::newLevel()
 	nlassert(levels.size() > 0);
 
 	if(CurrentLevel)
+	{
 		delete CurrentLevel;
+		CurrentLevel = NULL;
+	}
 	for(i = 0; i < levels.size(); i++)
 	{
 		CLevel *newLevel = new CLevel(levels[(NextLevelId+i)%levels.size()]);
 		if(newLevel->valid())
 		{
 			CurrentLevel = newLevel;
+			nlinfo("'%s' level loaded",newLevel->name().c_str());
 			resumePhysics();	
-			return;
+			return true;
 		}
 	}
 
-	// no level found, keep the current one
+	nlwarning("newLevel() : no valid level found");
 	resumePhysics();	
+	return false;
 }
 
 void CLevelManager::display(CLog *log) const

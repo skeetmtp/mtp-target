@@ -43,20 +43,24 @@ public:
 	void init(const std::string &filename);
 	void update();
 	void release();
-
+	void error();
+	bool hasError() {return _error;}
+	
 
 	void entityEntityCollideEvent(CEntity *client1, CEntity *client2);
 	void entitySceneCollideEvent(CEntity *client, CModule *module);
 	void entityWaterCollideEvent(CEntity *client);
 
-	lua_State *session(){return _luaSession;};
+	lua_State *session();
 
 private:
+	static int CLuaEngine::lua_ALERT(lua_State *L);
 	static int CLuaEngine::getSessionId(lua_State *L);
 	static uint32 _sessionId;
 		
 	lua_State *_luaSession;
 	CLevel *_level;
+	bool _error;
 	
 };
 

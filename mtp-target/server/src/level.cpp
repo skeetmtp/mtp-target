@@ -98,6 +98,8 @@ void CLevel::_luaInit()
 	luaGetGlobalVariable(_luaSession, ServerLua);
 	luaLoad(CLuaEngine::instance().session(),ServerLua);
 
+	if(!CLuaEngine::instance().session())
+		return;
 	luaGetGlobalVariable(_luaSession, Name);
 	//	nlinfo("level name '%s'", Name.c_str());
 	
@@ -198,6 +200,8 @@ void CLevel::update()
 
 void CLevel::nextStartingPoint(CVector &pos, uint8 &id)
 {
+	if(StartPoints.size()==0) return;
+	
 	id = (NextStartingPoint++)%StartPoints.size();
 	pos = StartPoints[id]->position();
 }
@@ -444,4 +448,9 @@ bool CLevel::changed()
 			return true;
 	}
 	return false;
+}
+
+bool CLevel::valid()
+{ 
+	return Valid && !CLuaEngine::instance().hasError(); 
 }

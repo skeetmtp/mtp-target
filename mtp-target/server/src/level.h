@@ -32,8 +32,8 @@ extern "C"
 #include <lauxlib.h>
 };
 
-#include "start_point.h"
 #include "module.h"
+#include "start_point.h"
 #include "../../common/lua_nel.h"
 
 
@@ -55,8 +55,8 @@ public:
 	void nextStartingPoint(NLMISC::CVector &pos, uint8 &id);
 
 	// return true of this level instance is valid (well initialized and ready to work)
-	bool valid() const { return Valid; }
-
+	bool valid();
+	
 	std::string name() const { return Name; }
 	std::string fileName() const { return FileName; }
 
