@@ -335,7 +335,7 @@ static void cbWSShardChooseShard(CMessage &msgin, const std::string &serviceName
 	MYSQL_RES *result;
 	MYSQL_ROW row;
 	sint32 nbrow;
-	reason = sqlQuery("select * from user where Cookie="+cookie, nbrow, row, result);
+	reason = sqlQuery("select * from user where Cookie='"+cookie+"'", nbrow, row, result);
 	if(!reason.empty()) return;
 	if(nbrow != 1)
 	{
