@@ -323,19 +323,31 @@ static void nearCallback(void *data, dGeomID o1, dGeomID o2)
 			contact[i].surface.bounce = 0.5;
 			contact[i].surface.bounce_vel = 0.1;
 */
-			if(module->bounce())
+			if(module->collide())
 			{
-				contact[i].surface.mode = dContactBounce;
-				contact[i].surface.mu = dInfinity;
-				contact[i].surface.mu2 = 0;
-				contact[i].surface.bounce = BounceScene;
-				contact[i].surface.bounce_vel = BounceVelScene;
+				if(module->bounce())
+				{
+					contact[i].surface.mode = dContactBounce;
+					contact[i].surface.mu = dInfinity;
+					contact[i].surface.mu2 = 0;
+					contact[i].surface.bounce = BounceScene;
+					contact[i].surface.bounce_vel = BounceVelScene;
+				}
+				else
+				{
+					contact[i].surface.mode = dContactMu2;
+					contact[i].surface.mu = dInfinity;
+					contact[i].surface.mu2 = dInfinity;
+				}
 			}
 			else
 			{
-				contact[i].surface.mode = dContactMu2;
-				contact[i].surface.mu = dInfinity;
-				contact[i].surface.mu2 = dInfinity;
+				nlassert(o1!=0 && 02!=0);
+				if(int numc = dCollide(o1,o2,numContact,&contact[0].geom,sizeof(dContact)))
+				{
+					entity->collideModules.insert(module);
+				}
+				return;
 			}
 
 			break;
@@ -414,7 +426,7 @@ static void nearCallback(void *data, dGeomID o1, dGeomID o2)
 					dBodySetLinearVel(entity->Body, 0.0f, 0.0f, 0.0f);
 					entity->Force = CVector::Null;
 					entity->OnTheWater = true;
-					entity->CurrentScore = 0;
+					//entity->CurrentScore = 0;
 //					nlinfo("on the water!!!");
 				}
 				
