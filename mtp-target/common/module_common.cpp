@@ -84,9 +84,6 @@ void CModuleCommon::init(const string &name,uint8 id, CVector position, CAngleAx
 	nlinfo("Adding module '%s' at position %f %f %f", name.c_str(), position.x, position.y, position.z);
 	ShapeName = name+".shape";
 	
-	// Get collision faces
-	loadMesh(ShapeName, Vertices, Normals, Indices);
-
 }
 
 
