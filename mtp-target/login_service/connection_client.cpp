@@ -184,7 +184,7 @@ static void cbClientVerifyLoginPassword(CMessage &msgin, TSockId from, CCallback
 		sint32 nbrow;
 		const CInetAddress &ia = netbase.hostAddress (from);
 
-		reason = sqlQuery("DELETE FROM ban WHERE Date+Duration<=NOW();", nbrow, row, result);
+		reason = sqlQuery("DELETE FROM ban WHERE Date+Duration*60<=NOW();", nbrow, row, result);
 		if(!reason.empty()) break;
 		string ip = ia.ipAddress();
 		reason = sqlQuery("select * from ban where Ip='"+ip+"';", nbrow, row, result);

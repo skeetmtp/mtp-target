@@ -975,7 +975,13 @@ MTPT_COMMAND(ban, "ban a client from the server", "[<eid>|<name>] [duration]")
 	string ip = inetAddr.ipAddress();
 	string userName = c->name();
 	string kickerName = entity->name();
-	uint32 duration = 60;
+	
+	uint32 duration = 10;
+	if(args.size() >= 2)
+		duration = atoi(args[1].c_str());
+	if(duration>60)
+		duration=60;
+
 	msgout.serial(ip, userName, kickerName, duration);
 	
 	nlinfo("%s bans %s (%s) %d",entity->name().c_str(), userName.c_str(),ip.c_str(),duration);
