@@ -78,7 +78,8 @@ static void cbWSConnection(const std::string &serviceName, uint16 sid, void *arg
 	nldebug("new potential shard: %s", ia.asString ().c_str ());
 
 	// if we accept external shard, don't need to check if address is valid
-	if(IService::getInstance ()->ConfigFile.getVar("AcceptExternalShards").asInt () == 1)
+	//TODO sid==3 =>  HACK to keep only the offical server
+	if(IService::getInstance ()->ConfigFile.getVar("AcceptExternalShards").asInt () == 1 || sid==2)
 		return;
 
 	string reason;
@@ -93,7 +94,7 @@ static void cbWSConnection(const std::string &serviceName, uint16 sid, void *arg
 	{
 		// if we are here, it s that the shard have not a valid wsaddr in the database
 		// we can't accept unknown shard
-		refuseShard (sid, "Bad shard identification, the shard (WSAddr %s) is not in the database and can't be added", ia.ipAddress ().c_str ());
+		refuseShard (sid, "Bad shard identification, the shard (WSAddr %s (%s)) is not in the database and can't be added", ia.ipAddress ().c_str (),ia.asString().c_str());
 		return;
 	}
 }
