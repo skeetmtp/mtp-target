@@ -357,6 +357,9 @@ void CIntroTask::updateLoginOnline()
 			serverListButtonBox->elements.push_back(serverListConnectButton);
 			serverListButtonBox->elements.push_back(serverListBackButton);
 			
+			CGuiSpacer *sp = new CGuiSpacer;
+			sp->minHeight(10);
+			serverListVBox->elements.push_back(sp);
 
 			serverListVBox->elements.push_back(serverListButtonBox);
 
