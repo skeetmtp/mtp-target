@@ -362,11 +362,11 @@ static void cbWSIdentification (CMessage &msgin, const std::string &serviceName,
 				return;
 			}
 
-			Shards.push_back (CShard (shardId, sid, ia.ipAddress(), true, row[3]));
+			Shards.push_back (CShard (shardId, sid, row[1], true, row[3]));
 		}
 
 		// ok, the shard is identified correctly
-		nlinfo("ShardId %d with ip '%s' is online!", shardId, ia.ipAddress ().c_str ());
+		nlinfo("ShardId %d name '%s' wsaddr '%s' with ip '%s' is online!", shardId, row[3], row[1], ia.ipAddress ().c_str ());
 		return;
 	}
 	else
