@@ -8,7 +8,7 @@
 <h3>Introduction</h3>
 
 <p>Cela fait maintenant plusieurs années que le projet Mtp Target existe et de
-nouveaux joueurs arrivent tous les jours. Ce jeu a toujours été gratuit et cela
+nouveaux joueurs arrivent tous les jours. Ce jeu a toujours été gratuit mais cela
 ne permet plus aujourd'hui d'avoir une qualité de jeu suffisante. Jusqu'alors,
 nous avions toujours réussi à trouver des serveurs gratuits pour stoquer nos
 bases de données, les serveurs de jeux, les serveurs pour les pages web mais
@@ -19,11 +19,11 @@ avec d'autres activités et qui rend le jeu très instable (quand il n'est pas
 tout simplement inaccessible).</p>
 
 <p>Pour améliorer le jeu, il nous faut nos propres serveurs dédiés, notre
-propre bande passante et pour cela il faut... de l'argent! Nous avons eu
+propre bande passante et pour cela il faut... de l'argent! Nous avons songé à
 plusieurs possibilités et celle qui a été retenue pour le moment est de garder
 le jeu entièrement libre et gratuit mais de faire appel à votre bonne volonté.</p>
 
-<p>Alors si vous aimez ce jeu et que vous voulez le soutenir, faite un don! Tout
+<p>Alors si vous aimez ce jeu et que vous voulez le soutenir, faites un don! Tout
 l'argent sera utilisé pour l'hebergement des serveurs et de ce fait améliorer
 la qualité du jeu. Si nous arrivons pas à obtenir suffisamment d'argent, il est
 très probable que le jeu ne s'ameliore jamais, voir même que le jeu disparraisse :(</p>
