@@ -24,6 +24,8 @@
 
 #include "stdpch.h"
 
+#include <nel/misc/variable.h>
+
 #include "config_file_task.h"
 
 
@@ -58,6 +60,9 @@ void CConfigFileTask::init()
 			fclose(fp);
 		}
 		ConfigFile.load (ConfigFileName);
+
+		// link variables with config file
+		IVariable::init(ConfigFile);
 	}
 	catch (NLMISC::EConfigFile &e)
 	{

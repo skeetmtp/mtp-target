@@ -24,6 +24,11 @@
 
 #include "stdpch.h"
 
+#include <string>
+
+#include <nel/misc/variable.h>
+#include <nel/3d/u_material.h>
+
 #include "editor_task.h"
 #include "time_task.h"
 #include "3d_task.h"
@@ -31,9 +36,6 @@
 #include "level_manager.h"
 #include "mtp_target.h"
 
-#include <string>
-
-#include <nel/3d/u_material.h>
 
 using namespace std;
 using namespace NLMISC;
@@ -41,8 +43,15 @@ using namespace NL3D;
 
 
 
+//
+// Variables
+//
+
+
 static CVector rayTestStart,rayTestEnd;
 static UMaterial testMat;
+
+CVariable<bool> EnableEditor("EnableEditor", "1 if you want a key to enable the editor", false, 0, true);
 
 //
 // Functions
@@ -157,12 +166,10 @@ void CEditorTask::_mouseSelectModule()
 
 void CEditorTask::update() 
 {
-	/*
-	if(C3DTask::instance().kbPressed(KeyF4))
+	if(EnableEditor && C3DTask::instance().kbPressed(KeyF4))
 	{
 		enable(!enable());
 	}
-	*/
 
 	if(_enable)
 	{
