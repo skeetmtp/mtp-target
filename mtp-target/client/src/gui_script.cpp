@@ -92,7 +92,7 @@ void CGuiScript::load(lua_State *luaState,const std::string &filename)
 
 void CGuiScript::XmlRegister()
 {
-	CGuiObjectManager::instance().registerClass("CGuiBitmap",CGuiBitmap::Create);
+	CGuiObjectManager::instance().registerClass("CGuiScript",CGuiScript::Create);
 }
 
 CGuiObject *CGuiScript::Create()
