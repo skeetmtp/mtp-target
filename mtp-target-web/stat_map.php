@@ -1,6 +1,10 @@
 <?php
 include_once("stat_function.php");
 
+	//$fullUrl = "http://{$HTTP_HOST}{$REQUEST_URI}";
+	if(!isset($p_map_id))
+		exit();
+		//$p_map_id = 1;
 	assertValidNumber($p_map_id);
 	$map_id = $p_map_id;
 	$mapName = mapId2Name($map_id);
@@ -16,6 +20,9 @@ include_once("stat_function.php");
 	
 	$html_fp = fopen($cacheFileName, "wt");
 
+	$descMapFilename = "./lang/$lang/".$mapName.".php";
+	if(file_exists($descMapFilename))
+	include($descMapFilename);
 
 	printf("<img src=\"$sshot_dir/%s.jpg\" ALT=\"%s screenshot \"><br>\n",$mapName,$mapName);
 

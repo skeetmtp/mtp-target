@@ -51,7 +51,7 @@ include_once("stat_map_graph_display.php");
 
 	$requete = "SELECT count(*),map.Id,map.LevelName FROM session,map WHERE map.LevelName=session.LevelName GROUP BY session.LevelName;";
 	$result=exec_game_db_requete($requete);
-	drawMapUsage($html_fp,$result,1,15,"Level usage",array("", "Level"),"<a href=\"?page=stat_map.php&p_map_id=%d\">%s</a>");
+	drawMapUsage($html_fp,$result,1,30,"Level usage",array("", "Level"),"<a href=\"?page=stat_map.php&p_map_id=%d\">%s</a>");
 	
 	$requete = "SELECT count(*),shard.ShardId,shard.Name FROM session,shard WHERE shard.ShardId=session.SId GROUP BY session.SId;";
 	$result=exec_game_db_requete($requete);

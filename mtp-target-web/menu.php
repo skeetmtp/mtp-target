@@ -60,8 +60,8 @@
 <tr align="center">
     <td colspan="<?php echo count($menu_array);?>">
         <a href="index.php"><img src="<?php echo $image_dir; ?>/logo.png" ALT="Logo"></a>
-        <a href="?page=<?php echo $page;?>&lang=en"><img src="<?php echo $image_dir; ?>/en.png" ALT="English"></a>
-        <a href="?page=<?php echo $page;?>&lang=fr"><img src="<?php echo $image_dir; ?>/fr.png" ALT="French"></a>
+        <a href="<?php echo "$REQUEST_URI";?>&lang=en"><img src="<?php echo $image_dir; ?>/en.png" ALT="English"></a>
+        <a href="<?php echo "$REQUEST_URI";?>&lang=fr"><img src="<?php echo $image_dir; ?>/fr.png" ALT="French"></a>
     </td>
 </tr>
 <tr>
