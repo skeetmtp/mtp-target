@@ -88,7 +88,7 @@ void CHudTask::render()
 	
 	if(CMtpTarget::instance().State == CMtpTarget::eStartSession)
 	{		
-		str = "Waiting other players";
+		str = "Waiting for other players";
 		ptdt = 1.0f;
 	}
 	if(CMtpTarget::instance().State == CMtpTarget::eBeforeFirstSession)
