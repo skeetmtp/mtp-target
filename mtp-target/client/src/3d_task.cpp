@@ -152,6 +152,20 @@ void C3DTask::init()
 			CConfigFileTask::instance().configFile().getVar("ScreenDepth").asInt(),
 			CConfigFileTask::instance().configFile().getVar("Fullscreen").asInt(),
 			CConfigFileTask::instance().configFile().getVar("ScreenFrequency").asInt());
+
+		std::vector<UDriver::CMode> modes;
+		bool res = Driver->getModes(modes);
+		std::vector<UDriver::CMode>::iterator it;
+		nlinfo("available video mode : ");
+		if(modes.size()==0)
+			nlinfo("none available");
+		
+		for(it=modes.begin();it!=modes.end();it++)
+		{
+			UDriver::CMode m = *it;
+			nlinfo("%d %d %d %dHz %s",m.Width,m.Height,m.Depth,m.Frequency,m.Windowed?"windowed":"fullscreen");
+		}
+		
 		return;
 	}
 

@@ -33,6 +33,7 @@
 #include "font_manager.h"
 #include "task_manager.h"
 #include "background_task.h"
+#include "config_file_task.h"
 #include "resource_manager.h"
 
 
@@ -49,7 +50,6 @@ using namespace NLMISC;
 // Variables
 //
 
-#define CHAT_LINES 3
 #define CHAT_COLUMNS 160
 
 static std::list<std::string> ChatText;
@@ -63,6 +63,7 @@ static std::list<std::string>::reverse_iterator CurrentChatLine = ChatText.rbegi
 	
 void CChatTask::init()
 {
+	chatLineCount = CConfigFileTask::instance().configFile().getVar("ChatLineCount").asInt();
 }
 
 void CChatTask::update()
@@ -110,12 +111,12 @@ void CChatTask::update()
 		std::list<std::string>::reverse_iterator it = ChatText.rend();
 		sint32 i;
 		// can't go back up too much
-		for (i = 0; i < CHAT_LINES && it != ChatText.rbegin(); i++, --it)
+		for (i = 0; i < chatLineCount && it != ChatText.rbegin(); i++, --it)
 		{
 			// nothing
 		}
 		// ok, go back up
-		for (i = 0; i < CHAT_LINES && CurrentChatLine != it; i++, ++CurrentChatLine)
+		for (i = 0; i < chatLineCount && CurrentChatLine != it; i++, ++CurrentChatLine)
 		{
 			// nothing
 		}
@@ -123,7 +124,7 @@ void CChatTask::update()
 	if (C3DTask::instance().kbPressed(KeyNEXT))
 	{
 		// go back down
-		for (sint32 i = 0; i < CHAT_LINES && CurrentChatLine != ChatText.rbegin(); i++, --CurrentChatLine)
+		for (sint32 i = 0; i < chatLineCount && CurrentChatLine != ChatText.rbegin(); i++, --CurrentChatLine)
 		{
 		}
 	}
@@ -131,7 +132,7 @@ void CChatTask::update()
 
 void CChatTask::render()
 {
-	uint cl = CHAT_LINES;
+	uint cl = chatLineCount;
 //ace todo	if(large) cl *= 4;
 	
 	C3DTask::instance().driver().setFrustum(CFrustum(0, (float)C3DTask::instance().screenWidth(), 0, (float)C3DTask::instance().screenHeight(), -1, 1, false));

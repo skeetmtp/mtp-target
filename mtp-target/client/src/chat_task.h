@@ -50,6 +50,7 @@ public:
 	void	addLine(const std::string &text);
 		
 private:
+	int chatLineCount;
 
 };
 
