@@ -126,6 +126,12 @@ static void cbLogout(CNetMessage &msgin)
 	//nlassert(entity!=0);
 	//mtpTarget::instance().World.remove(entity);
 
+	if(!CEntityManager::instance().exist(eid))
+	{
+		nlwarning("Try to cbLogout the eid %hu but doesn't exist, discard it", (uint16)eid);
+		return;
+	}
+
 	nlinfo("player number %hu leaves", (uint16)eid);
 	
 	// if it's my eid, it means that i have to disconnect because i was kicked out from the server
@@ -135,8 +141,7 @@ static void cbLogout(CNetMessage &msgin)
 	}
 	else
 	{
-		if(CEntityManager::instance().exist(eid))
-			CChatTask::instance().addLine(toString("%s leaves !", CEntityManager::instance()[eid].name().c_str()));
+		CChatTask::instance().addLine(toString("%s leaves !", CEntityManager::instance()[eid].name().c_str()));
 	}
 
 	CEntityManager::instance().remove(eid);
