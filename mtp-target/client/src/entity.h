@@ -162,6 +162,7 @@ private:
 	virtual ~CEntity() { delete _interpolator; _interpolator = 0; }
 
 	void reset();
+	void sessionReset();
 	void luaInit();
 	void init(TEntity type, const std::string &name, sint32 totalScore, NLMISC::CRGBA &color, const std::string &texture, const std::string &meshname, bool spectator, bool isLocal);
 	void id(uint8 nid);

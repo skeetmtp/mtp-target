@@ -285,13 +285,13 @@ void CEntityManager::startSession()
 	}
 }
 
-void CEntityManager::reset()
+void CEntityManager::sessionReset()
 {
 	for(uint i = 0; i < 256; i++)
 	{
 		if(entities()[i]->type() != CEntity::Unknown)
 		{
-			entities()[i]->interpolator().reset();
+			entities()[i]->sessionReset();
 		}
 	}
 }

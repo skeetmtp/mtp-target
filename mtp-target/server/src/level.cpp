@@ -183,6 +183,15 @@ void CLevel::_luaInit()
 		nlinfo("rot %f %f %f %f", Rotation.Axis.x , Rotation.Axis.y, Rotation.Axis.z, Rotation.Angle);
 		lua_pop(_luaSession, 1);  // removes `value'; keeps `key' for next iteration
 		
+		// Get module color
+		CLuaRGBA Color(255,255,255,255);
+		lua_pushstring(_luaSession,"Color");
+		lua_gettable(_luaSession, -2);
+		if (!lua_isnil(_luaSession, -1))
+			luaGetVariable(_luaSession, Color);		
+		nlinfo("color = %d %d %d %d", Color.R, Color.G, Color.B, Color.A);
+		lua_pop(_luaSession, 1);  // removes `value'; keeps `key' for next iteration
+		
 		// Get module name
 		
 		// Get module ShapeName
@@ -194,7 +203,7 @@ void CLevel::_luaInit()
 		lua_pop(_luaSession, 1);  // removes `value'; keeps `key' for next iteration
 		
 		CModule *mod = new CModule();
-		mod->init(Lua,ShapeName, moduleId, Position, Scale, Rotation);
+		mod->init(Lua,ShapeName, moduleId, Position, Scale, Rotation, Color);
 		Modules.push_back(mod);
 		moduleId++;
 		lua_pop(_luaSession, 1);

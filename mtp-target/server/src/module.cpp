@@ -80,9 +80,9 @@ CModule::CModule() : CModuleCommon()
 	triMeshDataId = 0;
 }
 
-void CModule::init(const std::string &name, const std::string &shapeName, uint8 id, const NLMISC::CVector &position, const NLMISC::CVector &scale, const NLMISC::CAngleAxis &rotation)
+void CModule::init(const std::string &name, const std::string &shapeName, uint8 id, const NLMISC::CVector &position, const NLMISC::CVector &scale, const NLMISC::CAngleAxis &rotation, const NLMISC::CRGBA &color)
 {
-	CModuleCommon::init(name, shapeName, id, position, scale, rotation);
+	CModuleCommon::init(name, shapeName, id, position, scale, rotation,color);
 	
 	// Get collision faces
 	loadMesh(ShapeName, Vertices, Normals, Indices, AutoEdges,true);

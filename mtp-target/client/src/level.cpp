@@ -250,6 +250,15 @@ CLevel::CLevel(const string &filename)
 		nlinfo("rot %g %g %g %g", Rotation.Axis.x , Rotation.Axis.y, Rotation.Axis.z, Rotation.Angle);
 		lua_pop(LuaState, 1);  // removes `value'; keeps `key' for next iteration
 		
+		// Get module color
+		CLuaRGBA Color(255,255,255,255);
+		lua_pushstring(LuaState,"Color");
+		lua_gettable(LuaState, -2);
+		if (!lua_isnil(LuaState, -1))
+			luaGetVariable(LuaState, Color);		
+		nlinfo("color = %d %d %d %d", Color.R, Color.G, Color.B, Color.A);
+		lua_pop(LuaState, 1);  // removes `value'; keeps `key' for next iteration
+		
 		// Get module name
 		string Lua;
 		lua_pushstring(LuaState,"Lua");
@@ -267,7 +276,7 @@ CLevel::CLevel(const string &filename)
 		lua_pop(LuaState, 1);  // removes `value'; keeps `key' for next iteration
 		
 		CModule *module = new CModule();
-		module->init(Lua,Shape,moduleId,Position,Scale,Rotation);
+		module->init(Lua,Shape,moduleId,Position,Scale,Rotation,Color);
 		moduleId++;
 		if(!DisplayLevel)
 			module->hide();

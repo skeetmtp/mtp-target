@@ -47,7 +47,7 @@ public:
 	
 	virtual ~CModuleCommon();
 
-	virtual void init(const std::string &name, const std::string &shapeName, uint8 id, NLMISC::CVector position, NLMISC::CVector scale, NLMISC::CAngleAxis rotation);
+	virtual void init(const std::string &name, const std::string &shapeName, uint8 id, NLMISC::CVector position, NLMISC::CVector scale, NLMISC::CAngleAxis rotation, const NLMISC::CRGBA &color);
 	void display(NLMISC::CLog *log = NLMISC::InfoLog) const;
 		
 	// accessors
@@ -86,6 +86,7 @@ protected:
 	float				Friction;
 	bool				Enabled;
 	std::string			LuaShapeName;
+	NLMISC::CRGBA		LuaColor;
 private:
 	
 };

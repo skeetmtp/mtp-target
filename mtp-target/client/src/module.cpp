@@ -92,9 +92,9 @@ CModule::~CModule()
 }
 
 
-void CModule::init(const string &name, const std::string &shapeName, uint8 id, const CVector &position, const CVector &scale, const CAngleAxis &rotation)
+void CModule::init(const string &name, const std::string &shapeName, uint8 id, const CVector &position, const CVector &scale, const CAngleAxis &rotation, const NLMISC::CRGBA &color)
 {
-	CModuleCommon::init(name, shapeName, id, position, scale, rotation); 
+	CModuleCommon::init(name, shapeName, id, position, scale, rotation,color); 
 
 	// Get collision faces
 //	loadMesh(ShapeName, Vertices, Normals, Indices,false);
@@ -117,6 +117,7 @@ void CModule::init(const string &name, const std::string &shapeName, uint8 id, c
 	Mesh.setScale(oldScale);
 	CMatrix mmatrix = mesh().getMatrix();
 	Color.set(255,255,255);
+	this->color(color);
 	
 }
 
@@ -202,7 +203,7 @@ void  CModule::color(const NLMISC::CRGBA &col)
 	for(uint i = 0; i < Mesh.getNumMaterials(); i++)
 	{
 		Mesh.getMaterial(i).setDiffuse(Color);
-		Mesh.getMaterial(i).setAmbient(Color);
+		//Mesh.getMaterial(i).setAmbient(Color);
 	}
 	
 }

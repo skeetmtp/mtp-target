@@ -183,15 +183,15 @@ void CEntity::update()
 		{
 			SoundsDescriptor.play(CSoundManager::CEntitySoundsDescriptor::Impact);
 			CHudTask::instance().addMessage(CHudMessage(0,15,1,string("don't touch anything when you fly"),CRGBA(255,255,0,255),5));
-			if(!ImpactParticle.empty())
-			{
-				//ImpactParticle.setPos(showCollideWhenFlyPos);
-				ImpactParticle.activateEmitters(true);
-				ImpactParticle.show();
-			}
-			//ImpactParticle.setPos(interpolator().position());
-			//ImpactParticle.setScale(100,100,100);
 		}
+		if(!ImpactParticle.empty())
+		{
+			//ImpactParticle.setPos(showCollideWhenFlyPos);
+			ImpactParticle.activateEmitters(true);
+			ImpactParticle.show();
+		}
+		//ImpactParticle.setPos(interpolator().position());
+		//ImpactParticle.setScale(100,100,100);
 		showCollideWhenFly = false;
 	}
 	
@@ -314,6 +314,19 @@ void CEntity::reset()
 	}
 }
 
+void CEntity::sessionReset()
+{
+	interpolator().reset();
+	OpenClose = false;
+	showCollideWhenFly = false;
+	showCollideWhenFlyPos = CVector(0,0,0);
+	if(!ImpactParticle.empty())
+	{
+		ImpactParticle.activateEmitters(false);
+		ImpactParticle.hide();
+	}
+}
+	
 void CEntity::init(TEntity type, const std::string &name, sint32 totalScore, CRGBA &color, const std::string &texture, const std::string &meshname, bool spectator, bool isLocal)
 {
 	nlassert(type != Unknown);
@@ -411,7 +424,7 @@ void CEntity::load3d()
 		ImpactParticle.setOrderingLayer(2);
 		ImpactParticle.activateEmitters(false);
 		ImpactParticle.hide();
-		//ImpactParticle.setScale(10,10,10);
+		//ImpactParticle.setScale(1,1,1);
 	}
 
 }

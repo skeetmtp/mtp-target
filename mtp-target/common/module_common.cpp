@@ -84,12 +84,13 @@ CModuleCommon::~CModuleCommon()
 {
 }
 
-void CModuleCommon::init(const string &name, const std::string &shapeName, uint8 id, CVector position, CVector scale, CAngleAxis rotation)
+void CModuleCommon::init(const string &name, const std::string &shapeName, uint8 id, CVector position, CVector scale, CAngleAxis rotation, const NLMISC::CRGBA &color)
 {
 	CEditableElementCommon::init(name,shapeName,id,position,scale,rotation);
-	nlinfo("Adding module '%s'(%s) at position %f %f %f , scale : %f %f %f", name.c_str(), shapeName.c_str(), position.x, position.y, position.z, scale.x, scale.y, scale.z);
+	nlinfo("Adding module '%s'(%s) at position %f %f %f , scale : %f %f %f, color = %d %d %d %d", name.c_str(), shapeName.c_str(), position.x, position.y, position.z, scale.x, scale.y, scale.z,color.R,color.G,color.B,color.A);
 	ShapeName = shapeName+".shape";
 	LuaShapeName = shapeName;
+	LuaColor = color;
 }
 
 
@@ -120,7 +121,7 @@ void CModuleCommon::enabled(bool e)
 
 string CModuleCommon::toLuaString()
 {
-	return toString("{ Position = CVector(%f,%f,%f), Scale = CVector(%f, %f, %f), Rotation = CAngleAxis(%f,%f,%f,%f), Lua=\"%s\", Shape=\"%s\" }",Position.x,Position.y,Position.z,Scale.x,Scale.y,Scale.z,Rotation.Axis.x,Rotation.Axis.y,Rotation.Axis.z,Rotation.Angle,Name.c_str(),LuaShapeName.c_str());
+	return toString("{ Position = CVector(%f,%f,%f), Scale = CVector(%f, %f, %f), Rotation = CAngleAxis(%f,%f,%f,%f), Color = CRGBA(%d,%d,%d,%d), Lua=\"%s\", Shape=\"%s\" }",Position.x,Position.y,Position.z,Scale.x,Scale.y,Scale.z,Rotation.Axis.x,Rotation.Axis.y,Rotation.Axis.z,Rotation.Angle,LuaColor.R,LuaColor.G,LuaColor.B,LuaColor.A,Name.c_str(),LuaShapeName.c_str());
 }
 
 

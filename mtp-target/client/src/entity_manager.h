@@ -95,7 +95,7 @@ public:
 	bool	exist(uint8 eid) ;
 
 	void	startSession();
-	void	reset();
+	void	sessionReset();
 	void	luaInit();
 		
 	// set all spectator to no more spectator

@@ -132,7 +132,7 @@ void CMtpTarget::error(string reason)
 void CMtpTarget::reset()
 {
 	nlinfo("CMtpTarget::reset()");
-	CEntityManager::instance().reset();
+	CEntityManager::instance().sessionReset();
 	controler().reset();
 	NewSession = false;
 	TimeBeforeSessionStart = 0.0f;
@@ -187,7 +187,7 @@ void CMtpTarget::update()
 		{
 			TimeBeforeSessionStart = 0;
 			CMtpTarget::instance().State = CMtpTarget::eGame;
-			CEntityManager::instance().reset();			
+			CEntityManager::instance().sessionReset();			
 		}
 	}
 	if(CMtpTarget::instance().State == CMtpTarget::eGame)
