@@ -118,12 +118,13 @@ static void cbLogin(CClient *c, CNetMessage &msgin)
 	login = strlwr(login);
 
 	nlinfo("cookie:%s login:%s texture:%s color:%d %d %d %d",cookie.c_str(),login.c_str(),texture.c_str(),color.R,color.G,color.B,color.A);
+	
 	if(error.empty())
 	{
 		if(cookie.empty())
 		{
 			// check in normal way
-			error = CEntityManager::instance().check(login, password, false, c->Score, c->isAdmin());
+			error = CEntityManager::instance().check(login, password, false, c->Score);
 		}
 		else
 		{
@@ -136,11 +137,12 @@ static void cbLogin(CClient *c, CNetMessage &msgin)
 			}
 			else
 			{
-				error = CEntityManager::instance().check(login, password, true, c->Score, c->isAdmin());
+				error = CEntityManager::instance().check(login, password, true, c->Score);
 			}
 		}
 	}
 
+	// init() must be after the check() call
 	c->init(login,texture,color);
 	c->Cookie = cookie;
 

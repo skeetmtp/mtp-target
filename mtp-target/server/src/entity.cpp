@@ -99,7 +99,6 @@ void CEntity::init ()
 	Force = CVector::Null;
 	for(uint i = 0; i < 10; i++) LastVel[i] = 0.0f;
 	Spectator = true;
-	_isAdmin = false;
 	MaxLinearVelocity = 0;
 	ForceReceived = true;
 	AfkCount = 0;
@@ -155,7 +154,6 @@ CEntity::CEntity(uint8 eid, const std::string &name)
 	Type = Bot;
 	Spectator = false;
 	_luaInit();
-	_isAdmin = false;
 }
 
 void CEntity::init(std::string &name,std::string &texture, NLMISC::CRGBA &color)
@@ -198,21 +196,20 @@ CEntity::~CEntity()
 
 bool CEntity::isAdmin() const
 {
-	return _isAdmin;
+	CConfigFile::CVar &admin = IService::getInstance()->ConfigFile.getVar("Admin");
+	for(uint i = 0; i < (uint)admin.size(); i++)
+	{
+		if(admin.asString(i) == name())
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 void CEntity::name(const string &name)
 {
 	Name = name;
-	CConfigFile::CVar &admin = IService::getInstance()->ConfigFile.getVar("Admin");
-	for(uint i = 0; i < (uint)admin.size(); i++)
-	{
-		if(admin.asString(i) == name)
-		{
-			_isAdmin = true;
-			return;
-		}
-	}
 }
 
 

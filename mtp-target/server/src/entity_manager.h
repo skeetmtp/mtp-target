@@ -50,7 +50,7 @@ public:
 	
 	std::list <CEntity*> &entities() { return Entities; }
 
-	std::string check (const std::string &login, const std::string &password, bool dontCheck, sint32 &score, bool isAdmin);
+	std::string check (const std::string &login, const std::string &password, bool dontCheck, sint32 &score);
 
 	// this add is to add a client
 	void addClient(NLNET::CTcpSock *sock);
@@ -90,7 +90,10 @@ public:
 		
 	CEntity *getNthEntity(uint8 number);
 	
+	bool isAdmin(const std::string &name) const;
+
 	std::list<uint8> IdUpdateList;
+	
 private:
 	void _add(std::list<CEntity *> &addList);
 	void _remove(std::list<uint8> &removeList);

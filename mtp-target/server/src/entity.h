@@ -164,7 +164,6 @@ private:
 	TEntity				 Type;				// type of entity
 	uint8				 Id;
 	std::string			 Name;				// empty name mean that the client not already send login information
-	bool                 _isAdmin;
 	float				 MaxLinearVelocity;
 };
 
