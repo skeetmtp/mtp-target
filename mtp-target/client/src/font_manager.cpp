@@ -80,9 +80,29 @@ uint32 CharH[] =
 //
 // Functions
 //
-	
+
 void CFontManager::init()
 {
+	replaceStrings.clear();
+	CConfigFile::CVar &replaceStringVar = CConfigFileTask::instance().configFile().getVar("ReplaceStringByImage");
+	nlassert(replaceStringVar.size() % 2 == 0);
+	for(uint i = 0; i < (uint)replaceStringVar.size(); i += 2)
+	{
+		string search = replaceStringVar.asString(i+0);
+		string replaceImageFilename = replaceStringVar.asString(i+1);
+		
+		string res = CResourceManager::instance().get(replaceImageFilename);
+		NL3D::UTextureFile *texture = C3DTask::instance().driver().createTextureFile (res);
+		CReplaceString *replaceString = new CReplaceString(search);
+		replaceString->material = C3DTask::instance().createMaterial();
+		replaceString->material.setTexture(texture);
+		replaceString->material.setBlend(true);
+		replaceString->material.setZFunc(UMaterial::always);
+		replaceString->material.setDoubleSided();
+		replaceStrings.push_back(replaceString);
+		nlinfo("%s->%s(0x%p)",search.c_str(),replaceImageFilename.c_str(),&(replaceString->material));
+	}
+
 	string res = CResourceManager::instance().get("font.tga");
 	Texture = C3DTask::instance().driver().createTextureFile (res);
 	Material = C3DTask::instance().createMaterial();
@@ -137,6 +157,55 @@ void CFontManager::release()
 	}
 }
 
+sint32 CFontManager::strfind(string &str,CReplaceString **found)
+{
+	vector<CReplaceString *>::iterator it;
+	uint32 minFoundPos = str.size()+1;
+	bool isFound = false;
+	for(it=replaceStrings.begin();it!=replaceStrings.end();it++)
+	{
+		string strSearch = (*it)->search;
+		string::size_type pos = str.find(strSearch);
+		if(pos!=string::npos && minFoundPos>pos)
+		{
+			*found = *it;
+			minFoundPos = pos;
+			isFound = true;
+		}
+	}
+	if(!isFound)
+		return -1;
+	return minFoundPos;
+}
+
+void CFontManager::drawSpecial(float x, float y,float width,float height, NL3D::UMaterial &material)
+{
+	float realX = C3DTask::instance().screenWidth()*8*x/800.0f;
+	float realY = C3DTask::instance().screenHeight()-C3DTask::instance().screenHeight()*(16*(y+1)+4)/600.0f;
+	float realW = C3DTask::instance().screenWidth()*width/800;
+	float realH = C3DTask::instance().screenHeight()*height/600;
+
+	CQuadUV		quad;
+	quad.V0.set(realX      , realY      , 0);
+	quad.V1.set(realX+realW, realY      , 0);
+	quad.V2.set(realX+realW, realY+realH, 0);
+	quad.V3.set(realX      , realY+realH, 0);
+
+	quad.Uv3.U= 0;
+	quad.Uv3.V= 0;
+	quad.Uv2.U= 1;
+	quad.Uv2.V= 0;
+	quad.Uv1.U= 1;
+	quad.Uv1.V= 1;
+	quad.Uv0.U= 0;
+	quad.Uv0.V= 1;
+
+	
+	C3DTask::instance().driver().setFrustum(CFrustum(0, (float)C3DTask::instance().screenWidth(), 0, (float)C3DTask::instance().screenHeight(), -1, 1, false));
+	C3DTask::instance().driver().drawQuad (quad, material);
+
+}
+
 void CFontManager::littlePrintf(const CRGBA &col, float x, float y, const char *format ...)
 {
 	H_AUTO(littlePrintf2);
@@ -155,10 +224,43 @@ void CFontManager::littlePrintf(float x, float y, const char *format ...)
 	char *str;
 	NLMISC_CONVERT_VARGS (str, format, 256);
 
-	LittleTextContext->setColor (CRGBA (255,255,255,255));
-	LittleTextContext->printfAt (8*x/C3DTask::instance().screenWidth(), (C3DTask::instance().screenHeight()-16*y-16)/C3DTask::instance().screenHeight(), str);
+	CReplaceString  *replaceString;
+	sint32 strFoundOffset = strfind(string(str),&replaceString);
+
+	if(strFoundOffset<0)
+	{
+		LittleTextContext->setColor (CRGBA (255,255,255,255));
+		LittleTextContext->printfAt (8*x/C3DTask::instance().screenWidth(), (C3DTask::instance().screenHeight()-16*y-16)/C3DTask::instance().screenHeight(), str);
+	}
+	else
+	{
+		uint32 strFoundLength = replaceString->search.size();
+		uint32 strSrcLength = strlen(str);
+		UTextContext::CStringInfo subStringInfo = CFontManager::instance().guiTextContext().getStringInfo(ucstring(string(str).substr(0,strFoundOffset)));
+		
+		if(strFoundOffset>0)
+			littlePrint(x,y,strFoundOffset,str);
+
+		float newStrDx = subStringInfo.StringWidth/8;
+		float imageW = 16;
+		float imageH = 16;
+		drawSpecial(x+newStrDx,y,imageW,imageH,replaceString->material);
+		float specialWidth = imageW / 8;
+
+		uint32 dx = strFoundOffset+strFoundLength;
+		uint32 remainingCharCount = strSrcLength - dx;
+		if(remainingCharCount>0)
+			littlePrintf(x+newStrDx+specialWidth,y,str+dx);
+	}
 }
 
+void CFontManager::littlePrint(float x, float y, uint32 count, const char *ch)
+{
+	string str = ch;
+
+	LittleTextContext->setColor (CRGBA (255,255,255,255));
+	LittleTextContext->printfAt (8*x/C3DTask::instance().screenWidth(), (C3DTask::instance().screenHeight()-16*y-16)/C3DTask::instance().screenHeight(), str.substr(0,count).c_str());
+}
 
 void CFontManager::printf(const NLMISC::CRGBA &col, float x, float y, float scale, const char *format, ...)
 {

@@ -39,6 +39,19 @@
 // Classes
 //
 
+class CReplaceString
+{
+public:
+	CReplaceString(std::string &search)
+	{
+		this->search = search;
+	}
+	std::string search;
+	NL3D::UMaterial material;
+protected:
+private:
+};
+
 class CFontManager : public CSingleton<CFontManager>, public ITask
 {
 public:
@@ -54,6 +67,7 @@ public:
 
 	void littlePrintf(float x, float y, const char *format ...);
 	void littlePrintf(const NLMISC::CRGBA &col, float x, float y, const char *format ...);
+	void littlePrint(float x, float y, uint32 count, const char *ch);
 	void printf(const NLMISC::CRGBA &col, float x, float y, float scale, const char *format, ...);
 	void printf3D(const NLMISC::CRGBA &col, const NLMISC::CVector &pos, float scale, const char *format, ...);
 	
@@ -66,6 +80,8 @@ public:
 
 private:
 
+	void drawSpecial(float x, float y,float width,float height, NL3D::UMaterial &material);
+	sint32 strfind(std::string &str,CReplaceString **found);
 	uint32 FontHeight;
 	uint32 FontWidth;
 
@@ -75,6 +91,8 @@ private:
 	
 	NL3D::UTextureFile	*Texture;
 	NL3D::UMaterial		 Material;
+
+	std::vector<CReplaceString *> replaceStrings;
 
 };
 
