@@ -69,7 +69,7 @@ public:
 	virtual void release() { }
 
 	void reset();
-	void error(std::string &reason);
+	void error(std::string reason);
 	
 	virtual std::string name() { return "CMtpTarget"; }
 

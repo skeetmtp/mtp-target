@@ -44,6 +44,11 @@ using namespace NLMISC;
 // Functions
 //
 
+CSoundManager::CSoundManager()
+{
+	isInit = false;
+}
+
 #ifdef USE_FMOD
 static FSOUND_SAMPLE *loadSoundSample(const std::string &filename)
 {
@@ -51,7 +56,7 @@ static FSOUND_SAMPLE *loadSoundSample(const std::string &filename)
 	string longName = CResourceManager::instance().get(filename);
 	if(!longName.empty())
 	{
-		sample = FSOUND_Sample_Load(FSOUND_FREE, longName.c_str(), 0, 0);
+		sample = FSOUND_Sample_Load(FSOUND_FREE, longName.c_str(),FSOUND_NORMAL  | FSOUND_LOOP_OFF , 0, 0);
 		if (!sample)
 		{
 			nlwarning("CSoundManager: Can't load '%s' (%s)", longName.c_str(), FMOD_ErrorString(FSOUND_GetError()));
@@ -104,10 +109,12 @@ void CSoundManager::init()
 			playStream(res);
 		}
 	}
+	isInit = true;
 }
 
 void CSoundManager::update()
 {
+	if(!isInit) return;
 #ifdef USE_FMOD
 	// first update listener
 	FSOUND_3D_Listener_SetAttributes(ListenerPosition, ListenerVelocity, ListenerAtVector.x, ListenerAtVector.y, ListenerAtVector.z, ListenerUpVector.x, ListenerUpVector.y, ListenerUpVector.z);
@@ -178,6 +185,7 @@ void CSoundManager::update()
 
 void CSoundManager::updateListener(const NLMISC::CVector &position, const NLMISC::CVector &velocity, const NLMISC::CVector &atVector, const NLMISC::CVector &upVector)
 {
+if(!isInit) return;
 #ifdef USE_FMOD
 	// fmod is left handed
 	ListenerPosition[0] = position.x;
@@ -202,6 +210,7 @@ void CSoundManager::render()
 
 void CSoundManager::release()
 {
+	if(!isInit) return;
 #ifdef USE_FMOD
 	// check if all entities have been unregistered
 	//nlassertex(entitySoundsDescriptorList.empty(), ("CSoundManager: %u entities already registered", entitySoundsDescriptorList.size()));
@@ -226,6 +235,7 @@ void CSoundManager::release()
 
 void CSoundManager::registerEntity(CEntitySoundsDescriptor &esd)
 {
+if(!isInit) return;
 #ifdef USE_FMOD
 	nlassert(std::find(entitySoundsDescriptorList.begin(), entitySoundsDescriptorList.end(), &esd) == entitySoundsDescriptorList.end());
 	entitySoundsDescriptorList.push_back(&esd);
@@ -236,6 +246,7 @@ void CSoundManager::registerEntity(CEntitySoundsDescriptor &esd)
 // -----------------------------------------------------------------------------
 void CSoundManager::unregisterEntity(CEntitySoundsDescriptor &esd)
 {
+if(!isInit) return;
 #ifdef USE_FMOD
 	TEntitySoundsDescriptorList::iterator it = std::find(entitySoundsDescriptorList.begin(), entitySoundsDescriptorList.end(), &esd);
 	if(it == entitySoundsDescriptorList.end())
@@ -316,6 +327,7 @@ void CSoundManager::CEntitySoundsDescriptor::reset()
 // -----------------------------------------------------------------------------
 void CSoundManager::playGuiSound(TGuiSound sound, bool loop)
 {
+if(!isInit) return;
 #ifdef USE_FMOD
 	if (guiSoundSamples[sound] != 0)
 	{
@@ -363,6 +375,7 @@ void CSoundManager::playGuiSound(TGuiSound sound, bool loop)
 // -----------------------------------------------------------------------------
 void CSoundManager::stopGuiSound(TGuiSound sound)
 {
+if(!isInit) return;
 #ifdef USE_FMOD
 	if (guiChannels[sound] != -1)
 	{
@@ -401,12 +414,13 @@ static signed char CSoundTaskStreamEndCallback(FSOUND_STREAM *stream, void *buff
 // -----------------------------------------------------------------------------
 void CSoundManager::playStream(const std::string &filename, bool loop)
 {
+if(!isInit) return;
 #ifdef USE_FMOD
 	stopStream();
 	std::string longName = NLMISC::CPath::lookup(filename, false);
 	if (! longName.empty())
 	{
-		streamStream = FSOUND_Stream_OpenFile(longName.c_str(), FSOUND_NORMAL | FSOUND_LOOP_OFF, 0);
+		streamStream = FSOUND_Stream_Open(longName.c_str(), FSOUND_NORMAL | FSOUND_LOOP_OFF, 0, 0);
 		if (streamStream == 0)
 		{
 			nlwarning("CSoundManager: Can't load stream '%s' (%s)", longName.c_str(), FMOD_ErrorString(FSOUND_GetError()));
@@ -434,6 +448,7 @@ void CSoundManager::playStream(const std::string &filename, bool loop)
 // -----------------------------------------------------------------------------
 void CSoundManager::stopStream()
 {
+if(!isInit) return;
 #ifdef USE_FMOD
 	if(streamStream != 0)
 	{

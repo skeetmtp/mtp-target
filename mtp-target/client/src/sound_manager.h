@@ -123,6 +123,11 @@ public:
 
 #endif // USE_FMOD
 
+	friend class CSingleton<CSoundManager>;
+	CSoundManager();
+private:
+	bool isInit;
+
 };
 
 #endif

@@ -122,7 +122,7 @@ void CMtpTarget::init()
 	reset();
 }
 
-void CMtpTarget::error(string &reason)
+void CMtpTarget::error(string reason)
 {
 	DoError = true;
 	ErrorReason = reason;
