@@ -547,6 +547,8 @@ void CGuiText::init(CGuiXml *xml,xmlNodePtr node)
 		isEditable(b);
 	if(xml->getBool(node,"isPassword",b))
 		isPassword(b);
+	if(xml->getBool(node,"isMultiline",b))
+		isMultiline(b);
 }
 
 
