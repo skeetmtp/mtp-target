@@ -95,6 +95,7 @@ protected:
 
 typedef CInterpolatorKey<CEntityState> CEntityInterpolatorKey;
 
+class CEntity;
 
 class CInterpolator
 {
@@ -118,6 +119,7 @@ public:
 	double localTime() const;
 	
 	virtual void reset();
+	void entity(CEntity *entity);
 	
 protected:
 	virtual CVector _position(double time);
@@ -135,7 +137,7 @@ protected:
 	double  _maxKeyDiffTime;
 	double  _meanKeyDiffTime;
 	bool    _available;
-	bool    _outOfKey;
+	int     _outOfKeyCount;
 
 	CVector _currentPosition;
 	CVector _currentSpeed;
@@ -146,6 +148,8 @@ protected:
 	double  _lct;
 	static const double _minLct;
 	static const double _maxLct;
+
+	CEntity *_entity;
 private:
 };
 
@@ -162,7 +166,6 @@ protected:
 private:
 };
 
-class CEntity;
 
 class CExtendedInterpolator : public CLinearInterpolator
 {
@@ -177,7 +180,6 @@ public:
 	CMatrix getMatrix() const;
 	
 	void rotation(CVector rotation);
-	void entity(CEntity *entity);
 	
 	void reset();
 	
@@ -193,7 +195,6 @@ private:
 	double  _currentFacing;
 	double  _lastRotationTime;
 
-	CEntity *_entity;
 };
 
 //#include "extrapolator.tpl"

@@ -16,31 +16,13 @@
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
  * MA 02111-1307, USA.
  */
-/*
-#include "stdpch.h"
-
-#include <deque>
-
-#include <nel/misc/quat.h>
-#include <nel/misc/common.h>
-
-#include <nel/3d/u_instance_material.h>
-
-#include "3d/water_height_map.h"
-#include "3d/water_pool_manager.h"
-
-#include "extrapolator.h"
-
-using namespace std;
-using namespace NLMISC;
-using namespace NL3D;
-*/
 #include "stdpch.h"
 
 #include <nel/misc/quat.h>
 #include <nel/misc/common.h>
 
 #include "time_task.h"
+#include "font_manager.h"
 #include "entity.h"
 #include "interpolator.h"
 #include "mtp_target.h"
@@ -50,352 +32,6 @@ using namespace std;
 using namespace NLMISC;
 using namespace NL3D;
 
-
-#if 0
-
-
-void CEntity::resetFacing()
-{
-	Facing = 0.0f;
-}
-
-
-void CEntity::position(CVector &position,float servertime, bool onwater)
-{
-	double localtime = CTimeTask::instance().time();
-	double dtime = localtime - PositionLastTime;
-	PositionLastTime = localtime;
-	
-	if(FirstSetPos)
-	{
-		FirstSetPos = false;
-		Position = position;
-		Oldposition = Position;
-		ServerStartTime = servertime;
-		LocalTime = 0.0;
-		LocalStartTime = CTimeTask::instance().time();
-		nlinfo("[%d] first set position => sync time server: %g local: %g", id(), ServerStartTime, LocalTime);
-	}
-	ServerTime = servertime - ServerStartTime;
-	PositionKeys.push_back(CPositionKey(position,ServerTime, onwater));
-	if(DisplayDebug)			
-	{
-		nlinfo("[%d] local time = %g", id(), LocalTime);
-		nlinfo("[%d] server time = %g", id(), ServerTime);
-		nlinfo("[%d] position (key count=%d)[id=%d] (%g %g %g)", id(), PositionKeys.size(), id(), position.x,position.y,position.z);
-	}
-	HasValidPosition = true;
-	PositionBuffer.push_back(position);
-	while(PositionBuffer.size()>PositionBufferCount)
-		PositionBuffer.pop_front();
-}
-
-CVector CEntity::computePosition(float time)
-{
-	deque<CPositionKey>::iterator it1,it2,it;
-
-	CVector res = Position;
-
-	if(FirstSetPos)
-	{
-		nlinfo("[%hu] no FirstSetPos ", (uint16)id());
-		return res;
-	}
-
-	if(CMtpTarget::instance().controler().getControledEntity()==id() && PositionKeys.size()<2)
-	{
-		Lct += LctAdaptationInc;
-		//if (_positionKeys.size() == 1) res = (*(_positionKeys.begin()))._position;
-		if(DisplayDebug)			
-			nlwarning("[%d] not enough key (1) to interpolate position",id());
-		FrameOkCount = 0;
-		return res;
-	}
-
-	// TODO: it crashs here sometimes because 'it' becomes out of bound (++ go out of the vector)
-	for(it=PositionKeys.begin();(it+1)!=PositionKeys.end() && time>(it+1)->ServerTime;it++)
-	{
-		if ((*it).OnWater)
-		{
-			collisionWithWater((*it).OnWater);
-		}
-	}
-
-	PositionKeys.erase(PositionKeys.begin(), it);
-
-	it1 = PositionKeys.begin();
-
-	if (PositionKeys.size() == 1)
-		return res;
-
-	if(CMtpTarget::instance().controler().getControledEntity()==id() && PositionKeys.size()<2 )
-	{
-		Lct += LctAdaptationInc;
-		//if (_positionKeys.size() == 1) res = (*(_positionKeys.begin()))._position;
-		if(DisplayDebug)			
-			nlwarning("[%d] not enough key to interpolate position (%g, %g, %g, %g)",id(),it1->ServerTime,time,LocalTime,Lct);
-		FrameOkCount = 0;
-		return res;
-	}
-
-	it2 = it1 + 1;
-	if(it2 == PositionKeys.end())
-	{
-		nlwarning("it1 is the last position, it should never happen, can't get it2");
-		return res;
-	}
-		
-	res = CPositionKey::Lerp(*it1, *it2, time);
-	if(CMtpTarget::instance().controler().getControledEntity()==id())
-		FrameOkCount++;
-	
-	if(CMtpTarget::instance().controler().getControledEntity()==id() && PositionKeys.size()<=(LctKeyCount-1))
-	{
-		FrameOkCount = 0;
-	}
-	if(CMtpTarget::instance().controler().getControledEntity()==id() && PositionKeys.size()>(LctKeyCount+1) && FrameOkCount > LctFrameCountBeforeDecreasing)
-	{
-		if(DisplayDebug)			
-			nlwarning("[%hu] too much key , adapting lct...", (uint16)id());
-		Lct -= LctAdaptationDec;
-	}
-		
-	return res;
-
-}
-
-CVector CEntity::smoothDirection()
-{
-	return Position - Oldposition;
-}
-
-CVector CEntity::direction()
-{
-	deque<CVector>::iterator it;
-	CVector res(0,-1,0);
-
-	if(FirstSetPos)
-		return res;
-
-	if(PositionBuffer.size()<2)
-		return res;
-
-	for(it = PositionBuffer.begin(); (it+1) != PositionBuffer.end(); it++)
-	{
-		res += *(it+1) - *it;
-	}
-
-	return res;
-}
-
-CVector CEntity::computeSpeed(float time)
-{
-	deque<CPositionKey>::iterator it1,it2,it;
-
-	CVector res(0,0,0);
-
-	if(FirstSetPos)
-		return res;
-
-	if(PositionKeys.size() < 2)
-	{
-		//if (_positionKeys.size() == 1) res = (*(_positionKeys.begin()))._position;
-		return res;
-	}
-
-	for(it = PositionKeys.begin(); it != PositionKeys.end() && (it+1) != PositionKeys.end() && time > (it+1)->ServerTime; it++)
-	{
-		collisionWithWater((*it).OnWater);
-	}
-	
-	PositionKeys.erase(PositionKeys.begin(), it);
-
-	it1 = PositionKeys.begin();
-
-	if(PositionKeys.size()<2)
-	{
-		//if (_positionKeys.size() == 1) res = (*(_positionKeys.begin()))._position;
-		return res;
-	}
-
-	if(it1 == PositionKeys.end())
-		return res;
-
-	it2 = it1 + 1;
-
-	if(it2 == PositionKeys.end())
-		return res;
-	
-	CVector pos1 = (*it1).Position;
-	CVector pos2 = (*it2).Position;
-	float dt = (*it2).ServerTime - (*it1).ServerTime;
-
-	return (pos2 - pos1) / dt;
-}
-
-static float rotLerp(float rsrc,float rdst,float pos)
-{
-	double nrsrc = fmod((double)rsrc, 2*NLMISC::Pi) + 2*NLMISC::Pi;
-	nrsrc = fmod((double)nrsrc, 2*NLMISC::Pi);
-	double nrdst = fmod((double)rdst, 2*NLMISC::Pi) + 2 * NLMISC::Pi ;
-	nrdst = fmod((double)nrdst, 2*NLMISC::Pi);
-	if(nrsrc<nrdst)
-	{
-		if(fabs(nrdst - nrsrc) > NLMISC::Pi)
-			nrdst -= 2*NLMISC::Pi;
-	}
-	else
-	{
-		if(fabs(nrsrc - nrdst) > NLMISC::Pi)
-			nrsrc -= 2*NLMISC::Pi;
-	}
-	double ipos = 1.0f - pos;
-
-	float res = (float) (nrdst * pos + nrsrc * ipos);
-	//nlinfo("%f => %f (%f) = %f",nrsrc,nrdst,pos,res);
-	return res;
-}
-
-
-
-void CEntity::update()
-{
-	double deltaTime = CTimeTask::instance().deltaTime();
-
-	if(DisplayDebug)
-	{
-		nlinfo("lct = %g, in queue %2d ct %g st %g (dt = %g)", Lct, PositionKeys.size(), LocalTime, ServerTime, deltaTime);
-	}
-
-//	_localTime += deltaTime;
-
-	ObjMatrix.setPos(CVector(0,0,0));
-	if(!FirstSetPos)
-	{
-		Speed = computeSpeed(LocalTime - Lct);
-		if(OpenClose)
-		{
-			if(CMtpTarget::instance().controler().getControledEntity()==id())
-			{
-				ObjMatrix.identity();
-				ObjMatrix.rotateZ(Facing);
-				ObjMatrix.rotateX(0.5f * (float)NLMISC::Pi * (1.0f - Rotation.x));
-			}
-			else
-			{
-				ObjMatrix.identity();
-				ObjMatrix.rotateZ(Facing);
-				float instantRotX = -0.5f * Speed.z * deltaTime / GScale - (float)NLMISC::Pi * 0.08f;
-				float lpos = 5 * deltaTime / 1.0f;
-				Rotation.x = rotLerp(Rotation.x, instantRotX, lpos);
-				ObjMatrix.rotateX(Rotation.x);
-			}
-		}
-		else
-		{
-			CVector speed = Speed;
-			speed.z = 0.0f;
-			if(speed.norm() > 0.01f*GScale)
-			{
-				CVector nspeed = speed;
-				nspeed.normalize();
-				CVector right = nspeed ^ CVector(0,0,1);
-				float angleX = - speed.norm() * deltaTime / GScale;
-				right = ObjMatrix.inverted().mulVector(right);
-				ObjMatrix.rotate(CQuat(CAngleAxis(right, angleX)));
-			}
-		}
-
-		Oldposition = Position;
-		Position = computePosition((float)fabs(LocalTime - Lct));
-
-		ObjMatrix.setPos(Position);
-
-		CMatrix m, m2;
-		m2.identity();
-		//m2.scale(0.01f);
-		m.setPos(ObjMatrix.getPos());
-		m.setRot(m2 * ObjMatrix);
-
-/*ace todo		if (OnWater && WaterModel)
-		{
-			//nlinfo("water set pos begin");
-			NLMISC::CVector pos = m.getPos();
-			pos.z = WaterModel->getAttenuatedHeight(NLMISC::CVector2f(pos.x, pos.y), CMtpTarget::instance().controler().Camera.getMatrix()->getPos());
-			m.setPos(pos);
-			//nlinfo("water set pos end");
-		}
-*//*		else
-		{
-			CWaterHeightMap &whm = GetWaterPoolManager().getPoolByID(0);
-			const float waterRatio = whm.getUnitSize(); 
-			const float invWaterRatio = 1.0f / waterRatio;
-			sint px = (sint) (_position.x * invWaterRatio);
-			sint py = (sint) (_position.y * invWaterRatio);			
-			whm.perturbate(px, py, 2, 1.0f*GScale);
-		}
-*/
-		if(OpenMesh)
-			OpenMesh->setMatrix(m);
-		if(CloseMesh)
-			CloseMesh->setMatrix(m);
-	}
-
-	SoundsDescriptor.update3d(ObjMatrix.getPos(), CVector(0,0,0)); // todo : velocity
-
-	CVector dir = smoothDirection();
-	dir.z = 0.0f;
-	if(dir.norm() > 0.001f && CMtpTarget::instance().State == CMtpTarget::eGame)
-	{
-		dir.normalize();
-		float instantFacing = (float)acos(dir.y);
-		if(dir.x>0.0f)
-			instantFacing = - instantFacing;
-		instantFacing += (float)NLMISC::Pi;
-		float lpos = 20 * deltaTime / 1.0f;
-		Facing = rotLerp(Facing, instantFacing, lpos);
-		if(CMtpTarget::instance().controler().getControledEntity() == id())
-			Facing = instantFacing;
-	}
-
-	if(TraceParticle != 0)
-	{
-		TraceParticle->setPos(Position);
-		
-		// we activate
-		if (TraceParticle != 0 && ParticuleActivated != -1 && TraceParticle->isSystemPresent())
-		{
-			//if (ParticuleActivated == 0 || CMtpTarget::instance().controler().getControledEntity() != this)
-			TraceParticle->activateEmitters(ParticuleActivated==1);
-			if(ParticuleActivated==1 && CMtpTarget::instance().controler().getControledEntity()!=id())
-				TraceParticle->show();
-
-			ParticuleActivated = -1;
-		}
-	}
-}
-
-
-void init()
-{
-	LctKeyCount = CConfigFileTask::instance().configFile().getVar("LctKeyCount").asInt();
-	LctFrameCountBeforeDecreasing = CConfigFileTask::instance().configFile().getVar("LctFrameCountBeforeDecreasing").asInt();
-	Lct = CConfigFileTask::instance().configFile().getVar("Lct").asFloat();
-	LctAdaptationInc = CConfigFileTask::instance().configFile().getVar("LctAdaptationInc").asFloat();	
-	LctAdaptationDec = CConfigFileTask::instance().configFile().getVar("LctAdaptationDec").asFloat();	
-}
-
-#endif
-
-///////////////////////////////////////////////////////////////////////////////////////////
-//
-//
-///////////////////////////////////////////////////////////////////////////////////////////
-
-///////////////////////////////////////////////////////////////////////////////////////////
-//
-//
-///////////////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -448,6 +84,7 @@ CInterpolator::CInterpolator()
 	_currentSmoothDirection = CVector::Null;
 	_currentOnWater         = false;
 	
+	_entity = 0;	
 	reset();
 }
 
@@ -468,9 +105,16 @@ void CInterpolator::reset()
 	_lct            = 0.0;
 	_maxKeyDiffTime  = 0.0;
 	_meanKeyDiffTime  = 0.0;
+	_outOfKeyCount = 0;
 	
 //	nlinfo("reset[0x%p] (%f)",this,CTimeTask::instance().time());
 }
+
+void CInterpolator::entity(CEntity *entity)
+{ 
+	_entity = entity;
+};
+
 
 static int fcount = 0;
 void CInterpolator::addKey(CEntityInterpolatorKey key)
@@ -531,14 +175,13 @@ double CInterpolator::localTime() const
 void CInterpolator::update()
 {
 	if(_keys.size()<2)
-	{
-		_outOfKey = true;
 		return;
-	}
 
+	_outOfKeyCount--;
+	if(_outOfKeyCount<0)
+		_outOfKeyCount=0;
+	nlinfo("outofkeycount = %d ; keysize = %d",_outOfKeyCount,_keys.size());
 	_autoAdjustLct();
-
-	_outOfKey = false;
 
 	_localTime = CTimeTask::instance().time() - _startTime;
 	_deltaTime = _localTime - _lastUpdateTime;
@@ -549,16 +192,12 @@ void CInterpolator::update()
 	_currentSpeed           = _speed(_serverTime);
 	_currentDirection       = _direction(_serverTime);
 	_currentSmoothDirection = _currentDirection;
-/*
-	if(_outOfKey)
-		nlinfo("################################### OUT of key ###############################");
-*/
 }
 
 
 bool CInterpolator::outOfKey()
 {
-	return _outOfKey;
+	return _keys.size()<2 || _outOfKeyCount>10;
 }
 
 
@@ -638,6 +277,7 @@ CLinearInterpolator::~CLinearInterpolator()
 CVector CLinearInterpolator::_position(double time)
 {
 	double remainder = fmod(time,MT_NETWORK_UPDATE_PERIODE);
+	double lerpPos = remainder / MT_NETWORK_UPDATE_PERIODE;
 	deque<CEntityInterpolatorKey>::reverse_iterator it;
 	CEntityInterpolatorKey nextKey = _keys.back();
 	bool nextKeySet = false;
@@ -648,18 +288,20 @@ CVector CLinearInterpolator::_position(double time)
 		{
 			if(!nextKeySet)
 				break;
-			return CEntityInterpolatorKey::Lerp(key.value(),nextKey.value(),remainder).position;
+
+			return CEntityInterpolatorKey::Lerp(key.value(),nextKey.value(),lerpPos).position;
 		}
 		nextKey = key;
 		nextKeySet = true;
 	}
-	//_outOfKey = true;
+	_outOfKeyCount++;
 	return CInterpolator::_position(time);
 }
 
 CVector CLinearInterpolator::_speed(double time)
 {
 	double remainder = fmod(time,MT_NETWORK_UPDATE_PERIODE);
+	double lerpPos = remainder / MT_NETWORK_UPDATE_PERIODE;
 	deque<CEntityInterpolatorKey>::reverse_iterator it;
 	CEntityInterpolatorKey nextKey = _keys.back();
 	bool nextKeySet = false;
@@ -675,13 +317,13 @@ CVector CLinearInterpolator::_speed(double time)
 		nextKey = key;
 		nextKeySet = true;
 	}
-	//_outOfKey = true;
 	return CInterpolator::_speed(time);
 }
 
 CVector CLinearInterpolator::_direction(double time)
 {
 	double remainder = fmod(time,MT_NETWORK_UPDATE_PERIODE);
+	double lerpPos = remainder / MT_NETWORK_UPDATE_PERIODE;
 	deque<CEntityInterpolatorKey>::reverse_iterator it;
 	CEntityInterpolatorKey nextKey = _keys.back();
 	bool nextKeySet = false;
@@ -697,7 +339,6 @@ CVector CLinearInterpolator::_direction(double time)
 		nextKey = key;
 		nextKeySet = true;
 	}
-	//_outOfKey = true;
 	return CInterpolator::_direction(time);
 }
 
@@ -723,7 +364,6 @@ void CLinearInterpolator::_autoAdjustLct()
 
 CExtendedInterpolator::CExtendedInterpolator()
 {
-	_entity = 0;	
 	reset();
 }
 
@@ -837,11 +477,6 @@ void CExtendedInterpolator::rotation(CVector rotation)
 	_currentRotation = rotation;
 }
 
-
-void CExtendedInterpolator::entity(CEntity *entity)
-{ 
-	_entity = entity;
-};
 
 CMatrix CExtendedInterpolator::getMatrix() const
 {
