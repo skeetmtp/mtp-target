@@ -109,21 +109,22 @@
 	
 	fclose($fp);
 
-	$t1 = strtotime(date("l dS of F Y H:i:s"));
-	$t2 = strtotime(date("l dS of F Y H:i:s",$lastRestartTime));
+	$t1 = strtotime(date("Y-m-d H:i:s"));
+	$t2 = strtotime(date("Y-m-d H:i:s",$lastRestartTime));
+	$t3 = $t1-$t2;
 	
-	//printf("%d %d %d <br>",$t1-$t2, $t1,$t2);
-	$serverUptime = mktime() - $lastRestartTime;
-	//$serverUptime = $serverUptime - mktime(1);
-
-	printf("Server uptime : ");
-	if(date("z",$serverUptime)!="0")
-		printf("%s day(s) %s<br>\n",date("z",$serverUptime),date("H:i:s",$serverUptime));
+	$upSec = $t3%60;
+	$upMin = ($t3/60)%60;
+	$upHour = (($t3/60)/60)%24;
+	$upDay = ((($t3/60)/60)/24)%100;
+	
+	if($upDay == 1)
+		printf("Server uptime : %d day %02d:%02d:%02d <br>",$upDay,$upHour,$upMin,$upSec);
+	else if($upDay > 1)
+		printf("Server uptime : %d days %02d:%02d:%02d <br>",$upDay,$upHour,$upMin,$upSec);
 	else
-		printf("%s<br>\n",date("H:i:s",$serverUptime));
+		printf("Server uptime : %02d:%02d:%02d <br>",$upHour,$upMin,$upSec);
 	printf("Current logged user : %d<br>\n",$playerCount);
-	
-	printf("report date  : %s<br>\n",date("l dS of F Y H:i:s"));
 	printf("Last restart : %s<br>\n",date("l dS of F Y H:i:s",$lastRestartTime));
 	
 ?>
