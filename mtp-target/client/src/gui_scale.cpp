@@ -60,7 +60,7 @@ void CGuiScaleManager::init()
 	_textureArrow = C3DTask::instance().driver().createTextureFile(res);
 	nlassert(_textureArrow);
 	
-	_materialArrow = C3DTask::instance().driver().createMaterial ();
+	_materialArrow = C3DTask::instance().createMaterial();
 	_materialArrow.setTexture(_textureArrow);
 	_materialArrow.setBlend(true);
 	_materialArrow.setZFunc(UMaterial::always);
@@ -70,7 +70,7 @@ void CGuiScaleManager::init()
 	_textureProgress = C3DTask::instance().driver().createTextureFile(res);
 	nlassert(_textureProgress);
 	
-	_materialProgress = C3DTask::instance().driver().createMaterial ();
+	_materialProgress = C3DTask::instance().createMaterial();
 	_materialProgress.setTexture(_textureProgress);
 	_materialProgress.setBlend(true);
 	_materialProgress.setZFunc(UMaterial::always);

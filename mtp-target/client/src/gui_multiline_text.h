@@ -45,9 +45,9 @@ public:
 	CGuiMultilineText();
 	virtual ~CGuiMultilineText();
 
-	static void Printf(float x, float y, int cursorIndex, NLMISC::CVector &cursorPos, const char *format ...);
-	static void Print(float x, float y, int cursorIndex, NLMISC::CVector &cursorPos, const std::string &str);
-	static NLMISC::CVector Size(bool shaded,int size, const std::string &str);
+	static void printf(float x, float y, int cursorIndex, NLMISC::CVector &cursorPos, const char *format ...);
+	static void print(float x, float y, int cursorIndex, NLMISC::CVector &cursorPos, const std::string &str);
+	static NLMISC::CVector size(bool shaded,int size, const std::string &str);
 		
 	
 private:

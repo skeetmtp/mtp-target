@@ -129,7 +129,7 @@ UMaterial CGuiBitmap::load(const string &filename)
 	_texture= C3DTask::instance().driver().createTextureFile(res);
 	nlassert(_texture);
 	
-	_material = C3DTask::instance().driver().createMaterial();
+	_material = C3DTask::instance().createMaterial();
 	_material.setTexture(_texture);
 	_material.setBlend(true);
 	_material.setZFunc(UMaterial::always);

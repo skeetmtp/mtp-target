@@ -68,13 +68,13 @@ private:
 	void release() 
 	{
 		bool del;
-		if(counter) 
-			del = counter->release(); 
+		if(counter)
+			del = counter->release();
 		if(del)
 			delete p;
 		counter=0;
 	}
-protected:	
+protected:
 public:
 	T *p;
 	Counter *counter;
@@ -84,19 +84,19 @@ public:
 	//!constructor
 	guiSPG( T* p_ )  { if(p_) counter=guiSPGManager::instance().get(p_); p=p_; counter->addRef();};
 	//!Copy constructor.
-	template <class U> guiSPG<T>(const guiSPG<U>& sp_ ) { 
+	template <class U> guiSPG<T>(const guiSPG<U>& sp_ ) {
 		if(sp_.counter)
 		{
 			p=sp_.p;
 			counter=(guiSPGCounter *)sp_.counter;
-			addRef(); 
+			addRef();
 		}
 		else
 		{
 			counter=0;
 			p=0;
 		}
-	} 
+	}
 	//!Copy constructor.
 	guiSPG<T>(const guiSPG<T>& sp_ ) {
 		if(sp_.counter)
@@ -110,7 +110,7 @@ public:
 			counter=0;
 			p=0;
 		}
-	} 
+	}
 
 	//!constructor.
 	guiSPG( int Null ) : counter(0),p(0) {nlassert(Null==0);}	// Assignment to NULL

@@ -60,7 +60,7 @@ void CGuiProgressBarManager::init()
 	_textureProgress = C3DTask::instance().driver().createTextureFile(res);
 	nlassert(_textureProgress);
 	
-	_materialProgress = C3DTask::instance().driver().createMaterial ();
+	_materialProgress = C3DTask::instance().createMaterial();
 	_materialProgress.setTexture(_textureProgress);
 	_materialProgress.setBlend(true);
 	_materialProgress.setZFunc(UMaterial::always);
@@ -70,7 +70,7 @@ void CGuiProgressBarManager::init()
 	_textureProgressBar = C3DTask::instance().driver().createTextureFile(res);
 	nlassert(_textureProgress);
 	
-	_materialProgressBar = C3DTask::instance().driver().createMaterial ();
+	_materialProgressBar = C3DTask::instance().createMaterial();
 	_materialProgressBar.setTexture(_textureProgressBar);
 	_materialProgressBar.setBlend(true);
 	_materialProgressBar.setZFunc(UMaterial::always);

@@ -78,7 +78,7 @@ using namespace NL3D;
 
 CParticles::CParticles() : CParticlesCommon()
 {
-	mat = C3DTask::instance().driver().createMaterial();
+	mat = C3DTask::instance().createMaterial();
 	luaProxy = 0;
 }
 

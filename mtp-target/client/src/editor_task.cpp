@@ -69,7 +69,7 @@ void CEditorTask::init()
 
 	rayTestStart = CVector(0,0,0);
 	rayTestEnd= CVector(0,0,0);
-	testMat = C3DTask::instance().driver().createMaterial();
+	testMat = C3DTask::instance().createMaterial();
 	testMat.setColor(CRGBA(255,255,255,255));
 	testMat.setZWrite(true);
 	testMat.setZFunc(UMaterial::always);

@@ -74,7 +74,7 @@ using namespace NL3D;
 
 CStartPoint::CStartPoint():CStartPointCommon()
 {
-	mat = C3DTask::instance().driver().createMaterial();
+	mat = C3DTask::instance().createMaterial();
 }
 
 

@@ -79,7 +79,7 @@ class CLensFlare
 		
 		_CFlare(NL3D::UTexture *texture, float width, float height, float location, float scale)
 		{
-			Material = C3DTask::instance().driver().createMaterial ();
+			Material = C3DTask::instance().createMaterial();
 			Material.initUnlit ();
 			Material.setTexture (texture);
 			Material.setBlendFunc (UMaterial::srcalpha, UMaterial::one);

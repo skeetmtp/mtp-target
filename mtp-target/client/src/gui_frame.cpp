@@ -62,7 +62,7 @@ void CGuiFrameManager::init()
 	_textureFrame->setWrapT(UTexture::Clamp);
 	*/
 	
-	_material = C3DTask::instance().driver().createMaterial ();
+	_material = C3DTask::instance().createMaterial();
 	_material.setTexture(_texture);
 	_material.setBlend(true);
 	_material.setZFunc(UMaterial::always);

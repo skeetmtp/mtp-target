@@ -315,3 +315,10 @@ void C3DTask::captureCursor(bool b)
 	*/
 }
 
+NL3D::UMaterial &C3DTask::createMaterial() const
+{
+	nlassert(Driver); 
+	UMaterial m = driver().createMaterial();
+	m.initUnlit();
+	return m;
+}

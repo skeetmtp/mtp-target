@@ -79,7 +79,7 @@ using namespace NL3D;
 
 CEditableElement::CEditableElement()
 {
-	mat = C3DTask::instance().driver().createMaterial();
+	mat = C3DTask::instance().createMaterial();
 }
 
 

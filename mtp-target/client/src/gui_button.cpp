@@ -82,7 +82,7 @@ void CGuiButtonManager::init()
 		buttonMaterials[i].texture = C3DTask::instance().driver().createTextureFile(res);
 		buttonMaterials[i].texture->setReleasable(false);
 		nlassert(buttonMaterials[i].texture);
-		buttonMaterials[i].material = C3DTask::instance().driver().createMaterial();
+		buttonMaterials[i].material = C3DTask::instance().createMaterial();
 		buttonMaterials[i].material.setTexture(buttonMaterials[i].texture);
 		buttonMaterials[i].material.setBlend(true);
 		buttonMaterials[i].material.setZFunc(UMaterial::always);

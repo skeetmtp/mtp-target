@@ -85,7 +85,7 @@ void CFontManager::init()
 {
 	string res = CResourceManager::instance().get("font.tga");
 	Texture = C3DTask::instance().driver().createTextureFile (res);
-	Material = C3DTask::instance().driver().createMaterial ();
+	Material = C3DTask::instance().createMaterial();
 	Material.setTexture(Texture);
 	Material.setBlend(true);
 	Material.setZFunc(UMaterial::always);

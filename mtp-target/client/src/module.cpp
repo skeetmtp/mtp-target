@@ -78,7 +78,7 @@ using namespace NL3D;
 
 CModule::CModule() : CModuleCommon()
 {
-	mat = C3DTask::instance().driver().createMaterial();
+	mat = C3DTask::instance().createMaterial();
 	luaProxy = 0;
 }
 

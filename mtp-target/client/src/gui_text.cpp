@@ -78,7 +78,7 @@ void CGuiTextManager::init()
 	_cursorTexture->setWrapS(UTexture::Clamp);
 	_cursorTexture->setWrapT(UTexture::Clamp);
 	
-	_cursorMaterial = C3DTask::instance().driver().createMaterial ();
+	_cursorMaterial = C3DTask::instance().createMaterial();
 	_cursorMaterial.setTexture(_cursorTexture);
 	_cursorMaterial.setBlend(true);
 	_cursorMaterial.setZFunc(UMaterial::always);
@@ -90,7 +90,7 @@ void CGuiTextManager::init()
 	_entryTexture->setWrapS(UTexture::Clamp);
 	_entryTexture->setWrapT(UTexture::Clamp);
 	
-	_entryMaterial = C3DTask::instance().driver().createMaterial ();
+	_entryMaterial = C3DTask::instance().createMaterial();
 	_entryMaterial.setTexture(_entryTexture);
 	_entryMaterial.setBlend(true);
 	_entryMaterial.setZFunc(UMaterial::always);
@@ -155,6 +155,7 @@ void CGuiTextCursor::Render(const CVector &position,int height)
 void CGuiText::_init(const string &text)
 {
 	this->text = text;
+	_cursorIndex = 0;	// must be init here becaise cursorIndex() make a if() with this value that is not init the first time
 	cursorIndex(0);
 	_isEditable  = false;
 	_isEntry     = false;	
@@ -234,7 +235,7 @@ void CGuiText::_render(const CVector &pos,CVector &maxSize)
 		globalPos += CVector(2,2,0);
 
 	text = strToMultiline(text,isMultiline());
-	CGuiMultilineText::Print(globalPos.x , globalPos.y, cursorIndex(), cursorPos, strToPassword(text,isPassword()));
+	CGuiMultilineText::print(globalPos.x , globalPos.y, cursorIndex(), cursorPos, strToPassword(text,isPassword()));
 
 	if(focused() && isEntry())
 	{
@@ -437,7 +438,7 @@ void CGuiText::cursorRight()
 
 float CGuiText::_width()
 {
-	float w = CGuiMultilineText::Size(false, CFontManager::instance().guiFontSize(),text).x;
+	float w = CGuiMultilineText::size(false, CFontManager::instance().guiFontSize(),text).x;
 	if(isEntry())
 		return w + 4;
 	else
@@ -446,7 +447,7 @@ float CGuiText::_width()
 
 float CGuiText::_height()
 {
-	float h = CGuiMultilineText::Size(false, CFontManager::instance().guiFontSize(),text).y;
+	float h = CGuiMultilineText::size(false, CFontManager::instance().guiFontSize(),text).y;
 	if(isEntry())
 		return h + 4;
 	else

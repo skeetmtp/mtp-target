@@ -41,17 +41,17 @@ using namespace std;
 using namespace NL3D;
 using namespace NLMISC;
 
-#define MultilineStringYSpace 3
 //
 // Variables
 //
 
+static const float MultilineStringYSpace = 3;
 
 //
 // Functions
 //
 	
-template<class OutIt> void Split( const std::string& s, char sep, OutIt dest ) 
+template<class OutIt> void split( const std::string& s, char sep, OutIt dest ) 
 {
 	std::string::size_type left = 0;
 	std::string::size_type right = left;
@@ -78,15 +78,15 @@ CGuiMultilineText::~CGuiMultilineText()
 }
 
 
-void CGuiMultilineText::Printf(float x, float y, int cursorIndex, CVector &cursorPos, const char *format ...)
+void CGuiMultilineText::printf(float x, float y, int cursorIndex, CVector &cursorPos, const char *format ...)
 {
 	string str;
 	NLMISC_CONVERT_VARGS (str, format, 256);
 
-	Print(x,y,cursorIndex,cursorPos,str);
+	print(x,y,cursorIndex,cursorPos,str);
 }
 
-void CGuiMultilineText::Print(float x, float y, int cursorIndex, CVector &cursorPos, const string &str)
+void CGuiMultilineText::print(float x, float y, int cursorIndex, CVector &cursorPos, const string &str)
 {
 	if(str.size()==0)
 	{
@@ -102,7 +102,7 @@ void CGuiMultilineText::Print(float x, float y, int cursorIndex, CVector &cursor
 	float StringLine = defaultStringInfo.StringLine;
 
 	std::vector<std::string> vstr;
-	Split(str, '\n', std::back_inserter(vstr));
+	split(str, '\n', std::back_inserter(vstr));
 	int subStringStart = 0;
 	for( std::vector<std::string>::size_type i = 0; i < vstr.size(); ++i ) 
 	{
@@ -123,7 +123,7 @@ void CGuiMultilineText::Print(float x, float y, int cursorIndex, CVector &cursor
 }
 	
 
-CVector CGuiMultilineText::Size(bool shaded,int size,const std::string &str)
+CVector CGuiMultilineText::size(bool shaded,int size,const std::string &str)
 {
 	CFontManager::instance().guiTextContext().setFontSize (size);
 	CFontManager::instance().guiTextContext().setShaded(shaded);
@@ -137,7 +137,7 @@ CVector CGuiMultilineText::Size(bool shaded,int size,const std::string &str)
 	res.y = StringHeight;
 	
 	std::vector<std::string> vstr;
-	Split(str, '\n', std::back_inserter(vstr));
+	split(str, '\n', std::back_inserter(vstr));
 	res.y *= vstr.size();
 
 	if(vstr.size()>1)
