@@ -4,8 +4,8 @@
 #
 
 ODE_INCLUDE     = $(HOME)/cvs/ode/include
-FMOD_INCLUDE    = $(HOME)/external/fmodapi372linux/api/inc
-FMOD_LIBRARY    = $(HOME)/external/fmodapi372linux/api
+#FMOD_INCLUDE    = $(HOME)/external/fmodapi372linux/api/inc
+#FMOD_LIBRARY    = $(HOME)/external/fmodapi372linux/api
 STLPORT_INCLUDE = /usr/include/stlport
 LIBXML2_INCLUDE = /usr/include/libxml2
 NEL_INCLUDE     = $(HOME)/install/release/include
@@ -19,7 +19,7 @@ MAKE           = make
 DBG            = off
 
 FLAGS_DBG_on   = -g -pipe -O0 -finline-functions -DNL_DEBUG -D__STL_DEBUG -D_REENTRANT -D_GNU_SOURCE
-FLAGS_DBG_off  = -g -pipe -O3 -finline-functions -DNL_RELEASE -D_REENTRANT -D_GNU_SOURCE
+FLAGS_DBG_off  = -g -pipe -O3 -finline-functions -DNL_RELEASE_DEBUG -D_REENTRANT -D_GNU_SOURCE
 
 DIR_DBG_on     = debug
 DIR_DBG_off    = release
@@ -28,12 +28,12 @@ DIR_DBG_off    = release
 CXXFLAGS       = $(FLAGS_DBG_$(DBG)) \
 		-I../../common \
 		-I$(ODE_INCLUDE) \
-		-I$(FMOD_INCLUDE) \
 		-I$(STLPORT_INCLUDE) \
 		-I$(LIBXML2_INCLUDE) \
 		-I$(NEL_INCLUDE) \
 		-I$(NEL_SOURCE) \
 		-I/usr/include/lua50
+
 
 # The flags for the linker
 LDFLAGS        = -L$(HOME)/install/$(DIR_DBG_$(DBG))/lib \
@@ -53,9 +53,7 @@ LDFLAGS        = -L$(HOME)/install/$(DIR_DBG_$(DBG))/lib \
 		-lpthread \
 		-lcrypt \
 		-ljpeg \
-		-llualib50 \
-		-L$(FMOD_LIBRARY) \
-		-lfmod-3.72
+		-llualib50
 
 # Add the fmod lib if you want sound
 
