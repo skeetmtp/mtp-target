@@ -84,14 +84,14 @@ static void cbCommand(CClient *c, CNetMessage &msgin)
 		return;
 	}
 
-	if(cmd.substr(0,7)=="voteMap")
+	if(cmd.substr(0,7)=="voteMap ")
 	{
 		string arg = cmd.substr(8);
 		if(!arg.empty())
 			c->voteMap(arg);
 		CNetwork::instance().sendChat(c->name()+" executed: /"+cmd);
 	}
-	else if(cmd.substr(0,1)=="v")
+	else if(cmd.substr(0,1)=="v ")
 	{
 		string arg = cmd.substr(2);
 		if(!arg.empty())
