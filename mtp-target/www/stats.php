@@ -1,5 +1,44 @@
-<?php
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>mtp-target</title>
+<link rel="stylesheet" type="text/css" href="http://www.mtp-target.org/mtptarget.css">
+</head>
+<body>
 
+<?php
+function generateHtml() 
+{
+
+	if (!function_exists('fprintf')) {
+	   if (function_exists('vsprintf')) { // >= 4.1.0
+	       function fprintf() {
+	           $args = func_get_args();
+	           $fp = array_shift($args);
+	           $format = array_shift($args);
+	           return fwrite($fp, vsprintf($format, $args));
+	       }
+	   } else { // < 4.1.0
+	       function fprintf() {
+	           $args = func_get_args();
+	           $fp = array_shift($args);
+	           $format = array_shift($args);
+	           $code = '';
+	           for ($i = 0; $i < count($args); ++$i) {
+	               if ($code) {
+	                   $code .= ',';
+	               }
+	               $code .= '$args[' . $i . ']';
+	           }
+	           $code = 'return sprintf($format, ' . $code . ');';
+	           $rv = eval($code);
+	           return $rv ? fwrite($fp, $rv) : false;
+	       }
+	   }
+	}
+	
 	$html_fp = fopen("stats.html", "wt");
 	$fp = fopen("../server/connection.stat", "r");
 	if (!$fp) {echo "<p>Unable to open remote file.</p>"; exit;}
@@ -116,6 +155,8 @@
 	$upMin = ($t3/60)%60;
 	$upHour = (($t3/60)/60)%24;
 	$upDay = ((($t3/60)/60)/24)%100;
+
+	fprintf($html_fp,"Stats generated : %s<br>\n",date("l dS of F Y H:i:s"));
 	
 	if($upDay == 1)
 		fprintf($html_fp,"Server uptime : %d day %02d:%02d:%02d <br>",$upDay,$upHour,$upMin,$upSec);
@@ -127,14 +168,14 @@
 	fprintf($html_fp,"Last restart : %s<br>\n",date("l dS of F Y H:i:s",$lastRestartTime));
 	
 
-fprintf($html_fp,"<br>\n");
-fprintf($html_fp,"<br>\n");
-
-fprintf($html_fp,"<b>Total</b> login :<br>\n");
-fprintf($html_fp,"Since %s\n",date("l dS of F Y h:i:s A",$firstDate));
-
-fprintf($html_fp,"<table>\n");
-fprintf($html_fp,"<tr valign=\"bottom\">\n");
+	fprintf($html_fp,"<br>\n");
+	fprintf($html_fp,"<br>\n");
+	
+	fprintf($html_fp,"<b>Total</b> login :<br>\n");
+	fprintf($html_fp,"Since %s\n",date("l dS of F Y h:i:s A",$firstDate));
+	
+	fprintf($html_fp,"<table bgcolor=\"#FFFAEA\">\n");
+	fprintf($html_fp,"<tr valign=\"bottom\">\n");
 
 	$maxTotal = 0;
 	
@@ -150,7 +191,7 @@ fprintf($html_fp,"<tr valign=\"bottom\">\n");
 		fprintf($html_fp,"<td valign=\"bottom\">\n");
 		if($maxTotal!=0)
 			fprintf($html_fp,"\t<img align=\"bottom\" src=\"./img/vp.png\" height=\"%d\" width=\"6\" alt='total login : %d' title='total login : %d' />\n",$userCountPerHourTotal[$i]*100/$maxTotal,$userCountPerHourTotal[$i],$userCountPerHourTotal[$i]);
-		ffprintf($html_fp,"</td>\n");
+		fprintf($html_fp,"</td>\n");
 	}
 	fprintf($html_fp,"</tr>\n");
 	
@@ -175,14 +216,14 @@ fprintf($html_fp,"<tr valign=\"bottom\">\n");
 	}
 	fprintf($html_fp,"</tr>\n");	
 
-fprintf($html_fp,"</table>\n");
-fprintf($html_fp,"<br>\n");
-fprintf($html_fp,"<br>\n");
-
-fprintf($html_fp,"Today login :\n");
-fprintf($html_fp,"<table>\n");
-fprintf($html_fp,"<tr valign=\"bottom\">\n");
-
+	fprintf($html_fp,"</table>\n");
+	fprintf($html_fp,"<br>\n");
+	fprintf($html_fp,"<br>\n");
+	
+	fprintf($html_fp,"Today login :\n");
+	fprintf($html_fp,"<table bgcolor=\"#FFFAEA\">\n");
+	fprintf($html_fp,"<tr valign=\"bottom\">\n");
+	
 	$maxToday = 0;
 	
 	for($i=0;$i<24;$i++)
@@ -222,14 +263,14 @@ fprintf($html_fp,"<tr valign=\"bottom\">\n");
 	}
 	fprintf($html_fp,"</tr>\n");	
 	
-fprintf($html_fp,"</table>\n");
-fprintf($html_fp,"<br>\n");
-fprintf($html_fp,"<br>\n");
-
-
-fprintf($html_fp,"Today Max simultaneous user :\n");
-fprintf($html_fp,"<table>\n");
-fprintf($html_fp,"<tr valign=\"bottom\">\n");
+	fprintf($html_fp,"</table bgcolor=\"#FFFAEA\">\n");
+	fprintf($html_fp,"<br>\n");
+	fprintf($html_fp,"<br>\n");
+	
+	
+	fprintf($html_fp,"Today Max simultaneous user :\n");
+	fprintf($html_fp,"<table>\n");
+	fprintf($html_fp,"<tr valign=\"bottom\">\n");
 
 	$maxTodayMax = 0;
 	
@@ -270,13 +311,13 @@ fprintf($html_fp,"<tr valign=\"bottom\">\n");
 	}
 	fprintf($html_fp,"</tr>\n");	
 	
-fprintf($html_fp,"</table>\n");
-fprintf($html_fp,"<br>\n");
-fprintf($html_fp,"<br>\n");
-
-fprintf($html_fp,"Last hour max simultaneous user :\n");
-fprintf($html_fp,"<table>\n");
-fprintf($html_fp,"<tr valign=\"bottom\">\n");
+	fprintf($html_fp,"</table bgcolor=\"#FFFAEA\">\n");
+	fprintf($html_fp,"<br>\n");
+	fprintf($html_fp,"<br>\n");
+	
+	fprintf($html_fp,"Last hour max simultaneous user :\n");
+	fprintf($html_fp,"<table>\n");
+	fprintf($html_fp,"<tr valign=\"bottom\">\n");
 
 	$maxHourMax = 0;
 	
@@ -322,6 +363,23 @@ fprintf($html_fp,"<tr valign=\"bottom\">\n");
 	}
 	fprintf($html_fp,"</tr>\n");
 	*/
-fprintf($html_fp,"</table>\n");
+	fprintf($html_fp,"</table>\n");
 	fclose($html_fp);
+}
+	
+	$lastModeTime = strtotime(date("Y-m-d H:i:s")) - filemtime("stats.html");
+	//printf("%d<br>",$lastModeTime);
+	if (!file_exists("stats.html") || $lastModeTime>60*5)
+		generateHtml();
+	
+	$html_fp = fopen("stats.html", "rt");
+	while (!feof($html_fp)):
+		$line = fgets($html_fp, 2048);
+		echo $line;
+		$html_fp++;
+	endwhile;
+	fclose($html_fp);
+
 ?>
+</body>
+</html>
