@@ -360,7 +360,7 @@ static void cbScoreUpdate(CMessage &msgin, const std::string &serviceName, uint1
 	
 	uint32 date = CTime::getSecondsSince1970();
 
-	sqlQuery("insert into session (LevelName, NbPlayers, Duration) values ("+levelname+", "+toString(nbplayers)+", "+toString(sessionduration)+")", nbrow, row, result);
+	sqlQuery("insert into session (LevelName, NbPlayers, Duration) values ('"+levelname+"', "+toString(nbplayers)+", "+toString(sessionduration)+")", nbrow, row, result);
 	uint32 sessionId = (uint32)mysql_insert_id(DatabaseConnection);
 
 	for(sint32 i = 0; i < nbplayers; i++)
