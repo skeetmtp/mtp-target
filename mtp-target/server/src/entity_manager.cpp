@@ -979,7 +979,7 @@ MTPT_COMMAND(ban, "ban a client from the server", "[<eid>|<name>] [duration]")
 	msgout.serial(ip, userName, kickerName, duration);
 	
 	nlinfo("%s bans %s (%s) %d",entity->name().c_str(), userName.c_str(),ip.c_str(),duration);
-	//CUnifiedNetwork::getInstance()->send("LS", msgout);
+	CUnifiedNetwork::getInstance()->send("LS", msgout);
 	
 	//TODO
 	
