@@ -185,7 +185,6 @@ int CEntityProxy::getPos(lua_State *luaSession)
 int CEntityProxy::setPos(lua_State *luaSession)
 {
 	CLuaVector pos  = *Lunar<CLuaVector>::check(luaSession,-1);
-	nlinfo("set pos (%f %f %f)",pos.x,pos.y,pos.z);
 	_entity->position(pos);
 	return 0;
 }
