@@ -1,5 +1,7 @@
 #!/bin/sh -
 
+VERSION=1.0.3
+
 DEST=tmp/mtp-target/client
 rm -rf tmp
 mkdir tmp
@@ -24,4 +26,6 @@ echo "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:." >>$DEST/launch.sh
 echo "./client" >>$DEST/launch.sh
 chmod 700 $DEST/launch.sh
 cd tmp
-tar zcvf ../mtp-target-1.0.2.tgz mtp-target
+rm -f ../mtp-target-*.tgz
+tar zcvf ../mtp-target-$VERSION.tgz mtp-target
+ftp ftpperso.free.fr
