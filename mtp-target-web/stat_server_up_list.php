@@ -21,7 +21,7 @@ include_once("stat_game.php");
 	$result=exec_game_db_requete($requete);
 	while($line = mysql_fetch_array($result))
 	{
-		fprintf($html_fp,"<b><a href=\"?page=stat_server.php&p_server_id=%d\">%s</a></b><br>\n",$line[0],$line[3]);
+		fprintf($html_fp,"id:%d <b><a href=\"?page=stat_server.php&p_server_id=%d\">%s</a></b> %d users<br>\n",$line[0],$line[0],$line[3],$line[2]);
 	}
 
 	fclose($html_fp);	  
