@@ -41,6 +41,7 @@
 
 using namespace std;
 using namespace NLMISC;
+using namespace NLNET;
 
 
 //
@@ -65,8 +66,24 @@ void CWaitingReadySessionState::update()
 				if(!NLMISC::CFile::isDirectory("./replay"))
 					NLMISC::CFile::createDirectory("./replay");
 				string CurrentLevel = CLevelManager::instance().currentLevel().name();
-				c->ReplayFilename = NLMISC::CFile::findNewFile("replay/"+CurrentLevel+"."+toString(c->StartingPointId)+"..mtr");
-				c->ReplayFile = fopen(c->ReplayFilename.c_str(), "wt");
+				int maxReplaySavedCount = IService::getInstance()->ConfigFile.getVar("maxReplaySavedCount").asInt();
+				if(maxReplaySavedCount<1)
+					maxReplaySavedCount=1;
+				char maxReplaySavedCountString[8];
+				sprintf(maxReplaySavedCountString,"%03d",maxReplaySavedCount-1);
+				string maxReplaySavedFileName = "replay/"+CurrentLevel+"."+toString(c->StartingPointId)+"."+maxReplaySavedCountString+".mtr";
+				//nlinfo(">>%s",maxReplaySavedFileName.c_str());
+				if(!NLMISC::CFile::fileExists(maxReplaySavedFileName))
+				{
+					//nlinfo(">> max replay count not reach");
+					c->ReplayFilename = NLMISC::CFile::findNewFile("replay/"+CurrentLevel+"."+toString(c->StartingPointId)+"..mtr");
+					c->ReplayFile = fopen(c->ReplayFilename.c_str(), "wt");
+				}
+				else
+				{
+					//nlinfo(">> max replay count reach... skipping record of this replay");
+					c->ReplayFile = 0;
+				}
 			}
 			else if((*it)->type() == CEntity::Bot)
 			{
