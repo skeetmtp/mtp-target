@@ -59,41 +59,43 @@ TARGETS		= link mtp_target_service
 # The default build rule
 all:			$(TARGETS)
 
+###### PLEASE!!!! put the .o files in alphabetic order !!!!!
+
 OBJS  = \
 bot.o \
 client.o \
+custom_floating_point.o \
+editable_element_common.o \
 ending_session_state.o \
 entity.o \
+entity_lua_proxy.o \
 entity_manager.o \
 level.o \
+level_lua_proxy.o \
 level_manager.o \
 load_mesh.o \
 lua_engine.o \
+lua_nel.o \
+lua_utility.o \
 main.o \
 module.o \
+module_common.o \
+module_lua_proxy.o \
 net_callbacks.o \
+net_message.o \
 network.o \
 physics.o \
 running_session_state.o \
 session_manager.o \
 session_state.o \
+start_point.o \
+start_point_common.o \
 stdpch.o \
 variables.o \
 waiting_clients_session_state.o \
 waiting_ready_session_state.o \
 waiting_start_session_state.o \
-welcome.o \
-lua_nel.o \
-lua_utility.o \
-net_message.o \
-entity_lua_proxy.o \
-level_lua_proxy.o \
-editable_element_common.o \
-start_point_common.o \
-start_point.o \
-module_common.o \
-module_lua_proxy.o \
-custom_floating_point.o
+welcome.o
 
 link:
 	-ln -s ../../common/lua_nel.cpp lua_nel.cpp

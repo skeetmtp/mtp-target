@@ -23,7 +23,7 @@
 			$t = filetype($f);
 			if($t == "file")
 			{
-				if(strstr($entry,"ping_ball_")!="" && strstr($entry,".tga")!="" )
+				if(strstr($entry,"ping_ball_")!="" && substr($entry,-3)=="tga" )
 				{
 					$modified = stat("../user_texture/$entry");
 					$moddate = date("D M j G:i:s T Y",$modified[9]);
