@@ -127,7 +127,11 @@ void C3DTask::init()
 	icon = (uint)LoadIcon(ghInstance,MAKEINTRESOURCE(IDI_ICON1));
 #endif
 	bool useD3D = CConfigFileTask::instance().configFile().getVar("OpenGL").asInt()==0;
+#ifdef NL_INDEX_BUFFER_H //new 3d
 	Driver = UDriver::createDriver(icon,useD3D);
+#else
+	Driver = UDriver::createDriver(icon);
+#endif
 	nlassert(Driver);
 
 	// Create the window with config file values

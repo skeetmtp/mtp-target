@@ -34,6 +34,8 @@
 #include <3d/material.h>
 #include <3d/register_3d.h>
 
+#include <nel/misc/smart_ptr.h> 
+
 /*
 #include "bot.h"
 #include "main.h"
@@ -72,12 +74,17 @@ uint32 loadMesh(const std::string &meshFileName, std::vector<NLMISC::CVector> &v
 		return 0;
 	}
 
-	CShapeStream ss;
-	NLMISC::CIFile i(CPath::lookup(meshFileName, false).c_str());
-	i.serial(ss);
-	i.close();
-
-	CMesh *m = (CMesh*)ss.getShapePointer();
+	CMesh *m = NULL;
+	{
+		CShapeStream ss;
+		NLMISC::CIFile i(CPath::lookup(meshFileName, false).c_str());
+		i.serial(ss);
+		i.close();
+		
+		
+		//CSmartPtr<IShape> is = ss.getShapePointer();
+		m = (CMesh*)ss.getShapePointer();
+	}
 	const CMeshGeom &mg = m->getMeshGeom();
 
 	CMatrix tmat;
@@ -95,6 +102,8 @@ uint32 loadMesh(const std::string &meshFileName, std::vector<NLMISC::CVector> &v
 	}
 	
 	
+
+#ifdef NL_INDEX_BUFFER_H //new 3d
 
 	uint nbmb = mg.getNbMatrixBlock();
 	for(uint i = 0; i < nbmb; i++)
@@ -136,5 +145,44 @@ uint32 loadMesh(const std::string &meshFileName, std::vector<NLMISC::CVector> &v
 //		if(j)
 	}
 
+#else //old 3d
+	uint nbmb = mg.getNbMatrixBlock();
+	for(uint i = 0; i < nbmb; i++)
+	{
+		uint nbrp = mg.getNbRdrPass(i);
+		for(uint j = 0; j < nbrp; j++)
+		{
+			const CPrimitiveBlock &pb = mg.getRdrPassPrimitiveBlock(i, j);
+			const uint32 *ptr = pb.getTriPointer();
+			uint nbt = pb.getNumTri();
+			for(uint k = 0; k < nbt*3; k+=3)
+			{
+				nbFaces++;
+				indices.push_back(ptr[k+0]);
+				indices.push_back(ptr[k+1]);
+				indices.push_back(ptr[k+2]);
+				//				nlinfo("%d %d %d %d", k, ptr[k+0], ptr[k+1], ptr[k+2]);
+			}
+		}
+	}
+	
+	const CVertexBuffer &vb = mg.getVertexBuffer();
+	uint32 nbv = vb.getNumVertices();
+	for(uint i = 0; i < nbv; i++)
+	{
+		const void *vv = vb.getVertexCoordPointer(i);
+		CVector v = *(CVector*)vv;
+		const void *nn = vb.getNormalCoordPointer(i);
+		CVector n = *(CVector*)nn;
+		//		uint j;
+		//		for(j = 0; j < vertices.c_str(); j++)
+		//		{
+		vertices.push_back(tmat * v);
+		normals.push_back(n);
+		//		}
+		//		if(j)
+	}
+#endif
+	delete m;
 	return nbFaces;
 }
