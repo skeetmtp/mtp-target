@@ -39,6 +39,7 @@ end
 
 function Entity:init()
   local parent = CEntity:new();
+  self:setCurrentScore(0);
   self:setUserData(parent);
   self:setStartPointId(clientId+getSessionId()*2);
   local t = math.mod(clientId,2);
@@ -55,6 +56,10 @@ function Entity:init()
   print(self:getName());
   parent:printTeam();
   clientId = clientId + 1;
+end
+
+function Entity:preUpdate()
+  self:setCurrentScore(0);
 end
 
 function Entity:update()

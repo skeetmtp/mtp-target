@@ -6,15 +6,17 @@
 local clientId = 0;
 
 function Entity:init()
+  self:setCurrentScore(0);
   --print(self:getName());
   --print("entity init");
 end
 
-function Entity:update()
-  --print(self:getName());
-  --print("entity update");
+function Entity:preUpdate()
+  self:setCurrentScore(0);
 end
 
+function Entity:update()
+end
 
 function entitySceneCollideEvent ( entity, module )
   --print(entity:getName());
