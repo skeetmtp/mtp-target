@@ -2,7 +2,7 @@
      $die_message = "error";
 
      $image_dir = "http://mtptarget.free.fr";	
-     $image_dir = "./";	
+     //$image_dir = "./";	
      $sshot_dir = $image_dir."/screenshot";	
      $cache_dir = "cache";
 
