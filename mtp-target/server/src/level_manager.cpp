@@ -32,8 +32,10 @@
 #include "level.h"
 #include "client.h"
 #include "network.h"
+#include "physics.h"
 #include "variables.h"
 #include "level_manager.h"
+#include "entity_manager.h"
 #include "../../common/net_message.h"
 
 
@@ -91,6 +93,8 @@ void CLevelManager::release()
 
 void CLevelManager::newLevel()
 {
+	pausePhysics();
+	CEntityManager::instance().reset();
 	uint i;
 	nlinfo("Find a new level");
 
@@ -116,11 +120,13 @@ void CLevelManager::newLevel()
 		if(newLevel->valid())
 		{
 			CurrentLevel = newLevel;
+			resumePhysics();	
 			return;
 		}
 	}
 
 	// no level found, keep the current one
+	resumePhysics();	
 }
 
 void CLevelManager::display(CLog *log) const
