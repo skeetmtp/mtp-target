@@ -57,23 +57,27 @@
 
 			for ($i = 0; $i+2 < sizeof($arr);)
 			{
-				$my1[$p] = strtr($arr[$i],"\""," ");
-				$my2[$p] = (int)(strtr($arr[$i+2],"\""," "));
-
+				$login = strtr($arr[$i],"\""," ");
+				$score = (int)(strtr($arr[$i+2],"\""," "));
 				// uncomment this line for debug 
-				//echo $my1[$p]." ".$my2[$p]."<br>\n";
+				//echo $login." ".$score."<br>\n";
 
-				$b = strpos($my1[$p],'[');
-				$e = strpos($my1[$p],']');
-				if($b !== false && $e !== false)
+				if($server == "easy" && $score < 10000 || $server == "adv")
 				{
-					$team = substr($my1[$p],$b+1,$e-$b-1);
-					$team_score[$team] = $team_score[$team] + $my2[$p];
-					$team_numbers[$team] = $team_numbers[$team] + 1;
-				}
+					$my1[$p] = $login;
+					$my2[$p] = $score;
 
+					$b = strpos($my1[$p],'[');
+					$e = strpos($my1[$p],']');
+					if($b !== false && $e !== false)
+					{
+						$team = substr($my1[$p],$b+1,$e-$b-1);
+						$team_score[$team] = $team_score[$team] + $my2[$p];
+						$team_numbers[$team] = $team_numbers[$team] + 1;
+					}
+					$p++;
+				}
 				$i+=3;
-				$p++;
 			}
 			arsort($team_score, SORT_NUMERIC);
 			reset($team_score);
@@ -83,7 +87,10 @@
 			echo "<h3>Registered:</h3>";
 			echo sizeof($my1)." players</p>";
 
-			echo "<h3>10 best players high scores :</h3>";
+			echo "<h3>10 best players high scores ";
+			if($server=="easy") echo "(on the easy server, only score < than 10000 are displayed)";
+			echo ":</h3>";
+
 			for ($i = 0; $i < 1; $i++)
 				echo "<font style=\"color:red\"><b>$my1[$i]</b> : $my2[$i]</font><br>";
 
