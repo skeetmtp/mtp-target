@@ -45,15 +45,29 @@ class CEntityInitData
 
 public:
 
+	CEntityInitData()
+	{
+		eid = 255;
+		name = "unk";
+		totalScore = 0;
+		color = NLMISC::CRGBA(255,255,255,255);
+		spectator = false;
+		isLocal = false;
+		
+	}
+
 	CEntityInitData(uint8 _eid, const std::string &_name, sint32 _totalScore, NLMISC::CRGBA &_color, bool _spectator, bool _isLocal):eid(_eid),name(_name),totalScore(_totalScore),color(_color),spectator(_spectator),isLocal(_isLocal)
 	{
-
 	}
+
+	CEntityInitData(const CEntityInitData &e) : eid(e.eid),name(e.name),totalScore(e.totalScore),color(e.color),spectator(e.spectator),isLocal(e.isLocal)
+	{
+	};
 
 	uint8 eid;
 	std::string name;
 	sint32 totalScore;
-	NLMISC::CRGBA &color;
+	NLMISC::CRGBA color;
 	bool spectator;
 	bool isLocal;
 };
