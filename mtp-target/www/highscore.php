@@ -51,6 +51,7 @@
 				{
 					$team = substr($my1[$p],$b+1,$e-$b-1);
 					$team_score[$team] = $team_score[$team] + $my2[$p];
+					$team_numbers[$team] = $team_numbers[$team] + 1;
 				}
 
 				$i+=3;
@@ -78,7 +79,7 @@
 			$i = 0;	
 			while (list($key, $val) = each($team_score))
 			{
-                                echo "$key : $val<br>";
+                                echo "$key : $val ($team_numbers[$key] members)<br>";
 				$i=$i+1;
 				if($i==3) break;
 			}
