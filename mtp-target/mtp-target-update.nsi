@@ -24,7 +24,7 @@ OutFile "${APPNAME}-update-${APPOLDVERSION}-${APPVERSION}.exe"
 !insertmacro MUI_RESERVEFILE_LANGDLL
 
 Section "base" Section1
-	call IsMtptInstalled
+	call IsMtptInstalledUpdate
 	; Set Section properties
 	SectionIn RO
 	SetOverwrite on
@@ -32,30 +32,51 @@ Section "base" Section1
 	SetOutPath "$INSTDIR"
 	FILE "client\ReleaseDebug\mtp-target.exe"
 	FILE "client\mtp_target_default.cfg"
-	FILE "..\nel\lib\nel_drv_opengl_win_rd.dll"
-	FILE "..\nel\lib\nel_drv_direct3d_win_rd.dll"
+	;FILE "..\nel\lib\nel_drv_opengl_win_rd.dll"
+	;FILE "..\nel\lib\nel_drv_direct3d_win_rd.dll"
 	; Set Section Files and Shortcuts
-	CreateDirectory "$SMPROGRAMS\${APPNAME}"
-	CreateShortCut "$SMPROGRAMS\${APPNAME}\Play Mtp-Target.lnk" "$INSTDIR\mtp-target.exe"
-	CreateShortCut "$SMPROGRAMS\${APPNAME}\About.lnk" "http://mtptarget.free.fr/" "" "$INSTDIR\mtp-target.exe" 0
+	;CreateDirectory "$SMPROGRAMS\${APPNAME}"
+	;CreateShortCut "$SMPROGRAMS\${APPNAME}\Play Mtp-Target.lnk" "$INSTDIR\mtp-target.exe"
+	;CreateShortCut "$SMPROGRAMS\${APPNAME}\About.lnk" "http://mtptarget.free.fr/" "" "$INSTDIR\mtp-target.exe" 0
 	
-	;WriteUninstaller "$INSTDIR\Uninst.exe"
+	WriteUninstaller "$INSTDIR\Uninst.exe"
 	CreateShortCut "$SMPROGRAMS\${APPNAME}\Uninstall.lnk" "$INSTDIR\uninstall.exe"
-
+	
+	; back up old value of .opt
+	!define Index "Line${__LINE__}"
+	  ReadRegStr $1 HKCR ".mtr" ""
+	  StrCmp $1 "" "${Index}-NoBackup"
+	    StrCmp $1 "MtpTargetReplayFile" "${Index}-NoBackup"
+	    WriteRegStr HKCR ".mtr" "backup_val" $1
+	"${Index}-NoBackup:"
+	  WriteRegStr HKCR ".mtr" "" "MtpTargetReplayFile"
+	  ReadRegStr $0 HKCR "MtpTargetReplayFile" ""
+	  StrCmp $0 "" 0 "${Index}-Skip"
+		WriteRegStr HKCR "MtpTargetReplayFile" "" "Mtp-Target Replay File"
+		WriteRegStr HKCR "MtpTargetReplayFile\shell" "" "open"
+		WriteRegStr HKCR "MtpTargetReplayFile\DefaultIcon" "" "$INSTDIR\client\mtp-target.exe,0"
+	;"${Index}-Skip:"
+	;  WriteRegStr HKCR "MtpTargetReplayFile\shell\open\command" "" \
+	;    '$INSTDIR\client\mtp-target.exe "%1"'
+	;  WriteRegStr HKCR "MtpTargetReplayFile\shell\edit" "" "Edit Options File"
+	;  WriteRegStr HKCR "MtpTargetReplayFile\shell\edit\command" "" \
+	;    '$INSTDIR\client\mtp-target.exe "%1"'
+	!undef Index
+	  ; Rest of script
 SectionEnd
 
 Section "server" Section2
-	call IsMtptInstalled
+	call IsMtptInstalledUpdate
 	; Set Section properties
 	SetOverwrite on
 	
 	SetOutPath "$INSTDIR"
 	;FILE "server\ReleaseDebug\mtp_target_service.exe"
-	FILE "server\mtp_target_service_default.cfg"
+	;FILE "server\mtp_target_service_default.cfg"
 
 	; Set Section Files and Shortcuts
-	CreateDirectory "$SMPROGRAMS\${APPNAME}"
-	CreateShortCut "$SMPROGRAMS\mtp-target\Launch dedicated server.lnk" "$INSTDIR\mtp_target_service.exe" "" "$INSTDIR\mtp_target_service.exe" 0
+	;CreateDirectory "$SMPROGRAMS\${APPNAME}"
+	;CreateShortCut "$SMPROGRAMS\mtp-target\Launch dedicated server.lnk" "$INSTDIR\mtp_target_service.exe" "" "$INSTDIR\mtp_target_service.exe" 0
 
 SectionEnd
 
@@ -66,13 +87,13 @@ Section -FinishSection
 	WriteRegStr HKCU "Software\${APPNAME}" "version" "${APPVERSION}"
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "DisplayName" "${APPNAME}"
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "UninstallString" "$INSTDIR\uninstall.exe"
-	WriteUninstaller "$INSTDIR\uninstall.exe"
+	;WriteUninstaller "$INSTDIR\uninstall.exe"
 
 SectionEnd
 
 ; Modern install component descriptions
 !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
-	!insertmacro MUI_DESCRIPTION_TEXT ${Section1} "Client data"
+	!insertmacro MUI_DESCRIPTION_TEXT ${Section1} "Client"
 	!insertmacro MUI_DESCRIPTION_TEXT ${Section2} "Server"
 !insertmacro MUI_FUNCTION_DESCRIPTION_END
 

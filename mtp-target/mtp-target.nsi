@@ -44,6 +44,29 @@ Section "client" Section1
 	CreateShortCut "$SMPROGRAMS\${APPNAME}\Play Mtp-Target.lnk" "$INSTDIR\client\mtp-target.exe"
 	CreateShortCut "$SMPROGRAMS\${APPNAME}\About.lnk" "http://mtptarget.free.fr/" "" "$INSTDIR\client\mtp-target.exe" 0
 	
+	; back up old value of .opt
+	!define Index "Line${__LINE__}"
+	  ReadRegStr $1 HKCR ".mtr" ""
+	  StrCmp $1 "" "${Index}-NoBackup"
+	    StrCmp $1 "MtpTargetReplayFile" "${Index}-NoBackup"
+	    WriteRegStr HKCR ".mtr" "backup_val" $1
+	"${Index}-NoBackup:"
+	  WriteRegStr HKCR ".mtr" "" "MtpTargetReplayFile"
+	  ReadRegStr $0 HKCR "MtpTargetReplayFile" ""
+	  StrCmp $0 "" 0 "${Index}-Skip"
+		WriteRegStr HKCR "MtpTargetReplayFile" "" "Mtp-Target Replay File"
+		WriteRegStr HKCR "MtpTargetReplayFile\shell" "" "open"
+		WriteRegStr HKCR "MtpTargetReplayFile\DefaultIcon" "" "$INSTDIR\client\mtp-target.exe,0"
+	;"${Index}-Skip:"
+	;  WriteRegStr HKCR "MtpTargetReplayFile\shell\open\command" "" \
+	;    '$INSTDIR\client\mtp-target.exe "%1"'
+	;  WriteRegStr HKCR "MtpTargetReplayFile\shell\edit" "" "Edit Options File"
+	;  WriteRegStr HKCR "MtpTargetReplayFile\shell\edit\command" "" \
+	;    '$INSTDIR\client\mtp-target.exe "%1"'
+	!undef Index
+	  ; Rest of script
+
+
 	SetOutPath "$INSTDIR\client\data"
 	FILE /r "client\data\*.*"
 
