@@ -1,4 +1,5 @@
 <?php
+	 $enableSql = false;
      $die_message = "error";
 
      $image_dir = "http://mtptarget.free.fr";	

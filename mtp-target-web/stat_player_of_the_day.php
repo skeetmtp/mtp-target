@@ -10,7 +10,7 @@ include_once("helpers.php");
 	{
 		include($cacheFileName);
 	}
-	else
+	else if($enableSql)
 	{
 
 		$html_fp = fopen($cacheFileName, "wt");
