@@ -177,14 +177,13 @@ void CRunningSessionState::update()
 							(*it)->CurrentScore += 1000;
 						}
 					}
+					CClient *cl = dynamic_cast<CClient*>(*it);
+					sint32 uid = cl->uid(), score = cl->CurrentScore;
+					float duration = cl->ArrivalTime;
+					msgout2.serial(uid, score, duration);
 				}
 
 				(*it)->Score +=(*it)->CurrentScore;
-
-				CClient *cl = dynamic_cast<CClient*>(*it);
-				sint32 uid = cl->uid(), score = cl->CurrentScore;
-				float duration = cl->ArrivalTime;
-				msgout2.serial(uid, score, duration);
 
 				CConfigFile::CVar &accounts = IService::getInstance()->ConfigFile.getVar("Accounts");
 				for(sint i = 0; i < accounts.size(); i+=3)
