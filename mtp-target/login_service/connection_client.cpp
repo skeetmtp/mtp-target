@@ -182,7 +182,7 @@ static void cbClientVerifyLoginPassword(CMessage &msgin, TSockId from, CCallback
 		reason = checkLogin(login);
 		if(!reason.empty()) break;
 
-		MYSQL_RES *result;
+		CMysqlResult result;
 		MYSQL_ROW row;
 		sint32 nbrow;
 
@@ -283,7 +283,7 @@ static void cbClientChooseShard(CMessage &msgin, TSockId from, CCallbackNetBase 
 
 	breakable
 	{
-		MYSQL_RES *result;
+		CMysqlResult result;
 		MYSQL_ROW row;
 		sint32 nbrow;
 		reason = sqlQuery("select * from user where State='Authorized'", nbrow, row, result);
@@ -318,7 +318,7 @@ static void cbClientChooseShard(CMessage &msgin, TSockId from, CCallbackNetBase 
 		uint32 shardid;
 		msgin.serial(shardid);
 
-		MYSQL_RES *result2;
+		CMysqlResult result2;
 		MYSQL_ROW row2;
 		sint32 nbrow2;
 		reason = sqlQuery("select * from shard where ShardId="+toString(shardid), nbrow2, row2, result2);
@@ -376,7 +376,7 @@ static void cbClientDisconnection (TSockId from, void *arg)
 
 	string reason;
 	
-	MYSQL_RES *result;
+	CMysqlResult result;
 	MYSQL_ROW row;
 	sint32 nbrow;
 	reason = sqlQuery("select * from user where State!='Offline'", nbrow, row, result);

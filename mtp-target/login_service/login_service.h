@@ -41,12 +41,39 @@ extern NLMISC::CLog				*Output;
 
 extern MYSQL *DatabaseConnection;
 
+class CMysqlResult
+{
+public:
+	CMysqlResult() 
+	{ 
+		_result = NULL;
+	}
+	CMysqlResult(CMysqlResult &mysqlResult) 
+	{ 
+		nlwarning("CMysqlResult copy not implemented");
+		_result=mysqlResult._result; 
+	}
+	~CMysqlResult()
+	{
+		mysql_free_result(_result);
+	}
+
+	CMysqlResult(MYSQL_RES *result) 
+	{ 
+		if(_result!=NULL)
+			mysql_free_result(_result);
+		_result = result; 
+	};
+	operator MYSQL_RES*() { return _result; };
+private:
+	MYSQL_RES *_result;
+};
 
 //
 // Functions
 //
 
-std::string sqlQuery(const std::string &query, sint32 &nbRow, MYSQL_ROW &firstRow, MYSQL_RES *&result);
+std::string sqlQuery(const std::string &query, sint32 &nbRow, MYSQL_ROW &firstRow, CMysqlResult &result);
 
 #endif // LOGIN_SERVICE_H
 

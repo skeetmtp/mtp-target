@@ -78,7 +78,7 @@ MYSQL *DatabaseConnection = 0;
 // Functions
 //
 
-string sqlQuery(const string &query, sint32 &nbRow, MYSQL_ROW &firstRow, MYSQL_RES *&result)
+string sqlQuery(const string &query, sint32 &nbRow, MYSQL_ROW &firstRow, CMysqlResult &result)
 {
 	nlassert(DatabaseConnection);
 	nlinfo("sqlQuery: '%s'", query.c_str());
@@ -121,7 +121,7 @@ string sqlQuery(const string &query, sint32 &nbRow, MYSQL_ROW &firstRow, MYSQL_R
 
 string resetDatabase()
 {
-	MYSQL_RES *result;
+	CMysqlResult result;
 	MYSQL_ROW row;
 	sint32 nbrow;
 

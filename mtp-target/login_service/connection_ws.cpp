@@ -82,7 +82,7 @@ static void cbWSConnection(const std::string &serviceName, uint16 sid, void *arg
 		return;
 
 	string reason;
-	MYSQL_RES *result;
+	CMysqlResult result;
 	MYSQL_ROW row;
 	sint32 nbrow;
 
@@ -107,7 +107,7 @@ static void cbWSDisconnection (const std::string &serviceName, uint16 sid, void 
 	nldebug("shard disconnection: %s", ia.asString().c_str());
 
 	string reason;
-	MYSQL_RES *result;
+	CMysqlResult result;
 	MYSQL_ROW row;
 	sint32 nbrow;
 
@@ -146,7 +146,7 @@ static void cbWSIdentification (CMessage &msgin, const std::string &serviceName,
 	nldebug("Shard identification, It says to be ShardId %d with %d players, let check that!", shardId, nbplayers);
 
 	string reason;
-	MYSQL_RES *result;
+	CMysqlResult result;
 	MYSQL_ROW row;
 	sint32 nbrow;
 	
@@ -198,7 +198,7 @@ static void cbWSIdentification (CMessage &msgin, const std::string &serviceName,
 			}
 		}
 
-		MYSQL_RES *result2;
+		CMysqlResult result2;
 		MYSQL_ROW row2;
 		sint32 nbrow2;
 		reason = sqlQuery("update shard set State='Online', NbPlayers="+toString(nbplayers)+", InternalId="+toString(sid)+" where ShardId="+toString(shardId), nbrow2, row2, result2);
@@ -243,7 +243,7 @@ static void cbWSClientConnected (CMessage &msgin, const std::string &serviceName
 		nlinfo ("Received a validation that client %u is disconnected on the frontend", Id);
 	
 	string reason;
-	MYSQL_RES *result;
+	CMysqlResult result;
 	MYSQL_ROW row;
 	sint32 nbrow;
 
@@ -276,7 +276,7 @@ static void cbWSClientConnected (CMessage &msgin, const std::string &serviceName
 		return;
 	}
 
-	MYSQL_RES *result2;
+	CMysqlResult result2;
 	MYSQL_ROW row2;
 	sint32 nbrow2;
 
@@ -332,7 +332,7 @@ static void cbWSShardChooseShard(CMessage &msgin, const std::string &serviceName
 		msgout.serial(addr);
 	}
 
-	MYSQL_RES *result;
+	CMysqlResult result;
 	MYSQL_ROW row;
 	sint32 nbrow;
 	reason = sqlQuery("select * from user where Cookie='"+cookie+"'", nbrow, row, result);
@@ -351,7 +351,7 @@ static void cbWSShardChooseShard(CMessage &msgin, const std::string &serviceName
 static void cbScoreUpdate(CMessage &msgin, const std::string &serviceName, uint16 sid)
 {
 	string reason;
-	MYSQL_RES *result;
+	CMysqlResult result;
 	MYSQL_ROW row;
 	sint32 nbrow;
 
