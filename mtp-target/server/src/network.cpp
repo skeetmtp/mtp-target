@@ -132,7 +132,8 @@ void CNetwork::update()
 	if(tsttime)
 		updatedt = t0 - tsttime;
 	tsttime = t0;
-	nlinfo("time before 2 network update : %d>50ms",updatedt);
+	if(updatedt>100)
+		nlinfo("time before 2 network update : %d>50ms",updatedt);
 
 	{
 		{
