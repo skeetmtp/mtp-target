@@ -111,6 +111,7 @@ void CEntityManager::update()
 
 void CEntityManager::add(uint8 eid, const std::string &name, sint32 totalScore, CRGBA &color, const string &texture, bool spectator, bool isLocal)
 {
+	nlinfo("CEntityManager::add(%d:%s)",eid,name.c_str());
 	nlassert(!exist(eid));
 	uint tid = getThreadId();
 	nlassert(tid==TaskManagerThreadId || tid==NetworkThreadId);
@@ -137,6 +138,7 @@ void CEntityManager::add(uint8 eid, const std::string &name, sint32 totalScore, 
 
 void CEntityManager::remove(uint8 eid)
 {
+	nlinfo("CEntityManager::remove(%d)",eid);
 	nlassert(exist(eid));
 	uint tid = getThreadId();
 	nlassert(tid==TaskManagerThreadId || tid==NetworkThreadId);
@@ -167,7 +169,7 @@ void CEntityManager::_add(std::list<CEntityInitData> &addList)
 		CEntityInitData e = *it2;
 		nlassert(!exist(e.eid));
 		entities()[e.eid]->init(CEntity::Player, e.name, e.totalScore, e.color, e.texture, "pingoo", e.spectator,e.isLocal);
-		nlinfo("CEntityManager::add(%d,%s)",e.eid,e.name.c_str());
+		nlinfo("CEntityManager::_add(%d,%s)",e.eid,e.name.c_str());
 	}
 	addList.clear();	
 }
@@ -182,6 +184,7 @@ void CEntityManager::_remove(std::list<uint8> &removeList)
 			nlwarning("Can't remove client because eid 255 is not valid");
 		
 		nlassert(exist(eid));
+		nlinfo("CEntityManager::_remove(%d)",eid);
 		if(CMtpTarget::instance().controler().Camera.getFollowedEntity() == eid)
 			CMtpTarget::instance().controler().Camera.setFollowedEntity(255);
 		

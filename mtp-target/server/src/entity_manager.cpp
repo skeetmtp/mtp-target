@@ -87,6 +87,7 @@ void CEntityManager::update()
 
 void CEntityManager::add(CEntity *entity)
 {
+	nlinfo("CEntityManager::add(0x%p,%d:%s)",entity,entity->id(),entity->name().c_str());
 	uint tid = getThreadId();
 	nlassert(tid==MainThreadId || tid==NetworkThreadId);
 	std::list<CEntity *> *ClientToAddList;
@@ -112,6 +113,7 @@ void CEntityManager::add(CEntity *entity)
 
 void CEntityManager::remove(uint8 eid)
 {
+	nlinfo("CEntityManager::remove(%d)",eid);
 	uint tid = getThreadId();
 	nlassert(tid==MainThreadId || tid==NetworkThreadId);
 	std::list<uint8> *ClientToRemoveList;
@@ -142,6 +144,7 @@ void CEntityManager::_add(std::list<CEntity *> &addList)
 	for(it2=addList.begin(); it2!=addList.end();it2++)
 	{
 		CEntity *e = *it2;
+		nlinfo("CEntityManager::_add(0x%p,%d,%s)",e,e->id(),e->name().c_str());
 		entities().push_back(e);
 	}
 	addList.clear();	
@@ -156,6 +159,7 @@ void CEntityManager::_remove(std::list<uint8> &removeList)
 		uint8 eid = *it1;
 		if(eid == 255)
 			nlwarning("Can't remove client because eid 255 is not valid");
+		nlinfo("CEntityManager::_remove(%d)",eid);
 		
 		CEntity *c = 0;
 		
