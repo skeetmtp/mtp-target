@@ -4,7 +4,9 @@
 <ul>
 <li>Get the <a href="http://mtptarget.free.fr/download">install program</a>.</li>
 <li>Run <code>mtptarget_launcher.exe</code>.</li>
-<li>Enter a login and a password, the first time you login, these informations will be stored into the database </li>
+<li>Enter a login and a password, the first time you login, these informations will be stored into the database<br>
+<b>Warning</b> : login size is <b>20 characters max</b> and only thoses chararters are allowed <b>a-z A-Z 0-9 [ ] _ -</b>
+</li>
 <li>Now you have to choose one of the available server</li>
 <li>The game could be automaticaly patched now.</li>
 <li>A window with <code>"Press enter to connect to the server"</code> should appear, so press <b>ENTER</b> :).</li>
