@@ -62,6 +62,7 @@ public:
 	{
 		std::string ShardName;
 		std::string WSAddr;
+		uint16 port;
 	};
 
 	typedef std::vector<CShardEntry> TShardList;

@@ -128,8 +128,8 @@ void CIntroTask::updateInit()
 	guiSPG<CGuiXml> xml = 0;
 	xml = CGuiXmlManager::instance().Load("menu.xml");
 	menuFrame = (CGuiFrame *)xml->get("menuFrame");
-	//playOnLineButton = (CGuiButton *)xml->get("bPlayOnline");
-	playOnLanButton = (CGuiButton *)xml->get("bPlayOnlan");
+	playOnLineButton = (CGuiButton *)xml->get("bPlayOnline");
+	//playOnLanButton = (CGuiButton *)xml->get("bPlayOnlan");
 	exitButton3 = (CGuiButton *)xml->get("bExit");
 	exitButton3->eventBehaviour = new CGuiExitButtonEventBehaviour();
 	
@@ -161,20 +161,79 @@ void CIntroTask::updateMenu()
 {
 	if(State!=eMenu) return;
 
-	/*
 	if(playOnLineButton->pressed())
 	{
 		CGuiObjectManager::instance().objects.clear();
 		CGuiObjectManager::instance().objects.push_back(loginFrame);
 		State = eLoginOnline;
 	}
-	*/
+	/*
 	if(playOnLanButton->pressed())
 	{
 		CGuiObjectManager::instance().objects.clear();
 		CGuiObjectManager::instance().objects.push_back(loginFrame);
 		State = eLoginOnlan;
 	}
+	*/
+	
+}
+
+
+void CIntroTask::getShardListFromFile(const string &filename)
+{
+	xmlNodePtr snode;
+	CIFile file;
+	NLMISC::CIXml doc;
+	string fn = CPath::lookup(filename, false);
+	if (file.open(fn.c_str()))
+	{
+		if (doc.init(file))
+		{
+			snode = doc.getRootNode();
+		}		
+		else
+		{
+			nlwarning("cannot init xml file : %s",filename.c_str());
+			nlassert(false);
+			return;
+		}
+	}
+	else
+	{
+		nlwarning("cannot open file : %s",filename.c_str());
+		nlassert(false);
+		return;
+	}
+	CLoginClientMtp::ShardList.clear ();
+	for( snode = doc.getFirstChildNode(snode,"server");snode;snode = doc.getNextChildNode(snode,"server") )
+	{
+		xmlNodePtr node;
+		bool isok;
+		string name;
+		isok = doc.getPropertyString(name,snode,"name");
+		string address;
+		isok = doc.getPropertyString(address,snode,"address");
+		uint16 port = CConfigFileTask::instance().configFile().getVar("TcpPort").asInt();
+
+		node = doc.getFirstChildNode(snode,"port");
+		if(node)
+		{
+			string s;
+			doc.getContentString(s,node);
+			char tmpstr[1024];
+			strcpy(tmpstr,s.c_str());
+			char *cstr = tmpstr;
+			char *endstr = 0;
+			port = (uint16)strtod(cstr,&endstr);
+		}			
+		nlinfo("adding server : %s(%s) : %d",name.c_str(),address.c_str(),port);
+		CLoginClientMtp::CShardEntry se;
+		se.ShardName = name;
+		se.WSAddr = address;
+		se.port = port;
+		CLoginClientMtp::ShardList.push_back (se);
+	}
+	
 	
 }
 
@@ -198,11 +257,9 @@ void CIntroTask::updateLoginOnline()
 		CConfigFileTask::instance().configFile().getVar("Password").setAsString(passwordText->text);
 		CConfigFileTask::instance().configFile().save();
 		_errorServerFrame = 0;
-		
+		/*
 		string loginServer = CConfigFileTask::instance().configFile().getVar("LSHost").asString();
-		
 		string reason = CLoginClientMtp::authenticate(loginServer, loginText->text, passwordText->text, 0);
-		
 		if(!reason.empty())
 		{
 			_autoLogin = 0;
@@ -210,8 +267,9 @@ void CIntroTask::updateLoginOnline()
 			CGuiObjectManager::instance().objects.push_back(loginFrame);
 		}
 		else
+		*/
 		{
-			
+			getShardListFromFile("shard_list.xml");
 			ServerId = 0;
 			
 			serverVbox->elements.clear();
@@ -281,6 +339,7 @@ void CIntroTask::updateServerList()
 	
 }
 
+/* old login system
 void CIntroTask::updateConnectionOnLine()
 {
 	if(State!=eConnectionOnline) return;
@@ -326,6 +385,42 @@ void CIntroTask::updateConnectionOnLine()
 
 	nlassert(false);
 }
+*/
+
+void CIntroTask::updateConnectionOnLine()
+{
+	if(State!=eConnectionOnline) return;
+	
+	CGuiObjectManager::instance().objects.clear();
+	
+	CInetAddress addr;
+	
+	addr.setNameAndPort(CLoginClientMtp::ShardList[ServerId].WSAddr+":"+toString(CConfigFileTask::instance().configFile().getVar("TcpPort").asInt()));
+			
+	string res = CNetworkTask::instance().connect(&addr);
+	if(res.empty())
+	{
+		_autoLogin = 0;//autologin only once
+		stop();
+		// stop the background
+		CBackgroundTask::instance().stop();
+		// go to the game task
+		CTaskManager::instance().add(CGameTask::instance(), 60);
+		
+		CGuiObjectManager::instance().objects.clear();
+		State = eNone;
+		return;		
+	}
+	else
+	{
+		_autoLogin = 0;
+		error(res);
+		CGuiObjectManager::instance().objects.push_back(loginFrame);
+		State = eLoginOnline;
+		return;
+	}
+}
+
 
 void CIntroTask::updateConnectionOnLan()
 {

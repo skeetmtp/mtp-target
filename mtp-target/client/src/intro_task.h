@@ -57,7 +57,8 @@ public:
 	void updateConnectionOnLan();
 	
 	virtual std::string name() { return "CIntroTask"; }
-
+	void getShardListFromFile(const std::string &filename);
+		
 	void doConnectionOnLine(uint32 serverId);
 	void doConnectionOnLan();
 private:
@@ -69,8 +70,8 @@ private:
 	uint32 ServerId;
 	
 	guiSPG<CGuiFrame> menuFrame;
-//	guiSPG<CGuiButton> playOnLineButton;
-	guiSPG<CGuiButton> playOnLanButton;
+	guiSPG<CGuiButton> playOnLineButton;
+//	guiSPG<CGuiButton> playOnLanButton;
 	guiSPG<CGuiButton> exitButton3;
 	
 	guiSPG<CGuiFrame> loginFrame;
