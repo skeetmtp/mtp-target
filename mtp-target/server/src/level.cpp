@@ -128,6 +128,9 @@ void CLevel::_luaInit()
 	//	nlinfo("level name '%s'", Name.c_str());
 	
 
+	uint32 CrashedClientCollide = 1;
+	luaGetGlobalVariable(_luaSession, CrashedClientCollide);
+	this->CrashedClientCollide = CrashedClientCollide!=0;
 	uint32 ClientBounce = 1;
 	luaGetGlobalVariable(_luaSession, ClientBounce);
 	this->ClientBounce = ClientBounce!=0;

@@ -15,6 +15,8 @@ fogDistMin = 0;
 fogDistMax = 150;
 fogColor = clearColor;
 
+CrashedClientCollide = 0;
+
 Cameras =
 {
 	CVector(0, 1, 10),

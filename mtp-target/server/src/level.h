@@ -79,6 +79,7 @@ public:
 	void clientBounceCoef(float c) {ClientBounceCoef = c;}
 	float clientBounceVel() {return ClientBounceVel;}
 	void clientBounceVel(float v) {ClientBounceVel=v;}
+	bool crashedClientCollide() const { return CrashedClientCollide; }
 	
 	
 	CLevelProxy		*luaProxy;
@@ -105,6 +106,7 @@ private:
 	bool						ClientBounce;
 	float						ClientBounceCoef;
 	float						ClientBounceVel;
+	bool						CrashedClientCollide;
 	
 };
 
