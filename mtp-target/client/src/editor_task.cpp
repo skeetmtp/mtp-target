@@ -51,7 +51,7 @@ using namespace NL3D;
 static CVector rayTestStart,rayTestEnd;
 static UMaterial testMat;
 
-CVariable<bool> EnableEditor("EnableEditor", "1 if you want a key to enable the editor", false, 0, true);
+CVariable<bool> EnableEditor("variables","EnableEditor", "1 if you want a key to enable the editor", false, 0, true);
 
 //
 // Functions

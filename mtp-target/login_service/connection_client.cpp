@@ -60,7 +60,7 @@ using namespace NLNET;
 // Variables
 //
 
-static CVariable<bool> AcceptNewUsers("AcceptNewUsers", "1 if the server accepts new users ", true, 0, true);
+static CVariable<bool> AcceptNewUsers("variables","AcceptNewUsers", "1 if the server accepts new users ", true, 0, true);
 
 static CCallbackServer *ClientsServer = 0;
 
