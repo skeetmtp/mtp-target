@@ -131,12 +131,11 @@ void CSoundManager::init()
 			{
 				string cline;
 				m3uNowPlaying = 0;
-				while (!m3uFile.eof())
+				while (!m3uFile.eof() && m3uFile.good())
 				{
-					if (m3uFile.good())
-						std::getline(m3uFile, cline);
+					std::getline(m3uFile, cline);
 					if(cline.size() && cline[0] != '#' && cline[0] != ' ')
-						m3uVector.push_back(m3uDirectory+cline);					
+						m3uVector.push_back(m3uDirectory+cline);		
 				}
 				useM3U = m3uVector.size()>0;
 				if (CConfigFileTask::instance().configFile().getVar("M3UShuffle").asInt() == 0)
