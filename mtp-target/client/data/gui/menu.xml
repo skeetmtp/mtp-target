@@ -27,7 +27,7 @@
 						</element>
 					</object>
 					-->
-					<object class="CGuiButton" name="bPlayOnlan">
+					<object class="CGuiButton" name="bPlayOnline">
 						<minSize>150,0</minSize>
 						<element>
 							<object class="CGuiText" name="txtPlayOnlan">
