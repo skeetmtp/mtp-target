@@ -181,7 +181,7 @@ fprintf($html_fp,"<br>\n");
 
 fprintf($html_fp,"Today login :\n");
 fprintf($html_fp,"<table>\n");
-fprintf($html_fp,"<tr valign=\"bottom\">\n"
+fprintf($html_fp,"<tr valign=\"bottom\">\n");
 
 	$maxToday = 0;
 	
