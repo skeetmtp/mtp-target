@@ -195,6 +195,8 @@ string CLevelManager::updateStats(const std::string &name, sint32 score, float t
 	string levelname = CFile::getFilename(CurrentLevel->fileName());
 
 	if(levelname.empty()) return "";
+
+	stats.SaveWrap = 5;
 	
 	for(uint i = 0; i < (uint)stats.size(); i += 5)
 	{
@@ -233,7 +235,6 @@ string CLevelManager::updateStats(const std::string &name, sint32 score, float t
 	      {
 		stats.setAsString(levelname, stats.size());
 	      }
-	    stats.SaveWrap = 5;
 	    stats.setAsString(name, stats.size());
 	    stats.setAsString(toString("%.2f",time), stats.size());
 	    stats.setAsString(name, stats.size());

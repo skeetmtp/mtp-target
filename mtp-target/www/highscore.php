@@ -85,37 +85,38 @@
 			}
 
 		}
-		else if (strstr ($line, "Levels"))
-		{
-			$line = substr($line, 26);
-			$line = strtr($line, "=,{};\"","      ");
-			$line = ereg_replace (' +', ' ', $line);
-			$LevelNames = explode(" ",$line);
-		}
 		else if (strstr ($line, "LevelStats"))
 		{
-			$line = substr($line, 26);
-			$line = strtr($line, "=,{};\"","      ");
+			$line = "";
+
+			while (!feof($fp))
+			{
+				$nl = fgets($fp, 10000);
+				if(strstr($nl,"};")) break;
+				$line = $line.$nl;
+			}
+			$line = strtr($line, "=,{};","     ");
 			$line = ereg_replace (' +', ' ', $line);
 			$LevelStats = explode(" ",$line);
 		}
 	}
 	fclose($fp);
 
-/*	echo "<p><b>Highscores by level:</b><br>";
-	if (isset($LevelNames) && isset($LevelStats))
+	echo "<h3>Highscores by level :</h3>";
+	if (isset($LevelStats))
 	{
-	 for ($i=0; $i < sizeof($LevelNames); $i++)
+	 for ($i=0; $i < sizeof($LevelStats); $i++)
 	 {
-	 if (strlen($LevelNames[$i])>1)
-	 {
-	 echo "- <b>$LevelNames[$i] :</b><br>";
-		 echo $LevelStats[$i*4]." : ".$LevelStats[$i*4+1]." points<br>";
-		   echo $LevelStats[$i*4+2]." : ".$LevelStats[$i*4+3]." seconds<br>";
-	 }	   
-	 }	   
+		$LevelStats[$i] = strtr($LevelStats[$i],"\""," ");
 	}
-*/
+
+	 for ($i=0; $i+4 < sizeof($LevelStats); $i+=5)
+	 {
+		echo "- <b>$LevelStats[$i] :</b><br>";
+		echo "Best time with ".$LevelStats[$i+2]." seconds : ".$LevelStats[$i+1]."<br>";
+		echo "Best score with ".$LevelStats[$i+4]." points : ".$LevelStats[$i+3]."<br>";
+	}
+}
 
 ?>
 </body>
