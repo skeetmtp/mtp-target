@@ -23,6 +23,7 @@
 #include <nel/misc/path.h>
 #include <nel/misc/bitmap.h>
 
+#include "task_manager.h"
 #include "3d_task.h"
 #include "editor_task.h"
 #include "time_task.h"
@@ -48,6 +49,11 @@ CMatrix ControlerCamMatrix;
 
 CControler::CControler()
 {
+	reset();
+}
+
+void CControler::reset()
+{
 	EId = 255;
 
 	FirstFrame = true;
@@ -57,6 +63,9 @@ CControler::CControler()
 
 	MissedTime = 0.0f;
 	RotZ = 0.0f;
+
+	Camera.reset();
+	Camera.setFollowedEntity(255);
 }
 
 CControler::~CControler()
@@ -205,7 +214,8 @@ void CControler::update()
 		}
 		
 		if (C3DTask::instance().kbPressed(KeyESCAPE))
-			exit(0);
+			CTaskManager::instance().exit();
+			//exit(0);
 
 		if (C3DTask::instance().kbPressed(KeyF1))
 		{
