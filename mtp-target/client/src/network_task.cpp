@@ -301,6 +301,12 @@ void CNetworkTask::setEditMode(uint8 editMode)
 	
 }
 
+void CNetworkTask::stop()
+{
+	NetworkThread->terminate();
+}
+
+
 
 void checkNetworkPaused()
 {

@@ -94,6 +94,13 @@ CLevel::CLevel(const string &filename)
 
 	LuaState = luaOpenAndLoad(filename);
 
+	if(!LuaState)
+	{
+		nlwarning("LEVEL: luaOpenAndLoad() failed while trying to load level '%s'", filename.c_str());
+		CMtpTarget::instance().error(string("Missing file : "+filename));
+		return;
+	}
+
 	luaGetGlobalVariable(LuaState, Name);
 	nlinfo("level name '%s'", Name.c_str());
 	
@@ -479,6 +486,13 @@ void CLevel::reset()
 	luaClose(LuaState);
 
 	LuaState = luaOpenAndLoad(FileName);
+	if(!LuaState)
+	{
+		nlwarning("LEVEL: luaOpenAndLoad() failed while trying to load level '%s'", FileName.c_str());
+		CMtpTarget::instance().error(string("Missing file : "+FileName));
+		return;
+	}
+	
 	
 	luaGetGlobalVariable(LuaState, Name);
 	nlinfo("level name '%s'", Name.c_str());

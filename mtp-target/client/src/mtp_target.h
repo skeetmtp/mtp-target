@@ -70,6 +70,7 @@ public:
 
 	void reset();
 	void error(std::string reason);
+	bool error();
 	
 	virtual std::string name() { return "CMtpTarget"; }
 
@@ -107,6 +108,7 @@ private:
 	void _error();
 	std::string		ErrorReason;
 	bool			DisplayTutorialInfo;
+	bool			Error;
 };
 
 

@@ -99,6 +99,7 @@ const char *mtpTargetConfigFilename = "mtp_target.cfg";
 
 void CMtpTarget::init()
 {
+	Error = false;
 	DoError = false;
 	// setup default task
 	CTaskManager::instance().add(CConfigFileTask::instance(), 10);
@@ -226,6 +227,8 @@ void CMtpTarget::error(string reason)
 {
 	DoError = true;
 	ErrorReason = reason;
+	Error = true;
+	CNetworkTask::instance().stop();
 }
 
 void CMtpTarget::reset()
@@ -239,6 +242,12 @@ void CMtpTarget::reset()
 	State = CMtpTarget::eBeforeFirstSession;
 	DisplayTutorialInfo = false;
 }
+
+bool CMtpTarget::error()
+{
+	return Error;
+}
+
 
 void CMtpTarget::_error()
 {

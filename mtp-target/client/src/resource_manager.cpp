@@ -285,7 +285,7 @@ string CResourceManager::get(const string &filename, bool &ok)
 
 	string ext = CFile::getExtension(filename);
 	if(ext == "shape") unk = CPath::lookup("unknown.shape", false);
-	else if(ext == "lua") unk = CPath::lookup("unknown.lua", false);
+	//else if(ext == "lua") unk = CPath::lookup("unknown.lua", false);
 	else if(ext == "tga") unk = CPath::lookup("unknown.tga", false);
 	else if(ext == "dds") unk = CPath::lookup("unknown.tga", false);
 	else if(ext == "png") unk = CPath::lookup("unknown.tga", false);
@@ -466,7 +466,6 @@ string CResourceManager::get(const string &filename, bool &ok)
 	vector<uint8> buf;
 	buf.resize(8000);
 	uint8 *ptr = &(*(buf.begin()));
-	
 	{
 		FILE *fp = fopen(destfn.c_str(), "wb");
 		gzFile gzfp = gzopen(packedfn.c_str(), "rb");

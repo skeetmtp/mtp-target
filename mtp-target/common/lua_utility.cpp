@@ -164,23 +164,25 @@ lua_State *luaOpen()
 lua_State *luaOpenAndLoad(const string &filename)
 {
 	lua_State *L = luaOpen();
-	luaLoad(L,filename);
+	bool res = luaLoad(L,filename);
+	if(!res)
+		L = 0;
 	return L;
 }
 
-void luaLoad(lua_State * L, const string &filename)
+bool luaLoad(lua_State * L, const string &filename)
 {
 	if(!L)
 	{
 		nlwarning("LUA: lua_dofile() failed while trying to load '%s'", filename.c_str());
-		return;
+		return false;
 	}
 
 	string fn = CPath::lookup(filename, false);
 	if(fn.empty())
 	{
 		nlwarning("LUA: File '%s' is not found", filename.c_str());
-		return;
+		return false;
 	}
 	
 	int res = lua_dofile(L, fn.c_str());
@@ -188,8 +190,9 @@ void luaLoad(lua_State * L, const string &filename)
 	{
 		nlwarning("LUA: lua_dofile(\"%s\") failed with code %d", filename.c_str(), res);
 		luaClose(L);
-		return;
+		return false;
 	}
+	return true;
 }
 
 void luaClose(lua_State *&L)

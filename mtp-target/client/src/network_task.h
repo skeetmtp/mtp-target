@@ -74,6 +74,7 @@ public:
 	void command(const std::string &cmd);
 	void openClose();
 	void ready();
+	void stop();
 	void force(const NLMISC::CVector &force);
 	void updateEditableElement(CEditableElementCommon *element);
 	void setEditMode(uint8 editMode);

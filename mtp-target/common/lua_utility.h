@@ -47,7 +47,7 @@ lua_State *luaOpenAndLoad(const std::string &filename);
 
 lua_State *luaOpen();
 
-void luaLoad(lua_State * L, const std::string &filename);
+bool luaLoad(lua_State * L, const std::string &filename);
 
 // Clean and close a lua state
 void luaClose(lua_State *&L);

@@ -95,7 +95,13 @@ void CLevelManager::loadLevel(const std::string &fileName)
 	nlassert(!res.empty());
 	
 	CurrentLevel = new CLevel(res);
-	nlassert(CurrentLevel->valid());
+	if(!CurrentLevel->valid())
+	{
+		nlwarning("level not valid, trying to quit properly");
+		return;
+	}
+
+	//nlassert(CurrentLevel->valid());
 	
 	if(CConfigFileTask::instance().configFile().getVar("ForceCRCCheck").asInt())
 		CResourceManager::instance().CRCCheckTimes.clear();
