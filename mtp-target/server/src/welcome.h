@@ -37,6 +37,6 @@ void initWelcome();
 void clientConnected(const std::string &cookie, bool connected);
 void updateConnectedClients();
 
-std::string getUserFromCookie(const std::string &cookie, sint32 &totalScore);
+std::string getUserFromCookie(const std::string &cookie, sint32 &totalScore,std::string userTexture);
 
 #endif
