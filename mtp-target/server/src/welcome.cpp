@@ -328,7 +328,7 @@ void initWelcome()
 		CUnifiedNetwork::getInstance()->addService("LS", LSAddr);
 	}
 
-	if(IService::getInstance()->ConfigFile.getVarPtr("ListenAddr") != 0)
+	if(IService::getInstance()->ConfigFile.exists("ListenAddr"))
 		ListenAddr = IService::getInstance()->ConfigFile.getVar("ListenAddr").asString();
 	else
 		ListenAddr = CInetAddress::localHost().ipAddress();
@@ -340,7 +340,6 @@ void initWelcome()
 
 	nlinfo("Listen address send to client will be '%s'", ListenAddr.c_str());
 }
-
 
 void clientConnected(const string &cookie, bool connected)
 {
