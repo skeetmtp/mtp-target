@@ -1,6 +1,6 @@
 #!/bin/sh -
 
-VERSION=1.0.3
+VERSION=1.0.4
 
 DEST=tmp/mtp-target/client
 rm -rf tmp
