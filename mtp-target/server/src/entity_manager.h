@@ -54,7 +54,7 @@ public:
 
 	// this add is to add a client
 	void addClient(NLNET::CTcpSock *sock);
-
+		
 //	void add(const std::string &name, NLNET::CTcpSock *sock=0, const std::string &cookie="", uint32 score=0, bool isBot=false, bool isAutomaticBot=false);
 
 	void login(CEntity *c);
@@ -63,7 +63,8 @@ public:
 	void flushRemoveList();
 	void remove(uint8 eid);
 	void remove(const std::string &name);
-
+	CEntity *getByName(const std::string &name);
+	
 	void addBot(const std::string &name, bool isAutomatic);
 	void removeBot();
 
@@ -86,6 +87,7 @@ private:
 
 	CEntities Entities;
 
+	void add(CEntity *entity);
 	uint8		findNewId();
 	void		checkForcedClientCount();
 	std::vector<uint8> IdToRemove;

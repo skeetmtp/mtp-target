@@ -125,15 +125,13 @@ void CEntityManager::addBot(const string &name, bool isAutomaticBot)
 	nlassert(e);
 
 	nlinfo("Adding bot eid %hu name '%s'", (uint16)e->id(), e->name().c_str());
-	
-	// add the client in the list
-	{
-		CEntities::CWriteAccessor acces(entities());
-		acces.value().push_back(e);
-	}
+
+	add(e);
 
 	login(e);
 }
+
+
 
 void CEntityManager::addClient(NLNET::CTcpSock *sock)
 {
@@ -147,14 +145,16 @@ void CEntityManager::addClient(NLNET::CTcpSock *sock)
 	CEntity *e = (CEntity *) new CClient(eid, sock);
 	nlassert(e);
 
-	// add the client in the list
-	{
-		CEntities::CWriteAccessor acces(entities());
-		acces.value().push_back(e);
-	}
+	add(e);
 	checkForcedClientCount();
 }
 
+
+void CEntityManager::add(CEntity *entity)
+{
+	CEntities::CWriteAccessor acces(entities());
+	acces.value().push_back(entity);
+}
 
 
 void CEntityManager::sendUpdateList()
@@ -268,6 +268,22 @@ void CEntityManager::login(CEntity *e)
 
 }
 
+CEntity *CEntityManager::getByName(const std::string &name)
+{
+	CEntity *res = NULL;
+	CEntities::CReadAccessor acces(entities());
+	for(EntityConstIt it = acces.value().begin(); it != acces.value().end(); it++)
+	{
+		if((*it)->name() == name)
+		{
+			res = *it;
+			break;
+		}
+	}
+	return res;
+}
+
+
 void CEntityManager::remove(const string &name)
 {
 	if(name.empty())
@@ -276,6 +292,7 @@ void CEntityManager::remove(const string &name)
 		return;
 	}
 
+	/*
 	uint8 eid = 0;
 	{
 		CEntities::CReadAccessor acces(entities());
@@ -288,7 +305,12 @@ void CEntityManager::remove(const string &name)
 			}
 		}
 	}
-	remove(eid);
+	*/
+	CEntity *e = getByName(name);
+	if(e)
+		remove(e->id());
+	else
+		nlwarning("Can't remove a client %s : not found",name.c_str());
 }
 
 void CEntityManager::remove(uint8 eid)
