@@ -81,7 +81,7 @@ public:
 	
 	virtual void	enabled(bool b);
 
-	virtual void init(const std::string &name,uint8 id, NLMISC::CVector position, NLMISC::CAngleAxis rotation);
+	virtual void init(const std::string &name, const std::string &shapeName, uint8 id, NLMISC::CVector position, NLMISC::CVector scale, NLMISC::CAngleAxis rotation);
 	virtual void renderSelection();
 	virtual void update(NLMISC::CVector pos,NLMISC::CVector rot);
 	

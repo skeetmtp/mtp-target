@@ -94,14 +94,14 @@ CModule::~CModule()
 
 
 
-void CModule::init(const string &name,uint8 id, CVector position, CAngleAxis rotation)
+void CModule::init(const string &name, const std::string &shapeName, uint8 id, CVector position, CVector scale, CAngleAxis rotation)
 {
-	CModuleCommon::init(name,id,position,rotation);
+	CModuleCommon::init(name, shapeName, id, position, scale, rotation); 
 
 	// Get collision faces
 //	loadMesh(ShapeName, Vertices, Normals, Indices,false);
 	
-	ShapeName = CResourceManager::instance().get(Name+".shape");
+	ShapeName = CResourceManager::instance().get(shapeName+".shape");
 	NbFaces = loadMesh(ShapeName, Vertices, Normals, Indices, AutoEdges);
 	
 	
@@ -113,6 +113,11 @@ void CModule::init(const string &name,uint8 id, CVector position, CAngleAxis rot
 	Mesh->setTransformMode(UTransformable::RotQuat);
 	Mesh->setRotQuat(CQuat(rotation));
 	Mesh->setPos(position);
+	CVector oldScale = Mesh->getScale();
+	scale.x *= oldScale.x;
+	scale.y *= oldScale.y;
+	scale.z *= oldScale.z;
+	Mesh->setScale(scale);
 	CMatrix mmatrix = mesh()->getMatrix();
 	
 }

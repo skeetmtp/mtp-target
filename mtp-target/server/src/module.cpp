@@ -80,12 +80,16 @@ CModule::CModule() : CModuleCommon()
 	triMeshDataId = 0;
 }
 
-void CModule::init(const std::string &name,uint8 id, NLMISC::CVector position, NLMISC::CAngleAxis rotation)
+void CModule::init(const std::string &name, const std::string &shapeName, uint8 id, NLMISC::CVector position, NLMISC::CVector scale, NLMISC::CAngleAxis rotation)
 {
-	CModuleCommon::init(name,id,position,rotation);
+	CModuleCommon::init(name, shapeName, id, position, scale, rotation);
 	
 	// Get collision faces
 	loadMesh(ShapeName, Vertices, Normals, Indices, AutoEdges,true);
+
+	CMatrix scaleMat;
+	scaleMat.identity();
+	scaleMat.setScale(scale);
 	
 	Geom = 0;
 	luaProxy = NULL;
@@ -95,9 +99,10 @@ void CModule::init(const std::string &name,uint8 id, NLMISC::CVector position, N
 	OdeVertices.resize(Vertices.size()*3);
 	for(uint i = 0; i < Vertices.size(); i++)
 	{
-		OdeVertices[i*3+0] = Vertices[i].x /** triColl.scaleX*/;
-		OdeVertices[i*3+1] = Vertices[i].y /** triColl.scaleY*/;
-		OdeVertices[i*3+2] = Vertices[i].z /** triColl.scaleZ*/;
+		CVector p = scaleMat * Vertices[i];
+		OdeVertices[i*3+0] = p.x;
+		OdeVertices[i*3+1] = p.y;
+		OdeVertices[i*3+2] = p.z;
 //		nlinfo("%d %f %f %f", i, Vertices[i*3+0], Vertices[i*3+1], Vertices[i*3+2]);
 	}
 	triMeshDataId = dGeomTriMeshDataCreate();

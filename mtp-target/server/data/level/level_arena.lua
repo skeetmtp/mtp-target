@@ -60,9 +60,9 @@ StartPoints =
 
 Modules =
 {
-	{ Position = CVector(0.000000,0.000000,0.500000),Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Name="arena" },
-	{ Position = CVector(-0.023449,0.000023,1.000000),Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Name="boxae" },
-	{ Position = CVector(0.476551,0.000000,1.000000),Rotation = CAngleAxis(0.000000,0.000000,1.000000,3.00000), Name="boxae" },
+	{ Position = CVector(0.000000,0.000000,0.500000), Scale = CVector(1, 1, 1), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="arena", Shape="arena" },
+	{ Position = CVector(-0.023449,0.000023,1.000000), Scale = CVector(1, 1, 1), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="boxae", Shape="boxae" },
+	{ Position = CVector(0.476551,0.000000,1.000000), Scale = CVector(1, 1, 1), Rotation = CAngleAxis(0.000000,0.000000,1.000000,3.00000), Lua="boxae", Shape="boxae" },
 
 }
 

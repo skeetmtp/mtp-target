@@ -60,17 +60,17 @@ StartPoints =
 
 Modules =
 {
-	{ Position = CVector(10.000000,-10.000000,3.500000),Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Name="snow_island" },
-	{ Position = CVector(6.000000,1.000000,2.800000),Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Name="snow_island2" },
-	{ Position = CVector(-3.800000,-2.000000,2.000000),Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Name="snow_island3" },
-	{ Position = CVector(0.398453,-0.032595,3.000000),Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Name="team_target_50_red" },
-	{ Position = CVector(0.400000,-0.257311,3.000000),Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Name="team_target_100_red" },
-	{ Position = CVector(0.400843,-0.369995,3.000000),Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Name="team_target_300_red" },
-	{ Position = CVector(0.400000,-0.782447,3.000000),Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Name="team_target_50_blue" },
-	{ Position = CVector(0.400000,-0.558576,3.000000),Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Name="team_target_100_blue" },
-	{ Position = CVector(0.400000,-0.445013,3.000000),Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Name="team_target_300_blue" },
-	{ Position = CVector(0.000000,15.000000,5.000000),Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Name="snow_ramp" },
-	{ Position = CVector(0.000000,-15.000000,5.000000),Rotation = CAngleAxis(0.000000,0.000000,1.000000,3.141500), Name="snow_ramp" }
+	{ Position = CVector(10.000000,-10.000000,3.500000), Scale = CVector(1, 1, 1) ,Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_island", Shape="snow_island" },
+	{ Position = CVector(6.000000,1.000000,2.800000), Scale = CVector(1, 1, 1), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_island2", Shape="snow_island2" },
+	{ Position = CVector(-3.800000,-2.000000,2.000000), Scale = CVector(1, 1, 1), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_island3", Shape="snow_island3" },
+	{ Position = CVector(0.398453,-0.032595,3.000000), Scale = CVector(1, 1, 1), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="team_target_50_red", Shape="team_target_50_red" },
+	{ Position = CVector(0.400000,-0.257311,3.000000), Scale = CVector(1, 1, 1), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="team_target_100_red", Shape="team_target_100_red" },
+	{ Position = CVector(0.400843,-0.369995,3.000000), Scale = CVector(1, 1, 1), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="team_target_300_red", Shape="team_target_300_red" },
+	{ Position = CVector(0.400000,-0.782447,3.000000), Scale = CVector(1, 1, 1), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="team_target_50_blue", Shape="team_target_50_blue" },
+	{ Position = CVector(0.400000,-0.558576,3.000000), Scale = CVector(1, 1, 1), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="team_target_100_blue", Shape="team_target_100_blue" },
+	{ Position = CVector(0.400000,-0.445013,3.000000), Scale = CVector(1, 1, 1), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="team_target_300_blue", Shape="team_target_300_blue" },
+	{ Position = CVector(0.000000,15.000000,5.000000), Scale = CVector(1, 1, 1), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_ramp", Shape="snow_ramp" },
+	{ Position = CVector(0.000000,-15.000000,5.000000), Scale = CVector(1, 1, 1), Rotation = CAngleAxis(0.000000,0.000000,1.000000,3.141500), Lua="snow_ramp", Shape="snow_ramp" }
 }
 
 

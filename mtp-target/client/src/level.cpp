@@ -118,7 +118,7 @@ CLevel::CLevel(const string &filename)
 		nlinfo("%g %g %g", luaStartPoints[i].x, luaStartPoints[i].y, luaStartPoints[i].z);
 		CAngleAxis Rotation(CVector(1,0,0),0);
 		CStartPoint *startPoint = new CStartPoint();
-		startPoint->init("start pos",startPositionId,luaStartPoints[i],Rotation);
+		startPoint->init("start pos","box.shape",startPositionId,luaStartPoints[i],Rotation);
 		if (!DisplayStartPositions)
 			startPoint->hide();
 		StartPoints.push_back(startPoint);
@@ -160,6 +160,14 @@ CLevel::CLevel(const string &filename)
 		nlinfo("pos %g %g %g", Position.x, Position.y, Position.z);
 		lua_pop(LuaState, 1);  // removes `value'; keeps `key' for next iteration
 		
+		// Get module Scale
+		CLuaVector Scale;
+		lua_pushstring(LuaState,"Scale");
+		lua_gettable(LuaState, -2);
+		luaGetVariable(LuaState, Scale);		
+		nlinfo("scale %g %g %g", Scale.x, Scale.y, Scale.z);
+		lua_pop(LuaState, 1);  // removes `value'; keeps `key' for next iteration
+		
 		// Get module rotation
 		CLuaAngleAxis Rotation;
 		lua_pushstring(LuaState,"Rotation");
@@ -169,21 +177,29 @@ CLevel::CLevel(const string &filename)
 		lua_pop(LuaState, 1);  // removes `value'; keeps `key' for next iteration
 		
 		// Get module name
-		string Name;
-		lua_pushstring(LuaState,"Name");
+		string Lua;
+		lua_pushstring(LuaState,"Lua");
 		lua_gettable(LuaState, -2);
-		luaGetVariable(LuaState, Name);		
-		nlinfo("name %s", Name.c_str());
+		luaGetVariable(LuaState, Lua);		
+		nlinfo("lua  %s", Name.c_str());
 		lua_pop(LuaState, 1);  // removes `value'; keeps `key' for next iteration
 
+		// Get module name
+		string Shape;
+		lua_pushstring(LuaState,"Shape");
+		lua_gettable(LuaState, -2);
+		luaGetVariable(LuaState, Shape);		
+		nlinfo("Shape %s", Shape.c_str());
+		lua_pop(LuaState, 1);  // removes `value'; keeps `key' for next iteration
+		
 		CModule *module = new CModule();
-		module->init(Name,moduleId,Position,Rotation);
+		module->init(Lua,Shape,moduleId,Position,Scale,Rotation);
 		moduleId++;
 		if(!DisplayLevel)
 			module->hide();
 	
 		Modules.push_back(module);
-
+		lua_pop(LuaState, 1);
 	}
 	lua_pop(LuaState, 1);  // removes `key'
 
@@ -274,8 +290,10 @@ CLevel::~CLevel()
 	CTaskManager::instance().remove(CSkyTask::instance());
 	CTaskManager::instance().remove(CLensFlareTask::instance());
 
+	/*
 	if(C3DTask::instance().levelParticle()!=0)
 		C3DTask::instance().levelParticle()->hide();
+		*/
 
 	if(changed())
 		CResourceManager::instance().refresh(FileName);

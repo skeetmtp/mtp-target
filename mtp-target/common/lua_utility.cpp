@@ -202,3 +202,20 @@ void luaClose(lua_State *&L)
 	lua_close(L);
 	L = 0;
 }
+
+void luaGetVariable(lua_State *L, std::string &var)
+{
+	/*
+	size_t chlen;
+	const char *res = luaL_checklstring(L,-1,&chlen);
+	var = res;
+	*/
+	
+	int isString = lua_isstring(L,-1);
+	if(isString)
+		var = lua_tostring(L, -1);
+	else
+		nlwarning("luaGetVariable(string) not a string");
+	//lua_pop(L, 1);
+	
+}

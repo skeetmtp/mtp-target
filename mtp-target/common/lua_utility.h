@@ -116,13 +116,7 @@ IMP_GET_VAR_INT(sint32);
 IMP_GET_VAR_INT(sint16);
 IMP_GET_VAR_INT(sint8);
 
-inline void luaGetVariable(lua_State *L, std::string &var)
-{
-	int isString = lua_isstring(L,-1);
-	if(isString)
-		var = lua_tostring(L, -1);
-	lua_pop(L, 1);
-}
+void luaGetVariable(lua_State *L, std::string &var);
 
 template<class T>
 void luaGetVector(lua_State *L, std::vector<T> &var)

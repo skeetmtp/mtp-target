@@ -306,8 +306,10 @@ bool CCamera::updateRampe(float backDist,float height,float targetBackDist,float
 		{
 			if(displayParticle)
 				CEntityManager::instance()[EId].TraceParticle->show();
+			/*
 			else 
 				CEntityManager::instance()[EId].TraceParticle->hide();
+				*/
 		}
 	}
 	

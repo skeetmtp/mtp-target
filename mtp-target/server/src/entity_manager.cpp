@@ -715,7 +715,22 @@ NLMISC_COMMAND(kick, "kick a client from the server", "[<eid>|<name>]")
 	if(val>0)
 		CEntityManager::instance().remove(val);
 	else
+	{
 		CEntityManager::instance().remove(args[0]);
+		CEntity *e = CEntityManager::instance().getByName(args[0]);
+		if(e)
+			val = e->id();
+		else
+			val = 255;
+	}
+
+	if(val!=255)
+	{
+		string reason = toString("You have been kicked !");
+		CNetMessage msgout(CNetMessage::Error);
+		msgout.serial(reason);
+		CNetwork::instance().send(val, msgout);
+	}
 	
 	return true;
 }

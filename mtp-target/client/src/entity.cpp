@@ -174,7 +174,7 @@ void CEntity::update()
 		if (ParticuleActivated != -1 && TraceParticle->isSystemPresent())
 		{
 			//if (ParticuleActivated == 0 || CMtpTarget::instance().controler().getControledEntity() != this)
-			TraceParticle->activateEmitters(ParticuleActivated==1);
+			//TraceParticle->activateEmitters(ParticuleActivated==1);
 			if(ParticuleActivated==1 && CMtpTarget::instance().controler().getControledEntity()!=id())
 				TraceParticle->show();
 
@@ -310,11 +310,13 @@ void CEntity::load3d()
 	
 	if(!TraceParticle && CConfigFileTask::instance().configFile().getVar("DisplayParticle").asInt() == 1)
 	{
-		string res = CResourceManager::instance().get("trace.ps");
+		string res = CResourceManager::instance().get("ribbon.ps");
 		TraceParticle = dynamic_cast<UParticleSystemInstance *>(C3DTask::instance().scene().createInstance(res));
 		nlassert(TraceParticle);
 		TraceParticle->setTransformMode (UTransformable::RotQuat);	
 		TraceParticle->setOrderingLayer(2);
+		TraceParticle->activateEmitters(true);
+		TraceParticle->show();
 		ParticuleActivated = 0;
 	}
 }

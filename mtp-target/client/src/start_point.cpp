@@ -91,9 +91,9 @@ CStartPoint::~CStartPoint()
 	}
 }
 
-void CStartPoint::init(const std::string &name,uint8 id, NLMISC::CVector position, NLMISC::CAngleAxis rotation)
+void CStartPoint::init(const std::string &name, const std::string &shapeName, uint8 id, NLMISC::CVector position, NLMISC::CAngleAxis rotation)
 {
-	CStartPointCommon::init(name,id,position,rotation);
+	CStartPointCommon::init(name,shapeName,id,position,rotation);
 
 	ShapeName = CResourceManager::instance().get("col_box.shape");
 	NbFaces = loadMesh(ShapeName, Vertices, Normals, Indices, AutoEdges);

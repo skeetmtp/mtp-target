@@ -1,6 +1,6 @@
 ---------------------- Level  ----------------------
 
-setMaxLevelSessionCount(1);
+setMaxLevelSessionCount(3);
 
 
 ---------------------- Entity ----------------------

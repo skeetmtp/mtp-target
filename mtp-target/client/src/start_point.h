@@ -78,7 +78,7 @@ class CStartPoint : public CStartPointCommon
 public:
 	CStartPoint();
 	virtual ~CStartPoint();
-	virtual void init(const std::string &name,uint8 id, NLMISC::CVector position, NLMISC::CAngleAxis rotation);
+	virtual void init(const std::string &name, const std::string &shapeName, uint8 id, NLMISC::CVector position, NLMISC::CAngleAxis rotation);
 	virtual void renderSelection();
 	virtual void position(NLMISC::CVector pos) {Position = pos; _changed = true; Mesh->setPos(pos);}
 	virtual NLMISC::CVector position() const {return Position;}

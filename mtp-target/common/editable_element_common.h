@@ -52,7 +52,7 @@ public:
 	
 	virtual ~CEditableElementCommon();
 
-	virtual void init(const std::string &name,uint8 id, NLMISC::CVector position, NLMISC::CAngleAxis rotation);
+	virtual void init(const std::string &name, const std::string &shapeName,uint8 id, NLMISC::CVector position, NLMISC::CVector scale, NLMISC::CAngleAxis rotation);
 	virtual void update(NLMISC::CVector pos,NLMISC::CVector rot) = 0;
 	virtual std::string toLuaString() = 0;
 	virtual bool intersect(NLMISC::CVector rayStart,NLMISC::CVector rayEnd,NLMISC::CVector &rayHit,const NLMISC::CMatrix &mat);
@@ -87,6 +87,7 @@ protected:
 	std::string			Name;
 	std::string			ShapeName;
 	NLMISC::CVector		Position;
+	NLMISC::CVector		Scale;
 	NLMISC::CAngleAxis	Rotation;
 	bool				_changed;	
 	TType				_type;

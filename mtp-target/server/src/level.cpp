@@ -109,7 +109,7 @@ void CLevel::_luaInit()
 	nlinfo("%d Camera", Cameras.size());
 	for(uint i = 0; i < Cameras.size(); i++)
 	{
-		nlinfo("  > camera %g %g %g", Cameras[i].x, Cameras[i].y, Cameras[i].z);
+		nlinfo("  > camera %f %f %f", Cameras[i].x, Cameras[i].y, Cameras[i].z);
 	}
 */
 
@@ -118,10 +118,10 @@ void CLevel::_luaInit()
 	uint8 startPositionId = 0;
 	for(uint i = 0; i < luaStartPoints.size(); i++)
 	{
-//		nlinfo("start point : %g %g %g", luaStartPoints[i].x, luaStartPoints[i].y, luaStartPoints[i].z);
+//		nlinfo("start point : %f %f %f", luaStartPoints[i].x, luaStartPoints[i].y, luaStartPoints[i].z);
 		CAngleAxis Rotation(CVector(1,0,0),0);
 		CStartPoint *startPosition = new CStartPoint();
-		startPosition->init("start pos",startPositionId,luaStartPoints[i],Rotation);
+		startPosition->init("start pos","box.shape",startPositionId,luaStartPoints[i],Rotation);
 		StartPoints.push_back(startPosition);		
 		startPositionId++;
 	}
@@ -130,7 +130,7 @@ void CLevel::_luaInit()
 	nlinfo("%d Starting points", StartPoints.size());
 	for(uint i = 0; i < StartPoints.size(); i++)
 	{
-		nlinfo("  > starting point %d : %g %g %g", i, StartPoints[i].x, StartPoints[i].y, StartPoints[i].z);
+		nlinfo("  > starting point %d : %f %f %f", i, StartPoints[i].x, StartPoints[i].y, StartPoints[i].z);
 	}
 */
 
@@ -143,34 +143,52 @@ void CLevel::_luaInit()
 	{
 		// `key' is at index -2 and `value' at index -1
 
+		string Lua;
+		lua_pushstring(_luaSession,"Lua");
+		lua_gettable(_luaSession, -2);
+		luaGetVariable(_luaSession, Lua);		
+		nlinfo("lua %s", Lua.c_str());
+		lua_pop(_luaSession, 1);  // removes `value'; keeps `key' for next iteration
+		
 		// Get module position
 		CLuaVector Position;
 		lua_pushstring(_luaSession,"Position");
 		lua_gettable(_luaSession, -2);
 		luaGetVariable(_luaSession, Position);		
-		nlinfo("pos %g %g %g", Position.x, Position.y, Position.z);
+		nlinfo("pos %f %f %f", Position.x, Position.y, Position.z);
 		lua_pop(_luaSession, 1);  // removes `value'; keeps `key' for next iteration
-
+		
+		// Get module position
+		CLuaVector Scale;
+		lua_pushstring(_luaSession,"Scale");
+		lua_gettable(_luaSession, -2);
+		luaGetVariable(_luaSession, Scale);		
+		nlinfo("scale %f %f %f", Scale.x, Scale.y, Scale.z);
+		lua_pop(_luaSession, 1);  // removes `value'; keeps `key' for next iteration
+		
 		// Get module rotation
 		CLuaAngleAxis Rotation;
 		lua_pushstring(_luaSession,"Rotation");
 		lua_gettable(_luaSession, -2);
 		luaGetVariable(_luaSession, Rotation);		
-		nlinfo("rot %g %g %g %g", Rotation.Axis.x , Rotation.Axis.y, Rotation.Axis.z, Rotation.Angle);
+		nlinfo("rot %f %f %f %f", Rotation.Axis.x , Rotation.Axis.y, Rotation.Axis.z, Rotation.Angle);
 		lua_pop(_luaSession, 1);  // removes `value'; keeps `key' for next iteration
 		
 		// Get module name
-		string Name;
-		lua_pushstring(_luaSession,"Name");
+		
+		// Get module ShapeName
+		string ShapeName;
+		lua_pushstring(_luaSession,"Shape");
 		lua_gettable(_luaSession, -2);
-		luaGetVariable(_luaSession, Name);		
-		nlinfo("name %s", Name.c_str());
+		luaGetVariable(_luaSession, ShapeName);		
+		nlinfo("ShapeName %s", ShapeName.c_str());
 		lua_pop(_luaSession, 1);  // removes `value'; keeps `key' for next iteration
-
+		
 		CModule *mod = new CModule();
-		mod->init(Name, moduleId, Position, Rotation);
+		mod->init(Lua,ShapeName, moduleId, Position, Scale, Rotation);
 		Modules.push_back(mod);
 		moduleId++;
+		lua_pop(_luaSession, 1);
 	}
 	lua_pop(_luaSession, 1);  // removes `key'
 	

@@ -66,9 +66,9 @@ CStartPointCommon::~CStartPointCommon()
 	
 }
 
-void CStartPointCommon::init(const std::string &name,uint8 id, NLMISC::CVector position, NLMISC::CAngleAxis rotation)
+void CStartPointCommon::init(const std::string &name, const std::string &shapeName, uint8 id, NLMISC::CVector position, NLMISC::CAngleAxis rotation)
 {
-	CEditableElementCommon::init(name,id,position,rotation);
+	CEditableElementCommon::init(name,shapeName,id,position,CVector::Null,rotation);
 }
 
 
