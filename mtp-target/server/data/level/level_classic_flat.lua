@@ -1,6 +1,7 @@
 Name = "Snow classic flat"
 Author = "Ace"
 ServerLua = "level_classic_flat_server.lua"
+ReleaseLevel = 1
 
 skyShapeFileName = "sky.shape";
 sunAmbientColor = CRGBA(82, 100, 133, 255);

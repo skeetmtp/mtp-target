@@ -1,7 +1,7 @@
 Name = "Snow funnel"
 Author = "Ace"
 ServerLua = "level_snow_funnel_server.lua"
-ReleaseLevel = 0
+ReleaseLevel = 2
 
 skyShapeFileName = "sky.shape";
 sunAmbientColor = CRGBA(82, 100, 133, 255);

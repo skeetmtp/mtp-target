@@ -1,7 +1,7 @@
 Name = "Hit me"
 Author = "Skeet"
 ServerLua = "level_hit_me_server.lua"
-ReleaseLevel = 0
+ReleaseLevel = 3
 
 skyShapeFileName = "sky.shape";
 sunAmbientColor = CRGBA(82, 100, 133, 255);

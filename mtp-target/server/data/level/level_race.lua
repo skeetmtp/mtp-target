@@ -1,7 +1,7 @@
 Name = "Race"
 Author = "Skeet"
 ServerLua = "level_race_server.lua"
-ReleaseLevel = 0
+ReleaseLevel = 3
 
 skyShapeFileName = "sky.shape";
 sunAmbientColor = CRGBA(82, 100, 133, 255);
