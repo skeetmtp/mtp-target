@@ -297,14 +297,14 @@ void CNetwork::update()
 				
 				uint8 eid = (*it)->id();
 				uint16 ping = (*it)->Ping.getSmoothValue();
-				msgout.serial(eid,ping);
+				msgout.serial(eid);
 
 				CVector dpos = (*it)->Pos - (*it)->LastSentPos;
-
+				
 				serial8_8fp(msgout,dpos.x);
 				serial8_8fp(msgout,dpos.y);
 				serial8_8fp(msgout,dpos.z);
-				
+
 				if((*it)->type() != CEntity::Bot)
 					(*it)->LastSentPing.push(currentTime);
 				

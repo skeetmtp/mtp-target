@@ -43,6 +43,7 @@
 #include <nel/net/tcp_sock.h>
 #include <nel/net/callback_client.h>
 
+#include "time_task.h"
 #include "mtp_target.h"
 #include "network_task.h"
 #include "net_callbacks.h"
@@ -194,9 +195,29 @@ string CNetworkTask::connect(CInetAddress *ip)
 	return "";
 }
 
+static uint32 sendCount = 0;
+static double sendStartCount = 0;
+static double rceivStartCount = 0;
+static double sendStartTime = 0;
+
 void CNetworkTask::send(CNetMessage &msg)
 {
 	msg.send(&Sock);
+	if(sendCount==0)
+		sendStartTime = CTimeTask::instance().time();
+	sendCount++;
+	if((sendCount%100)==0 && sendCount)
+	{
+		double dtime = CTimeTask::instance().time() - sendStartTime;
+		double fbsent = (double)Sock.bytesSent();
+		double fbrceiv = (double)Sock.bytesReceived();
+		double dfbsent = fbsent - sendStartCount;
+		double dfbrceiv = fbrceiv - rceivStartCount;
+		nlinfo("during %f, up = %fB/s (%f) down = %fB/s (%f)",dtime,dfbsent/dtime,dfbsent,dfbrceiv/dtime,dfbrceiv);
+		sendStartTime = CTimeTask::instance().time();
+		sendStartCount = fbsent;
+		rceivStartCount = fbrceiv;
+	}
 }
 
 void CNetworkTask::chat(const string &msg)

@@ -47,7 +47,7 @@
 //
 
 static const float NetVirtualFrameRate = MT_NETWORK_UPDATE_FREQUENCE;
-static const float NetVirtualFrameDuration = MT_NETWORK_UPDATE_PERIODE;
+static const float NetVirtualFrameDuration = 1.0f / 20.0f;//MT_NETWORK_UPDATE_PERIODE;
 
 
 //

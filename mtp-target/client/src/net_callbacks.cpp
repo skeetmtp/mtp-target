@@ -182,7 +182,8 @@ static void cbUpdate(CNetMessage &msgin)
 	uint8 eid;
 	CVector pos;
 	CVector dpos;
-	uint16 ping;
+	CVector ddpos;
+	//uint16 ping;
 
 	// reply to the update first (used for the ping)
 	CNetMessage msgout(CNetMessage::Update);
@@ -193,14 +194,14 @@ static void cbUpdate(CNetMessage &msgin)
 	while(msgin.getPos() < (sint32)msgin.length())
 	{
 		float deltaCoef = 100;
-		msgin.serial(eid,ping);
+		msgin.serial(eid);
 		dpos.x = serial8_8fp(msgin);
 		dpos.y = serial8_8fp(msgin);
 		dpos.z = serial8_8fp(msgin);
 		pos = CEntityManager::instance()[eid].LastSentPos + dpos;
 		CEntityManager::instance()[eid].LastSentPos = pos;
 		if(DisplayDebug)
-			nlinfo("TCP update client %hu a %g %g %g ping %hu", (uint16)eid, pos.x, pos.y, pos.z, ping);
+			nlinfo("TCP update client %hu a %g %g %g ping %hu", (uint16)eid, pos.x, pos.y, pos.z);
 
 //		CEntity *entity = mtpTarget::instance().World.getEntityById(id);
 //		if(entity != 0)
@@ -216,7 +217,7 @@ static void cbUpdate(CNetMessage &msgin)
 		if(CEntityManager::instance().exist(eid))
 		{
 			CEntityManager::instance()[eid].interpolator.addKey(CEntityInterpolatorKey(CEntityState(pos,false),rsxTime));
-			CEntityManager::instance()[eid].ping(ping);
+			//CEntityManager::instance()[eid].ping(ping);
 		}
 		else
 		{
