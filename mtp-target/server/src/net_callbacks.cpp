@@ -83,6 +83,21 @@ static void cbForce(CClient *c, CNetMessage &msgin)
 	c->setForce(force);
 }
 	
+
+static void keepValidChar(string &s)
+{
+	string res = "";
+	uint i;
+	for(i=0;i<s.size();i++)
+	{
+		if('a'<=s[i] && s[i]<='z' || '0'<=s[i] && s[i]<='9' || s[i]=='_' || s[i]=='-')
+			res += s[i];
+		if('A'<=s[i] && s[i]<='Z')
+			res += 'a' + s[i]-'A';
+	}
+	s = res;
+}
+
 static void cbLogin(CClient *c, CNetMessage &msgin)
 {
 	string cookie;
@@ -94,6 +109,10 @@ static void cbLogin(CClient *c, CNetMessage &msgin)
 	nlinfo("New client login");
 
 	msgin.serial(cookie, login, password, color,networkVersion);
+
+	keepValidChar(login);
+	keepValidChar(password);
+	
 
 	if(networkVersion!=MTPT_NETWORK_VERSION)
 	{
