@@ -3,8 +3,8 @@
 <resource>
 	<object class="CGuiFrame" name="errorServerFrame">
 		<minSize>400,0</minSize>
-		<!-- <position>100,100</position> -->
-		<alignment>eAlignCenterVertical|eAlignCenterHorizontal</alignment>
+		<position>0,100</position>
+		<alignment>eAlignUp|eAlignCenterHorizontal</alignment>
 		<element>
 			<object class="CGuiVBox" name="vbox">
 				<alignment>eAlignExpandHorizontal|eAlignExpandVertical</alignment>
