@@ -52,7 +52,8 @@ public:
 	// accessors
 
 	NLNET::CTcpSock			*sock() const { return Sock; }
-
+	virtual bool			forceReceived();
+	
 public:
 
 	// ugly public variables

@@ -54,6 +54,7 @@ public:
 	virtual ~CEntity();
 
 	void _luaInit();
+	void init(std::string &name,std::string &texture, NLMISC::CRGBA &color);
 
 	// switch the open close status of the entity
 	// return true if the switch really occurs
@@ -92,6 +93,8 @@ public:
 
 	bool					 spectator() const { return Spectator; }
 	void					 spectator(bool b) { Spectator = b; }
+
+	virtual bool			forceReceived() = 0;
 	
 	CEntityProxy		*luaProxy;
 
@@ -151,6 +154,8 @@ public:
 	float				 DefaultAccel;
 	float				 DefaultFriction;
 	bool				 EnableOpenCloseCommand;
+	bool				 ForceReceived;
+	uint32				 AfkCount;
 	
 private:
 

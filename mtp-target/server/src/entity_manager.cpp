@@ -1087,6 +1087,50 @@ void CEntityManager::saveAllValidReplay()
 	}
 }
 
+void CEntityManager::checkAfkClient()
+{
+	vector<uint8> IdToRemove;
+	vector<string> msgs;
+	{
+		CEntityManager::EntityConstIt it;
+		
+		// send the message to all entities
+		for(it = entities().begin(); it != entities().end(); it++)
+		{
+			if((*it)->type()==CEntity::Client && !(*it)->forceReceived())
+			{
+				(*it)->AfkCount++;
+				(*it)->CurrentScore = 0;
+				if((*it)->AfkCount>=(uint)IService::getInstance()->ConfigFile.getVar("MaxAfkSessionCount").asInt())
+				{
+					IdToRemove.push_back((*it)->id());
+					string timeoutMsg = toString("kick %s : away from keyboard",(*it)->name().c_str());
+					msgs.push_back(timeoutMsg);
+				}
+			}
+			else
+			{
+				(*it)->AfkCount = 0;
+			}
+		}	
+	}
+	for(uint i = 0; i < IdToRemove.size(); i++)
+	{
+		string reason = "Away from keyboard";
+		CNetMessage msgout(CNetMessage::Error);
+		msgout.serial(reason);
+		CNetwork::instance().send(IdToRemove[i], msgout);
+		
+		CEntityManager::instance().remove(IdToRemove[i]);
+	}
+	IdToRemove.clear();
+	for(uint i = 0; i < msgs.size(); i++)
+	{
+		CNetwork::instance().sendChat(msgs[i]);
+	}
+	msgs.clear();
+	
+}
 
 bool CEntityManager::everyBodyReady()
 {

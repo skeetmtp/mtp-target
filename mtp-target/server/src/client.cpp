@@ -86,6 +86,9 @@ void CClient::display(CLog &log)
 
 void CClient::setForce(const CVector &clientForce)
 {
+	if(clientForce.norm()!=0.0)
+		ForceReceived = true;	
+
 	if(ReplayFile)
 	{
 		float rsxTime = (CTime::getLocalTime() - CSessionManager::instance().startTime()) / 1000.0f ;
@@ -98,6 +101,10 @@ void CClient::setForce(const CVector &clientForce)
 	CEntity::setForce(clientForce);
 }
 
+bool CClient::forceReceived()
+{
+	return ForceReceived;
+}
 
 //
 // Commands

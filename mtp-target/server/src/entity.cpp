@@ -101,6 +101,8 @@ void CEntity::init ()
 	Spectator = true;
 	_isAdmin = false;
 	MaxLinearVelocity = 0;
+	ForceReceived = true;
+	AfkCount = 0;
 
 	nlassert(World);
 
@@ -134,6 +136,7 @@ void CEntity::init ()
 	luaProxy = 0;
 }
 
+
 CEntity::CEntity(uint8 eid)
 {
 	nlassert(eid!=255);
@@ -153,6 +156,16 @@ CEntity::CEntity(uint8 eid, const std::string &name)
 	Spectator = false;
 	_luaInit();
 	_isAdmin = false;
+}
+
+void CEntity::init(std::string &name,std::string &texture, NLMISC::CRGBA &color)
+{
+	this->name(name);
+	this->Color = color;
+	this->Texture = texture;
+	
+	ForceReceived = true;
+	AfkCount = 0;
 }
 
 void CEntity::_luaInit()
@@ -242,6 +255,7 @@ void CEntity::reset()
 	EnableOpenCloseCommand = true;
 	SendCollideWhenFly = false;
 	CollideWhenFlyPos = CVector(0,0,0);
+	ForceReceived = true;
 }
 
 void CEntity::update() 
@@ -291,6 +305,7 @@ void CEntity::update()
 
 void CEntity::initBeforeStartLevel()
 {
+	ForceReceived = false;
 	if(luaProxy)
 		luaProxy->call("init");
 }

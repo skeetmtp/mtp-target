@@ -141,10 +141,8 @@ static void cbLogin(CClient *c, CNetMessage &msgin)
 		}
 	}
 
-	c->name(login);
+	c->init(login,texture,color);
 	c->Cookie = cookie;
-	c->Color = color;
-	c->Texture = texture;
 
 	if(error.empty())
 	{

@@ -82,7 +82,7 @@ void CRunningSessionState::update()
 						if(c->ArrivalTime == 0)
 						{
 							c->ArrivalTime =(float)(currentTime - CSessionManager::instance().startTime())/1000.0f;
-nlinfo("*** ARRIVAL TIME '%s' %f",c->name().c_str(),c->ArrivalTime);
+							nlinfo("*** ARRIVAL TIME '%s' %f",c->name().c_str(),c->ArrivalTime);
 
 							CNetMessage msgout(CNetMessage::TimeArrival);
 							uint8 eid = c->id();
@@ -97,6 +97,10 @@ nlinfo("*** ARRIVAL TIME '%s' %f",c->name().c_str(),c->ArrivalTime);
 
 		if(CSessionManager::instance().forceEnding() || everybodyStopped)
 		{
+
+			if(IService::getInstance()->ConfigFile.getVar("CheckAfk").asInt()!=0)
+				CEntityManager::instance().checkAfkClient();
+
 			CEntityManager::EntityConstIt  bestit1 = CEntityManager::instance().entities().end();
 			CEntityManager::EntityConstIt  bestit2 = CEntityManager::instance().entities().end();
 			CEntityManager::EntityConstIt  bestit3 = CEntityManager::instance().entities().end();

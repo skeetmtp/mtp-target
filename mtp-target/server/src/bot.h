@@ -50,7 +50,8 @@ public:
 	// accessors
 
 	bool	isAutomaticBot() const { return IsAutomaticBot; }	
-
+	virtual bool	forceReceived() {return true;}
+	
 private:
 
 	bool	IsAutomaticBot;

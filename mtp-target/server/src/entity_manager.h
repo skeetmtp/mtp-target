@@ -80,7 +80,8 @@ public:
 	void saveAllValidReplay();
 	bool everyBodyReady();
 	CEntity *getById(uint8 eid);
-
+	void checkAfkClient();
+		
 	void displayText(float x,float y, float scale, NLMISC::CRGBA col, double duration, const std::string &text);
 	void displayText(uint8 eid, float x,float y, float scale, NLMISC::CRGBA col, double duration, const std::string &text);
 		
