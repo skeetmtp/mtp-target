@@ -1,7 +1,7 @@
 ---------------------- Level  ----------------------
 
 --setMaxLevelSessionCount(3);
-setLevelHasBonusTime(0);
+--setLevelHasBonusTime(0);
 setLevelRecordBest(0);
 setLevelTimeout(60);
 
