@@ -110,6 +110,8 @@ public:
 	
 	void				 load3d();
 
+	void				 fadeParticleColorTo(NLMISC::CRGBA &color,float duration);
+
 	CExtendedInterpolator &interpolator() const;
 
 
@@ -122,6 +124,11 @@ public:
 	NLMISC::CVector		 LastSent2OthersPos;
 private:
 	
+	NLMISC::CRGBA   FadeParticleColor;
+	NLMISC::CRGBA   FadeParticleStartColor;
+	float           FadeParticleDuration;
+	float           FadeParticleStartTime;
+
 	TEntity			Type;
 	uint8			Id;
 	uint8			Rank;
@@ -142,7 +149,8 @@ private:
 	void reset();
 	void init(TEntity type, const std::string &name, sint32 totalScore, NLMISC::CRGBA &color, const std::string &meshname, bool spectator, bool isLocal);
 	void id(uint8 nid);
-
+	void fadeParticleColorUpdate();
+	
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 // old stuff to clean

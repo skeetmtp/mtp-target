@@ -302,15 +302,15 @@ bool CCamera::updateRampe(float backDist,float height,float targetBackDist,float
 
 		float minMouseAngleToDisplayPart = 0.35f;
 		bool displayParticle = fabs(C3DTask::instance().mouseListener().MouseX)>minMouseAngleToDisplayPart || C3DTask::instance().mouseListener().MouseY<-0.53f ||  C3DTask::instance().mouseListener().MouseY>0.4f || C3DTask::instance().mouseListener().MouseWheel>4;
+		/*
 		if(CEntityManager::instance()[EId].TraceParticle)
 		{
 			if(displayParticle)
 				CEntityManager::instance()[EId].TraceParticle->show();
-			/*
 			else 
 				CEntityManager::instance()[EId].TraceParticle->hide();
-				*/
 		}
+		*/
 	}
 	
 	Position = CEntityManager::instance()[EId].interpolator().position() + CurrentHeight * CVector(0,0,1) + CurrentBackDist * (rotMat * CVector(0,1,0));

@@ -174,13 +174,24 @@ void CEntity::update()
 		if (ParticuleActivated != -1 && TraceParticle->isSystemPresent())
 		{
 			//if (ParticuleActivated == 0 || CMtpTarget::instance().controler().getControledEntity() != this)
+			
+			
 			//TraceParticle->activateEmitters(ParticuleActivated==1);
+			if(ParticuleActivated==1)
+				fadeParticleColorTo(CRGBA(255,255,255,255),1);
+			else
+				fadeParticleColorTo(CRGBA(0,0,0,0),1);
+
+			/*
 			if(ParticuleActivated==1 && CMtpTarget::instance().controler().getControledEntity()!=id())
 				TraceParticle->show();
+			*/
 
 			ParticuleActivated = -1;
 		}
 	}
+
+	fadeParticleColorUpdate();
 }
 
 void CEntity::collisionWithWater(bool col)
@@ -317,6 +328,7 @@ void CEntity::load3d()
 		TraceParticle->setOrderingLayer(2);
 		TraceParticle->activateEmitters(true);
 		TraceParticle->show();
+		TraceParticle->setUserColor(CRGBA(0,0,0,0));
 		ParticuleActivated = 0;
 	}
 }
@@ -337,3 +349,26 @@ void CEntity::setIsLocal(bool local)
 	else
 		interpolator().dt(MT_NETWORK_UPDATE_PERIODE);
 }
+
+
+void CEntity::fadeParticleColorTo(NLMISC::CRGBA &color,float duration)
+{
+	if(FadeParticleColor==color || duration<=0) return;
+
+	FadeParticleColor = color;
+	FadeParticleStartColor = TraceParticle->getUserColor();
+	FadeParticleDuration = duration;
+	FadeParticleStartTime = (float)CTimeTask::instance().time();
+}
+
+void CEntity::fadeParticleColorUpdate()
+{
+	float time = (float)CTimeTask::instance().time();
+	float lpos = (time  - FadeParticleStartTime) / FadeParticleDuration;
+	if(lpos<0 || 1<lpos) return;
+
+	CRGBA newCol;
+	newCol.blendFromui(FadeParticleStartColor,FadeParticleColor,(uint)(256 * lpos));
+	TraceParticle->setUserColor(newCol);
+}
+
