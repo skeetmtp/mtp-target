@@ -73,6 +73,7 @@ public:
 		UpdateList,			//    SC
 		FullUpdate,			//    SC
 		UpdateElement,		// CS SC
+		ShowElement,		//    SC
 	};
 
 	CNetMessage(TType type = Unknown, bool inputStream = false);

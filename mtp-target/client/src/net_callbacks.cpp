@@ -400,6 +400,14 @@ static void cbReady(CNetMessage &msgin)
 	mtpTarget::instance().everybodyReady();
 }
 
+static void cbShowElement(CNetMessage &msgin)
+{
+	uint8 elementId;
+	msgin.serial(elementId);
+	bool show;
+	msgin.serial(show);
+}
+
 static void cbRequestCRCKey(CNetMessage &msgin)
 {
 	string fn;
@@ -544,6 +552,7 @@ void netCallbacksHandler(CNetMessage &msgin)
 	SWITCH_CASE(StartSession);
 	SWITCH_CASE(EndSession);
 	SWITCH_CASE(EditMode);
+	SWITCH_CASE(ShowElement);
 	
 	default: nlinfo("Received an unknown message type %hu", (uint16)msgin.type()); break;
 	}

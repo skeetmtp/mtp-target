@@ -66,7 +66,7 @@ packBit32::packBit32(uint32 bits)
 
 void packBit32::packBits(uint32 newBits,uint32 count)
 {
-	nlassert((1<<count)>newBits);
+	nlassert(((uint32)1<<count)>newBits);
 	currentAccess += count;
 	nlassert(currentAccess<=32);
 	bits = bits<<count;
