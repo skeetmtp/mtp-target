@@ -209,6 +209,14 @@ function userTexture($uid)
 	
 }
 
+function userTextureBame2Url($userTextureName)
+{
+	global $userTexturePath;
+	global $userTextureStartName;
+	$userTextureUrl = $userTexturePath.$userTextureStartName.$userTextureName.".jpg";
+	return $userTextureUrl;
+}
+
 function textureGetUploader($textureName)
 {
 	$requete = sprintf("SELECT UploadBy FROM texture WHERE Name='%s';",$textureName);
