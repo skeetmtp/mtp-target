@@ -25,6 +25,8 @@
 #include "stdpch.h"
 
 #include <nel/misc/path.h>
+#include <nel/misc/triangle.h>
+#include <nel/misc/plane.h>
 
 #include "editable_element_common.h"
 #include "lua_utility.h"
@@ -60,6 +62,9 @@ CEditableElementCommon::CEditableElementCommon()
 {
 	_type = Unknown;
 	_changed = false;
+#ifndef MTPT_SERVER
+	Mesh = NULL;
+#endif
 }
 
 CEditableElementCommon::~CEditableElementCommon()
@@ -121,3 +126,40 @@ bool CEditableElementCommon::intersect(NLMISC::CVector rayStart,NLMISC::CVector 
 	return false;
 }
 
+
+
+#ifndef MTPT_SERVER
+using namespace NL3D;
+
+void CEditableElementCommon::show()
+{
+	if(Mesh)
+		Mesh->show();
+}
+
+void CEditableElementCommon::hide()
+{
+	if(Mesh)
+		Mesh->hide();
+}
+
+/*
+void CEditableElementCommon::position(CVector pos)
+{
+	Position = pos;
+	Mesh->setPos(pos);
+	_changed = true;
+	CLevelManager::instance().currentLevel().changed(true);
+}
+*/
+
+UInstance *CEditableElementCommon::mesh()
+{
+	return Mesh;
+}
+
+void CEditableElementCommon::renderSelection()
+{
+
+}
+#endif

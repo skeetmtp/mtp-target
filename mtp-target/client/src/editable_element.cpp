@@ -87,7 +87,7 @@ CEditableElement::CEditableElement()
 CEditableElement::~CEditableElement()
 {
 	C3DTask::instance().scene().deleteInstance(Mesh);
-	
+	Mesh = NULL;	
 }
 
 void CEditableElement::show()
@@ -205,9 +205,6 @@ void CEditableElement::init(const string &name,uint8 id, CVector position, CAngl
 //  A---B|
 //  | H |G
 //  D---C
-
-
-
 void CEditableElement::renderSelection()
 {
 	mat->setColor(CRGBA(255,255,255,255));

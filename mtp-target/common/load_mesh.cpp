@@ -58,8 +58,9 @@ using namespace NLMISC;
 //
 
 
-void loadMesh(const std::string &meshFileName, std::vector<NLMISC::CVector> &vertices, std::vector<NLMISC::CVector> &normals, std::vector<int> &indices)
+uint32 loadMesh(const std::string &meshFileName, std::vector<NLMISC::CVector> &vertices, std::vector<NLMISC::CVector> &normals, std::vector<int> &indices, bool applyPreTransform)
 {
+	uint32 nbFaces = 0;
 	NL3D::registerSerial3d();
 
 	vertices.clear();
@@ -68,7 +69,7 @@ void loadMesh(const std::string &meshFileName, std::vector<NLMISC::CVector> &ver
 	if(CPath::lookup(meshFileName, false).empty())
 	{
 		nlwarning("Mesh '%s' is not found, can't get colission", meshFileName.c_str());
-		return;
+		return 0;
 	}
 
 	CShapeStream ss;
@@ -82,13 +83,16 @@ void loadMesh(const std::string &meshFileName, std::vector<NLMISC::CVector> &ver
 	CMatrix tmat;
 	tmat.identity();
 
-	CVector gpos = dynamic_cast<const CAnimatedValueVector &>(m->getDefaultPos()->getValue()).Value;
-	CQuat grot = dynamic_cast<const CAnimatedValueBlendable<CQuat> &>(m->getDefaultRotQuat()->getValue()).Value;
-	CVector gscale = dynamic_cast<const CAnimatedValueVector &>(m->getDefaultScale()->getValue()).Value;
-	
-	tmat.setPos(gpos);
-	tmat.setRot(grot);
-	tmat.scale(gscale);
+	if(applyPreTransform)
+	{
+		CVector gpos = dynamic_cast<const CAnimatedValueVector &>(m->getDefaultPos()->getValue()).Value;
+		CQuat grot = dynamic_cast<const CAnimatedValueBlendable<CQuat> &>(m->getDefaultRotQuat()->getValue()).Value;
+		CVector gscale = dynamic_cast<const CAnimatedValueVector &>(m->getDefaultScale()->getValue()).Value;
+		
+		tmat.setPos(gpos);
+		tmat.setRot(grot);
+		tmat.scale(gscale);
+	}
 	
 	
 
@@ -103,6 +107,7 @@ void loadMesh(const std::string &meshFileName, std::vector<NLMISC::CVector> &ver
 			uint nbt = pb.getNumTri();
 			for(uint k = 0; k < nbt*3; k+=3)
 			{
+				nbFaces++;
 				indices.push_back(ptr[k+0]);
 				indices.push_back(ptr[k+1]);
 				indices.push_back(ptr[k+2]);
@@ -127,4 +132,6 @@ void loadMesh(const std::string &meshFileName, std::vector<NLMISC::CVector> &ver
 //		}
 //		if(j)
 	}
+
+	return nbFaces;
 }

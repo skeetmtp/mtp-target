@@ -76,13 +76,19 @@ using namespace NL3D;
 
 
 
-CStartPoint::CStartPoint():CEditableElement(),CStartPointCommon()
+CStartPoint::CStartPoint():CStartPointCommon()
 {
+	mat = C3DTask::instance().driver().createMaterial();
 }
 
 
 CStartPoint::~CStartPoint()
 {
+	if(Mesh)
+	{
+		C3DTask::instance().scene().deleteInstance(Mesh);
+		Mesh = NULL;	
+	}
 }
 
 void CStartPoint::init(const std::string &name,uint8 id, NLMISC::CVector position, NLMISC::CAngleAxis rotation)
@@ -90,7 +96,7 @@ void CStartPoint::init(const std::string &name,uint8 id, NLMISC::CVector positio
 	CStartPointCommon::init(name,id,position,rotation);
 
 	ShapeName = CResourceManager::instance().get("col_box.shape");
-	loadMesh(ShapeName, Vertices, Normals, Indices);
+	NbFaces = loadMesh(ShapeName, Vertices, Normals, Indices);
 
 	Mesh = C3DTask::instance().scene().createInstance (ShapeName);
 	if (mesh == 0)
@@ -107,5 +113,92 @@ void CStartPoint::init(const std::string &name,uint8 id, NLMISC::CVector positio
 
 
 
+
+//   /E--F
+//  A---B|
+//  | H |G
+//  D---C
+void CStartPoint::renderSelection()
+{
+	mat->setColor(CRGBA(255,255,255,255));
+	mat->setZWrite(true);
+	mat->setZFunc(UMaterial::always);
+	CAABBox bbox;
+	Mesh->getShapeAABBox(bbox);
+	CAABBox tbbox = CAABBox::transformAABBox(Mesh->getMatrix(),bbox);
+	
+	CVector boxMin = tbbox.getMin();
+	CVector boxMax = tbbox.getMax();
+
+	CQuad quad;
+	CVector a = boxMin;
+	CVector b = a;
+	b.x = boxMax.x;
+	CVector c = a;
+	c.x = boxMax.x;
+	c.y = boxMax.y;
+	CVector d = a;
+	d.y = boxMax.y;
+	
+	CVector e = a;
+	e.z = boxMax.z;
+	CVector f = b;
+	f.z = boxMax.z;
+	CVector g = c;
+	g.z = boxMax.z;
+	CVector h = d;
+	h.z = boxMax.z;
+	
+	CLine l;
+
+	l.V0 = a;
+	l.V1 = b;
+	C3DTask::instance().driver().drawLine(l,*mat);
+	l.V0 = b;
+	l.V1 = c;
+	C3DTask::instance().driver().drawLine(l,*mat);
+	l.V0 = c;
+	l.V1 = d;
+	C3DTask::instance().driver().drawLine(l,*mat);
+	l.V0 = d;
+	l.V1 = a;
+	C3DTask::instance().driver().drawLine(l,*mat);
+	
+	l.V0 = e;
+	l.V1 = f;
+	C3DTask::instance().driver().drawLine(l,*mat);
+	l.V0 = f;
+	l.V1 = g;
+	C3DTask::instance().driver().drawLine(l,*mat);
+	l.V0 = g;
+	l.V1 = h;
+	C3DTask::instance().driver().drawLine(l,*mat);
+	l.V0 = h;
+	l.V1 = e;
+	C3DTask::instance().driver().drawLine(l,*mat);
+	
+	l.V0 = a;
+	l.V1 = e;
+	C3DTask::instance().driver().drawLine(l,*mat);
+	l.V0 = b;
+	l.V1 = f;
+	C3DTask::instance().driver().drawLine(l,*mat);
+	l.V0 = c;
+	l.V1 = g;
+	C3DTask::instance().driver().drawLine(l,*mat);
+	l.V0 = d;
+	l.V1 = h;
+	C3DTask::instance().driver().drawLine(l,*mat);
+	
+	
+	/*
+	quad.V0 = a;
+	quad.V1 = b;
+	quad.V2 = c;
+	quad.V3 = d;
+
+	C3DTask::instance().driver().drawQuad(quad,*mat);
+	*/			
+}
 
 

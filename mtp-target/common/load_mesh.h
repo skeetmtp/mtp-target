@@ -26,6 +26,6 @@
 // Functions
 //
 
-void loadMesh(const std::string &meshFileName, std::vector<NLMISC::CVector> &vertices, std::vector<NLMISC::CVector> &normals, std::vector<int> &indices);
+uint32 loadMesh(const std::string &meshFileName, std::vector<NLMISC::CVector> &vertices, std::vector<NLMISC::CVector> &normals, std::vector<int> &indices, bool applyPreTransform=false);
 
 #endif

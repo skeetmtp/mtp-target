@@ -67,6 +67,13 @@ public:
 	bool changed() {return _changed;}
 	void changed(bool c) {_changed = c;}
 
+#ifndef MTPT_SERVER
+	NL3D::UInstance *mesh();
+	virtual void renderSelection();
+	void show();
+	void hide();
+#endif
+
 protected:
 	std::vector<NLMISC::CVector> Normals;
 	std::vector<NLMISC::CVector> Vertices;
@@ -81,6 +88,10 @@ protected:
 	TType				_type;
 	uint8				_id;
 	
+#ifndef MTPT_SERVER
+	NL3D::UInstance *Mesh;
+	NL3D::UMaterial *mat;
+#endif
 };
 
 

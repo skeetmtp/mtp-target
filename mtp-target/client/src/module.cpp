@@ -76,13 +76,19 @@ using namespace NL3D;
 
 
 
-CModule::CModule():CEditableElement(),CModuleCommon()
+CModule::CModule():CModuleCommon()
 {
+	mat = C3DTask::instance().driver().createMaterial();
 }
 
 
 CModule::~CModule()
 {
+	if(Mesh)
+	{
+		C3DTask::instance().scene().deleteInstance(Mesh);
+		Mesh = NULL;	
+	}
 }
 
 
@@ -93,7 +99,7 @@ void CModule::init(const string &name,uint8 id, CVector position, CAngleAxis rot
 	CModuleCommon::init(name,id,position,rotation);
 
 	ShapeName = CResourceManager::instance().get(Name+".shape");
-	loadMesh(ShapeName, Vertices, Normals, Indices);
+	NbFaces = loadMesh(ShapeName, Vertices, Normals, Indices);
 	
 	
 	Mesh = C3DTask::instance().scene().createInstance (ShapeName);

@@ -201,14 +201,6 @@ SOURCE=.\Src\network_task.h
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=.\Src\editable_element.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\Src\editable_element.h
-# End Source File
-# Begin Source File
-
 SOURCE=..\common\editable_element_common.cpp
 # End Source File
 # Begin Source File
