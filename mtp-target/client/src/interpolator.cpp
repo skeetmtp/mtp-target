@@ -184,9 +184,13 @@ void CInterpolator::addKey(const CEntityInterpolatorKey &k)
 	double localTime = time - StartTime;
 	if(AddKeyTime>localTime && ReplayFile.empty())
 	{
+		//nlinfo("(%f)start time correction : [0x%p] : %f-%f = %f (%f)",time,this,AddKeyTime,localTime,AddKeyTime-localTime,StartTime);
+		/*
+		if(Entity->id()==CMtpTarget::instance().controler().getControledEntity())
+			nlinfo("(%f)addKeyTime[0x%p] too early: %f-%f = %fms (%f)",time,this,AddKeyTime,localTime,(AddKeyTime-localTime)*1000,StartTime);
+		*/
 		StartTime -=  AddKeyTime - localTime;
 		localTime = time - StartTime;
-		//nlinfo("  start time correction : [0x%p] : %f-%f = %f (%f)",this,_addKeyTime,localTime,_addKeyTime-localTime,_startTime);
 	}
 	else
 	{
@@ -199,8 +203,10 @@ void CInterpolator::addKey(const CEntityInterpolatorKey &k)
 			nlinfo("(%f)addKeyTime[0x%p] : %f-%f = %f (%f)",time,this,_addKeyTime,localTime,_addKeyTime-localTime,_startTime);
 		}
 		*/
-		//nlinfo("(%f)addKeyTime[0x%p] : %f-%f = %f (%f)",time,this,_addKeyTime,localTime,_addKeyTime-localTime,_startTime);
-		
+		/*
+		if(Entity->id()==CMtpTarget::instance().controler().getControledEntity())
+			nlinfo("(%f)addKeyTime[0x%p] too late : %f-%f = %fms (%f)",time,this,AddKeyTime,localTime,(AddKeyTime-localTime)*1000,StartTime);
+		*/
 	}
 	Available = true;
 	key.ServerTime = AddKeyTime;
