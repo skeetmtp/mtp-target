@@ -72,6 +72,48 @@ while ($ligne = mysql_fetch_array($resultat))
     	<?php include("stat_player_of_the_day.php");?>
     	<?php include(sprintf("./lang/%s/news-header.php",$lang));?>
 
+
+
+<!-- SiteSearch Google -->
+<form method="get" action="http://www.google.com/custom" target="_top">
+<table border="0" CELLPADDING=2 CELLSPACING=2>
+<tr><td nowrap="nowrap" valign="top" align="left" height="32">
+<a href="http://www.google.com/">
+<img src="http://www.google.com/logos/Logo_25wht.gif"
+border="0" alt="Google"></img></a>
+<br/>
+<input type="hidden" name="domains" value="www.mtp-target.org"></input>
+<input type="text" name="q" size="7" maxlength="255" value=""></input>
+<input type="submit" name="sa" value="Search"></input>
+</td></tr>
+<tr>
+<td nowrap="nowrap">
+<table>
+<tr>
+<td>
+<input type="radio" name="sitesearch" value="" checked="checked"></input>
+<font size="-1" color="#000000">Web</font>
+</td>
+<td>
+<input type="radio" name="sitesearch" value="www.mtp-target.org"></input>
+<font size="-1" color="#000000">www.mtp-target.org</font>
+</td>
+</tr>
+</table>
+<input type="hidden" name="client" value="pub-6761473150430697"></input>
+<input type="hidden" name="forid" value="1"></input>
+<input type="hidden" name="ie" value="ISO-8859-1"></input>
+<input type="hidden" name="oe" value="ISO-8859-1"></input>
+<input type="hidden" name="safe" value="active"></input>
+<input type="hidden" name="cof" value="GALT:#008000;GL:1;DIV:#336699;VLC:663399;AH:center;BGC:FFEEDD;LBGC:DDCCBB;ALC:0000FF;LC:0000FF;T:000000;GFNT:333399;GIMP:333399;LH:58;LW:100;L:http://mtptarget.free.fr/logo.png;S:http://www.mtp-target.org;FORID:1;"></input>
+<input type="hidden" name="hl" value="en"></input>
+
+</td></tr></table>
+</form>
+<!-- SiteSearch Google -->
+
+
+
 <script type="text/javascript"><!--
 google_ad_client = "pub-6761473150430697";
 google_ad_width = 160;
@@ -87,8 +129,6 @@ google_color_text = "000000";
 <script type="text/javascript"
   src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 </script>
-
-
 
     </td>
 </tr>
