@@ -704,7 +704,6 @@ bool CEntityManager::connected(const std::string &name)
 	{
 		if((*it)->name() == name)
 		{
-			(*it)->openClose();
 			return true;
 		}
 	}
