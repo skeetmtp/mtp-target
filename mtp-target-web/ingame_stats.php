@@ -1,5 +1,5 @@
 <?php 
-	function getStats(&$NbOnlinePlayers, &$NbRegisteredPlayers, &NbSessions)
+	function getStats(&$NbOnlinePlayers, &$NbRegisteredPlayers, &$NbSessions)
 	{
 		$DBHost = "mtp-target.dyndns.org";
 		$DBUserName = "www";
