@@ -250,6 +250,14 @@ SOURCE=..\common\module_common.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\Src\module_lua_proxy.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Src\module_lua_proxy.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\src\start_point.cpp
 # End Source File
 # Begin Source File
@@ -296,14 +304,6 @@ SOURCE=..\common\load_mesh.cpp
 # Begin Source File
 
 SOURCE=..\common\load_mesh.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\Src\module_lua_proxy.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\Src\module_lua_proxy.h
 # End Source File
 # End Group
 # Begin Group "lua"

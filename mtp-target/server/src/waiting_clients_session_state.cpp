@@ -142,7 +142,7 @@ void CWaitingClientsSessionState::update()
 			CEntity *e = *it;
 			ranks.push_back(e->StartingPointId);
 			eids.push_back(e->id());
-			nlinfo("startpoint(%d) = %d",e->id(),e->StartingPointId);
+			nlinfo("startpoint(%d,%s) = %d",e->id(),e->name().c_str(),e->StartingPointId);
 		}
 		msgout.serialCont(ranks);		
 		msgout.serialCont(eids);		

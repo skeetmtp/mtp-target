@@ -111,6 +111,7 @@ lua_State *luaOpen()
 		nlwarning("LUA: lua_open() failed while trying to create ");
 		return 0;
 	}
+	nlinfo("Lua open : L = 0x%p",L);
 	
 	lua_baselibopen(L);
 	lua_iolibopen(L);
