@@ -1,6 +1,16 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>mtp-target</title>
+<link rel="stylesheet" type="text/css" href="http://www.mtp-target.org/mtptarget.css">
+</head>
+<body>
+
 <?php
 
-	echo "<h2>Official Server High Score</h2>\n";
+	echo "<h2>Official Server High Scores</h2>\n";
 
 	$filename = "/home/ace/cvs/mtp-target/server/mtp_target_service.cfg";
 
@@ -85,3 +95,5 @@
 */
 
 ?>
+</body>
+</html>
