@@ -1,0 +1,134 @@
+[-] Table of Contents
+ |
+ x-----[+] License
+ |
+ x-----[+] Introduction
+ |
+ x-----[+] Installation
+ |
+ x-----[-] Configuration
+ |      |
+ |      x----- wpkg-sync.cfg
+ |      |
+ |      x----- VC++ Includes & Libraries
+ |        
+ x-----[+] Using Wpkg-sync
+ |        
+ x-----[+] Credits
+
+
+
+License
+-------
+
+wpkg-sync is a Free Software project under the GNU General Public License,
+which means all its code is available for everyone to download, examine,
+use, modify, and distribute, subject to the usual restrictions attached
+to any GNU GPL software. If you are not familiar with the GNU GPL, see the
+COPYING file for for more details on license terms and other legal issues.
+
+
+
+
+Introduction
+------------
+
+wpkg-sync is a tool intended to enable Windows programmers to quickly and
+easily download, install and use commonly used precompiled libraries. for
+example creating a program with ftp support the compiled CURL library and
+header files may be needed, with wpkg-sync you can acquire and begin using
+CURL in a matter of minutes negating the need for downloading and compiling 
+the source repeatedly to make the library work with a Windows environment.
+
+wpkg-sync is currently available from the following download sites.
+
+    http://ace.planet-d.net/dl/wpkg-sync.zip
+
+wpkg-sync is currently developed and tested under Windows environments. 
+
+
+
+
+Installation
+------------
+
+ - Create a folder for wpkg-sync in a location of your choice recommended
+   locations are:
+   
+	C:\wpkg-sync
+	or
+	C:\Program Files\wpkg-sync
+
+
+ - Extract the 'wpkg-sync.zip' archive to a destination folder you have created
+   using winzip or any compatible zip decompression package.
+
+
+
+
+Configuration - wpkg-sync.cfg
+-----------------------------
+
+ - Enter the folder you have extracted wpkg-sync into.
+
+ - Open wpkg-sync.cfg with notepad.
+
+ - Locate the 'LocalRepository' variable which by default will look similar to
+   this:
+
+	LocalRepository = "";
+
+ - Change "" to the path of your choice the path must exist and it is 
+   recommended to use:
+
+	LocalRepository = "C:\wpkg";
+	or
+	LocalRepository = "C:\Program Files\wpkg";
+
+
+
+Configuration - VC++ Includes & Libraries
+-----------------------------------------
+
+ - Run Microsoft Visual C++.
+
+ - Goto to the [Tools->Options] menu in VC++.
+
+ - Select the 'Directories' tab.
+
+ - In 'Include files' category, add <LocalRepository>\include
+
+ (If you want to use the STLport library you must also add this path in
+  the include directory. It must be the top first of the list:
+      <LocalRepository>\include\stlport
+ )
+
+ - In 'Library files' category, add <LocalRepository>\lib
+
+ - In 'Executable files' category, add <LocalRepository>\bin
+
+ - Add <LocalRepository>/bin to your Windows 'PATH' Environment Variable
+   (or dynamic library will not be found when executing your application
+    outside the compiler)
+
+
+
+
+Using wpkg-sync
+---------------
+
+ - Launch 'wpkg-sync.exe'
+
+ - Click on the 'Update Package List' button to retrieve the libraries list from
+   the server.
+
+ - To install a library, select one or more libraries in the list and click on
+   the 'Install selected packages' button.
+
+
+
+
+Credits
+-------
+
+   Concept, Design & Implementation	-	Vianney "Ace" Lecroart <lecroart@noos.fr>

@@ -1,0 +1,5 @@
+
+ - faire que si on met une url pourri ca recupere le summaries mais que ca fasse pas l assert 5
+ - faire le boutton "upgrade"
+ - pouvoir selectionner +ieurs module pour maker les packages et les uploader
+ - traduire le TODO en anglais :)
