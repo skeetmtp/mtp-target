@@ -40,7 +40,7 @@ function DisplayCacheFile($filename)
 
 function isCacheFileUpToDateDuration($filename,$duration)
 {
-	return (file_exists($filename) && (strtotime(date("Y-m-d H:i:s")) - filemtime($filename))<$duration);
+	return (file_exists($filename) && filesize($filename)>0 && (strtotime(date("Y-m-d H:i:s")) - filemtime($filename))<$duration);
 }
 
 function isCacheFileUpToDate($filename)
@@ -49,6 +49,7 @@ function isCacheFileUpToDate($filename)
 	if(!file_exists($cache_dir))
 		mkdir($cache_dir);
 	//chmod($cache_dir, 0777)
+	//return false;
 	$res = isCacheFileUpToDateDuration($filename,5*60);
 	return $res;
 }
