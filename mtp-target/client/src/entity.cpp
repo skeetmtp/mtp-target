@@ -310,7 +310,7 @@ void CEntity::load3d()
 	
 	if(!TraceParticle && CConfigFileTask::instance().configFile().getVar("DisplayParticle").asInt() == 1)
 	{
-		string res = CResourceManager::instance().get("ribbon.ps");
+		string res = CResourceManager::instance().get("trace.ps");
 		TraceParticle = dynamic_cast<UParticleSystemInstance *>(C3DTask::instance().scene().createInstance(res));
 		nlassert(TraceParticle);
 		TraceParticle->setTransformMode (UTransformable::RotQuat);	
