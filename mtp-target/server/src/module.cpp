@@ -278,6 +278,24 @@ void CModule::enabled(bool e)
 	
 }
 
+void CModule::changePosition(NLMISC::CVector &pos) 
+{
+	pausePhysics();
+	dGeomSetPosition(Geom, pos.x, pos.y, pos.z);
+	resumePhysics();
+	Position = pos;
+	CNetMessage msgout(CNetMessage::UpdateElement);
+	uint8 elementType = CEditableElementCommon::Module;
+	uint8 elementId = id();
+	uint8 selectedBy = 0;
+	CVector eulerRot(0,0,0);
+	msgout.serial(elementType);
+	msgout.serial(elementId);
+	msgout.serial(selectedBy);
+	msgout.serial(pos);
+	msgout.serial(eulerRot);
+	CNetwork::instance().send(msgout);
+}
 
 
 //

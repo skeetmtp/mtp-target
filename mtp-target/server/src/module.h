@@ -59,6 +59,7 @@ public:
 	float bounceVel() {return BounceVel;}
 	void bounceVel(float v) {BounceVel=v;}
 	
+	virtual void changePosition(NLMISC::CVector &pos);
 	
 
 	CModuleProxy		*luaProxy;

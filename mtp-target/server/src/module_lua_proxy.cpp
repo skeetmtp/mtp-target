@@ -193,18 +193,7 @@ int CModuleProxy::setPos(lua_State *luaSession)
 {
 	CLuaVector pos  = *Lunar<CLuaVector>::check(luaSession,-1);
 	//_module->position(pos);
-	CNetMessage msgout(CNetMessage::UpdateElement);
-	uint8 elementType = CEditableElementCommon::Module;
-	uint8 elementId = _module->id();
-	uint8 selectedBy = 0;
-	CVector eulerRot(0,0,0);
-	msgout.serial(elementType);
-	msgout.serial(elementId);
-	msgout.serial(selectedBy);
-	msgout.serial(pos);
-	msgout.serial(eulerRot);
-	CNetwork::instance().send(msgout);
-	_module->update(pos,eulerRot);
+	_module->changePosition(pos);
 	return 0;
 }
 
