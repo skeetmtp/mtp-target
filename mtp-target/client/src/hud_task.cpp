@@ -319,7 +319,7 @@ void CHudTask::render()
 		CFontManager::instance().printf(CRGBA(245, 238, 141, 255), (float) (C3DTask::instance().screenWidth() - totalScoreStr.size() * CFontManager::instance().fontWidth() - 10), float(C3DTask::instance().screenHeight() - 1 * CFontManager::instance().fontHeight()), 1, totalScoreStr.c_str());
 		
 		if (CEntityManager::instance()[eid].interpolator().outOfKey())
-			CFontManager::instance().printf(CRGBA(255, 0, 0, 255), float(C3DTask::instance().screenWidth() / 2 - 70), 70.0f,1, "NET LAG");
+			CFontManager::instance().printf(CRGBA(255, 0, 0, 255), float(C3DTask::instance().screenWidth() / 2 - 70), 100.0f,1, "NET LAG");
 	}
 	
 
