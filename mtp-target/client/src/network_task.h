@@ -37,7 +37,6 @@
 #include <nel/net/login_cookie.h>
 
 #include "entity.h"
-#include "editable_element.h"
 #include "../../common/net_message.h"
 #include "../../common/constant.h"
 

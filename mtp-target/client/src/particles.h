@@ -57,7 +57,6 @@
 
 #include "sound_manager.h"
 #include "interpolator.h"
-#include "editable_element.h"
 #include "../../common/particles_common.h"
 #include "particles_lua_proxy.h"
 
