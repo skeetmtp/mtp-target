@@ -136,7 +136,7 @@ static void cbLogin(CClient *c, CNetMessage &msgin)
 			}
 			else
 			{
-				error = CEntityManager::instance().check(login, password, true, c->Score);
+				error = CEntityManager::instance().check(login, password, true, c->Score, c->isAdmin());
 			}
 		}
 	}
