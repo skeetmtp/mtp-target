@@ -99,7 +99,7 @@ void CStartPoint::init(const std::string &name,uint8 id, NLMISC::CVector positio
 	NbFaces = loadMesh(ShapeName, Vertices, Normals, Indices);
 
 	Mesh = C3DTask::instance().scene().createInstance (ShapeName);
-	if (mesh == 0)
+	if (Mesh == 0)
 	{
 		nlwarning ("Can't load '%s.shape'", Name.c_str());
 	}
