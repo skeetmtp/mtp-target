@@ -81,6 +81,7 @@ CMysqlResult::CMysqlResult()
 	//nlinfo("CMysqlResult::construct 0x%p",this);
 	_result = NULL;
 }
+/*
 CMysqlResult::CMysqlResult(const CMysqlResult &mysqlResult) 
 { 
 	nlwarning("CMysqlResult::copy1 not implemented");
@@ -91,6 +92,7 @@ CMysqlResult::CMysqlResult(const CMysqlResult &mysqlResult)
 	}
 	_result=mysqlResult._result; 
 }
+*/
 
 CMysqlResult::CMysqlResult(MYSQL_RES *result) 
 { 
@@ -110,6 +112,7 @@ CMysqlResult::~CMysqlResult()
 	mysql_free_result(_result);
 }
 
+/*
 CMysqlResult& CMysqlResult::operator=(CMysqlResult &mysqlResult)
 {
 	nlwarning("CMysqlResult::copy2 not implemented");
@@ -121,6 +124,7 @@ CMysqlResult& CMysqlResult::operator=(CMysqlResult &mysqlResult)
 	_result=mysqlResult._result; 
 	return *this;		
 }
+*/
 
 CMysqlResult& CMysqlResult::operator=(MYSQL_RES *result)
 {

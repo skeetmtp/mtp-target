@@ -45,11 +45,10 @@ class CMysqlResult
 {
 public:
 	CMysqlResult();
-	CMysqlResult(const CMysqlResult &mysqlResult);
 	CMysqlResult(MYSQL_RES *result);
 	~CMysqlResult();
 
-	CMysqlResult& operator=(CMysqlResult &mysqlResult);
+	//CMysqlResult& operator=(CMysqlResult &mysqlResult);
 	CMysqlResult& operator=(MYSQL_RES *result);
 	
 	operator MYSQL_RES*()
@@ -58,6 +57,8 @@ public:
 		return _result; 
 	};
 private:
+	//we don't want user to do a copy
+	CMysqlResult(const CMysqlResult &mysqlResult){};
 	MYSQL_RES *_result;
 };
 
