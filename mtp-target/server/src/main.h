@@ -41,6 +41,10 @@ extern NLMISC::TTime LastPingSent;	// When we send all information of client (pi
 
 extern const float GSCALE;
 
+extern uint MainThreadId;
+extern uint NetworkThreadId;
+extern uint PhysicThreadId;
+
 
 class PauseFlags 
 {

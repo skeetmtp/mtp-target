@@ -438,6 +438,7 @@ class PhysicsThread : public IRunnable
 {
 	void run()
 	{
+		PhysicThreadId = getThreadId();
 		static TTime lastTime = CTime::getLocalTime();
 		static float deltaTime = worldStep;
 		while(true)

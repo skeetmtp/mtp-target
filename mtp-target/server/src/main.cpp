@@ -70,6 +70,11 @@ TTime NextSendUpdate = 0;
 
 const float GSCALE = 0.01f;
 
+
+uint MainThreadId = 0;
+uint NetworkThreadId = 0;
+uint PhysicThreadId = 0;
+
 CSynchronized<PauseFlags> servicePauseFlags("servicePauseFlags");
 void checkServicePaused();
 
@@ -83,6 +88,7 @@ public:
 
 	void init()
 	{
+		MainThreadId = getThreadId();
 #ifdef NL_OS_WINDOWS
 		BOOL res;
 		if(ConfigFile.getVar("HighPriority").asInt()==1)
@@ -298,7 +304,7 @@ bool pauseAllThread()
 
 void resumeAllThread()
 {
-	//getThreadId();
+	uint tid = getThreadId();
 	resumeService();
 	resumePhysics();
 	resumeNetwork();	

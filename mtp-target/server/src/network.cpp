@@ -72,6 +72,7 @@ void CNetworkTask::run()
 	fd_set readers;
 	timeval tv;
 
+	NetworkThreadId = getThreadId();
 	while(true)
 	{
 		{
