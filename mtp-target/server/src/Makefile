@@ -92,7 +92,8 @@ editable_element_common.o \
 start_point_common.o \
 start_point.o \
 module_common.o \
-module_lua_proxy.o
+module_lua_proxy.o \
+custom_floating_point.o
 
 link:
 	-ln -s ../../common/lua_nel.cpp lua_nel.cpp
@@ -102,6 +103,7 @@ link:
 	-ln -s ../../common/editable_element_common.cpp editable_element_common.cpp
 	-ln -s ../../common/module_common.cpp module_common.cpp
 	-ln -s ../../common/load_mesh.cpp load_mesh.cpp
+	-ln -s ../../common/custom_floating_point.cpp
 
 mtp_target_service: $(OBJS)
 	$(CXX) -o $@ $(OBJS) $(LDFLAGS)
