@@ -5,6 +5,70 @@
 <body>
 
 	<?php
+		function exec_requete($requete)
+		{
+		
+			$DBHost = "127.0.0.1";
+			$DBUserName = "root";
+			$DBPassword = "";
+			$DBName = "nel";
+	
+			$MySqlLinkIdentifier = mysql_connect( $DBHost, $DBUserName, $DBPassword ) or die("cannot connect to $DBHost");
+		
+			mysql_select_db($DBName) or die("cannot select $DBName");
+		
+			$resultat = mysql_query($requete) or die("query failed(".mysql_error().") : $requete");
+			$erreur = mysql_error();
+			if ($erreur != "")
+			{
+		    		die("mysql_error : $erreur");
+			}
+			return $resultat;
+		}
+		
+		function dbAddFile($srcName,$destDir,$destName)
+		{
+			$gzFilename = $destDir.$destName.".gz";
+			$requete = "SELECT Crc,UNIX_TIMESTAMP(CrcDate) FROM data_file WHERE Name='$destName';";
+			$result=exec_requete($requete);
+			//echo "$srcName -> $gzFilename<br>";
+			if($line = mysql_fetch_array($result))
+			{
+				$sha1 = $line[0];
+				$crcDate = $line[1];
+				$filedate = filemtime($srcName);
+				if($crcDate>$filedate && file_exists($gzFilename))
+				{
+					echo "uptodate ";
+					return $sha1;
+				}
+					
+				if($crcDate<=$filedate)
+					echo "crc not up to date ";
+				if(!file_exists($gzFilename))
+					echo "$gzFilename file not found ";
+					
+				echo "computing ... ";
+				$sha1 = sha1_file($srcName);
+				$command = "nice gzip -c ".$srcName." > ".$gzFilename;
+				system($command);
+				$requete = "UPDATE data_file SET Crc='$sha1', CrcDate=NOW() WHERE Name='$destName';";
+				$result=exec_requete($requete);
+				return $sha1;
+			}
+			else
+			{
+				echo "$srcName never build : computing ... ";
+				$sha1 = sha1_file($srcName);
+				$command = "nice gzip -c ".$srcName." > ".$gzFilename;
+				system($command);
+				$requete = "INSERT INTO data_file (Name,Crc,CrcDate) VALUES ('$destName','$sha1',NOW());";
+				$result=exec_requete($requete);
+				return $sha1;
+			}
+			return 0;
+		}
+		
 		function emptyDir($dir)
 		{
 			if(!file_exists($dir))
@@ -64,14 +128,14 @@
 							if(in_array($ext, $validExt))
 							{
 								//printf("%s : %s<br>",$f,$ext);
-								$sha1 = sha1_file($f);
+								$sha1 = dbAddFile($f,$destDir,$FolderOrFile);
 								printf("%s : %s<br>\n",$FolderOrFile,$sha1);
 								fwrite($fp,sprintf("%s\n",$FolderOrFile));
 								fwrite($fp,sprintf("%s\n",$sha1));
-								$command = "nice gzip -c ".$f." > ".$destDir.$FolderOrFile.".gz";
+								//$command = "nice gzip -c ".$f." > ".$destDir.$FolderOrFile.".gz";
 								//sleep(1);
 								//echo "executing : ".$command."<br>";
-								system($command);
+								//system($command);
 							}
 						}
 					}
@@ -81,24 +145,26 @@
 		}
 
 		$ext  = "tga lua dds ps shape xml";
-		$exportDirname = "./export/";
-		$exportTempDirname = "./export_temp/";
-		$crcFilename = "crc.txt";
-
 		$extArray = explode(" ", $ext);
-		$fullCrcFilename = $exportTempDirname.$crcFilename;
-		emptyDir($exportTempDirname);
-		printf("building : '%s'<br>\n",$fullCrcFilename);
-		$crcfp = fopen($fullCrcFilename,"wt");
-		if(!$crcfp) die("error opening crc file : ".$fullCrcFilename);
+
+		$exportDirname = "./export/";
+		$crcFilename = "crc.txt";
+		$crcTempFilename = "crc_temp.txt";
 		
-		crcAddDir($crcfp,"../server/data/",$exportTempDirname,$extArray);
-		crcAddDir($crcfp,"../user_texture/",$exportTempDirname,$extArray);
+		$fullCrcFilename = $exportDirname.$crcFilename;
+		$fullCrcTempFilename = $exportDirname.$crcTempFilename;
+
+		printf("building : '%s'<br>\n",$fullCrcFilename);
+		$crcfp = fopen($fullCrcTempFilename,"wt");
+		if(!$crcfp) die("error opening crc file : ".$fullCrcTempFilename);
+		
+		crcAddDir($crcfp,"../server/data/",$exportDirname,$extArray);
+		crcAddDir($crcfp,"../user_texture/",$exportDirname,$extArray);
 		
 		fclose($crcfp);
-		emptyDir($exportDirname);
-		rmdir($exportDirname);
-		rename($exportTempDirname,$exportDirname);
+		if(file_exists($fullCrcFilename))
+			unlink($fullCrcFilename);
+		rename($fullCrcTempFilename,$fullCrcFilename);
 		/*
 		$command = "gzip ".$fullCrcFilename;
 		echo "executing : ".$command."<br>";
