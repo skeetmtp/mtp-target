@@ -86,16 +86,18 @@ void CSoundManager::init()
 	
 	memset(entitySoundSamples, 0, CSoundManager::CEntitySoundsDescriptor::SoundCount * sizeof(FSOUND_SAMPLE *));
 	// load all samples
-	entitySoundSamples[CSoundManager::CEntitySoundsDescriptor::BallOpen]  = loadSoundSample(CPath::lookup(CConfigFileTask::instance().configFile().getVar("SoundBallOpen").asString(),false));
-	entitySoundSamples[CSoundManager::CEntitySoundsDescriptor::BallClose] = loadSoundSample(CPath::lookup(CConfigFileTask::instance().configFile().getVar("SoundBallClose").asString(),false));
-	entitySoundSamples[CSoundManager::CEntitySoundsDescriptor::Splash]    = loadSoundSample(CPath::lookup(CConfigFileTask::instance().configFile().getVar("SoundSplash").asString(), false));
-	
+	entitySoundSamples[CSoundManager::CEntitySoundsDescriptor::BallOpen]  = loadSoundSample(CResourceManager::instance().get(CConfigFileTask::instance().configFile().getVar("SoundBallOpen").asString()));
+	entitySoundSamples[CSoundManager::CEntitySoundsDescriptor::BallClose] = loadSoundSample(CResourceManager::instance().get(CConfigFileTask::instance().configFile().getVar("SoundBallClose").asString()));
+	entitySoundSamples[CSoundManager::CEntitySoundsDescriptor::Splash]    = loadSoundSample(CResourceManager::instance().get(CConfigFileTask::instance().configFile().getVar("SoundSplash").asString()));
+
 	// load all gui samples
 	for (uint i = 0; i < CSoundManager::GuiSoundCount; i++)
 		guiChannels[i] = -1;
 	memset(guiSoundSamples, 0, CSoundManager::GuiSoundCount * sizeof(FSOUND_SAMPLE *));
-	guiSoundSamples[CSoundManager::GuiReady] = loadSoundSample(CConfigFileTask::instance().configFile().getVar("SoundGuiReady").asString());
+	guiSoundSamples[CSoundManager::GuiReady] = loadSoundSample(CResourceManager::instance().get(CConfigFileTask::instance().configFile().getVar("SoundGuiReady").asString()));
 #endif
+
+	isInit = true;
 
 	if (CConfigFileTask::instance().configFile().getVar("Music").asInt() == 1)
 	{
@@ -109,7 +111,6 @@ void CSoundManager::init()
 			playStream(res);
 		}
 	}
-	isInit = true;
 }
 
 void CSoundManager::update()
@@ -127,7 +128,7 @@ void CSoundManager::update()
 		{
 			CEntitySoundsDescriptor::TSound &s = esd->Sounds[i];
 			
-			if (s.Command & CEntitySoundsDescriptor::CommandStop)
+			if (s.Command == CEntitySoundsDescriptor::CommandStop)
 			{
 				if (s.Channel != -1)
 				{
@@ -135,7 +136,7 @@ void CSoundManager::update()
 					s.Channel = -1;
 				}
 			}
-			else if (s.Command & CEntitySoundsDescriptor::CommandPlay)
+			else if (s.Command == CEntitySoundsDescriptor::CommandPlay)
 			{
 				bool start = true;
 				if (s.Channel != -1)
@@ -162,6 +163,10 @@ void CSoundManager::update()
 						FSOUND_SetPaused(s.Channel, false);
 					}
 				}
+			}
+			else if (s.Command == CEntitySoundsDescriptor::CommandPlayLoop)
+			{
+				nlwarning("CommandPlayLoop");
 			}
 			else if (s.Channel != -1)
 			{

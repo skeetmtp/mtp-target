@@ -239,9 +239,10 @@ string CResourceManager::get(const string &filename)
 	else if(ext == "dds") unk = CPath::lookup("unknown.tga", false);
 	else if(ext == "png") unk = CPath::lookup("unknown.tga", false);
 	else if(ext == "ps") unk = CPath::lookup("unknown.ps", false);
+	else if(ext == "wav") unk = CPath::lookup("unkown.wav", false);
 	else 
 	{
-		nlwarning("Extension not managed : %s",ext.c_str());
+		nlwarning("Extension not managed : %s(%s)",ext.c_str(),filename.c_str());
 	}
 
 	
