@@ -86,7 +86,7 @@ private:
 	NLMISC::CRGBA			 AmbientColor;
 	NLMISC::CRGBA			 ClearColor;
 	C3dMouseListener		*MouseListener;
-	NL3D::UInstance			LevelParticle;
+	NL3D::UParticleSystemInstance LevelParticle;
 	//bool					 CaptureCursor;
 };
 

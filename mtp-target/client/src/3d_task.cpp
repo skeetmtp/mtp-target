@@ -205,20 +205,18 @@ void C3DTask::init()
 
 	LevelParticle = 0;
 	//too much particles , no left to trace.ps
-	/*
 	if(CConfigFileTask::instance().configFile().getVar("DisplayParticle").asInt() == 1)
 	{
 		string res;
 		res = CResourceManager::instance().get("snow.ps");
-		LevelParticle = Scene->createInstance(res);
-		if (LevelParticle != 0)
+		LevelParticle.cast(C3DTask::instance().scene().createInstance(res));
+		if (!LevelParticle.empty())
 		{
-			LevelParticle->setTransformMode(UTransformable::RotQuat);
-			LevelParticle->hide();
-			LevelParticle->setOrderingLayer(2);
+			LevelParticle.setTransformMode(UTransformable::RotQuat);
+			LevelParticle.hide();
+			LevelParticle.setOrderingLayer(2);
 		}
 	}
-	*/
 	
 #ifdef NL_OS_WINDOWS
 	HWND hWnd = (HWND )Driver->getDisplay();
