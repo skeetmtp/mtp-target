@@ -189,10 +189,20 @@ void CControler::update()
 				if (C3DTask::instance().kbDown(mtRIGHT))
 					deltaRot -= ROT_SPEED_CLOSE;
 				*/
-				if (C3DTask::instance().kbDown(KeyLEFT))
-					deltaAccel -= right * speed * speedRatio;
-				if (C3DTask::instance().kbDown(KeyRIGHT))
-					deltaAccel += right * speed * speedRatio;
+				if(speed>1.0f)
+				{
+					if (C3DTask::instance().kbDown(KeyLEFT))
+						deltaAccel -= right * speed * speedRatio;
+					if (C3DTask::instance().kbDown(KeyRIGHT))
+						deltaAccel += right * speed * speedRatio;	
+				}
+				else
+				{
+					if (C3DTask::instance().kbDown(KeyLEFT))
+						deltaAccel -= right ;
+					if (C3DTask::instance().kbDown(KeyRIGHT))
+						deltaAccel += right ;					
+				}
 
 				if (C3DTask::instance().kbDown(KeyUP))
 					deltaAccel += lookAt;
