@@ -108,7 +108,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 nlmisc_r.lib nlnet_r.lib fmodvc.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib libjpeg.lib libpng.lib zlib.lib d3d8.lib vfw32.lib dxguid.lib dinput8.lib d3dx8.lib fmodvc.lib freetype211ST.lib /nologo /subsystem:windows /machine:I386 /nodefaultlib:"libc.lib" /libpath:"../../RealTimeFairy/extern/lib"
-# ADD LINK32 nlmisc_rd.lib nlnet_rd.lib nl3d_rd.lib lua.lib jpeg.lib freetype.lib zlib.lib libxml2.lib fmodvc.lib user32.lib gdi32.lib advapi32.lib shell32.lib /nologo /subsystem:windows /debug /machine:I386 /nodefaultlib:"libc.lib" /out:"ReleaseDebug/mtp-target.exe" /pdbtype:sept
+# ADD LINK32 nlmisc_rd.lib nlnet_rd.lib nl3d_rd.lib lua.lib libjpeg.lib freetype.lib zlib.lib libxml2.lib fmodvc.lib user32.lib gdi32.lib advapi32.lib shell32.lib /nologo /subsystem:windows /debug /machine:I386 /nodefaultlib:"libc.lib" /out:"ReleaseDebug/mtp-target.exe" /pdbtype:sept
 
 !ELSEIF  "$(CFG)" == "Client - Win32 DebugFast"
 
