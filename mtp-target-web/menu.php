@@ -89,8 +89,8 @@
 <tr>
         <td width="5%"><center><div id="menu">
         <?php
-		getStats($nbop, $nbrp);
-		echo "<b>$nbrp registered players</b> | <b>$nbop online players</b>";
+		getStats($nbop, $nbrp, $nbs);
+		echo "<b>$nbrp registered players</b> | <b>$nbop online players</b> | <b>$nbs played sessions</b>";
         ?>
         </div></center></td>
 </tr>

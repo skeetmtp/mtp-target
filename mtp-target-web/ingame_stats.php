@@ -1,5 +1,5 @@
 <?php 
-	function getStats(&$NbOnlinePlayers, &$NbRegisteredPlayers)
+	function getStats(&$NbOnlinePlayers, &$NbRegisteredPlayers, &NbSessions)
 	{
 		$DBHost = "mtp-target.dyndns.org";
 		$DBUserName = "www";
@@ -17,5 +17,10 @@
 		$result = mysql_query ($query) or die ("Can't execute the query: ".$query);
 		$row = mysql_fetch_row ($result);
 		$NbRegisteredPlayers = $row[0];
+
+		$query = "select count(*) from session";
+		$result = mysql_query ($query) or die ("Can't execute the query: ".$query);
+		$row = mysql_fetch_row ($result);
+		$NbSessions = $row[0];
 	}
 ?>
