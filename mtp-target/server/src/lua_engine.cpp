@@ -66,13 +66,14 @@ do{ \
 #define MT_LUA_CALL(argCount,retCount) \
 do \
 { \
-	int status = 0; lua_call(LuaSession, argCount, retCount); \
-	if(status != 0) \
-	{ \
-		nlwarning("lua_call() failed !"); \
+	int status = 0; lua_pcall(LuaSession, argCount, retCount); \
+	if (status) {\
+		const char *msg = lua_tostring(session(), -1);\
+		if (msg == 0) msg = "(error with no message)";\
+		nlwarning("pcall error(MT_LUA_CALL) : (status = %d)%s", status, msg);\
 		luaCodeIsValid = false; \
-		return; \
-	} \
+		return;\
+	}\
 }while(false)
 
 
@@ -170,12 +171,17 @@ void CLuaEngine::entityEntityCollideEvent(CEntity *entity1, CEntity *entity2)
 {
 	if(!session())
 		return;
-	int res ;
 //	nlinfo("CLuaEngine::entityEntityCollideEvent(0x%p[0x%p],0x%p[0x%p])",entity1,entity1->luaProxy,entity2,entity2->luaProxy);
 	lua_getglobal(session(), "entityEntityCollideEvent");
 	Lunar<CEntityProxy>::push(session(), entity1->luaProxy);
 	Lunar<CEntityProxy>::push(session(), entity2->luaProxy);
-	res = lua_pcall (session(),2,0,0);
+	int status = lua_pcall (session(),2,0,0);
+    if (status) {
+		const char *msg = lua_tostring(session(), -1);
+		if (msg == 0) msg = "(error with no message)";
+		nlwarning("pcall error(entityEntityCollideEvent) : (status = %d)%s", status, msg);
+		return;
+    }
 	/*
 	if(res<0)
 		nlwarning("error calling lua function");
@@ -194,6 +200,12 @@ void CLuaEngine::entitySceneCollideEvent(CEntity *entity, CModule *module)
 	Lunar<CEntityProxy>::push(session(), entity->luaProxy);
 	Lunar<CModuleProxy>::push(session(), module->luaProxy);
 	res = lua_pcall (session(),2,0,0);
+    if (res) {
+		const char *msg = lua_tostring(session(), -1);
+		if (msg == 0) msg = "(error with no message)";
+		nlwarning("pcall error(entitySceneCollideEvent) : (status = %d)%s", res, msg);
+		return;
+    }
 	/*
 	if(res<0)
 		nlwarning("error calling lua function");
@@ -209,6 +221,12 @@ void CLuaEngine::entityWaterCollideEvent(CEntity *entity)
 	lua_getglobal(session(), "entityWaterCollideEvent");
 	Lunar<CEntityProxy>::push(session(), entity->luaProxy);
 	res = lua_pcall (session(),1,0,0);
+    if (res) {
+		const char *msg = lua_tostring(session(), -1);
+		if (msg == 0) msg = "(error with no message)";
+		nlwarning("pcall error(entityWaterCollideEvent) : (status = %d)%s", res, msg);
+		return;
+    }
 	/*
 	if(res<0)
 		nlwarning("error calling lua function");
@@ -225,6 +243,12 @@ void CLuaEngine::entityLeaveEvent(CEntity *entity)
 	lua_getglobal(session(), "entityLeaveEvent");
 	Lunar<CEntityProxy>::push(session(), entity->luaProxy);
 	res = lua_pcall (session(),1,0,0);	
+    if (res) {
+		const char *msg = lua_tostring(session(), -1);
+		if (msg == 0) msg = "(error with no message)";
+		nlwarning("pcall error(entityLeaveEvent) : (status = %d)%s", res, msg);
+		return;
+    }
 }
 
 
@@ -236,6 +260,12 @@ void CLuaEngine::levelInit()
 //	nlinfo("CLuaEngine::entityWaterCollideEvent(0x%p)",entity);
 	lua_getglobal(session(), "levelInit");
 	res = lua_pcall (session(),0,0,0);
+    if (res) {
+		const char *msg = lua_tostring(session(), -1);
+		if (msg == 0) msg = "(error with no message)";
+		nlwarning("pcall error(levelInit) : (status = %d)%s", res, msg);
+		return;
+    }
 	/*
 	if(res<0)
 		nlwarning("error calling lua function");
@@ -252,6 +282,12 @@ void CLuaEngine::levelPreUpdate()
 //	nlinfo("CLuaEngine::entityWaterCollideEvent(0x%p)",entity);
 	lua_getglobal(session(), "levelPreUpdate");
 	res = lua_pcall (session(),0,0,0);
+    if (res) {
+		const char *msg = lua_tostring(session(), -1);
+		if (msg == 0) msg = "(error with no message)";
+		nlwarning("pcall error(levelPreUpdate) : (status = %d)%s", res, msg);
+		return;
+    }
 	/*
 	if(res<0)
 		nlwarning("error calling lua function");
@@ -267,6 +303,12 @@ void CLuaEngine::levelPostUpdate()
 //	nlinfo("CLuaEngine::entityWaterCollideEvent(0x%p)",entity);
 	lua_getglobal(session(), "levelPostUpdate");
 	res = lua_pcall (session(),0,0,0);
+    if (res) {
+		const char *msg = lua_tostring(session(), -1);
+		if (msg == 0) msg = "(error with no message)";
+		nlwarning("pcall error(levelPostUpdate) : (status = %d)%s", res, msg);
+		return;
+    }
 	/*
 	if(res<0)
 		nlwarning("error calling lua function");
@@ -282,6 +324,12 @@ void CLuaEngine::levelEndSession()
 //	nlinfo("CLuaEngine::entityWaterCollideEvent(0x%p)",entity);
 	lua_getglobal(session(), "levelEndSession");
 	res = lua_pcall (session(),0,0,0);
+    if (res) {
+		const char *msg = lua_tostring(session(), -1);
+		if (msg == 0) msg = "(error with no message)";
+		nlwarning("pcall error(levelEndSession) : (status = %d)%s", res, msg);
+		return;
+    }
 	/*
 	if(res<0)
 		nlwarning("error calling lua function");

@@ -111,6 +111,7 @@ static int lua_exit(lua_State *L)
 
 static int mydefault_panic (lua_State *L) {
 	nlwarning("lua panic");
+	lua_close(L);
 	return 0;
 }
 
