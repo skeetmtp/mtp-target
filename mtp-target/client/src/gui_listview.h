@@ -47,7 +47,7 @@ public:
 	CGuiListViewEventBehaviour();
 	virtual ~CGuiListViewEventBehaviour();
 	
-	virtual void onPressed(uint rowId);
+	virtual void onPressed(int rowId);
 };
 
 
@@ -64,7 +64,7 @@ public:
 	float spacing();
 	void spacing(float spacing);
 
-	uint selectedRow() {return _selectedRow-1;};
+	int selectedRow() {return _selectedRow-1;};
 	
 	virtual void _render(const NLMISC::CVector &pos, NLMISC::CVector &maxSize);	
 	

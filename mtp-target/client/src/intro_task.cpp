@@ -99,8 +99,10 @@ public:
 	virtual ~CGuiServerListConnectButtonEventBehaviour() {}
 	virtual void onPressed()
 	{
-		nlinfo("user want to connect to server : %d",_serverListView->selectedRow());
-		CIntroTask::instance().doConnectionOnLine(_serverListView->selectedRow());
+		int rowId = _serverListView->selectedRow();
+		nlinfo("user want to connect to server : %d",rowId);
+		if(rowId>0)
+			CIntroTask::instance().doConnectionOnLine(rowId);
 	}
 private:
 	guiSPG<CGuiListView> _serverListView;
@@ -111,10 +113,11 @@ class CGuiLaunchServerEventBehaviour : public CGuiListViewEventBehaviour
 public:
 	CGuiLaunchServerEventBehaviour() {}
 	virtual ~CGuiLaunchServerEventBehaviour() {}
-	virtual void onPressed(uint rowId)
+	virtual void onPressed(int rowId)
 	{
 		nlinfo("user want to connect to server : %d",rowId);
-		CIntroTask::instance().doConnectionOnLine(rowId);
+		if(rowId>0)
+			CIntroTask::instance().doConnectionOnLine(rowId);
 	}
 private:
 };

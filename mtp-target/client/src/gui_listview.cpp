@@ -431,7 +431,7 @@ CGuiListViewEventBehaviour::~CGuiListViewEventBehaviour()
 	
 }
 
-void CGuiListViewEventBehaviour::onPressed(uint rowId)
+void CGuiListViewEventBehaviour::onPressed(int rowId)
 {
 	
 }
