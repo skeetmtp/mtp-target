@@ -77,6 +77,14 @@ public:
 	CStartPoint *getStartPoint(uint32 id);
 	uint32 getStartPointCount();
 	void updateStartPoint(uint32 id, const NLMISC::CVector &pos, const NLMISC::CVector &rot,uint32 selectedBy);
+
+
+	bool execLuaCode(std::string code);
+	lua_State						*luaState() {return LuaState;}
+
+
+	static int getEntityByName(lua_State *L);
+	
 	
 private:
 	

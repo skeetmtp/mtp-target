@@ -46,6 +46,7 @@ extern "C"
 #include "task_manager.h"
 #include "entity_manager.h"
 #include "lens_flare_task.h"
+#include "entity_lua_proxy.h"
 #include "config_file_task.h"
 #include "resource_manager.h"
 #include "../../common/lua_nel.h"
@@ -279,6 +280,7 @@ CLevel::CLevel(const string &filename)
 	
 
 	CTaskManager::instance().add(CLensFlareTask::instance(), 140);
+
 	
 }
 
@@ -414,6 +416,9 @@ void CLevel::reset()
 	}
 	lua_pop(LuaState, 1);  // removes `key'
 	*/
+	Lunar<CEntityProxy>::Register(LuaState);
+	lua_register(LuaState, "getEntityByName", getEntityByName);	
+	CEntityManager::instance().luaInit();
 }
 
 
@@ -500,4 +505,40 @@ void CLevel::updateStartPoint(uint32 id,const CVector &pos,const CVector &rot,ui
 	//TODO selectedBy
 	getStartPoint(id)->update(pos,rot);//,selectedBy);
 }
+
+
+bool CLevel::execLuaCode(std::string code)
+{
+	if(LuaState)
+	{
+		int res = lua_dostring(LuaState,code.c_str());
+		if(res==0)
+			return true;
+	}
+	return false;
+}
+
+
+/////////////////////////////////////
+//static
+/////////////////////////////////////
+
+int CLevel::getEntityByName(lua_State *L)
+{
+	unsigned int len;
+	const char *entityName = luaL_checklstring(L, 1, &len);
+	string name(entityName);
+	CEntity *e = CEntityManager::instance().getByName(name);
+	if(e)
+		nlinfo("Lua(0x%p) : getEntityByName(%s))=0x%p(0x%p)",L,name.c_str(),e,e->luaProxy);
+	if(e==NULL)
+	{
+		nlwarning("getEntityByName(%s)==NULL",name.c_str());
+		return 0;
+	}
+	else
+		Lunar<CEntityProxy>::push(L, e->luaProxy);
+	return 1;
+}
+
 
