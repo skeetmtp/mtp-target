@@ -3,7 +3,7 @@
 setMaxLevelSessionCount(3);
 setLevelHasBonusTime(0);
 setLevelRecordBest(0);
-setLevelTimeout(10);
+setLevelTimeout(60);
 
 local teamRedScore = 0;
 local teamBlueScore = 0;
@@ -91,10 +91,10 @@ function Entity:init()
   self:setStartPointId(clientId+getSessionId()*2);
   local t = math.mod(clientId,2);
 
-  self:displayText(0,4,1,255,255,255,"Score is shared beetween the team",10);
+  self:displayText(0,4,1,255,255,255,"warning : Team share the score",10);
   if(t==0) then
+  	self:displayText(0,5,1,255,0,0,"You are in RED team",15);
   	self:displayText(0,6,1,255,0,0,"Land on RED target !",20);
-  	self:displayText(0,4,1,255,0,0,"Score is shared beetween the team",10);
   else
   	self:displayText(0,5,1,100,100,255,"You are in BLUE team",15);
   	self:displayText(0,6,1,100,100,255,"Land on BLUE target !",20);
