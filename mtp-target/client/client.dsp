@@ -186,6 +186,14 @@ SOURCE=..\common\custom_floating_point.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\Src\login_client.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Src\login_client.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\Src\net_callbacks.cpp
 # End Source File
 # Begin Source File
@@ -680,14 +688,6 @@ SOURCE=.\Src\interpolator.cpp
 # Begin Source File
 
 SOURCE=.\Src\interpolator.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\Src\login_client.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\Src\login_client.h
 # End Source File
 # Begin Source File
 

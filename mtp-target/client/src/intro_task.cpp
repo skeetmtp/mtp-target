@@ -280,7 +280,10 @@ void CIntroTask::updateLoginOnline()
 		else
 		{
 			ServerId = 0;
-			
+
+			// TODO skeet: if CLoginClientMtp::ShardList.size() is 0 then you must
+			// handle the case where no shard are available
+
 			serverVbox->elements.clear();
 			for(uint i = 0; i < CLoginClientMtp::ShardList.size(); i++)
 			{

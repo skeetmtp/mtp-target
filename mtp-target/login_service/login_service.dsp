@@ -153,14 +153,6 @@ SOURCE=.\connection_client.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\connection_web.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\connection_web.h
-# End Source File
-# Begin Source File
-
 SOURCE=.\connection_ws.cpp
 # End Source File
 # Begin Source File

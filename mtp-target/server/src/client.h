@@ -53,7 +53,10 @@ public:
 
 	NLNET::CTcpSock			*sock() const { return Sock; }
 	virtual bool			forceReceived();
-	
+
+	sint32 uid() const { return UId; }
+	void uid(sint32) { UId = uid; }
+
 public:
 
 	// ugly public variables
@@ -68,6 +71,9 @@ private:
 
 	// we send update information about this entity
 	bool NetworkReady;
+
+	// uniq id for all shards, gived by the login service
+	sint32	UId;
 };
 
 #endif

@@ -17,6 +17,11 @@
  * MA 02111-1307, USA.
  */
 
+
+//
+// Includes
+//
+
 #include "stdpch.h"
 
 #include "nel/misc/types_nl.h"
@@ -27,21 +32,32 @@
 
 #include <list>
 
-#include "nel/misc/debug.h"
-#include "nel/misc/config_file.h"
-#include "nel/misc/displayer.h"
-#include "nel/misc/command.h"
-#include "nel/misc/log.h"
+#include <nel/misc/debug.h>
+#include <nel/misc/config_file.h>
+#include <nel/misc/displayer.h>
+#include <nel/misc/command.h>
+#include <nel/misc/log.h>
 
-#include "nel/net/service.h"
-#include "nel/net/unified_network.h"
-#include "nel/net/login_cookie.h"
+#include <nel/net/service.h>
+#include <nel/net/unified_network.h>
+#include <nel/net/login_cookie.h>
 
 #include "welcome.h"
+#include "entity_manager.h"
+
+
+//
+// Namespaces
+//
 
 using namespace std;
 using namespace NLMISC;
 using namespace NLNET;
+
+
+//
+// Variables
+//
 
 /// association between cookie in string and username
 map<string, string> UserIdNameAssociations;
@@ -291,6 +307,22 @@ void cbLSConnection(const std::string &serviceName, uint16 sid, void *arg)
 	}
 
 	msgout.serial(shardId);
+
+	// send online players
+
+	std::list <CEntity*> &ent = CEntityManager::instance().entities();
+	sint32 nbplayers = ent.size();
+	msgout.serial(nbplayers);
+	for(CEntityManager::EntityConstIt it = ent.begin(); it != ent.end(); it++)
+	{
+		if((*it)->type() == CEntity::Client)
+		{
+			CClient *cl = dynamic_cast<CClient*>(*it);
+			sint32 uid = cl->uid();
+			msgout.serial(uid);
+		}
+	}
+
 	CUnifiedNetwork::getInstance()->send(sid, msgout);
 
 	nlinfo("Connected to %s-%hu and sent identification with shardId '%d'", serviceName.c_str(), sid, shardId);

@@ -54,6 +54,7 @@ CClient::CClient(uint8 eid, NLNET::CTcpSock *sock) :
 	Sock = sock;
 	ReplayFile = 0;
 	NetworkReady = false;
+	UId = -1;
 }
 
 CClient::~CClient()

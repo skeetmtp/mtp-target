@@ -21,9 +21,11 @@
 //
 // Includes
 //
+
 #include "stdpch.h"
 
 #include "custom_floating_point.h"
+
 
 //
 // Namespaces

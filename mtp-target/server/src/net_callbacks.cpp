@@ -23,20 +23,22 @@
 //
 
 #include "stdpch.h"
-#include "time.h"
 
+#include <time.h>
+#include <zlib.h>
 #include <errno.h>
 
 #include <nel/misc/path.h>
 #include <nel/misc/sha1.h>
 
+#include <nel/net/login_cookie.h>
+
 #include "network.h"
 #include "welcome.h"
+#include "level_manager.h"
 #include "net_callbacks.h"
 #include "entity_manager.h"
-#include "level_manager.h"
 #include "session_manager.h"
-#include "zlib.h"
 
 
 //
@@ -145,6 +147,9 @@ static void cbLogin(CClient *c, CNetMessage &msgin)
 	// init() must be after the check() call
 	c->init(login,texture,color);
 	c->Cookie = cookie;
+	CLoginCookie lc;
+	lc.setFromString(cookie);
+	c->uid(lc.getUserId());
 
 	if(error.empty())
 	{

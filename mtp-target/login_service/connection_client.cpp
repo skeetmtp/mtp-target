@@ -1,54 +1,55 @@
-/** \file connection_client.cpp
- * Login Service (LS)
+/* Copyright, 2003 Melting Pot
  *
- * $Id$
- *
- */
-
-/* Copyright, 2000 Nevrax Ltd.
- *
- * This file is part of NEVRAX NeL Network Services.
- * NEVRAX NeL Network Services is free software; you can redistribute it and/or modify
+ * This file is part of MTP Target.
+ * MTP Target is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
  * any later version.
- *
- * NEVRAX NeL Network Services is distributed in the hope that it will be useful, but
+
+ * MTP Target is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * General Public License for more details.
- *
+
  * You should have received a copy of the GNU General Public License
- * along with NEVRAX NeL Network Services; see the file COPYING. If not, write to the
+ * along with MTP Target; see the file COPYING. If not, write to the
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
  * MA 02111-1307, USA.
  */
 
-#include "nel/misc/types_nl.h"
 
+//
+// Includes
+//
+
+#include <nel/misc/types_nl.h>
+
+#include <math.h>
 #include <stdio.h>
 #include <ctype.h>
-#include <math.h>
 
-#include <vector>
 #include <map>
+#include <vector>
 
-#include "nel/misc/debug.h"
-#include "nel/misc/config_file.h"
-#include "nel/misc/displayer.h"
-#include "nel/misc/log.h"
+#include <nel/misc/log.h>
+#include <nel/misc/debug.h>
+#include <nel/misc/displayer.h>
+#include <nel/misc/config_file.h>
 
-#include "nel/net/service.h"
-#include "nel/net/net_manager.h"
-#include "nel/net/login_cookie.h"
+#include <nel/net/service.h>
+#include <nel/net/net_manager.h>
+#include <nel/net/login_cookie.h>
 
 #include "login_service.h"
 
-#define CRYPT_PASSWORD 0
-
-#if defined(NL_OS_UNIX) && CRYPT_PASSWORD
+#ifdef NL_OS_UNIX
 extern "C" char *crypt (const char *__key, const char *__salt);
 #endif
+
+
+//
+// Namespaces
+//
 
 using namespace std;
 using namespace NLMISC;
@@ -59,69 +60,33 @@ using namespace NLNET;
 // Variables
 //
 
-CCallbackServer *ClientsServer = 0;
+static CVariable<bool> AcceptNewUsers("AcceptNewUsers", "1 if the server accepts new users ", true, 0, true);
 
-struct CUser
+static CCallbackServer *ClientsServer = 0;
+
+static const uint32 EncryptedSize = 13;
+
+
+//
+// Functions
+//
+
+void sendToClient(CMessage &msgout, TSockId sockId)
 {
-	CUser(const string &l, const string &p)
-	{
-		Login = l;
-		Password = p;
-		Id = NextId++;
-		Active = true;
-		Online = false;
-		Authorized = true;
-		SockId = 0;
-	}
-	string Login, Password, ShardPrivilege;
-	uint32 Id;
-	bool Online;
-	bool Active;
-	bool Authorized;
-
-	enum TState
-	{
-		Awaiting,
-	};
-
-	TState State;
-
-	CLoginCookie Cookie;
-
-	TSockId SockId;
-
-	string Authorize (TSockId from, CCallbackNetBase &netbase)
-	{
-		SockId = from;
-		Cookie.set((uint32)from, rand(), Id);
-		return "";
-	}
-
-	static uint32 NextId;
-};
-
-uint32 CUser::NextId = 1;
-
-vector<CUser> Users;
-
-const uint32 ServerVersion = 0;
-
-const bool AcceptNewUser = true;
-
-// These functions enable crypting password, work only on unix
-
-const uint32 EncryptedSize = 13;
+	nlassert(ClientsServer != 0);
+	ClientsServer->send(msgout, sockId);
+}
 
 // Get a number between 0 and 64, used by cryptPassword
-static uint32 rand64 ()
+static uint32 rand64()
 {
 	return (uint32) floor(64.0*(double)rand()/((double)RAND_MAX+1.0));
 }
 
 // Crypt a password
-string cryptPassword (const string &password)
+static string cryptPassword(const string &password)
 {
-#if defined(NL_OS_UNIX) && CRYPT_PASSWORD
+#ifdef NL_OS_UNIX
 	char Salt[3];
 	static char SaltString[65] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789./";
 
@@ -129,14 +94,14 @@ string cryptPassword (const string &password)
 	Salt[1] = SaltString[rand64()];
 	Salt[2] = '\0';
 
-	return string (crypt (password.c_str(), Salt));
+	return string(crypt(password.c_str(), Salt));
 #else
 	return password;
 #endif
 }
 
 // Check if a password is valid
-string checkPassword (const string &password, const string &encrypted)
+static string checkPassword(const string &password, const string &encrypted)
 {
 	if(password.empty())
 	{
@@ -157,7 +122,7 @@ string checkPassword (const string &password, const string &encrypted)
 		}
 	}
 
-#if defined(NL_OS_UNIX) && CRYPT_PASSWORD
+#ifdef NL_OS_UNIX
 	char Salt[3];
 
 	if (encrypted.size() != EncryptedSize)
@@ -175,40 +140,7 @@ string checkPassword (const string &password, const string &encrypted)
 #endif
 }
 
-sint findUser (string &login)
-{
-	for (sint i = 0; i < (sint) Users.size (); i++)
-	{
-		if (Users[i].Login == login)
-		{
-			return i;
-		}
-	}
-	// user not found
-	return -1;
-}
-
-void addUser (string &login, string &password)
-{
-	if (findUser (login) == -1)
-	{
-		Users.push_back (CUser (login, cryptPassword(password)));
-		//ace writePlayerDatabase ();
-	}
-	else
-	{
-		nlwarning ("user '%s' already exists in the base", login.c_str ());
-	}
-}
-
-sint userToLog(sint userPos)
-{
-	if (userPos == -1) return userPos;
-	else return Users[userPos].Id;
-}
-
-
-string checkLogin(const string &login)
+static string checkLogin(const string &login)
 {
 	if(login.empty())
 	{
@@ -227,361 +159,224 @@ string checkLogin(const string &login)
 			return toString("Bad login, character '%c' is not allowed", login[i]);
 		}
 	}
+
 	return "";
 }
 
-bool havePrivilege (string userPriv, string shardPriv)
+static void cbClientVerifyLoginPassword(CMessage &msgin, TSockId from, CCallbackNetBase &netbase)
 {
-	if (userPriv == "::")
-	{
-		return shardPriv == "::";
-	}
-	else
-	{
-		if (shardPriv == "::")
-			return true;
-		else
-			return userPriv.find (shardPriv) != string::npos;
-	}
-}
-
-
-
-
-
-
-
-
-
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////// CONNECTION TO THE WS ///////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-//
-// Callbacks
-//
-
-static void cbWSShardChooseShard(CMessage &msgin, const std::string &serviceName, uint16 sid)
-{
-	nlassert(ClientsServer != 0);
-
-	//
-	// S10: receive "SCS" message from WS
-	//
-
-	CMessage msgout("SCS");
-
-	string reason;
-	msgin.serial (reason);
-	msgout.serial (reason);
-
-	CLoginCookie cookie;
-	msgin.serial (cookie);
-
-	// search the cookie
-/*	map<uint32, CLoginCookie>::iterator it = TempCookies.find (cookie.getUserAddr ());
-	
-	if (it == TempCookies.end ())
-	{
-		// not found in TempCookies, can't do anything
-		nlwarning ("Receive an answer from welcome service but no connection waiting");
-		return;
-	}
-	
-*/	if (reason.empty())
-	{
-		msgout.serial (cookie);
-
-		string addr;
-		msgin.serial (addr);
-		msgout.serial (addr);
-	}
-
-	for (sint j = 0; j < (sint) Users.size (); j++)
-	{
-		if ((uint32)Users[j].SockId == cookie.getUserAddr())
-		{
-			ClientsServer->send (msgout, Users[j].SockId);
-			return;
-		}
-	}
-	nlwarning("no client found that waiting for connection");
-}
-
-static const TUnifiedCallbackItem WSCallbackArray[] =
-{
-	{ "SCS", cbWSShardChooseShard },
-};
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////// CONNECTION TO THE CLIENTS //////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////
-
-/**
- * Callback for service unregistration.
- *
- * Message expected :
- * - nothing
- */
-static void cbClientVerifyLoginPassword (CMessage &msgin, TSockId from, CCallbackNetBase &netbase)
-{
-	// reason is empty if everything goes right or contains the reason of the failure
-	string reason = "";
-
 	//
 	// S03: check the validity of the client login/password and send "VLP" message to client
 	//
 
-	string Login, Password;
-	msgin.serial (Login);
-	msgin.serial (Password);
+	// reason is empty if everything goes right or contains the reason of the failure
+	string reason;
+	sint32 uid = -1;
+	string login, password, cpassword;
+	msgin.serial (login);
+	msgin.serial (password);
+	cpassword = cryptPassword(password);
 
-	sint userPos = findUser (Login);
-	const CInetAddress &ia = netbase.hostAddress (from);
-
-	Output->displayNL ("***: %3d Login '%s' Ip '%s'", userToLog(userPos), Login.c_str(), ia.asString().c_str());
-
-	// recv the client version and check it
-
-	uint32 ClientVersion;
-	msgin.serial (ClientVersion);
-	if (ClientVersion < ServerVersion || ClientVersion > ServerVersion)
+	breakable
 	{
-		// reject the use, bad version
-		if (ClientVersion < ServerVersion)
-			reason = "Your client is out of date. You have to download the last version.";
-		else
-			reason = "Your client is too new compare to the server. You have to get an older version of the client.";
-		Output->displayNL ("---: %3d Bad Version, ClientVersion: %d ServerVersion: %d", userToLog(userPos), ClientVersion, ServerVersion);
-	}
+		reason = checkLogin(login);
+		if(!reason.empty()) break;
 
-	// recv client hardware info
+		MYSQL_RES *result;
+		MYSQL_ROW row;
+		sint32 nbrow;
 
-	string OS, Proc, Mem, Gfx;
+		reason = sqlQuery("select * from user where Login='"+login+"'", nbrow, row, result);
+		if(!reason.empty()) break;
 
-	msgin.serial (OS);
-	msgin.serial (Proc);
-	msgin.serial (Mem);
-	msgin.serial (Gfx);
-
-	if (!OS.empty()) Output->displayNL ("OS : %3d %s", userToLog(userPos), OS.c_str());
-	if (!Proc.empty()) Output->displayNL ("PRC: %3d %s", userToLog(userPos), Proc.c_str());
-	if (!Mem.empty()) Output->displayNL ("MEM: %3d %s", userToLog(userPos), Mem.c_str());
-	if (!Gfx.empty()) Output->displayNL ("GFX: %3d %s", userToLog(userPos), Gfx.c_str());
-
-	// check the login & pass
-
-	if (reason.empty())
-	{
-		reason = checkLogin (Login);
-		if(!reason.empty())
+		if(nbrow == 0)
 		{
-			// reject the new user, bad login format
-			Output->displayNL ("---: %3d %s", userToLog(userPos), reason.c_str());
-		}
-	}
-
-	if (reason.empty())
-	{
-		if (userPos == -1)
-		{
-			// unknown user
-			if (AcceptNewUser)
+			if(AcceptNewUsers)
 			{
-				// add the new user
-				addUser (Login, Password);
-				// take the new user entry
-				userPos = findUser (Login);
-				Output->displayNL ("---: %3d New User (new id:%d)", -1, userToLog(userPos));
+				// we accept new user, add it
+				reason = sqlQuery("insert into user (Login, Password) values ('"+login+"', '"+cpassword+"')", nbrow, row, result);
+				if(!reason.empty()) break;
 			}
 			else
 			{
-				// reject the new user
-				reason = "Bad login";
-				Output->displayNL ("---: %3d Bad Login", userToLog(userPos));
+				// can't accept new shard
+				reason = toString("Login '%s' doesn't exist and can't be added", login.c_str());
+				break;
 			}
 		}
-		else
-		{
-			// check id the account is active
 
-			if (!Users[userPos].Active)
-			{
-				reason = "Your account is unactive";
-				Output->displayNL ("---: %3d Your account is unactive", userToLog(userPos));
-			}
-			else
-			{
-				reason = checkPassword (Password, Users[userPos].Password);
-				if(reason.empty())
-					Output->displayNL ("---: %3d Ok", userToLog(userPos));
-				else
-					Output->displayNL ("---: %3d %s", userToLog(userPos), reason.c_str());
-			}
-		}
-	}
+		// now the user is on the database
 
-	if (reason.empty())
-	{
-		reason = Users[userPos].Authorize (from, netbase);
-	}
+		reason = sqlQuery("select * from user where Login='"+login+"'", nbrow, row, result);
+		if(!reason.empty()) break;
 
-	uint32 nbshard = 0;
-	if (reason.empty())
-	{
-		// count online shards
-		for (uint i = 0; i < Shards.size (); i++)
-		{
-			// add it only if the shard is on line and the user can go to this shard
-			if (Shards[i].Online /*&& havePrivilege(Users[userPos].ShardPrivilege, Shards[i].ShardName)*/)
-			{
-				nbshard++;
-			}
-		}
-		if (nbshard==0)
-		{
-			reason = "No shards available";
-		}
+		uid = atoi(row[0]);
 
-	}
+		const CInetAddress &ia = netbase.hostAddress (from);
+		Output->displayNL("***: %3d Login '%s' Ip '%s'", uid, login.c_str(), ia.asString().c_str());
 
-	CMessage msgout ("VLP");
+		string OS, Proc, Mem, Gfx;
+		
+		msgin.serial (OS);
+		msgin.serial (Proc);
+		msgin.serial (Mem);
+		msgin.serial (Gfx);
+		
+		if(!OS.empty()) Output->displayNL("OS : %3d %s", uid, OS.c_str());
+		if(!Proc.empty()) Output->displayNL("PRC: %3d %s", uid, Proc.c_str());
+		if(!Mem.empty()) Output->displayNL("MEM: %3d %s", uid, Mem.c_str());
+		if(!Gfx.empty()) Output->displayNL("GFX: %3d %s", uid, Gfx.c_str());
 
-	if (reason.empty())
-	{
-		uint8 ok = 1;
-		msgout.serial (ok);
+		reason = checkPassword(password, row[2]);
+		if(!reason.empty()) break;
 
-		// send number of online shard
-		msgout.serial (nbshard);
+		CLoginCookie c;
+		c.set((uint32)from, rand(), uid);
 
+		reason = sqlQuery("update user set State='Authorized', Cookie='"+c.setToString()+"' where UId="+toString(uid), nbrow, row, result);
+		if(!reason.empty()) break;
+
+		reason = sqlQuery("select * from shard where State='Online'", nbrow, row, result);
+		if(!reason.empty()) break;
+
+		// Send success message
+		Output->displayNL("---: %3d Ok", uid);
+		CMessage msgout ("VLP");
+
+		msgout.serial(reason);
+
+		msgout.serial(nbrow);
+		
 		// send address and name of all online shards
-		for (uint i = 0; i < Shards.size (); i++)
+		while(row != 0)
 		{
-			if (Shards[i].Online /*&& havePrivilege (Users[userPos].ShardPrivilege, Shards[i].ShardName)*/)
+			// serial the name of the shard
+			string shardname;
+			shardname = row[3];
+			
+			if (atoi(row[2]) == 0)
 			{
-				// serial the name of the shard
-				string shardname;
-				shardname = Shards[i].ShardName;
-
-				if (Shards[i].NbPlayers == 0)
-				{
-					shardname += " (empty)";
-				}
-				else
-				{
-					char num[1024];
-					smprintf(num, 1024, "%d", Shards[i].NbPlayers);
-					shardname += " (";
-					shardname += num;
-					if (Shards[i].NbPlayers == 1)
-						shardname += " player)";
-					else
-						shardname += " players)";
-				}
-				msgout.serial (shardname);
-				
-				// serial the address of the WS service
-				msgout.serial (Shards[i].ShardId);
+				shardname += " (no players)";
 			}
+			else
+			{
+				shardname += " (";
+				shardname += row[2];
+				if(atoi(row[2]) == 1)
+					shardname += " player)";
+				else
+					shardname += " players)";
+			}
+			msgout.serial (shardname);
+			
+			// serial the address of the WS service
+			uint32 sid = atoi(row[0]);
+			msgout.serial (sid);
+			row = mysql_fetch_row(result);
 		}
 		netbase.send (msgout, from);
-
 		netbase.authorizeOnly ("CS", from);
+
+		return;
 	}
-	else
-	{
-		// put the error message
-		uint8 ok = 0;
-		msgout.serial (ok);
-		msgout.serial (reason);
-		netbase.send (msgout, from);
-// FIX: On GNU/Linux, when we disconnect now, sometime the other side doesn't receive the message sent just before.
-//      So it is the other side to disconnect
-//		netbase.disconnect (from);
-	}
+
+	// Manage error
+	Output->displayNL("---: %3d %s", uid, reason.c_str());
+	CMessage msgout("VLP");
+	msgout.serial(reason);
+	netbase.send(msgout, from);
+	// FIX: On GNU/Linux, when we disconnect now, sometime the other side doesn't receive the message sent just before.
+	//      So it is the other side to disconnect
+	//		netbase.disconnect (from);
 }
 
-static void cbClientChooseShard (CMessage &msgin, TSockId from, CCallbackNetBase &netbase)
+static void cbClientChooseShard(CMessage &msgin, TSockId from, CCallbackNetBase &netbase)
 {
 	//
 	// S06: receive "CS" message from client
 	//
 
-	// first find if the user is authorized
-	for (vector<CUser>::iterator it = Users.begin (); it != Users.end (); it++)
+	string reason;
+
+	breakable
 	{
-		if ((*it).Authorized && (*it).SockId == from)
+		MYSQL_RES *result;
+		MYSQL_ROW row;
+		sint32 nbrow;
+		reason = sqlQuery("select * from user where State='Authorized'", nbrow, row, result);
+		if(!reason.empty()) break;
+
+		if(nbrow == 0)
 		{
-			// it's ok, so we found the wanted shard
-			uint32 ShardId;
-			msgin.serial (ShardId);
-
-			for (sint32 i = 0; i < (sint32) Shards.size (); i++)
-			{
-				if (Shards[i].Online && Shards[i].ShardId == ShardId && havePrivilege ((*it).ShardPrivilege, "::"))
-				{
-					CMessage msgout ("CS");
-					const CInetAddress &ia = netbase.hostAddress ((*it).SockId);
-					msgout.serial ((*it).Cookie);
-					msgout.serial ((*it).Login);
-					CUnifiedNetwork::getInstance ()->send (Shards[i].SId, msgout);
-					beep (1000, 1, 100, 100);
-					return;
-				}
-			}
-			// the shard is not available, denied the user
-			nlwarning("User try to choose a shard without authorization");
-
-			CMessage msgout ("SCS");
-			uint8 ok = false;
-			string reason = "Selected shard is not available";
-			msgout.serial (ok);
-			msgout.serial (reason);
-			netbase.send (msgout, from);
-// FIX: On linux, when we disconnect now, sometime the other side doesnt receive the message sent just before.
-//      So it's the other side to disconnect
-//			netbase.disconnect (from);
-			return;
+			reason = "You are not authorized to select a shard";
+			break;
 		}
+
+		bool ok = false;
+		while(row != 0)
+		{
+			CLoginCookie lc;
+			lc.setFromString(row[6]);
+			if(lc.getUserAddr() == (uint32)from)
+			{
+				ok = true;
+				break;
+			}
+			row = mysql_fetch_row(result);
+		}
+	
+		if(!ok)
+		{
+			reason = "You are not authorized to select a shard";
+			break;
+		}
+
+		// it is ok, so we find the wanted shard
+		uint32 shardid;
+		msgin.serial(shardid);
+
+		MYSQL_RES *result2;
+		MYSQL_ROW row2;
+		sint32 nbrow2;
+		reason = sqlQuery("select * from shard where ShardId="+toString(shardid), nbrow2, row2, result2);
+		if(!reason.empty()) break;
+
+		if(nbrow2 == 0)
+		{
+			reason = "This shard is not available";
+			break;
+		}
+
+		uint16 sid = atoi(row2[5]);
+
+		reason = sqlQuery("update user set State='Waiting', ShardId="+toString(shardid)+" where UId="+row[0], nbrow2, row2, result2);
+		if(!reason.empty()) break;
+		
+		CMessage msgout("CS");
+		string cookie = row[6];
+		msgout.serial(cookie);
+		string name = row[1];
+		msgout.serial(name);
+		CUnifiedNetwork::getInstance()->send(sid, msgout);
+
+		return;
 	}
 
-	// the user isn t authorized
-	nlwarning("User try to choose a shard without authorization");
-	// disconnect him
-	netbase.disconnect (from);
+	// Manage error
+	CMessage msgout("SCS");
+	msgout.serial(reason);
+	netbase.send(msgout, from);
+	// FIX: On GNU/Linux, when we disconnect now, sometime the other side doesn't receive the message sent just before.
+	//      So it's the other side to disconnect
+	//			netbase.disconnect (from);
 }
 
 static void cbClientConnection (TSockId from, void *arg)
 {
 	CCallbackNetBase *cnb = ClientsServer;
 	const CInetAddress &ia = cnb->hostAddress (from);
-
 	nldebug("new client connection: %s", ia.asString ().c_str ());
-
 	Output->displayNL ("CCC: Connection from %s", ia.asString ().c_str ());
-
-	if (ia.asString().find ("nevrax") != string::npos)
-	{
-		// internal connection
-		beep ();
-	}
-	else
-	{
-		// external connection
-		beep (1000, 2, 100, 100);
-	}
-
 	cnb->authorizeOnly ("VLP", from);
 }
 
@@ -592,23 +387,30 @@ static void cbClientDisconnection (TSockId from, void *arg)
 
 	nldebug("new client disconnection: %s", ia.asString ().c_str ());
 
-	// remove the user if necessary
-	for (vector<CUser>::iterator it = Users.begin (); it != Users.end (); it++)
+	string reason;
+	
+	MYSQL_RES *result;
+	MYSQL_ROW row;
+	sint32 nbrow;
+	reason = sqlQuery("select * from user where State!='Offline'", nbrow, row, result);
+	if(!reason.empty()) return;
+		
+	if(nbrow == 0)
 	{
-		if ((*it).SockId == from)
+		return;
+	}
+	
+	while(row != 0)
+	{
+		CLoginCookie lc;
+		lc.setFromString(row[6]);
+		if(lc.getUserAddr() == (uint32)from)
 		{
-			if ((*it).State == CUser::Awaiting)
-			{
-				// the user is disconnected from me because he have to connect to the front end right now, so we wait...
-			}
-			else
-			{
-				// prematurated disconnection, clean everything
-				// ace disconnectClient (*it, false, false);
-			}
-			(*it).SockId = 0;
+			// got it
+			sqlQuery("update user set State='Offline', ShardId=-1, Cookie='' where UId="+string(row[0]), nbrow, row, result);
 			return;
 		}
+		row = mysql_fetch_row(result);
 	}
 }
 
@@ -633,10 +435,6 @@ void connectionClientInit ()
 	ClientsServer->addCallbackArray(ClientCallbackArray, sizeof(ClientCallbackArray)/sizeof(ClientCallbackArray[0]));
 	ClientsServer->setConnectionCallback(cbClientConnection, 0);
 	ClientsServer->setDisconnectionCallback(cbClientDisconnection, 0);
-
-	// catch the messages from Welcome Service to know if the user can connect or not
-	CUnifiedNetwork::getInstance ()->addCallbackArray (WSCallbackArray, sizeof(WSCallbackArray)/sizeof(WSCallbackArray[0]));
-	
 }
 
 void connectionClientUpdate ()

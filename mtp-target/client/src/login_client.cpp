@@ -69,11 +69,10 @@ void cbVerifyLoginPassword (CMessage &msgin, TSockId from, CCallbackNetBase &net
 	// S04: receive the "VLP" message from LS
 	//
 
-	uint8 ok;
-	msgin.serial (ok);
-	if (ok)
+	msgin.serial (VerifyLoginPasswordReason);
+	if(VerifyLoginPasswordReason.empty())
 	{
-		uint32 nbshard = 0;
+		uint32 nbshard;
 		msgin.serial (nbshard);
 
 		CLoginClientMtp::ShardList.clear ();
@@ -87,10 +86,6 @@ void cbVerifyLoginPassword (CMessage &msgin, TSockId from, CCallbackNetBase &net
 			msgin.serial (se.ShardId);
 			CLoginClientMtp::ShardList.push_back (se);
 		}		
-	}
-	else
-	{
-		msgin.serial (VerifyLoginPasswordReason);
 	}
 	VerifyLoginPassword = true;
 }
