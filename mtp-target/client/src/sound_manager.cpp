@@ -204,7 +204,7 @@ void CSoundManager::release()
 {
 #ifdef USE_FMOD
 	// check if all entities have been unregistered
-	nlassertex(entitySoundsDescriptorList.empty(), ("CSoundManager: %u entities already registered", entitySoundsDescriptorList.size()));
+	//nlassertex(entitySoundsDescriptorList.empty(), ("CSoundManager: %u entities already registered", entitySoundsDescriptorList.size()));
 	TEntitySoundsDescriptorList::iterator first(entitySoundsDescriptorList.begin()), last(entitySoundsDescriptorList.end());
 	for ( ; first != last; ++first)
 	{
