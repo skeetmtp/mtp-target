@@ -237,6 +237,8 @@ void CCamera::update()
 			lookAt(MatrixFollow, Position, CurrentLookAt + CVector(0,0.00001f, 0), up);
 	}
 
+	if(C3DTask::instance().levelParticle()!=0)
+		C3DTask::instance().levelParticle()->setPos(Position);
 }
 
 bool CCamera::updateRampe(float backDist,float height,float targetBackDist,float targetHeight)

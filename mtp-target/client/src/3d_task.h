@@ -69,6 +69,7 @@ public:
 		
 	void				captureCursor(bool b);
 
+	NL3D::UInstance     *levelParticle()  { return LevelParticle;};
 private:
 	
 	NL3D::UDriver			*Driver;

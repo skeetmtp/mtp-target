@@ -188,7 +188,9 @@ void C3DTask::init()
 	Scene->setPolygonBalancingMode(UScene::PolygonBalancingOn);
 	Scene->setGroupLoadMaxPolygon("Fx", CConfigFileTask::instance().configFile().getVar("FxNbMaxPoly").asInt());
 
-/*
+
+	//too much particles , no left to trace.ps
+	/*
 	if(CConfigFileTask::instance().configFile().getVar("DisplayParticle").asInt() == 1)
 	{
 		string res;
@@ -201,7 +203,8 @@ void C3DTask::init()
 			LevelParticle->setOrderingLayer(2);
 		}
 	}
-*/
+	*/
+
 
 #ifdef NL_OS_WINDOWS
 	HWND hWnd = (HWND )Driver->getDisplay();

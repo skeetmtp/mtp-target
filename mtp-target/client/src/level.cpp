@@ -177,10 +177,14 @@ CLevel::CLevel(const string &filename)
 	DisplayLevel = true;
 
 	Valid = true;
+	if(C3DTask::instance().levelParticle()!=0)
+		C3DTask::instance().levelParticle()->show();
 }
 
 CLevel::~CLevel()
 {
+	if(C3DTask::instance().levelParticle()!=0)
+		C3DTask::instance().levelParticle()->hide();
 
 	if(changed())
 		CResourceManager::instance().refresh(FileName);

@@ -476,8 +476,8 @@ void mtpTarget::init()
 //			C3DTask::instance().scene().deleteInstance(nelLogoParticle);
 //			nelLogoParticle = 0;
 //		}
-//		if(nelLevelParticle!=0)
-//			nelLevelParticle->show();
+//		if(C3DTask::instance().levelParticle()!=0)
+//			C3DTask::instance().levelParticle()->show();
 
 //		if(CConfigFileTask::instance().configFile().getVar("CaptureMouse").asInt() == 1)
 //		{
