@@ -116,7 +116,7 @@ void CLevel::_luaInit()
 	uint8 startPositionId = 0;
 	for(uint i = 0; i < luaStartPoints.size(); i++)
 	{
-		nlinfo("start point : %g %g %g", luaStartPoints[i].x, luaStartPoints[i].y, luaStartPoints[i].z);
+//		nlinfo("start point : %g %g %g", luaStartPoints[i].x, luaStartPoints[i].y, luaStartPoints[i].z);
 		CAngleAxis Rotation(CVector(1,0,0),0);
 		CStartPoint *startPosition = new CStartPoint();
 		startPosition->init("start pos",startPositionId,luaStartPoints[i],Rotation);
@@ -235,8 +235,8 @@ void CLevel::updateModule(uint32 id,CVector pos,CVector rot)
 
 uint8 CLevel::getStartPointCount() 
 {
-	nlassert(Modules.size()<255);
-	return Modules.size();
+	nlassert(StartPoints.size()<255);
+	return StartPoints.size();
 }
 
 
