@@ -1,6 +1,6 @@
 ; Define your application name
 !define APPNAME "object-viewer"
-!define APPVERSION "1.0.0"
+!define APPVERSION "1.0.1"
 !define APPOLDVERSION "1.0.0"
 !define APPNAMEANDVERSION "${APPNAME} ${APPVERSION}"
 
