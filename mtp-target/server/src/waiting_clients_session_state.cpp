@@ -118,7 +118,7 @@ void CWaitingClientsSessionState::update()
 		
 		CNetMessage msgout(CNetMessage::StartSession);
 		msgout.serial(TimeBeforeStart);
-		float ttimeout = CLevelManager::instance().timeTimeout();
+		float ttimeout = (float)CLevelManager::instance().timeTimeout();
 		msgout.serial(ttimeout);
 		msgout.serial(CurrentLevel, string1, string2);
 		//ace		msgout.serial(CurrentLevel, LevelName, string1, string2, Author);
