@@ -59,7 +59,6 @@ public:
 		EndSession,			//    SC
 		EditMode,			// CS SC
 		Error,				//    SC
-		ExecLua,			//    SC
 		Force,				// CS
 		Login,				// CS SC
 		Logout,				//    SC
@@ -75,6 +74,7 @@ public:
 		FullUpdate,			//    SC
 		UpdateElement,		// CS SC
 		EnableElement,		//    SC
+		ExecLua,			//    SC
 	};
 
 	CNetMessage(TType type = Unknown, bool inputStream = false);
