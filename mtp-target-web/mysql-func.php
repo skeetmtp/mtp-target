@@ -3,7 +3,7 @@ include_once("config.php");
 
 function exec_requete($requete)
 {
-	$MySqlLinkIdentifier = mysql_connect("$host","$base","$password") or die($die_message);
+	$MySqlLinkIdentifier = mysql_connect( $host, $base, $password) or die($die_message);
 
 	mysql_select_db("$base") or die($die_message);
 
