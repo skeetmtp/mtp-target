@@ -389,7 +389,7 @@ int CLuaEngine::getTimeRemaining(lua_State *L)
 	TTime timeRemaining = startTime+(TTime)CLevelManager::instance().timeTimeout() - localtime;
 	if(CSessionManager::instance().currentStateName()!="Running")
 		timeRemaining = (TTime)CLevelManager::instance().timeTimeout();
-	lua_Number res = (lua_Number)(timeRemaining / 1000);
+	lua_Number res = ((lua_Number)(timeRemaining)) / 1000;
 	if(res<0)
 		res = 0;
 	lua_pushnumber(L,res); 
