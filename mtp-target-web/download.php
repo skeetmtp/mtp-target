@@ -25,6 +25,10 @@ echo "<h3>$menuLinkText_Download</h3>";
 
 	<tr><td bgcolor="<?php echo $table_news_head_color;?>"><b>&nbsp;Windows Full version&nbsp;</b></td></tr>
 	<?php
+		function returnFileSize($fn,$precision=2) {
+			$sizeInBytes = filesize($fn);
+			return ($sizeInBytes < 1024)?"$sizeInBytes bytes":round(($sizeInBytes / pow(1024,floor(log($sizeInBytes,1024)))),$precision)." ".substr(" KMGT",log($sizeInBytes,1024),1)."b";
+		}
 
 		$dirname = "./download/";
 		$d = dir($dirname);
@@ -43,7 +47,7 @@ echo "<h3>$menuLinkText_Download</h3>";
 				if(strstr($entry,"update")=="" && strstr($entry,"mtp-target")!="" && strstr($entry,".exe")!="" )
 				{
 					printf("<tr>");
-					printf("<td bgcolor=\"%s\">&nbsp;<a href=\"$f\"><img src=\"download.png\" ALT=\"file\"> $entry</a>&nbsp;</td>",$table_news_row_color);
+					printf("<td bgcolor=\"%s\">&nbsp;<a href=\"$f\"><img src=\"download.png\" ALT=\"file\"> $entry</a> (".returnFileSize($f).")&nbsp;</td>",$table_news_row_color);
 					printf("</tr>");
 					$count++;
 				}
@@ -74,10 +78,10 @@ echo "<h3>$menuLinkText_Download</h3>";
 			$t = filetype($f);
 			if($t == "file")
 			{
-				if(strstr($entry,"update")=="" && strstr($entry,"mtp-target")!="" && strstr($entry,".tgz")!="" )
+				if(strstr($entry,"update")=="" && strstr($entry,"mtp-target")!="" && strstr($entry,".tar.bz2")!="" )
 				{
 					printf("<tr>");
-					printf("<td bgcolor=\"%s\">&nbsp;<a href=\"$f\"><img src=\"download.png\" ALT=\"file\"> $entry</a>&nbsp;</td>",$table_news_row_color);
+					printf("<td bgcolor=\"%s\">&nbsp;<a href=\"$f\"><img src=\"download.png\" ALT=\"file\"> $entry</a> (".returnFileSize($f).")&nbsp;</td>",$table_news_row_color);
 					printf("</tr>");
 					$count++;
 				}
@@ -92,7 +96,7 @@ echo "<h3>$menuLinkText_Download</h3>";
 		}
 	?>
 	<tr><td><b>&nbsp;&nbsp;</b></td></tr>
-	<tr><td bgcolor="<?php echo $table_news_head_color;?>"><b>&nbsp;Update&nbsp;</b></td></tr>
+	<tr><td bgcolor="<?php echo $table_news_head_color;?>"><b>&nbsp;Windows Update&nbsp;</b></td></tr>
 	<?php
 
 		$dirname = "./download/";
@@ -112,7 +116,7 @@ echo "<h3>$menuLinkText_Download</h3>";
 				if(strstr($entry,"update")!="")
 				{
 					printf("<tr>");
-					printf("<td bgcolor=\"%s\">&nbsp;<a href=\"$f\"><img src=\"download.png\" ALT=\"file\"> $entry</a>&nbsp;</td>",$table_news_row_color);
+					printf("<td bgcolor=\"%s\">&nbsp;<a href=\"$f\"><img src=\"download.png\" ALT=\"file\"> $entry</a> (".returnFileSize($f).")&nbsp;</td>",$table_news_row_color);
 					printf("</tr>");
 					$count++;
 				}
@@ -147,7 +151,42 @@ echo "<h3>$menuLinkText_Download</h3>";
 				//if(strstr($entry,"update")=="" && strstr($entry,"mtp-target")==""  && strstr($entry,"index")=="" )
 				{
 					printf("<tr>");
-					printf("<td bgcolor=\"%s\">&nbsp;<a href=\"$f\"><img src=\"download.png\" ALT=\"file\"> $entry</a>&nbsp;</td>",$table_news_row_color);
+					printf("<td bgcolor=\"%s\">&nbsp;<a href=\"$f\"><img src=\"download.png\" ALT=\"file\"> $entry</a> (".returnFileSize($f).")&nbsp;</td>",$table_news_row_color);
+					printf("</tr>");
+					$count++;
+				}
+			}
+		}
+		$d->close();
+		if($count==0)
+		{
+			printf("<tr>");
+			printf("<td bgcolor=\"%s\">No file available</td>",$table_news_row_color);
+			printf("</tr>");
+		}
+	?>
+	<tr><td><b>&nbsp;&nbsp;</b></td></tr>
+	<tr><td bgcolor="<?php echo $table_news_head_color;?>"><b>&nbsp;Videos&nbsp;</b></td></tr>
+	<?php
+
+		$dirname = "./download/";
+		$d = dir($dirname);
+		$count = 0;
+		while (false !== ($entry = $d->read())) 
+		{
+			if(($count%2)==0)
+				$color = $table_row_even_color;
+			else
+				$color = $table_row_odd_color;
+			
+			$f = $dirname . $entry ;
+			$t = filetype($f);
+			if($t == "file")
+			{
+				if(strstr($entry,".avi")!="")
+				{
+					printf("<tr>");
+					printf("<td bgcolor=\"%s\">&nbsp;<a href=\"$f\"><img src=\"download.png\" ALT=\"file\"> $entry</a> (".returnFileSize($f).")&nbsp;</td>",$table_news_row_color);
 					printf("</tr>");
 					$count++;
 				}
