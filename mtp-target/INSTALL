@@ -12,14 +12,15 @@ To compile Mtp Target, you needs followings libraries :
 
 On Debian you can easily get package : apt-get install <module name>
 You will need some other library : 
-- NeL : see http://mtp-target.dyndns.org/wiki/index.php for more information
+- NeL : see http://www.nevrax.org for more information
 - fmod (optionnal) : http://www.fmod.org/
-- ODE 0.039(not the cvs version) : http://ode.org/
+- ODE 0.05(not the cvs version) : http://ode.org/
 
-* Edit client/src/Makefile to change external library paths and includes
-* Edit server/src/Makefile to change external library paths and includes
+* Edit Variables.mk to change external library paths and includes
 
-* make
+* make update
+
+* make 
 
 * Dynamic libraries needs to be in LD_LIBRARY_PATH variable :
   export LD_LIBRARY_PATH=$(HOME)/external/nel/lib
