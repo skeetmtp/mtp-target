@@ -97,6 +97,8 @@ void CControler::swapOpenClose()
 	//RotZ  = 0;
 	Pique = 1.0f;
 	Accel = CVector::Null;
+	MissedTime = 0;
+	VirtualFrameTime = 0.0f;
 }
 
 void CControler::update()

@@ -158,7 +158,7 @@ static void cbOpenClose(CNetMessage &msgin)
 {
 	uint8 eid;
 	msgin.serial(eid);
-	nlinfo("NET: cbOpenClose eid=%hu", (uint16)eid);
+	nlinfo("NET: cbOpenClose eid=%hu (%s)", (uint16)eid,CEntityManager::instance()[eid].name().c_str());
 
 	// check if the player exists
 	if(!CEntityManager::instance().exist(eid)) { nlwarning("The eid doesn't exist"); return; }
