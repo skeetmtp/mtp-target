@@ -49,6 +49,7 @@ end
 local targetName;
 
 function Entity:init()
+  self:enableOpenCloseCommand(0);
   self:setDensity(1);
   self:setDefaultAccel(0.000005);
   self:setDefaultFriction(10.0);

@@ -75,6 +75,7 @@ public:
 
 	float defaultAccel();
 	void defaultAccel(float a);
+	void enableOpenCloseCommand(bool e);
 	
 	// accessors
 
@@ -147,6 +148,7 @@ public:
 	bool				 LuaInit;
 	float				 DefaultAccel;
 	float				 DefaultFriction;
+	bool				 EnableOpenCloseCommand;
 	
 private:
 

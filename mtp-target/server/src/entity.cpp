@@ -80,6 +80,7 @@ void CEntity::init ()
 	InGame = false;
 	Ready = false;
 	WaitingReady = false;
+	EnableOpenCloseCommand = true;
 	LastVelPos = 0;
 	StartingPointId = 255;
 	OnTheWater = false;
@@ -221,6 +222,7 @@ void CEntity::reset()
 	DefaultAccel = 0;
 	DefaultFriction = 0;
 	MaxLinearVelocity = 0;
+	EnableOpenCloseCommand = true;
 }
 
 void CEntity::update() 
@@ -273,6 +275,9 @@ void CEntity::isOpen(bool open)
 
 bool CEntity::openClose()
 {
+	if(!EnableOpenCloseCommand)
+		return false;
+
 	if(FreezeCommand)
 	{
 		nlinfo("Client '%s' tries to %s but he is frozen", Name.c_str(), (OpenClose?"open":"close"));
@@ -408,6 +413,11 @@ void CEntity::defaultAccel(float a)
 	DefaultAccel = a;
 }
 
+void CEntity::enableOpenCloseCommand(bool e)
+{
+	EnableOpenCloseCommand = e;
+}
+
 
 //
 // Commands
@@ -417,5 +427,6 @@ void CEntity::defaultAccel(float a)
 //
 //
 //
+
 
 

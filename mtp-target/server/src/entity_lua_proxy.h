@@ -52,6 +52,7 @@ public:
 	int setUserData(lua_State *luaSession);
 	int getIsOpen(lua_State *luaSession);
 	int setIsOpen(lua_State *luaSession);
+	int enableOpenCloseCommand(lua_State *luaSession);
 	int getOpenCloseCount(lua_State *luaSession);
 	int setOpenCloseCount(lua_State *luaSession);
 	int getOpenCloseMax(lua_State *luaSession);

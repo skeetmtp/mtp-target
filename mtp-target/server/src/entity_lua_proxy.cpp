@@ -50,6 +50,7 @@ Lunar<CEntityProxy>::RegType CEntityProxy::methods[] =
 		bind_method(CEntityProxy, getUserData),	
 		bind_method(CEntityProxy, setUserData),	
 		bind_method(CEntityProxy, getName),	
+		bind_method(CEntityProxy, enableOpenCloseCommand),	
 		bind_method(CEntityProxy, getOpenCloseCount),	
 		bind_method(CEntityProxy, setOpenCloseCount),	
 		bind_method(CEntityProxy, getOpenCloseMax),	
@@ -333,5 +334,12 @@ int CEntityProxy::setArrivalTime(lua_State *luaSession)
 {
 	TTime currentTime = CTime::getLocalTime();
 	_entity->ArrivalTime =(float)(currentTime - CSessionManager::instance().startTime())/1000.0f;
+	return 0;	
+}
+
+int CEntityProxy::enableOpenCloseCommand(lua_State *luaSession)
+{
+	bool e = luaL_checknumber(luaSession,1)==1;
+	_entity->enableOpenCloseCommand(e);
 	return 0;	
 }
