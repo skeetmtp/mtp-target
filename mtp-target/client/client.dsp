@@ -430,6 +430,14 @@ SOURCE=.\Src\resource_manager.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\src\resource_manager2.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\src\resource_manager2.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\Src\score_task.cpp
 # End Source File
 # Begin Source File

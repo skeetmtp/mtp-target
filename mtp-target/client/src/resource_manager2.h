@@ -22,12 +22,9 @@
 // This class manages the loading of a level
 //
 
-#ifndef MTPT_RESOURCE_MANAGER
-#define MTPT_RESOURCE_MANAGER
+#ifndef MTPT_RESOURCE_MANAGER2
+#define MTPT_RESOURCE_MANAGER2
 
-#if 1 //use new resource manager
-#include "resource_manager2.h"
-#else
 
 //
 // Includes
@@ -90,5 +87,4 @@ private:
 	std::string			CacheDirectory;
 };
 
-#endif
 #endif

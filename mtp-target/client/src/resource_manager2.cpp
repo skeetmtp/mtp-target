@@ -24,7 +24,6 @@
 
 #include "stdpch.h"
 
-
 #include <nel/misc/file.h>
 #include <nel/misc/path.h>
 
@@ -56,9 +55,7 @@
 #include "font_manager.h"
 #include "background_task.h"
 #include "config_file_task.h"
-#include "resource_manager.h"
-
-#ifndef MTPT_RESOURCE_MANAGER2
+#include "resource_manager2.h"
 
 
 //
@@ -504,5 +501,3 @@ string CResourceManager::get(const string &filename, bool &ok)
 	ok = true;
 	return destfn;
 }
-
-#endif
