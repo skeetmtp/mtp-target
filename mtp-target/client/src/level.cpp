@@ -266,6 +266,7 @@ CLevel::CLevel(const string &filename)
 
 CLevel::~CLevel()
 {
+	CTaskManager::instance().remove(CWaterTask::instance());
 	CTaskManager::instance().remove(CSkyTask::instance());
 	CTaskManager::instance().remove(CLensFlareTask::instance());
 
@@ -299,6 +300,7 @@ CLevel::~CLevel()
 
 CVector CLevel::startPosition(uint32 id)
 {
+	if(StartPoints.size()==0) return CVector::Null;
 	return StartPoints[id]->position();
 }
 
