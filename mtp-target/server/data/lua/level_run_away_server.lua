@@ -64,13 +64,13 @@ function Entity:init()
     t = 1;
   end
   if(t==0) then
-  	self:displayText(0,4,1,255,0,0,"You are the target",15);
+  	self:displayText(0,5,1,255,0,0,"You are the target",15);
   	targetName = self:getName();
   	parent.startTargetTime = getLevelTimeout();
   	execLuaOnAllClient("getEntityByName(\""..self:getName().."\"):setColor(255,255,0,255);");
         self:setDensity(5);
   else
-  	self:displayText(0,4,1,255,0,0,"You have to hit : "..targetName,15);
+  	self:displayText(0,5,1,255,0,0,"You have to hit : "..targetName,15);
   	execLuaOnAllClient("getEntityByName(\""..self:getName().."\"):setColor(255,255,255,255);");
   end
 
@@ -91,13 +91,13 @@ end
 function swapRabbit(oldRabbit, newRabbit)
   	oldRabbit:parent().team = 1;
   	newRabbit:parent().team = 0;
-  	newRabbit:displayText(0,5,1,255,255,0,"you hit target",15);
-  	oldRabbit:displayText(0,5,1,255,0,0,"you have been hit",15);
-        displayTextToAll(0,4,1,255,0,0,"new target : "..newRabbit:getName(),10);
+  	newRabbit:displayText(0,6,1,255,255,0,"you hit target",15);
+  	oldRabbit:displayText(0,6,1,255,0,0,"you have been hit",15);
+        displayTextToAll(0,5,1,255,0,0,"new target : "..newRabbit:getName(),10);
   	oldRabbit:setCurrentScore(oldRabbit:getCurrentScore() + (oldRabbit:parent().startTargetTime - getTimeRemaining()) * 10);
   	execLuaOnAllClient("getEntityByName(\""..oldRabbit:getName().."\"):setCurrentScore("..oldRabbit:getCurrentScore()..");");
   	newRabbit:parent().startTargetTime = getTimeRemaining();
-        oldRabbit:displayText(0,6,1,255,255,255,"score : "..oldRabbit:getCurrentScore(),10);
+        oldRabbit:displayText(0,7,1,255,255,255,"score : "..oldRabbit:getCurrentScore(),10);
   	execLuaOnAllClient("getEntityByName(\""..newRabbit:getName().."\"):setColor(255,255,0,255);");
   	execLuaOnAllClient("getEntityByName(\""..oldRabbit:getName().."\"):setColor(255,255,255,255);");
         oldRabbit:setDensity(1);
@@ -115,7 +115,7 @@ function entityLeaveEvent ( entity )
       if(getEntity(i):getEid()~=entity:getEid()) then
         getEntity(i):parent().team = 0;
   	getEntity(i):parent().startTargetTime = getTimeRemaining();
-  	displayTextToAll(0,4,1,255,0,0,"New target : "..getEntity(i):getName(),15);
+  	displayTextToAll(0,5,1,255,0,0,"New target : "..getEntity(i):getName(),15);
   	break;
       end
     end
