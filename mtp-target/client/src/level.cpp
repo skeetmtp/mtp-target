@@ -44,6 +44,7 @@ extern "C"
 #include "editor_task.h"
 #include "task_manager.h"
 #include "entity_manager.h"
+#include "lens_flare_task.h"
 #include "config_file_task.h"
 #include "resource_manager.h"
 #include "../../common/lua_nel.h"
@@ -76,14 +77,6 @@ using namespace NLMISC;
 // Functions
 //
 
-void luaGetStrVariable(lua_State *L, std::string &var)
-{
-	int isString = lua_isstring(L,-1);
-	const char *res = lua_tostring(L, -1);
-	var = res;
-	lua_pop(L, 1);
-}
-
 CLevel::CLevel(const string &filename)
 {
 	nlinfo("Trying to load level '%s'", filename.c_str());
@@ -96,9 +89,6 @@ CLevel::CLevel(const string &filename)
 
 	LuaState = luaOpenAndLoad(filename);
 
-	string skyName;
-	nlinfo("skyName '%s'", skyName.c_str());
-	
 	luaGetGlobalVariable(LuaState, Name);
 	nlinfo("level name '%s'", Name.c_str());
 	
@@ -205,13 +195,38 @@ CLevel::CLevel(const string &filename)
 	if(C3DTask::instance().levelParticle()!=0)
 		C3DTask::instance().levelParticle()->show();
 
-	//CSkyTask::instance().shapeName("sky.shape");
+	string skyShapeFileName;
+	luaGetGlobalVariable(LuaState, skyShapeFileName);
+	nlinfo("skyShapeFileName '%s'", skyShapeFileName.c_str());
+	CSkyTask::instance().shapeName(skyShapeFileName);
+	string skyEnvMap0Name;
+	luaGetGlobalVariable(LuaState, skyEnvMap0Name);
+	nlinfo("skyEnvMap0Name '%s'", skyEnvMap0Name.c_str());
+	CSkyTask::instance().envMap0Name(skyEnvMap0Name);
+	string skyEnvMap1Name;
+	luaGetGlobalVariable(LuaState, skyEnvMap1Name);
+	nlinfo("skyEnvMap1Name '%s'", skyEnvMap1Name.c_str());
+	CSkyTask::instance().envMap1Name(skyEnvMap1Name);
+	string skyHeightMap0Name;
+	luaGetGlobalVariable(LuaState, skyHeightMap0Name);
+	nlinfo("skyHeightMap0Name '%s'", skyHeightMap0Name.c_str());
+	CSkyTask::instance().heightMap0Name(skyHeightMap0Name);
+	string skyHeightMap1Name;
+	luaGetGlobalVariable(LuaState, skyHeightMap1Name);
+	nlinfo("skyHeightMap1Name '%s'", skyHeightMap1Name.c_str());
+	CSkyTask::instance().heightMap1Name(skyHeightMap1Name);
+	
 	CTaskManager::instance().add(CSkyTask::instance(), 100);
+
+	CTaskManager::instance().add(CLensFlareTask::instance(), 140);
+	
 }
+
 
 CLevel::~CLevel()
 {
-	CSkyTask::instance().stop();
+	CTaskManager::instance().remove(CSkyTask::instance());
+	CTaskManager::instance().remove(CLensFlareTask::instance());
 
 	if(C3DTask::instance().levelParticle()!=0)
 		C3DTask::instance().levelParticle()->hide();

@@ -47,6 +47,18 @@ public:
 
 	virtual std::string name() { return "CLensFlareTask"; }
 
+	friend class CSingleton<CLensFlareTask>;
+protected:
+	CLensFlareTask();
+	
+private:
+	NL3D::UTextureFile *flareTexture1;
+	NL3D::UTextureFile *flareTexture3;
+	NL3D::UTextureFile *flareTexture4;
+	NL3D::UTextureFile *flareTexture5;
+	NL3D::UTextureFile *flareTexture6;
+	NL3D::UTextureFile *flareTexture7;
+	
 };
 
 #endif

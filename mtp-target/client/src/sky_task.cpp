@@ -85,6 +85,13 @@ CSkyTask::CSkyTask():ITask()
 	EnvMap1Name = "water_env.tga";
 	HeightMap0Name = "water_disp.tga";
 	HeightMap1Name = "water_disp2.tga";
+
+	nelSkyScene   = NULL;
+	nelSkyMesh    = NULL;
+	nelCloudScape = NULL;
+	WaterShape    = NULL;
+	WaterModel    = NULL;
+	WaterMesh     = NULL;	
 }
 
 void cbVar (CConfigFile::CVar &var)
@@ -136,7 +143,6 @@ void CSkyTask::init()
 	}
 
 ////
-
 	if(CConfigFileTask::instance().configFile().getVar("DisplayWater").asInt() == 2)
 	{
 		string res;
@@ -267,31 +273,55 @@ void CSkyTask::render()
 
 void CSkyTask::release()
 {
+	if(nelSkyMesh)
+	{
+		nelSkyScene->deleteInstance(nelSkyMesh);
+		nelSkyMesh = NULL;
+	}
+
+	if(nelCloudScape)
+	{
+		nelSkyScene->deleteCloudScape(nelCloudScape);
+		nelCloudScape = NULL;
+	}
+
+	if(nelSkyScene)
+	{
+		C3DTask::instance().driver().deleteScene(nelSkyScene);
+		nelSkyScene = NULL;
+	}
+
+	
 }
 
 
 void CSkyTask::shapeName(std::string shapeName)
 {
+	if(shapeName.empty()) return;
 	ShapeName = shapeName;
 }
 
 void CSkyTask::envMap0Name(std::string envMapName)
 {
+	if(envMapName.empty()) return;
 	EnvMap0Name = envMapName;
 }
 
 void CSkyTask::envMap1Name(std::string envMapName)
 {
+	if(envMapName.empty()) return;
 	EnvMap1Name = envMapName;
 }
 
 void CSkyTask::heightMap0Name(std::string heightMap)
 {
+	if(heightMap.empty()) return;
 	HeightMap0Name = heightMap;
 }
 
 void CSkyTask::heightMap1Name(std::string heightMap)
 {
+	if(heightMap.empty()) return;
 	HeightMap1Name = heightMap;
 }
 

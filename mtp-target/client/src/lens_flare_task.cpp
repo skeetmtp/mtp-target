@@ -97,6 +97,13 @@ class CLensFlare
 			// texture scale
 			Scale = scale;
 		}
+
+		~_CFlare()
+		{
+			nlassert(Material);
+			C3DTask::instance().driver().deleteMaterial(Material);
+			Material = 0;
+		}
 	};
 
 	/// flares due to light
@@ -109,7 +116,17 @@ public:
 	{
 		_AlphaCoef = 1.0f;
 	}
-
+	~CLensFlare()
+	{
+		std::vector<_CFlare *>::iterator it;
+		for(it=_Flares.begin();it!=_Flares.end();it++)
+		{
+			_CFlare *fl = *it;
+			delete fl;
+		}
+		_Flares.clear();
+	}
+		
 	/// add a flare to the flare list
 	void addFlare(NL3D::UTexture * texture, float width, float height, float location = 1.f, float scale = 1.f);
 
@@ -200,6 +217,21 @@ static CLensFlare	*LensFlare = 0;
 
 
 
+
+
+CLensFlareTask::CLensFlareTask()
+{
+	LensFlare = 0;
+
+	flareTexture1 = 0;
+	flareTexture3 = 0;
+	flareTexture4 = 0;
+	flareTexture5 = 0;
+	flareTexture6 = 0;
+	flareTexture7 = 0;
+	
+}
+
 void CLensFlareTask::init()
 {
 	LensFlare = new CLensFlare ();
@@ -207,17 +239,17 @@ void CLensFlareTask::init()
 	string res;
 
 	res = CResourceManager::instance().get("flare01.tga");
-	UTexture *flareTexture1 = C3DTask::instance().driver().createTextureFile (res);
+	flareTexture1 = C3DTask::instance().driver().createTextureFile (res);
 	res = CResourceManager::instance().get("flare03.tga");
-	UTexture *flareTexture3 = C3DTask::instance().driver().createTextureFile (res);
+	flareTexture3 = C3DTask::instance().driver().createTextureFile (res);
 	res = CResourceManager::instance().get("flare04.tga");
-	UTexture *flareTexture4 = C3DTask::instance().driver().createTextureFile (res);
+	flareTexture4 = C3DTask::instance().driver().createTextureFile (res);
 	res = CResourceManager::instance().get("flare05.tga");
-	UTexture *flareTexture5 = C3DTask::instance().driver().createTextureFile (res);
+	flareTexture5 = C3DTask::instance().driver().createTextureFile (res);
 	res = CResourceManager::instance().get("flare06.tga");
-	UTexture *flareTexture6 = C3DTask::instance().driver().createTextureFile (res);
+	flareTexture6 = C3DTask::instance().driver().createTextureFile (res);
 	res = CResourceManager::instance().get("flare07.tga");
-	UTexture *flareTexture7 = C3DTask::instance().driver().createTextureFile (res);
+	flareTexture7 = C3DTask::instance().driver().createTextureFile (res);
 
 	float w = 30/800.0f;
 	float h = 30/600.0f;
@@ -235,10 +267,20 @@ void CLensFlareTask::init()
 	LensFlare->addFlare (flareTexture1, w, h, -0.4f, 1.f);
 	LensFlare->addFlare (flareTexture4, w, h, -1.0f, 12.f);
 	LensFlare->addFlare (flareTexture5, w, h, -0.6f, 6.f);
+
+	C3DTask::instance().driver().deleteTextureFile(flareTexture1);
+	C3DTask::instance().driver().deleteTextureFile(flareTexture3);
+	C3DTask::instance().driver().deleteTextureFile(flareTexture4);
+	C3DTask::instance().driver().deleteTextureFile(flareTexture5);
+	C3DTask::instance().driver().deleteTextureFile(flareTexture6);
+	C3DTask::instance().driver().deleteTextureFile(flareTexture7);
+	
 }
 
 void CLensFlareTask::render()
 {
+	nlassert(LensFlare);
+	
 	C3DTask::instance().driver().enableFog(true);
 	C3DTask::instance().scene().render();
 	C3DTask::instance().driver().enableFog(false);
@@ -305,6 +347,9 @@ void CLensFlareTask::render()
 
 void CLensFlareTask::release()
 {
-	delete LensFlare;
-	LensFlare = 0;
+	if(LensFlare)
+	{
+		delete LensFlare;
+		LensFlare = 0;
+	}
 }

@@ -58,7 +58,6 @@
 #include "level_manager.h"
 #include "entity_manager.h"
 #include "entity_manager.h"
-#include "lens_flare_task.h"
 #include "background_task.h"
 #include "resource_manager.h"
 #include "config_file_task.h"
@@ -109,7 +108,6 @@ void CMtpTarget::init()
 	CTaskManager::instance().add(C3DTask::instance(), 110);
 	CTaskManager::instance().add(CGuiTask::instance(), 130);
 	CTaskManager::instance().add(CEditorTask::instance(), 120);
-	CTaskManager::instance().add(CLensFlareTask::instance(), 140);
 	CTaskManager::instance().add(CSwap3DTask::instance(), 10000);
 	CTaskManager::instance().add(CFontManager::instance(), 40);
 
