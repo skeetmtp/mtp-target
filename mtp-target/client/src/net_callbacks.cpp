@@ -582,6 +582,17 @@ static void cbEndSession(CNetMessage &msgin)
 		SessionFile = 0;
 	}
 }
+
+static void cbExecLua(CNetMessage &msgin)
+{
+	string luaCode;
+	msgin.serial(luaCode);
+	nlinfo("exeLua : %s",luaCode.c_str());
+	if(CLevelManager::instance().levelPresent())
+		CLevelManager::instance().currentLevel().execLuaCode(luaCode);
+}
+
+
 	
 //
 // Callback handler
@@ -614,6 +625,7 @@ void netCallbacksHandler(CNetMessage &msgin)
 	SWITCH_CASE(EndSession);
 	SWITCH_CASE(EditMode);
 	SWITCH_CASE(EnableElement);
+	SWITCH_CASE(ExecLua);
 	
 	default: nlinfo("Received an unknown message type %hu", (uint16)msgin.type()); break;
 	}

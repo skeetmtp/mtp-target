@@ -59,6 +59,7 @@ public:
 		EndSession,			//    SC
 		EditMode,			// CS SC
 		Error,				//    SC
+		ExecLua,			//    SC
 		Force,				// CS
 		Login,				// CS SC
 		Logout,				//    SC
