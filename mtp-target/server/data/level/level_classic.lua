@@ -2,6 +2,8 @@ Name = "Snow classic"
 Author = "Skeet and 9dan"
 ServerLua = "level_classic_server.lua"
 
+skyShapeFileName = "sky.shape"
+
 Cameras =
 {
 	CVector(0, 3, 10),

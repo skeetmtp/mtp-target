@@ -2,6 +2,9 @@ Name = "Snow team"
 Author = "Skeet"
 ServerLua = "level_team_server.lua"
 
+skyShapeFileName = "sky.shape"
+
+
 Cameras =
 {
 	CVector(0, 3, 10),
