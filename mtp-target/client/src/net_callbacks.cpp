@@ -87,7 +87,6 @@ static void cbLogin(CNetMessage &msgin)
 	msgin.serial(self, eid, name, totalScore);
 	msgin.serial(color, texture, spec);
 	nlinfo("cbLogin : Adding player %hu(%s) , list.size = %d", (uint16)eid,name.c_str(),CEntityManager::instance().size());
-	CChatTask::instance().addLine(toString("%s comes in !", name.c_str()));
 
 	CEntityManager::instance().add(eid, name, totalScore, color, texture, spec, self);
 
@@ -113,6 +112,7 @@ static void cbLogin(CNetMessage &msgin)
 	}
 	else
 	{
+		CChatTask::instance().addLine(toString("%s comes in !", name.c_str()));
 		nlinfo("a new player number %hu name '%s' score %d", (uint16)eid, name.c_str(), totalScore);
 	}
 }
@@ -127,14 +127,17 @@ static void cbLogout(CNetMessage &msgin)
 	//mtpTarget::instance().World.remove(entity);
 
 	nlinfo("player number %hu leaves", (uint16)eid);
-
-	CChatTask::instance().addLine(toString("%s leaves !", CEntityManager::instance()[eid].name().c_str()));
 	
 	// if it's my eid, it means that i have to disconnect because i was kicked out from the server
 	if(CMtpTarget::instance().controler().getControledEntity()==eid)
 	{
 		nlerror("You have been kicked");
 	}
+	else
+	{
+		CChatTask::instance().addLine(toString("%s leaves !", CEntityManager::instance()[eid].name().c_str()));
+	}
+
 	CEntityManager::instance().remove(eid);
 }
 
