@@ -1,7 +1,7 @@
 Name = "Run Away"
 Author = "Skeet"
 ServerLua = "level_run_away_server.lua"
-ReleaseLevel = 2
+ReleaseLevel = 0
 
 skyShapeFileName = "sky.shape";
 sunAmbientColor = CRGBA(82, 100, 133, 255);
