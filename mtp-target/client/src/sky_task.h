@@ -70,7 +70,7 @@ protected:
 private:
 
 	NL3D::UScene			*nelSkyScene;
-	NL3D::UInstance			*nelSkyMesh;
+	NL3D::UInstance			nelSkyMesh;
 	NL3D::UCloudScape		*nelCloudScape;
 
 	std::string ShapeName;

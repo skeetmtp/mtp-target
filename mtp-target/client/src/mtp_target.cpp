@@ -165,7 +165,7 @@ void CMtpTarget::update()
 	if(FollowEntity)
 	{
 //		nlinfo("set camera matrix follow");
-		C3DTask::instance().scene().getCam()->setMatrix(*CMtpTarget::instance().controler().Camera.getMatrixFollow());
+		C3DTask::instance().scene().getCam().setMatrix(*CMtpTarget::instance().controler().Camera.getMatrixFollow());
 	}
 
 	if(CMtpTarget::instance().State == CMtpTarget::eReady)
@@ -637,8 +637,8 @@ void mtpTarget::renderInterface()
 	
 	if (DisplayDebug)
 	{
-		CFontManager::instance().littlePrintf(0, 6, "pos %.2f %.2f %.2f", C3DTask::instance().scene().getCam()->getMatrix().getPos().x, C3DTask::instance().scene().getCam()->getMatrix().getPos().y, C3DTask::instance().scene().getCam()->getMatrix().getPos().z);
-		CQuat q = C3DTask::instance().scene().getCam()->getMatrix().getRot();
+		CFontManager::instance().littlePrintf(0, 6, "pos %.2f %.2f %.2f", C3DTask::instance().scene().getCam().getMatrix().getPos().x, C3DTask::instance().scene().getCam().getMatrix().getPos().y, C3DTask::instance().scene().getCam().getMatrix().getPos().z);
+		CQuat q = C3DTask::instance().scene().getCam().getMatrix().getRot();
 		CAngleAxis aa = q.getAngleAxis();
 		CFontManager::instance().littlePrintf(0, 7, "rot %.2f %.2f %.2f %.2f", aa.Axis.x, aa.Axis.y, aa.Axis.z, aa.Angle);
 

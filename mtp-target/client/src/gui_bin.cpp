@@ -78,14 +78,14 @@ CGuiBin::~CGuiBin()
 	_element = NULL;	
 }
 
-void CGuiBin::_render(CVector pos,CVector &maxSize)
+void CGuiBin::_render(const CVector &pos,CVector &maxSize)
 {
 	CVector size = maxSize;
 	renderQuad(pos,maxSize);
 	renderElement(pos,size);
 }	
 
-void CGuiBin::renderElement(CVector pos,CVector &maxSize)
+void CGuiBin::renderElement(const CVector &pos,CVector &maxSize)
 {
 	CVector expSize = expandSize(maxSize);
 	CVector globalPos = globalPosition(pos,maxSize);
@@ -97,7 +97,7 @@ void CGuiBin::renderElement(CVector pos,CVector &maxSize)
 }	
 
 
-void CGuiBin::renderQuad(CVector pos,CVector &maxSize)
+void CGuiBin::renderQuad(const CVector &pos,CVector &maxSize)
 {
 	CVector expSize = expandSize(maxSize);
 	CVector globalPos = globalPosition(pos,maxSize);

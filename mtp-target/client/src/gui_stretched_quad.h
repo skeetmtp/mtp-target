@@ -30,6 +30,7 @@
 // Includes
 //
 
+#include <nel/3d/u_material.h>
 
 
 //
@@ -44,16 +45,16 @@ public:
 	virtual void render();
 	
 	NLMISC::CVector size();
-	void size(NLMISC::CVector size);
+	void size(const NLMISC::CVector &size);
 	NLMISC::CVector position();
-	void position(NLMISC::CVector position);
+	void position(const NLMISC::CVector &position);
 	
-	NL3D::UMaterial *material();
-	void material(NL3D::UMaterial *material);
+	NL3D::UMaterial material();
+	void material(NL3D::UMaterial material);
 
 	void color(NLMISC::CRGBA color);
 	NLMISC::CRGBA color();
-	void offset(NLMISC::CVector offset);
+	void offset(const NLMISC::CVector &offset);
 	NLMISC::CVector offset();
 
 	void stretched(bool stretched);
@@ -65,7 +66,7 @@ private:
 	
 	NLMISC::CVector _position;
 
-	NL3D::UMaterial *_material;
+	NL3D::UMaterial _material;
 
 	NLMISC::CRGBA _color;
 	NLMISC::CVector _offset;

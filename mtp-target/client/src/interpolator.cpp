@@ -44,7 +44,7 @@ CEntityState::CEntityState()
 	this->onWater = false;
 }
 
-CEntityState::CEntityState(CVector position,bool onWater)
+CEntityState::CEntityState(const CVector &position,bool onWater)
 {
 	this->position = position;
 	this->onWater = onWater;
@@ -489,7 +489,7 @@ double CExtendedInterpolator::facing() const
 	return _currentFacing;
 }
 
-void CExtendedInterpolator::rotation(CVector rotation)
+void CExtendedInterpolator::rotation(const CVector &rotation)
 {
 	_currentRotation = rotation;
 }

@@ -69,7 +69,7 @@ public:
 		
 	void				captureCursor(bool b);
 
-	NL3D::UInstance     *levelParticle()  { return LevelParticle;};
+	NL3D::UInstance     levelParticle()  { return LevelParticle;};
 
 	void				clearColor(NLMISC::CRGBA color);
 private:
@@ -83,7 +83,7 @@ private:
 	NLMISC::CRGBA			 AmbientColor;
 	NLMISC::CRGBA			 ClearColor;
 	C3dMouseListener		*MouseListener;
-	NL3D::UInstance			*LevelParticle;
+	NL3D::UInstance			LevelParticle;
 	//bool					 CaptureCursor;
 };
 

@@ -177,7 +177,7 @@ void CControler::update()
 			ControlerCamMatrix.rotateZ(mouseX);
 			ControlerCamMatrix.rotateX(mouseY);
 //			nlinfo("set camera matrix");
-			C3DTask::instance().scene().getCam()->setMatrix(ControlerCamMatrix);			
+			C3DTask::instance().scene().getCam().setMatrix(ControlerCamMatrix);			
 		}
 		else
 		{

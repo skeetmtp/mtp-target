@@ -102,7 +102,6 @@ void CGuiStretchedQuad::render()
 
 	if(_size.x<=0.0f || _size.y<=0.0f) return;
 
-	nlassert(_material);
 	_offset.z = 0;
 
 	CQuadColorUV q;
@@ -143,7 +142,7 @@ void CGuiStretchedQuad::render()
 		q.V2 += _offset;
 		q.V3 += _offset;
 		
-		C3DTask::instance().driver().drawQuad(q,*_material);
+		C3DTask::instance().driver().drawQuad(q,_material);
 
 		return;
 	}
@@ -200,7 +199,7 @@ void CGuiStretchedQuad::render()
 	q.V1 += _offset;
 	q.V2 += _offset;
 	q.V3 += _offset;
-	C3DTask::instance().driver().drawQuad(q,*_material);
+	C3DTask::instance().driver().drawQuad(q,_material);
 	
 	//s1
 	if(stretchX)
@@ -217,7 +216,7 @@ void CGuiStretchedQuad::render()
 		q.V1 += _offset;
 		q.V2 += _offset;
 		q.V3 += _offset;
-		C3DTask::instance().driver().drawQuad(q,*_material);
+		C3DTask::instance().driver().drawQuad(q,_material);
 	}
 
 	//f2
@@ -233,7 +232,7 @@ void CGuiStretchedQuad::render()
 	q.V1 += _offset;
 	q.V2 += _offset;
 	q.V3 += _offset;
-	C3DTask::instance().driver().drawQuad(q,*_material);
+	C3DTask::instance().driver().drawQuad(q,_material);
 	
 	//s4
 	if(stretchY)
@@ -250,7 +249,7 @@ void CGuiStretchedQuad::render()
 		q.V1 += _offset;
 		q.V2 += _offset;
 		q.V3 += _offset;
-		C3DTask::instance().driver().drawQuad(q,*_material);
+		C3DTask::instance().driver().drawQuad(q,_material);
 	}
 	
 	//c
@@ -268,7 +267,7 @@ void CGuiStretchedQuad::render()
 		q.V1 += _offset;
 		q.V2 += _offset;
 		q.V3 += _offset;
-		C3DTask::instance().driver().drawQuad(q,*_material);
+		C3DTask::instance().driver().drawQuad(q,_material);
 	}
 	
 	//s2
@@ -286,7 +285,7 @@ void CGuiStretchedQuad::render()
 		q.V1 += _offset;
 		q.V2 += _offset;
 		q.V3 += _offset;
-		C3DTask::instance().driver().drawQuad(q,*_material);
+		C3DTask::instance().driver().drawQuad(q,_material);
 	}
 	
 	//f4
@@ -302,7 +301,7 @@ void CGuiStretchedQuad::render()
 	q.V1 += _offset;
 	q.V2 += _offset;
 	q.V3 += _offset;
-	C3DTask::instance().driver().drawQuad(q,*_material);
+	C3DTask::instance().driver().drawQuad(q,_material);
 	
 	//s3
 	if(stretchX)
@@ -319,7 +318,7 @@ void CGuiStretchedQuad::render()
 		q.V1 += _offset;
 		q.V2 += _offset;
 		q.V3 += _offset;
-		C3DTask::instance().driver().drawQuad(q,*_material);
+		C3DTask::instance().driver().drawQuad(q,_material);
 	}
 	
 	//f3
@@ -335,7 +334,7 @@ void CGuiStretchedQuad::render()
 	q.V1 += _offset;
 	q.V2 += _offset;
 	q.V3 += _offset;
-	C3DTask::instance().driver().drawQuad(q,*_material);	
+	C3DTask::instance().driver().drawQuad(q,_material);	
 }
 
 
@@ -345,7 +344,7 @@ CVector CGuiStretchedQuad::size()
 	return _size;
 }
 
-void CGuiStretchedQuad::size(CVector size)
+void CGuiStretchedQuad::size(const CVector &size)
 {
 	_size = size;
 }
@@ -356,19 +355,18 @@ CVector CGuiStretchedQuad::position()
 	return _position;
 }
 
-void CGuiStretchedQuad::position(CVector position)
+void CGuiStretchedQuad::position(const CVector &position)
 {
 	_position = position;
 }
 
-NL3D::UMaterial *CGuiStretchedQuad::material()
+NL3D::UMaterial CGuiStretchedQuad::material()
 {
 	return _material;
 }
 
-void CGuiStretchedQuad::material(NL3D::UMaterial *material)
+void CGuiStretchedQuad::material(NL3D::UMaterial material)
 {
-	nlassert(material);
 	_material = material;
 }
 
@@ -382,7 +380,7 @@ NLMISC::CRGBA CGuiStretchedQuad::color()
 	return _color;
 }
 
-void CGuiStretchedQuad::offset(NLMISC::CVector offset)
+void CGuiStretchedQuad::offset(const NLMISC::CVector &offset)
 {
 	_offset = offset;
 }

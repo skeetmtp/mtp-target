@@ -442,7 +442,7 @@ static void cbClientVerifyLoginPassword (CMessage &msgin, TSockId from, CCallbac
 
 	}
 
-	CMessage msgout (netbase.getSIDA (), "VLP");
+	CMessage msgout ("VLP");
 
 	if (reason.empty())
 	{
@@ -530,7 +530,7 @@ static void cbClientChooseShard (CMessage &msgin, TSockId from, CCallbackNetBase
 			// the shard is not available, denied the user
 			nlwarning("User try to choose a shard without authorization");
 
-			CMessage msgout (netbase.getSIDA (), "SCS");
+			CMessage msgout ("SCS");
 			uint8 ok = false;
 			string reason = "Selected shard is not available";
 			msgout.serial (ok);

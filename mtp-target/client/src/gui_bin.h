@@ -44,9 +44,9 @@ public:
 	CGuiBin();
 	virtual ~CGuiBin();
 	
-	virtual void _render(NLMISC::CVector pos,NLMISC::CVector &maxSize);
-	virtual void renderQuad(NLMISC::CVector pos,NLMISC::CVector &maxSize);
-	virtual void renderElement(NLMISC::CVector pos,NLMISC::CVector &maxSize);
+	virtual void _render(const NLMISC::CVector &pos,NLMISC::CVector &maxSize);
+	virtual void renderQuad(const NLMISC::CVector &pos,NLMISC::CVector &maxSize);
+	virtual void renderElement(const NLMISC::CVector &pos,NLMISC::CVector &maxSize);
 	
 	virtual NLMISC::CVector innerSize();
 	virtual NLMISC::CVector borderSize();

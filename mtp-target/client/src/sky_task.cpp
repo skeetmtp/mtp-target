@@ -92,15 +92,15 @@ void CSkyTask::init()
 {
 	nelSkyScene = C3DTask::instance().driver().createScene(false);
 
-	nelSkyScene->getCam ()->setPerspective(degToRad(CConfigFileTask::instance().configFile().getVar("Fov").asFloat()), 1.33f, 0.15f, 3000.0f);
-	nelSkyScene->getCam ()->setTransformMode (UTransformable::DirectMatrix);
+	nelSkyScene->getCam().setPerspective(degToRad(CConfigFileTask::instance().configFile().getVar("Fov").asFloat()), 1.33f, 0.15f, 3000.0f);
+	nelSkyScene->getCam().setTransformMode (UTransformable::DirectMatrix);
 
 	string res = CResourceManager::instance().get(shapeName());
 	nelSkyMesh = nelSkyScene->createInstance(res);
-	if (nelSkyMesh)
+	if (!nelSkyMesh.empty())
 	{
-		nelSkyMesh->setTransformMode (UTransformable::DirectMatrix);
-		nelSkyMesh->setMatrix(CMatrix::Identity);
+		nelSkyMesh.setTransformMode (UTransformable::DirectMatrix);
+		nelSkyMesh.setMatrix(CMatrix::Identity);
 	}
 
 ////
@@ -128,10 +128,10 @@ void CSkyTask::update()
 {
 	CMatrix skyCameraMatrix;
 	skyCameraMatrix.identity();
-	skyCameraMatrix = C3DTask::instance().scene().getCam()->getMatrix();
+	skyCameraMatrix = C3DTask::instance().scene().getCam().getMatrix();
 	skyCameraMatrix.setPos(CVector::Null);
 	
-	nelSkyScene->getCam()->setMatrix(skyCameraMatrix);
+	nelSkyScene->getCam().setMatrix(skyCameraMatrix);
 	
 	nelSkyScene->animate (CTimeTask::instance().time());
 	
@@ -153,10 +153,10 @@ void CSkyTask::render()
 
 void CSkyTask::release()
 {
-	if(nelSkyMesh)
+	if(!nelSkyMesh.empty())
 	{
 		nelSkyScene->deleteInstance(nelSkyMesh);
-		nelSkyMesh = NULL;
+		nelSkyMesh.detach();
 	}
 
 	if(nelCloudScape)

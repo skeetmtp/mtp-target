@@ -52,17 +52,20 @@ using namespace NLMISC;
 	
 struct buttonMaterialData
 {
+	buttonMaterialData(const char *name) : filename(name)
+	{
+	}
 	NL3D::UTextureFile	*texture;
-	NL3D::UMaterial *material;
-	char filename[256];
+	NL3D::UMaterial material;
+	std::string filename;
 };
 
 static buttonMaterialData buttonMaterials[] = 
 {
-	{NULL,NULL,"hbutton-prelight.tga"},
-	{NULL,NULL,"hbutton-insensitive.tga"},
-	{NULL,NULL,"hbutton.tga"},
-	{NULL,NULL,"hbutton-active.tga"},
+	{"hbutton-prelight.tga"},
+	{"hbutton-insensitive.tga"},
+	{"hbutton.tga"},
+	{"hbutton-active.tga"},
 };
 
 
@@ -79,10 +82,10 @@ void CGuiButtonManager::init()
 		buttonMaterials[i].texture = C3DTask::instance().driver().createTextureFile(res);
 		nlassert(buttonMaterials[i].texture);
 		buttonMaterials[i].material = C3DTask::instance().driver().createMaterial();
-		buttonMaterials[i].material->setTexture(buttonMaterials[i].texture);
-		buttonMaterials[i].material->setBlend(true);
-		buttonMaterials[i].material->setZFunc(UMaterial::always);
-		buttonMaterials[i].material->setDoubleSided();
+		buttonMaterials[i].material.setTexture(buttonMaterials[i].texture);
+		buttonMaterials[i].material.setBlend(true);
+		buttonMaterials[i].material.setZFunc(UMaterial::always);
+		buttonMaterials[i].material.setDoubleSided();
 	}
 
 	CGuiButton::XmlRegister();
@@ -104,7 +107,7 @@ NL3D::UTextureFile	*CGuiButtonManager::texture(TButtonMaterialId id)
 	return buttonMaterials[id].texture;
 }
 
-NL3D::UMaterial *CGuiButtonManager::material(TButtonMaterialId id)
+NL3D::UMaterial CGuiButtonManager::material(TButtonMaterialId id)
 {
 	return buttonMaterials[id].material;
 }
@@ -126,25 +129,25 @@ CGuiButton::CGuiButton()
 	_init();
 }
 
-CGuiButton::CGuiButton(UMaterial *normalBitmap)
+CGuiButton::CGuiButton(UMaterial normalBitmap)
 {
 	resetBitmap(normalBitmap);
 	_init();
 }
 
-CGuiButton::CGuiButton(UMaterial *normalBitmap, UMaterial *activeBitmap)
+CGuiButton::CGuiButton(UMaterial normalBitmap, UMaterial activeBitmap)
 {
 	resetBitmap(normalBitmap,activeBitmap);
 	_init();
 }
 
-CGuiButton::CGuiButton(string normalBitmap)
+CGuiButton::CGuiButton(const string &normalBitmap)
 {
 	resetBitmap(normalBitmap);
 	_init();
 }
 
-CGuiButton::CGuiButton(string normalBitmap, string activeBitmap)
+CGuiButton::CGuiButton(const string &normalBitmap, const string &activeBitmap)
 {
 	resetBitmap(normalBitmap,activeBitmap);
 	_init();
@@ -159,7 +162,7 @@ void CGuiButton::resetBitmap()
 	_stretched          = true;
 }
 
-void CGuiButton::resetBitmap(UMaterial *normalBitmap)
+void CGuiButton::resetBitmap(UMaterial normalBitmap)
 {
 	_normalBitmap       = normalBitmap;
 	_activeBitmap       = NULL;
@@ -168,7 +171,7 @@ void CGuiButton::resetBitmap(UMaterial *normalBitmap)
 	_stretched          = false;
 }
 
-void CGuiButton::resetBitmap(UMaterial *normalBitmap, UMaterial *activeBitmap)
+void CGuiButton::resetBitmap(UMaterial normalBitmap, UMaterial activeBitmap)
 {
 	_normalBitmap       = normalBitmap;
 	_activeBitmap       = activeBitmap;
@@ -177,7 +180,7 @@ void CGuiButton::resetBitmap(UMaterial *normalBitmap, UMaterial *activeBitmap)
 	_stretched          = false;
 }
 
-void CGuiButton::resetBitmap(string normalBitmap)
+void CGuiButton::resetBitmap(const string &normalBitmap)
 {
 	_normalBitmap       = CGuiObject::LoadBitmap(normalBitmap);	
 	_activeBitmap       = NULL;
@@ -186,7 +189,7 @@ void CGuiButton::resetBitmap(string normalBitmap)
 	_stretched          = false;
 }
 
-void CGuiButton::resetBitmap(string normalBitmap, string activeBitmap)
+void CGuiButton::resetBitmap(const string &normalBitmap, const string &activeBitmap)
 {
 	_normalBitmap       = CGuiObject::LoadBitmap(normalBitmap);	
 	_activeBitmap       = CGuiObject::LoadBitmap(activeBitmap);	
@@ -200,7 +203,7 @@ CGuiButton::~CGuiButton()
 	
 }
 
-void CGuiButton::_render(CVector pos,CVector &maxSize)
+void CGuiButton::_render(const CVector &pos, CVector &maxSize)
 {
 	CGuiButtonManager::TButtonMaterialId buttonState = CGuiButtonManager::eNormal;
 	quad.color(CRGBA(255,255,255,255));
@@ -238,7 +241,7 @@ void CGuiButton::_render(CVector pos,CVector &maxSize)
 
 	if(buttonState==CGuiButtonManager::eActive)
 	{
-		if(_activeBitmap)
+		if(!_activeBitmap.empty())
 			quad.material(_activeBitmap);
 		else
 		{
@@ -250,7 +253,7 @@ void CGuiButton::_render(CVector pos,CVector &maxSize)
 	
 	if(buttonState==CGuiButtonManager::ePrelight)
 	{
-		if(_prelightBitmap)
+		if(!_prelightBitmap.empty())
 			quad.material(_prelightBitmap);
 		else
 		{

@@ -61,10 +61,10 @@ public:
 
 	virtual std::string name() { return "CWaterTask"; }
 
-	void envMap0Name(std::string envMapName);
-	void envMap1Name(std::string envMapName);
-	void heightMap0Name(std::string heightMap);
-	void heightMap1Name(std::string heightMap);
+	void envMap0Name(const std::string &envMapName);
+	void envMap1Name(const std::string &envMapName);
+	void heightMap0Name(const std::string &heightMap);
+	void heightMap1Name(const std::string &heightMap);
 
 	std::string envMap0Name();
 	std::string envMap1Name();
@@ -80,7 +80,7 @@ private:
 	NL3D::UScene			*nelWaterScene;
 	NL3D::CWaterShape		*WaterShape;
 	NL3D::CWaterModel		*WaterModel;
-	NL3D::UInstance			*WaterMesh;	
+	NL3D::UInstance			WaterMesh;	
 	NL3D::CTransformShape   *WaterInstance;
 
 	std::string EnvMap0Name;

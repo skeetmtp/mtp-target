@@ -140,12 +140,10 @@ string CLoginClientMtp::authenticate (const string &loginServiceAddr, const stri
 		return "Connection refused to LS";
 	}
 
-	_CallbackClient->displayAllMyAssociations ();
-
 	//
 	// S02: create and send the "VLP" message
 	//
-	CMessage msgout (_CallbackClient->getSIDA (), "VLP");
+	CMessage msgout ("VLP");
 	msgout.serial (const_cast<string&>(login));
 	msgout.serial (const_cast<string&>(password));
 	msgout.serial (clientVersion);
@@ -198,7 +196,7 @@ string CLoginClientMtp::confirmConnection (uint32 shardListIndex)
 	//
 
 	// send CS
-	CMessage msgout (_CallbackClient->getSIDA (), "CS");
+	CMessage msgout ("CS");
 	msgout.serial (ShardList[shardListIndex].WSAddr);
 	_CallbackClient->send (msgout);
 

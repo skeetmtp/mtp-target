@@ -365,7 +365,7 @@ void CHudTask::release()
 {
 }
 
-void CHudTask::setDisplayViewedName(string name)
+void CHudTask::setDisplayViewedName(const string &name)
 {
 	_viewedName = name;
 }

@@ -116,9 +116,9 @@ public:
 
 
 	
-	NL3D::UInstance *CloseMesh, *OpenMesh;
+	NL3D::UInstance CloseMesh, OpenMesh;
 
-	NL3D::UParticleSystemInstance *TraceParticle;
+	NL3D::UParticleSystemInstance TraceParticle;
 	
 	NLMISC::CVector		 LastSent2MePos;
 	NLMISC::CVector		 LastSent2OthersPos;

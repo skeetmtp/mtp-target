@@ -62,10 +62,10 @@ void CGuiBoxManager::init()
 	
 	
 	_material = C3DTask::instance().driver().createMaterial ();
-	_material->setTexture(_texture);
-	_material->setBlend(true);
-	_material->setZFunc(UMaterial::always);
-	_material->setDoubleSided();
+	_material.setTexture(_texture);
+	_material.setBlend(true);
+	_material.setZFunc(UMaterial::always);
+	_material.setDoubleSided();
 
 	CGuiHBox::XmlRegister();
 	CGuiVBox::XmlRegister();
@@ -86,7 +86,7 @@ NL3D::UTextureFile	*CGuiBoxManager::texture()
 	return _texture;
 }
 
-NL3D::UMaterial *CGuiBoxManager::material()
+NL3D::UMaterial CGuiBoxManager::material()
 {
 	return _material;
 }
@@ -166,7 +166,7 @@ CGuiVBox::~CGuiVBox()
 	
 }
 
-void CGuiVBox::_render(CVector pos,CVector &maxSize)
+void CGuiVBox::_render(const CVector &pos,CVector &maxSize)
 {
 	if(elements.empty()) return;
 	CVector globalPos = globalPosition(pos,maxSize);
@@ -279,7 +279,7 @@ CGuiHBox::~CGuiHBox()
 	
 }
 
-void CGuiHBox::_render(CVector pos,CVector &maxSize)
+void CGuiHBox::_render(const CVector &pos,CVector &maxSize)
 {
 	if(elements.empty()) return;
 	CVector globalPos = globalPosition(pos,maxSize);

@@ -57,7 +57,7 @@ private:
 	NL3D::UTextureFile	*Background;
 	NL3D::UTextureFile	*Target;
 	NL3D::UTextureFile	*Logo;
-	NL3D::UInstance		*LogoParticle;
+	NL3D::UInstance		LogoParticle;
 };
 
 #endif

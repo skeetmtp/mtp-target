@@ -33,6 +33,9 @@
 #include "lunar.h"
 #include "load_mesh.h"
 
+#ifndef MTPT_SERVER
+#include <nel/3d/u_material.h>
+#endif
 
 //
 // Classes
@@ -52,13 +55,13 @@ public:
 	
 	virtual ~CEditableElementCommon();
 
-	virtual void init(const std::string &name, const std::string &shapeName,uint8 id, NLMISC::CVector position, NLMISC::CVector scale, NLMISC::CAngleAxis rotation);
-	virtual void update(NLMISC::CVector pos,NLMISC::CVector rot) = 0;
+	virtual void init(const std::string &name, const std::string &shapeName,uint8 id, const NLMISC::CVector &position, const NLMISC::CVector &scale, const NLMISC::CAngleAxis &rotation);
+	virtual void update(const NLMISC::CVector &pos, const NLMISC::CVector &rot) = 0;
 	virtual std::string toLuaString() = 0;
-	virtual bool intersect(NLMISC::CVector rayStart,NLMISC::CVector rayEnd,NLMISC::CVector &rayHit,const NLMISC::CMatrix &mat);
+	virtual bool intersect(const NLMISC::CVector &rayStart, const NLMISC::CVector &rayEnd, NLMISC::CVector &rayHit, const NLMISC::CMatrix &mat);
 	
 	virtual NLMISC::CVector position() const {return Position;}
-	virtual void position(NLMISC::CVector pos) {Position = pos; _changed = true;}
+	virtual void position(const NLMISC::CVector &pos) {Position = pos; _changed = true;}
 	virtual NLMISC::CMatrix transformMatrix();
 	virtual NLMISC::CAngleAxis rotation();
 	
@@ -71,7 +74,7 @@ public:
 	void changed(bool c) {_changed = c;}
 
 #ifndef MTPT_SERVER
-	NL3D::UInstance *mesh();
+	NL3D::UInstance mesh();
 	virtual void renderSelection();
 	void show();
 	void hide();
@@ -95,14 +98,9 @@ protected:
 
 	
 #ifndef MTPT_SERVER
-	NL3D::UInstance *Mesh;
-	NL3D::UMaterial *mat;
+	NL3D::UInstance Mesh;
+	NL3D::UMaterial mat;
 #endif
 };
-
-
-
-
-
 
 #endif

@@ -68,7 +68,7 @@ class CLensFlare
 	/// flare
 	struct _CFlare
 	{
-		NL3D::UMaterial *Material;
+		NL3D::UMaterial Material;
 
 		float Width;
 		float Height;
@@ -80,12 +80,12 @@ class CLensFlare
 		_CFlare(NL3D::UTexture *texture, float width, float height, float location, float scale)
 		{
 			Material = C3DTask::instance().driver().createMaterial ();
-			Material->initUnlit ();
-			Material->setTexture (texture);
-			Material->setBlendFunc (UMaterial::srcalpha, UMaterial::one);
-			Material->setBlend(true);
-			Material->setZFunc (UMaterial::always);
-			Material->setZWrite (false);
+			Material.initUnlit ();
+			Material.setTexture (texture);
+			Material.setBlendFunc (UMaterial::srcalpha, UMaterial::one);
+			Material.setBlend(true);
+			Material.setZFunc (UMaterial::always);
+			Material.setZWrite (false);
 
 			// quad dimension
 			Width = width;
@@ -100,9 +100,8 @@ class CLensFlare
 
 		~_CFlare()
 		{
-			nlassert(Material);
 			C3DTask::instance().driver().deleteMaterial(Material);
-			Material = 0;
+			Material.detach();
 		}
 	};
 
@@ -160,11 +159,11 @@ void CLensFlare::show()
 	C3DTask::instance().driver().setMatrixMode2D11 ();
 
 	// Determining axis "screen center - light" vector
-	CMatrix cameraMatrix = C3DTask::instance().scene().getCam()->getMatrix();
+	CMatrix cameraMatrix = C3DTask::instance().scene().getCam().getMatrix();
 	cameraMatrix.invert();
 	CVector light = (-100000 * SunDirection);
 	light = cameraMatrix * light;
-	light = C3DTask::instance().scene().getCam()->getFrustum().project(light);
+	light = C3DTask::instance().scene().getCam().getFrustum().project(light);
 	
 	CVector screenCenter(0.5f,0.5f,0);
 	CVector axis = light - screenCenter;
@@ -178,7 +177,7 @@ void CLensFlare::show()
 	vector<_CFlare *>::iterator itflr;
 	for(itflr = _Flares.begin(); itflr!=_Flares.end(); itflr++)
 	{
-		(*itflr)->Material->setColor(CRGBA(255,255,255,(uint8)(_AlphaCoef*255)));
+		(*itflr)->Material.setColor(CRGBA(255,255,255,(uint8)(_AlphaCoef*255)));
 			
 		CQuadUV quad;
 		
@@ -209,7 +208,7 @@ void CLensFlare::show()
 		quad.Uv2.U = 1.0f; quad.Uv2.V = 0.0f;
 		quad.Uv3.U = 0.0f; quad.Uv3.V = 0.0f;
 
-		C3DTask::instance().driver().drawQuad (quad, *(*itflr)->Material);
+		C3DTask::instance().driver().drawQuad (quad, (*itflr)->Material);
 	}
 }
 
@@ -285,7 +284,7 @@ void CLensFlareTask::render()
 
 	// vector to sun
 	//==============
-	CVector userLook = C3DTask::instance().scene().getCam()->getMatrix().getJ();
+	CVector userLook = C3DTask::instance().scene().getCam().getMatrix().getJ();
 
 	CVector sunDirection = (-100000 * SunDirection);
 
@@ -308,11 +307,11 @@ void CLensFlareTask::render()
 	// landscape's masking sun ?
 	//==========================
 	CMatrix camMatrix;
-	camMatrix = C3DTask::instance().scene().getCam()->getMatrix();
+	camMatrix = C3DTask::instance().scene().getCam().getMatrix();
 	camMatrix.setPos(CVector::Null);
 	camMatrix.invert();
 	CVector tmp = camMatrix * sunDirection;
-	tmp = C3DTask::instance().scene().getCam()->getFrustum().project(tmp);
+	tmp = C3DTask::instance().scene().getCam().getFrustum().project(tmp);
 	uint32	w,h;
 	C3DTask::instance().driver().getWindowSize(w,h);
 	float sunRadius = 24;

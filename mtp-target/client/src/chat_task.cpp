@@ -50,7 +50,7 @@ using namespace NLMISC;
 //
 
 #define CHAT_LINES 3
-#define CHAT_COLUMNS 80
+#define CHAT_COLUMNS 160
 
 static std::list<std::string> ChatText;
 static std::string ChatInput = "";

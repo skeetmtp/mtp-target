@@ -49,20 +49,20 @@ public:
 class CGuiButton : public CGuiBin
 {
 public:
-	CGuiButton(NL3D::UMaterial *normalBitmap);
-	CGuiButton(NL3D::UMaterial *normalBitmap, NL3D::UMaterial *activeBitmap);
-	CGuiButton(std::string normalBitmap);
-	CGuiButton(std::string normalBitmap, std::string activeBitmap);
+	CGuiButton(NL3D::UMaterial normalBitmap);
+	CGuiButton(NL3D::UMaterial normalBitmap, NL3D::UMaterial activeBitmap);
+	CGuiButton(const std::string &normalBitmap);
+	CGuiButton(const std::string &normalBitmap, const std::string &activeBitmap);
 	CGuiButton();
 	virtual ~CGuiButton();
 
 	void resetBitmap();
-	void resetBitmap(NL3D::UMaterial *normalBitmap);
-	void resetBitmap(NL3D::UMaterial *normalBitmap, NL3D::UMaterial *activeBitmap);
-	void resetBitmap(std::string normalBitmap);
-	void resetBitmap(std::string normalBitmap, std::string activeBitmap);
+	void resetBitmap(NL3D::UMaterial normalBitmap);
+	void resetBitmap(NL3D::UMaterial normalBitmap, NL3D::UMaterial activeBitmap);
+	void resetBitmap(const std::string &normalBitmap);
+	void resetBitmap(const std::string &normalBitmap, const std::string &activeBitmap);
 	
-	virtual void _render(NLMISC::CVector pos,NLMISC::CVector &maxSize);
+	virtual void _render(const NLMISC::CVector &pos, NLMISC::CVector &maxSize);
 
 	virtual void onPressed();
 	
@@ -80,10 +80,10 @@ private:
 	void _init();
 	void _onPressed();
 	
-	NL3D::UMaterial *_prelightBitmap;
-	NL3D::UMaterial *_insensitiveBitmap;
-	NL3D::UMaterial *_normalBitmap;
-	NL3D::UMaterial *_activeBitmap;
+	NL3D::UMaterial _prelightBitmap;
+	NL3D::UMaterial _insensitiveBitmap;
+	NL3D::UMaterial _normalBitmap;
+	NL3D::UMaterial _activeBitmap;
 
 	bool _stretched;
 	bool _pressed;
@@ -105,7 +105,7 @@ public:
 	virtual void release();
 
 	NL3D::UTextureFile	*texture(TButtonMaterialId id);
-	NL3D::UMaterial *material(TButtonMaterialId id);
+	NL3D::UMaterial material(TButtonMaterialId id);
 	
 protected:
 	

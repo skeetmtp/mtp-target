@@ -79,7 +79,7 @@ bool CEditableElementCommon::isKindOf(TType type)
 }
 
 
-void CEditableElementCommon::init(const std::string &name, const std::string &shapeName, uint8 id, NLMISC::CVector position, NLMISC::CVector scale, NLMISC::CAngleAxis rotation)
+void CEditableElementCommon::init(const std::string &name, const std::string &shapeName, uint8 id, const NLMISC::CVector &position, const NLMISC::CVector &scale, const NLMISC::CAngleAxis &rotation)
 {
 	Name = name;
 	Position = position;
@@ -95,7 +95,7 @@ void CEditableElementCommon::init(const std::string &name, const std::string &sh
 }
 
 
-bool CEditableElementCommon::intersect(NLMISC::CVector rayStart,NLMISC::CVector rayEnd,NLMISC::CVector &rayHit,const NLMISC::CMatrix &mat)
+bool CEditableElementCommon::intersect(const NLMISC::CVector &rayStart, const NLMISC::CVector &rayEnd, NLMISC::CVector &rayHit, const NLMISC::CMatrix &mat)
 {
 	//return true;
 	//CMatrix mat = mesh()->getMatrix();
@@ -148,14 +148,14 @@ using namespace NL3D;
 
 void CEditableElementCommon::show()
 {
-	if(Mesh)
-		Mesh->show();
+	if(!Mesh.empty())
+		Mesh.show();
 }
 
 void CEditableElementCommon::hide()
 {
-	if(Mesh)
-		Mesh->hide();
+	if(!Mesh.empty())
+		Mesh.hide();
 }
 
 /*
@@ -168,7 +168,7 @@ void CEditableElementCommon::position(CVector pos)
 }
 */
 
-UInstance *CEditableElementCommon::mesh()
+UInstance CEditableElementCommon::mesh()
 {
 	return Mesh;
 }

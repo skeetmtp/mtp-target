@@ -68,7 +68,7 @@ public:
 	CGuiHScale();
 	virtual ~CGuiHScale();
 	
-	virtual void _render(NLMISC::CVector pos,NLMISC::CVector &maxSize);
+	virtual void _render(const NLMISC::CVector &pos, NLMISC::CVector &maxSize);
 	virtual void alignment(int alignment);	
 	
 	static void XmlRegister();
@@ -82,7 +82,7 @@ public:
 	CGuiVScale();
 	virtual ~CGuiVScale();
 	
-	virtual void _render(NLMISC::CVector pos,NLMISC::CVector &maxSize);
+	virtual void _render(const NLMISC::CVector &pos, NLMISC::CVector &maxSize);
 	virtual void alignment(int alignment);	
 	
 	static void XmlRegister();
@@ -98,15 +98,15 @@ public:
 	virtual void render();
 	virtual void release();
 
-	NL3D::UMaterial *materialArrow();
-	NL3D::UMaterial *materialProgress();
+	NL3D::UMaterial materialArrow();
+	NL3D::UMaterial materialProgress();
 	
 	friend class CGuiScale;
 protected:
 	NL3D::UTextureFile	*_textureArrow;
-	NL3D::UMaterial *_materialArrow;
+	NL3D::UMaterial _materialArrow;
 	NL3D::UTextureFile	*_textureProgress;
-	NL3D::UMaterial *_materialProgress;
+	NL3D::UMaterial _materialProgress;
 	
 };
 

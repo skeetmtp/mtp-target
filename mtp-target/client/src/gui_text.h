@@ -40,7 +40,7 @@
 class CGuiTextCursor
 {
 public:
-	static void Render(NLMISC::CVector position,int height);
+	static void Render(const NLMISC::CVector &position, int height);
 	static void Reset();
 private:
 	static int _FrameCount;
@@ -51,11 +51,11 @@ private:
 class CGuiText : public CGuiObject
 {
 	public:
-	CGuiText(std::string text);
+	CGuiText(const std::string &text);
 	CGuiText();
 	virtual ~CGuiText();
 	
-	virtual void _render(NLMISC::CVector pos,NLMISC::CVector &maxSize);
+	virtual void _render(const NLMISC::CVector &pos, NLMISC::CVector &maxSize);
 	virtual float _width();
 	virtual float _height();
 
@@ -92,7 +92,7 @@ class CGuiText : public CGuiObject
 	static CGuiObject *Create();
 	virtual void init(CGuiXml *xml,xmlNodePtr node);
 private:
-	void _init(std::string text);
+	void _init(const std::string &text);
 	uint _cursorIndex;
 	bool _isEditable;
 	bool _isEntry;
@@ -109,7 +109,7 @@ public:
 	CGuiTextPercent();
 	virtual ~CGuiTextPercent();
 	
-	virtual void _render(NLMISC::CVector pos,NLMISC::CVector &maxSize);
+	virtual void _render(const NLMISC::CVector &pos, NLMISC::CVector &maxSize);
 	void ptrValue(float *ptrValue);
 
 	static void XmlRegister();
@@ -130,14 +130,14 @@ public:
 	virtual void render();
 	virtual void release();
 
-	NL3D::UMaterial *cursorMaterial();
-	NL3D::UMaterial *entryMaterial();
+	NL3D::UMaterial cursorMaterial();
+	NL3D::UMaterial entryMaterial();
 	
 protected:
 	NL3D::UTextureFile	*_cursorTexture;
-	NL3D::UMaterial *_cursorMaterial;
+	NL3D::UMaterial _cursorMaterial;
 	NL3D::UTextureFile	*_entryTexture;
-	NL3D::UMaterial *_entryMaterial;
+	NL3D::UMaterial _entryMaterial;
 private:
 	
 };

@@ -73,10 +73,10 @@ public:
 
 	CModule *getModule(uint32 id);
 	uint32 getModuleCount();
-	void updateModule(uint32 id,NLMISC::CVector pos,NLMISC::CVector rot,uint32 selectedBy);
+	void updateModule(uint32 id,const NLMISC::CVector &pos, const NLMISC::CVector &rot,uint32 selectedBy);
 	CStartPoint *getStartPoint(uint32 id);
 	uint32 getStartPointCount();
-	void updateStartPoint(uint32 id,NLMISC::CVector pos,NLMISC::CVector rot,uint32 selectedBy);
+	void updateStartPoint(uint32 id, const NLMISC::CVector &pos, const NLMISC::CVector &rot,uint32 selectedBy);
 	
 private:
 	

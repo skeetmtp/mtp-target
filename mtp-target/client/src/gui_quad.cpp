@@ -136,7 +136,7 @@ void CGuiQuad::render()
 	q.V1.set(xa,y0,0);
 	q.V2.set(xa,ya,0);
 	q.V3.set(x0,ya,0);
-	C3DTask::instance().driver().drawQuad(q,*_material);
+	C3DTask::instance().driver().drawQuad(q,_material);
 	
 	//s1
 	q.Uv0.set(uh,v0);
@@ -147,7 +147,7 @@ void CGuiQuad::render()
 	q.V1.set(xb,y0,0);
 	q.V2.set(xb,ya,0);
 	q.V3.set(xa,ya,0);
-	C3DTask::instance().driver().drawQuad(q,*_material);
+	C3DTask::instance().driver().drawQuad(q,_material);
 
 	//f2
 	q.Uv0.set(uh,v0);
@@ -158,7 +158,7 @@ void CGuiQuad::render()
 	q.V1.set(x1,y0,0);
 	q.V2.set(x1,ya,0);
 	q.V3.set(xb,ya,0);
-	C3DTask::instance().driver().drawQuad(q,*_material);
+	C3DTask::instance().driver().drawQuad(q,_material);
 	
 	//s4
 	q.Uv0.set(u0,vh);
@@ -169,7 +169,7 @@ void CGuiQuad::render()
 	q.V1.set(xa,ya,0);
 	q.V2.set(xa,yb,0);
 	q.V3.set(x0,yb,0);
-	C3DTask::instance().driver().drawQuad(q,*_material);
+	C3DTask::instance().driver().drawQuad(q,_material);
 	
 	//c
 	q.Uv0.set(uh,vh);
@@ -180,7 +180,7 @@ void CGuiQuad::render()
 	q.V1.set(xb,ya,0);
 	q.V2.set(xb,yb,0);
 	q.V3.set(xa,yb,0);
-	C3DTask::instance().driver().drawQuad(q,*_material);
+	C3DTask::instance().driver().drawQuad(q,_material);
 	
 	//s2
 	q.Uv0.set(uh,vh);
@@ -191,7 +191,7 @@ void CGuiQuad::render()
 	q.V1.set(x1,ya,0);
 	q.V2.set(x1,yb,0);
 	q.V3.set(xb,yb,0);
-	C3DTask::instance().driver().drawQuad(q,*_material);
+	C3DTask::instance().driver().drawQuad(q,_material);
 	
 	//f4
 	q.Uv0.set(u0,vh);
@@ -202,7 +202,7 @@ void CGuiQuad::render()
 	q.V1.set(xa,yb,0);
 	q.V2.set(xa,y1,0);
 	q.V3.set(x0,y1,0);
-	C3DTask::instance().driver().drawQuad(q,*_material);
+	C3DTask::instance().driver().drawQuad(q,_material);
 	
 	//s3
 	q.Uv0.set(uh,vh);
@@ -213,7 +213,7 @@ void CGuiQuad::render()
 	q.V1.set(xb,yb,0);
 	q.V2.set(xb,y1,0);
 	q.V3.set(xa,y1,0);
-	C3DTask::instance().driver().drawQuad(q,*_material);
+	C3DTask::instance().driver().drawQuad(q,_material);
 	
 	//f3
 	q.Uv0.set(uh,vh);
@@ -224,7 +224,7 @@ void CGuiQuad::render()
 	q.V1.set(x1,yb,0);
 	q.V2.set(x1,y1,0);
 	q.V3.set(xb,y1,0);
-	C3DTask::instance().driver().drawQuad(q,*_material);	
+	C3DTask::instance().driver().drawQuad(q,_material);	
 }
 
 
@@ -254,17 +254,17 @@ CVector CGuiQuad::position()
 	return _position;
 }
 
-void CGuiQuad::position(CVector position)
+void CGuiQuad::position(const CVector &position)
 {
 	_position = position;
 }
 
-NL3D::UMaterial *CGuiQuad::material()
+NL3D::UMaterial CGuiQuad::material()
 {
 	return _material;
 }
 
-void CGuiQuad::material(NL3D::UMaterial *material)
+void CGuiQuad::material(NL3D::UMaterial material)
 {
 	_material = material;
 }

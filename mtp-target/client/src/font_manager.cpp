@@ -85,10 +85,10 @@ void CFontManager::init()
 	string res = CResourceManager::instance().get("font.tga");
 	Texture = C3DTask::instance().driver().createTextureFile (res);
 	Material = C3DTask::instance().driver().createMaterial ();
-	Material->setTexture(Texture);
-	Material->setBlend(true);
-	Material->setZFunc(UMaterial::always);
-	Material->setDoubleSided();
+	Material.setTexture(Texture);
+	Material.setBlend(true);
+	Material.setZFunc(UMaterial::always);
+	Material.setDoubleSided();
 
 	FontWidth = 22;
 	FontHeight = 20;
@@ -96,16 +96,29 @@ void CFontManager::init()
 
 void CFontManager::release()
 {
-	if(Material)
+	if(!Material.empty())
 	{
 		C3DTask::instance().driver().deleteMaterial(Material);
-		Material = 0;
+		Material.detach();
 	}
 	if(Texture)
 	{
 		C3DTask::instance().driver().deleteTextureFile(Texture);
 		Texture = 0;
 	}
+}
+
+void CFontManager::littlePrintf(const CRGBA &col, float x, float y, const char *format ...)
+{
+	char *str;
+	NLMISC_CONVERT_VARGS (str, format, 256);
+
+	C3DTask::instance().textContext().setHotSpot (UTextContext::BottomLeft);
+	C3DTask::instance().textContext().setColor (col);
+	C3DTask::instance().textContext().setFontSize (12);
+	C3DTask::instance().textContext().setShaded(true);
+	C3DTask::instance().textContext().printfAt (8*x/C3DTask::instance().screenWidth(), (C3DTask::instance().screenHeight()-16*y-16)/C3DTask::instance().screenHeight(), str);
+	C3DTask::instance().textContext().setKeep800x600Ratio (true);
 }
 
 void CFontManager::littlePrintf(float x, float y, const char *format ...)
@@ -133,7 +146,7 @@ void CFontManager::printf(const NLMISC::CRGBA &col, float x, float y, float scal
 	px = x;
 	py = y+FontHeight;
 	C3DTask::instance().driver().setFrustum(CFrustum(0, (float)C3DTask::instance().screenWidth(), 0, (float)C3DTask::instance().screenHeight(), -1, 1, false));
-	Material->setColor(col);
+	Material.setColor(col);
 
 	for (char *ptr = str; *ptr; ptr++)
 	{
@@ -178,7 +191,7 @@ void CFontManager::printf(const NLMISC::CRGBA &col, float x, float y, float scal
 					quad.Uv3.U= rx1/256.0f;
 					quad.Uv3.V= ry1/256.0f;
 
-					C3DTask::instance().driver().drawQuad (quad, *Material);
+					C3DTask::instance().driver().drawQuad (quad, Material);
 					px += CharW[j]*scale;
 					break;
 				}
@@ -198,7 +211,7 @@ void CFontManager::printf3D(const NLMISC::CRGBA &col, const NLMISC::CVector &pos
 	CVector p = pos;
 	p.z += 0.02f;
 	
-	CMatrix cameraMatrix = C3DTask::instance().scene().getCam()->getMatrix();
+	CMatrix cameraMatrix = C3DTask::instance().scene().getCam().getMatrix();
 
 	CVector vv = cameraMatrix.getPos() - p;
 	float dt = 1.0f / vv.norm();
@@ -215,12 +228,12 @@ void CFontManager::printf3D(const NLMISC::CRGBA &col, const NLMISC::CVector &pos
 	if (p.y < 0.0f)
 		return;
 
-	p = C3DTask::instance().scene().getCam()->getFrustum().project(p);
+	p = C3DTask::instance().scene().getCam().getFrustum().project(p);
 
 	float avx = -(float(strlen(str))/2.0f*22.0f*scale/10.0f);
 
-	Material->setZFunc(UMaterial::lessequal);
-	Material->setColor(col);
+	Material.setZFunc(UMaterial::lessequal);
+	Material.setColor(col);
 	
 	for (char *ptr = str; *ptr; ptr++)
 	{
@@ -256,7 +269,7 @@ void CFontManager::printf3D(const NLMISC::CRGBA &col, const NLMISC::CVector &pos
 					q.Uv1.U= rx1/256.0f;
 					q.Uv1.V= ry1/256.0f;	
 
-					C3DTask::instance().driver().drawQuad (q, *Material);
+					C3DTask::instance().driver().drawQuad (q, Material);
 
 					avx += CharW[j]*scale/10.0f;
 					break;
@@ -265,5 +278,5 @@ void CFontManager::printf3D(const NLMISC::CRGBA &col, const NLMISC::CVector &pos
 		}
 	}
 
-	Material->setZFunc(UMaterial::always);
+	Material.setZFunc(UMaterial::always);
 }

@@ -55,7 +55,7 @@ using namespace NLMISC;
 #define max(a,b) (((a) > (b)) ? (a) : (b))
 #endif
 
-NLMISC::CVector CVectorMax(NLMISC::CVector a,NLMISC::CVector b)
+NLMISC::CVector CVectorMax(const NLMISC::CVector &a, const NLMISC::CVector &b)
 {
 	NLMISC::CVector res;
 	res.x = max(a.x,b.x);
@@ -136,12 +136,12 @@ CGuiObject *CGuiObjectManager::focus()
 	 return _focus;
 }
 
-void CGuiObjectManager::registerClass(string className,CreateObjectCB cb)
+void CGuiObjectManager::registerClass(const string &className,CreateObjectCB cb)
 {
 	_createFunctionMap.insert(string2CreateFunction::value_type(className,cb));
 }
 
-CGuiObject *CGuiObjectManager::create(string className)
+CGuiObject *CGuiObjectManager::create(const string &className)
 {
 	string2CreateFunction::iterator it;
 	it = _createFunctionMap.find(className);
@@ -193,7 +193,7 @@ void CGuiObject::release()
 
 }
 
-CVector CGuiObject::globalPosition(CVector pos,CVector &maxSize)
+CVector CGuiObject::globalPosition(const CVector &pos,const CVector &maxSize)
 {
 	//CVector res(pos.x + position().x + xOffset(maxSize.x),pos.y + position().y + yOffset(maxSize.y),0);
 	return pos + position() + offset(maxSize);
@@ -204,7 +204,7 @@ CVector CGuiObject::position()
 	return _position;
 }
 
-void CGuiObject::position(CVector position)
+void CGuiObject::position(const CVector &position)
 {
 	_position = position;
 }
@@ -231,7 +231,7 @@ void CGuiObject::alignment(int alignment)
 }
 
 
-CVector CGuiObject::offset(CVector maxSize)
+CVector CGuiObject::offset(const CVector &maxSize)
 {
 	CVector res(0,0,0);
 
@@ -272,7 +272,7 @@ CVector CGuiObject::offset(CVector maxSize)
 
 
 //TODO
-CVector CGuiObject::expandSize(CVector &maxSize)
+CVector CGuiObject::expandSize(const CVector &maxSize)
 {
 	CVector res = size();
 
@@ -298,7 +298,7 @@ bool CGuiObject::focused()
 }
 
 
-bool CGuiObject::isIn(CVector point,CVector startPos,CVector size)
+bool CGuiObject::isIn(const CVector &point,const CVector &startPos,const CVector &size)
 {
 	
 	//CVector globalPos = startPos + position() + offset(size);
@@ -309,7 +309,7 @@ bool CGuiObject::isIn(CVector point,CVector startPos,CVector size)
 	
 }
 
-void CGuiObject::_checkFocus(CVector pos,CVector maxSize)
+void CGuiObject::_checkFocus(const CVector &pos,const CVector &maxSize)
 {
 	CVector mousePos = CGuiObjectManager::instance().mouseListener().position();
 	if(isIn(mousePos,pos,maxSize))
@@ -323,7 +323,7 @@ void CGuiObject::_checkFocus(CVector pos,CVector maxSize)
 }
 
 
-void CGuiObject::render(CVector pos,CVector &maxSize)
+void CGuiObject::render(const CVector &pos,CVector &maxSize)
 {
 	CVector oldMaxSize = maxSize;
 	_checkFocus(pos,maxSize);	
@@ -341,16 +341,16 @@ void CGuiObject::render(CVector pos,CVector &maxSize)
 
 
 
-void CGuiObject::_preRender(CVector pos,CVector &maxSize)
+void CGuiObject::_preRender(const CVector &pos,CVector &maxSize)
 {
 }
 
-void CGuiObject::_render(CVector pos,CVector &maxSize)
+void CGuiObject::_render(const CVector &pos,CVector &maxSize)
 {
 
 }
 
-void CGuiObject::_postRender(CVector pos,CVector &maxSize)
+void CGuiObject::_postRender(const CVector &pos,CVector &maxSize)
 {
 }
 
@@ -381,7 +381,7 @@ CVector CGuiObject::minSize()
 	return _minSize;
 }
 
-void CGuiObject::minSize(CVector minSize)
+void CGuiObject::minSize(const CVector &minSize)
 {
 	_minSize = minSize;
 }
@@ -401,10 +401,10 @@ float CGuiObject::height()
 	return max(h,mh);
 }
 
-UMaterial *CGuiObject::LoadBitmap(string filename)
+UMaterial CGuiObject::LoadBitmap(const string &filename)
 {
 	UTextureFile	*_texture;
-	UMaterial *_material;
+	UMaterial _material;
 	string res;
 	
 	res = CResourceManager::instance().get(filename);
@@ -412,10 +412,10 @@ UMaterial *CGuiObject::LoadBitmap(string filename)
 	nlassert(_texture);
 	
 	_material= C3DTask::instance().driver().createMaterial ();
-	_material->setTexture(_texture);
-	_material->setBlend(true);
-	_material->setZFunc(UMaterial::always);
-	_material->setDoubleSided();
+	_material.setTexture(_texture);
+	_material.setBlend(true);
+	_material.setZFunc(UMaterial::always);
+	_material.setDoubleSided();
 	
 	return _material;
 }

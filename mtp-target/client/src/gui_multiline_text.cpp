@@ -83,7 +83,7 @@ void CGuiMultilineText::Printf(float x, float y, CRGBA color,bool shaded,int siz
 	Print(x,y,color,shaded,size,cursorIndex,cursorPos,str);
 }
 
-void CGuiMultilineText::Print(float x, float y, CRGBA color,bool shaded,int size,int cursorIndex, CVector &cursorPos, string str)
+void CGuiMultilineText::Print(float x, float y, CRGBA color,bool shaded,int size,int cursorIndex, CVector &cursorPos, const string &str)
 {
 	if(str.size()==0)
 	{
@@ -127,7 +127,7 @@ void CGuiMultilineText::Print(float x, float y, CRGBA color,bool shaded,int size
 }
 	
 
-CVector CGuiMultilineText::Size(bool shaded,int size,std::string str)
+CVector CGuiMultilineText::Size(bool shaded,int size,const std::string &str)
 {
 	C3DTask::instance().textContext().setHotSpot (UTextContext::BottomLeft);
 	C3DTask::instance().textContext().setFontSize (size);

@@ -34,7 +34,7 @@
 #include "gui_spg.h"
 #include <libxml/parser.h>
 
-NLMISC::CVector CVectorMax(NLMISC::CVector a,NLMISC::CVector b);
+NLMISC::CVector CVectorMax(const NLMISC::CVector &a, const NLMISC::CVector &b);
 class CGuiXml;	
 
 //
@@ -61,26 +61,26 @@ public:
 	
 	virtual void init();
 	virtual void update();
-	void render(NLMISC::CVector pos,NLMISC::CVector &maxSize);
+	void render(const NLMISC::CVector &pos, NLMISC::CVector &maxSize);
 	virtual void release();
 	
 	//virtual bool mouseIsIn(NLMISC::CVector pos,NLMISC::CVector maxSize);
-	bool isIn(NLMISC::CVector point,NLMISC::CVector startPos,NLMISC::CVector size);
+	bool isIn(const NLMISC::CVector &point, const NLMISC::CVector &startPos, const NLMISC::CVector &size);
 	static float ToProportionalX(float x);
 	static float ToProportionalY(float y);
 	virtual float width();
 	virtual float height();
 	virtual NLMISC::CVector position();
-	virtual NLMISC::CVector globalPosition(NLMISC::CVector pos,NLMISC::CVector &maxSize);
-	virtual NLMISC::CVector expandSize(NLMISC::CVector &maxSize);
+	virtual NLMISC::CVector globalPosition(const NLMISC::CVector &pos, const NLMISC::CVector &maxSize);
+	virtual NLMISC::CVector expandSize(const NLMISC::CVector &maxSize);
 	virtual NLMISC::CVector size();
-	virtual void  position(NLMISC::CVector position);
+	virtual void  position(const NLMISC::CVector &position);
 	
 	virtual TGuiAlignment alignment();
 	virtual void alignment(int alignment);
-	NLMISC::CVector offset(NLMISC::CVector maxSize);
+	NLMISC::CVector offset(const NLMISC::CVector &maxSize);
 
-	NL3D::UMaterial *CGuiObject::LoadBitmap(std::string filename);
+	NL3D::UMaterial CGuiObject::LoadBitmap(const std::string &filename);
 		
 	//CVector globalPosition()
 
@@ -91,7 +91,7 @@ public:
 	void minHeight(float minHeight);
 
 	NLMISC::CVector minSize();
-	void minSize(NLMISC::CVector minSize);
+	void minSize(const NLMISC::CVector &minSize);
 	
 	std::string name();
 
@@ -105,10 +105,10 @@ protected:
 	std::string _name;
 	virtual float _width() = 0;
 	virtual float _height() = 0;
-	virtual void _preRender(NLMISC::CVector pos,NLMISC::CVector &maxSize);
-	virtual void _render(NLMISC::CVector pos,NLMISC::CVector &maxSize);
-	virtual void _postRender(NLMISC::CVector pos,NLMISC::CVector &maxSize);
-	void _checkFocus(NLMISC::CVector pos,NLMISC::CVector maxSize);
+	virtual void _preRender(const NLMISC::CVector &pos, NLMISC::CVector &maxSize);
+	virtual void _render(const NLMISC::CVector &pos, NLMISC::CVector &maxSize);
+	virtual void _postRender(const NLMISC::CVector &pos, NLMISC::CVector &maxSize);
+	void _checkFocus(const NLMISC::CVector &pos, const NLMISC::CVector &maxSize);
 private:
 	TGuiAlignment _alignment;
 	NLMISC::CVector _position;	
@@ -127,8 +127,8 @@ public:
 	virtual void render();
 	virtual void release();
 
-	void registerClass(std::string className,CreateObjectCB cb);
-	CGuiObject *create(std::string className);
+	void registerClass(const std::string &className,CreateObjectCB cb);
+	CGuiObject *create(const std::string &className);
 		
 	CGuiMouseListener &mouseListener();
 	void focus(CGuiObject *object);

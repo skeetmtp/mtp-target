@@ -50,9 +50,10 @@ public:
 
 	virtual std::string name() { return "CFontManager"; }
 	
-	NL3D::UMaterial &material() const { nlassert(Material); return *Material; }
+	NL3D::UMaterial material() const { return Material; }
 
 	void littlePrintf(float x, float y, const char *format ...);
+	void littlePrintf(const NLMISC::CRGBA &col, float x, float y, const char *format ...);
 	void printf(const NLMISC::CRGBA &col, float x, float y, float scale, const char *format, ...);
 	void printf3D(const NLMISC::CRGBA &col, const NLMISC::CVector &pos, float scale, const char *format, ...);
 	
@@ -65,7 +66,7 @@ private:
 	uint32 FontWidth;
 	
 	NL3D::UTextureFile *Texture;
-	NL3D::UMaterial *Material;
+	NL3D::UMaterial Material;
 
 };
 

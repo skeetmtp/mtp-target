@@ -43,7 +43,7 @@ public:
 	CGuiProgressBar();
 	virtual ~CGuiProgressBar();
 
-	virtual void _render(NLMISC::CVector pos,NLMISC::CVector &maxSize);
+	virtual void _render(const NLMISC::CVector &pos, NLMISC::CVector &maxSize);
 	
 	virtual float borderWidth() {return 16;};
 	virtual float borderHeight() {return 16;};
@@ -63,9 +63,9 @@ public:
 	friend class CGuiProgressBar;
 protected:
 	NL3D::UTextureFile	*_textureProgress;
-	NL3D::UMaterial *_materialProgress;
+	NL3D::UMaterial _materialProgress;
 	NL3D::UTextureFile	*_textureProgressBar;
-	NL3D::UMaterial *_materialProgressBar;
+	NL3D::UMaterial _materialProgressBar;
 	
 };
 

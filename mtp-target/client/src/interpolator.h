@@ -53,7 +53,7 @@ class CEntityState
 {
 public:
 	CEntityState();
-	CEntityState(CVector position,bool onWater);
+	CEntityState(const CVector &position, bool onWater);
 	CVector position;
 	bool    onWater;
 	CEntityState operator+( const CEntityState &other ) const;
@@ -183,7 +183,7 @@ public:
 	double  facing() const;
 	CMatrix getMatrix() const;
 	
-	void rotation(CVector rotation);
+	void rotation(const CVector &rotation);
 	
 	void reset();
 	

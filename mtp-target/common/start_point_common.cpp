@@ -66,13 +66,13 @@ CStartPointCommon::~CStartPointCommon()
 	
 }
 
-void CStartPointCommon::init(const std::string &name, const std::string &shapeName, uint8 id, NLMISC::CVector position, NLMISC::CAngleAxis rotation)
+void CStartPointCommon::init(const std::string &name, const std::string &shapeName, uint8 id, const NLMISC::CVector &position, const NLMISC::CAngleAxis &rotation)
 {
 	CEditableElementCommon::init(name,shapeName,id,position,CVector::Null,rotation);
 }
 
 
-void CStartPointCommon::update(NLMISC::CVector pos,NLMISC::CVector rot)
+void CStartPointCommon::update(const NLMISC::CVector &pos, const NLMISC::CVector &rot)
 {
 	Position = pos;
 	_changed = true;

@@ -30,6 +30,7 @@
 // Includes
 //
 
+#include <nel/3d/u_material.h>
 
 
 //
@@ -48,10 +49,10 @@ public:
 	float height();
 	void height(float height);
 	NLMISC::CVector position();
-	void position(NLMISC::CVector position);
+	void position(const NLMISC::CVector &position);
 	
-	NL3D::UMaterial *material();
-	void material(NL3D::UMaterial *material);
+	NL3D::UMaterial material();
+	void material(NL3D::UMaterial material);
 	
 private:
 	
@@ -60,7 +61,7 @@ private:
 	
 	NLMISC::CVector _position;
 
-	NL3D::UMaterial *_material;
+	NL3D::UMaterial _material;
 };
 
 

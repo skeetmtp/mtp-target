@@ -61,20 +61,20 @@ void CGuiProgressBarManager::init()
 	nlassert(_textureProgress);
 	
 	_materialProgress = C3DTask::instance().driver().createMaterial ();
-	_materialProgress->setTexture(_textureProgress);
-	_materialProgress->setBlend(true);
-	_materialProgress->setZFunc(UMaterial::always);
-	_materialProgress->setDoubleSided();
+	_materialProgress.setTexture(_textureProgress);
+	_materialProgress.setBlend(true);
+	_materialProgress.setZFunc(UMaterial::always);
+	_materialProgress.setDoubleSided();
 	
 	res = CResourceManager::instance().get("progress-bar.tga");
 	_textureProgressBar = C3DTask::instance().driver().createTextureFile(res);
 	nlassert(_textureProgress);
 	
 	_materialProgressBar = C3DTask::instance().driver().createMaterial ();
-	_materialProgressBar->setTexture(_textureProgressBar);
-	_materialProgressBar->setBlend(true);
-	_materialProgressBar->setZFunc(UMaterial::always);
-	_materialProgressBar->setDoubleSided();
+	_materialProgressBar.setTexture(_textureProgressBar);
+	_materialProgressBar.setBlend(true);
+	_materialProgressBar.setZFunc(UMaterial::always);
+	_materialProgressBar.setDoubleSided();
 	
 	CGuiProgressBar::XmlRegister();
 }
@@ -110,7 +110,7 @@ CGuiProgressBar::~CGuiProgressBar()
 	
 }
 
-void CGuiProgressBar::_render(CVector pos,CVector &maxSize)
+void CGuiProgressBar::_render(const CVector &pos,CVector &maxSize)
 {
 	if(_ptrValue)
 		_percent = *_ptrValue;

@@ -80,7 +80,7 @@ CModule::CModule() : CModuleCommon()
 	triMeshDataId = 0;
 }
 
-void CModule::init(const std::string &name, const std::string &shapeName, uint8 id, NLMISC::CVector position, NLMISC::CVector scale, NLMISC::CAngleAxis rotation)
+void CModule::init(const std::string &name, const std::string &shapeName, uint8 id, const NLMISC::CVector &position, const NLMISC::CVector &scale, const NLMISC::CAngleAxis &rotation)
 {
 	CModuleCommon::init(name, shapeName, id, position, scale, rotation);
 	
@@ -221,7 +221,7 @@ void CModule::initBeforeStartLevel()
 }
 
 
-void CModule::update(CVector pos,CVector rot)
+void CModule::update(const CVector &pos, const CVector &rot)
 {	
 	pausePhysics();
 	dGeomSetPosition(Geom, pos.x, pos.y, pos.z);

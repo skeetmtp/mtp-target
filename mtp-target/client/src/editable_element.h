@@ -83,7 +83,7 @@ public:
 
 	//virtual void init(const std::string &name,uint8 id, NLMISC::CVector position, NLMISC::CAngleAxis rotation);
 
-	NL3D::UInstance *mesh();
+	NL3D::UInstance mesh();
 	virtual void renderSelection();
 
 	void show();
@@ -92,8 +92,8 @@ public:
 	//virtual void position(NLMISC::CVector pos);
 
 protected:
-	NL3D::UInstance *Mesh;
-	NL3D::UMaterial *mat;
+	NL3D::UInstance Mesh;
+	NL3D::UMaterial mat;
 };
 
 

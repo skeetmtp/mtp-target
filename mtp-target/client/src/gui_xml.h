@@ -43,10 +43,10 @@ public:
 	CGuiObject *get(std::string name);
 	virtual ~CGuiXml();
 
-	bool getVector(xmlNodePtr node,std::string name,NLMISC::CVector &res);
-	bool getAlignment(xmlNodePtr node,std::string name,CGuiObject::TGuiAlignment &res);
-	bool getString(xmlNodePtr node,std::string name,std::string &res);
-	bool getBool(xmlNodePtr node,std::string name,bool &res);
+	bool getVector(xmlNodePtr node,const std::string &name,NLMISC::CVector &res);
+	bool getAlignment(xmlNodePtr node,const std::string &name,CGuiObject::TGuiAlignment &res);
+	bool getString(xmlNodePtr node,const std::string &name,std::string &res);
+	bool getBool(xmlNodePtr node,const std::string &name,bool &res);
 		
 	friend class CGuiXmlManager;
 	std::list<guiSPG<CGuiObject> > objects;
@@ -59,7 +59,7 @@ private:
 class CGuiXmlManager : public CSingleton<CGuiXmlManager>
 {
 public:
-	static CGuiXml *Load(std::string filename);
+	static CGuiXml *Load(const std::string &filename);
 protected:
 private:
 };

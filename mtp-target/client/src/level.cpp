@@ -209,8 +209,8 @@ CLevel::CLevel(const string &filename)
 	DisplayLevel = true;
 
 	Valid = true;
-	if(C3DTask::instance().levelParticle()!=0)
-		C3DTask::instance().levelParticle()->show();
+	if(!C3DTask::instance().levelParticle().empty())
+		C3DTask::instance().levelParticle().show();
 
 	float cameraMinDistFromStartPointToMove = 1.0f;
 	luaGetGlobalVariable(LuaState, cameraMinDistFromStartPointToMove);
@@ -452,14 +452,14 @@ void CLevel::displayLevel(bool b)
 	{
 		for(uint i = 0; i < Modules.size(); i++)
 		{
-			Modules[i]->mesh()->show ();
+			Modules[i]->mesh().show ();
 		}
 	}
 	else
 	{
 		for(uint i = 0; i < Modules.size(); i++)
 		{
-			Modules[i]->mesh()->hide ();
+			Modules[i]->mesh().hide ();
 		}
 	}
 }
@@ -477,7 +477,7 @@ uint32 CLevel::getModuleCount()
 	return Modules.size();
 }
 
-void CLevel::updateModule(uint32 id,CVector pos,CVector rot,uint32 selectedBy)
+void CLevel::updateModule(uint32 id,const CVector &pos,const CVector &rot,uint32 selectedBy)
 {
 	//TODO selectedBy
 	getModule(id)->update(pos,rot);//,selectedBy);
@@ -495,7 +495,7 @@ uint32 CLevel::getStartPointCount()
 	return StartPoints.size();
 }
 
-void CLevel::updateStartPoint(uint32 id,CVector pos,CVector rot,uint32 selectedBy)
+void CLevel::updateStartPoint(uint32 id,const CVector &pos,const CVector &rot,uint32 selectedBy)
 {
 	//TODO selectedBy
 	getStartPoint(id)->update(pos,rot);//,selectedBy);

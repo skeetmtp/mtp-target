@@ -46,8 +46,8 @@ public:
 
 	void initBeforeStartLevel();
 		
-	virtual void init(const std::string &name, const std::string &shapeName, uint8 id, NLMISC::CVector position, NLMISC::CVector scale, NLMISC::CAngleAxis rotation);
-	virtual void update(NLMISC::CVector pos,NLMISC::CVector rot);
+	virtual void init(const std::string &name, const std::string &shapeName, uint8 id, const NLMISC::CVector &position, const NLMISC::CVector &scale, const NLMISC::CAngleAxis &rotation);
+	virtual void update(const NLMISC::CVector &pos, const NLMISC::CVector &rot);
 	void update();
 	
 

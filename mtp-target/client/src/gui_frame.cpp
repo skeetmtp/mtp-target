@@ -63,10 +63,10 @@ void CGuiFrameManager::init()
 	*/
 	
 	_material = C3DTask::instance().driver().createMaterial ();
-	_material->setTexture(_texture);
-	_material->setBlend(true);
-	_material->setZFunc(UMaterial::always);
-	_material->setDoubleSided();
+	_material.setTexture(_texture);
+	_material.setBlend(true);
+	_material.setZFunc(UMaterial::always);
+	_material.setDoubleSided();
 	
 	CGuiFrame::XmlRegister();	
 }
@@ -110,7 +110,7 @@ CGuiFrame::~CGuiFrame()
 	
 }
 
-void CGuiFrame::_render(CVector pos,CVector &maxSize)
+void CGuiFrame::_render(const CVector &pos,CVector &maxSize)
 {
 	CVector globalPos = globalPosition(pos,maxSize);
 	maxSize = expandSize(maxSize);

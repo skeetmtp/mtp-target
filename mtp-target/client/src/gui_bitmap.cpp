@@ -90,7 +90,7 @@ CGuiBitmap::~CGuiBitmap()
 
 float CGuiBitmap::_width()
 {
-	if(_material)
+	if(!_material.empty())
 		return 32;
 	else
 		return 0;
@@ -98,13 +98,13 @@ float CGuiBitmap::_width()
 
 float CGuiBitmap::_height()
 {
-	if(_material)
+	if(!_material.empty())
 		return 32;
 	else
 		return 0;	
 }
 
-void CGuiBitmap::_render(CVector pos,CVector &maxSize)
+void CGuiBitmap::_render(const CVector &pos,CVector &maxSize)
 {
 	CGuiStretchedQuad quad;
 	CVector globalPos = globalPosition(pos,maxSize);
@@ -121,7 +121,7 @@ void CGuiBitmap::_render(CVector pos,CVector &maxSize)
 
 
 
-UMaterial *CGuiBitmap::load(string filename)
+UMaterial CGuiBitmap::load(const string &filename)
 {
 	string res;
 	
@@ -129,17 +129,17 @@ UMaterial *CGuiBitmap::load(string filename)
 	_texture= C3DTask::instance().driver().createTextureFile(res);
 	nlassert(_texture);
 	
-	_material= C3DTask::instance().driver().createMaterial ();
-	_material->setTexture(_texture);
-	_material->setBlend(true);
-	_material->setZFunc(UMaterial::always);
-	_material->setDoubleSided();
+	_material = C3DTask::instance().driver().createMaterial();
+	_material.setTexture(_texture);
+	_material.setBlend(true);
+	_material.setZFunc(UMaterial::always);
+	_material.setDoubleSided();
 	
 	return _material;
 }
 
 
-NL3D::UMaterial *CGuiBitmap::material()
+NL3D::UMaterial CGuiBitmap::material()
 {
 	return _material;
 }

@@ -87,20 +87,20 @@ void CEntity::swapOpenClose()
 	if (OpenClose)
 	{
 		ParticuleActivated = 1;
-		if(CloseMesh)
-			CloseMesh->hide();
-		if(OpenMesh)
-			OpenMesh->show();
+		if(!CloseMesh.empty())
+			CloseMesh.hide();
+		if(!OpenMesh.empty())
+			OpenMesh.show();
 		SoundsDescriptor.play(CSoundManager::CEntitySoundsDescriptor::BallOpen);
 		SoundsDescriptor.stop(CSoundManager::CEntitySoundsDescriptor::BallClose);
 	}
 	else
 	{
 		ParticuleActivated = 0;
-		if(CloseMesh)
-			CloseMesh->show();
-		if(OpenMesh)
-			OpenMesh->hide();
+		if(!CloseMesh.empty())
+			CloseMesh.show();
+		if(!OpenMesh.empty())
+			OpenMesh.hide();
 		SoundsDescriptor.stop(CSoundManager::CEntitySoundsDescriptor::BallOpen);
 		SoundsDescriptor.play(CSoundManager::CEntitySoundsDescriptor::BallClose);
 	}
@@ -126,10 +126,10 @@ void CEntity::close()
 	OpenClose = false;
 	
 	ParticuleActivated = 0;
-	if(CloseMesh)
-		CloseMesh->show();
-	if(OpenMesh)
-		OpenMesh->hide();
+	if(!CloseMesh.empty())
+		CloseMesh.show();
+	if(!OpenMesh.empty())
+		OpenMesh.hide();
 }
 
 void CEntity::update()
@@ -138,10 +138,10 @@ void CEntity::update()
 
 //	nlinfo("set matrix for %hu", (uint16)id());
 				
-	if(OpenMesh)
-		OpenMesh->setMatrix(interpolator().getMatrix());
-	if(CloseMesh)
-		CloseMesh->setMatrix(interpolator().getMatrix());
+	if(!OpenMesh.empty())
+		OpenMesh.setMatrix(interpolator().getMatrix());
+	if(!CloseMesh.empty())
+		CloseMesh.setMatrix(interpolator().getMatrix());
 	{
 
 /*ace todo		if (OnWater && WaterModel)
@@ -166,12 +166,12 @@ void CEntity::update()
 
 	SoundsDescriptor.update3d(ObjMatrix.getPos(), CVector(0,0,0)); // todo : velocity
 
-	if(TraceParticle != 0)
+	if(!TraceParticle.empty())
 	{
-		TraceParticle->setPos(interpolator().position());
+		TraceParticle.setPos(interpolator().position());
 		
 		// we activate
-		if (ParticuleActivated != -1 && TraceParticle->isSystemPresent())
+		if (ParticuleActivated != -1 && TraceParticle.isSystemPresent())
 		{
 			//if (ParticuleActivated == 0 || CMtpTarget::instance().controler().getControledEntity() != this)
 			
@@ -182,10 +182,8 @@ void CEntity::update()
 			else
 				fadeParticleColorTo(CRGBA(0,0,0,0),1);
 
-			/*
-			if(ParticuleActivated==1 && CMtpTarget::instance().controler().getControledEntity()!=id())
-				TraceParticle->show();
-			*/
+			//if(ParticuleActivated==1 && CMtpTarget::instance().controler().getControledEntity()!=id())
+			//	TraceParticle->show();
 
 			ParticuleActivated = -1;
 		}
@@ -238,20 +236,20 @@ void CEntity::reset()
 {
 	interpolator().entity(this);
 	
-	if(TraceParticle)
+	if(!TraceParticle.empty())
 	{
 		C3DTask::instance().scene().deleteInstance(TraceParticle);
-		TraceParticle = 0;
+		TraceParticle.detach();
 	}
-	if(CloseMesh)
+	if(!CloseMesh.empty())
 	{
 		C3DTask::instance().scene().deleteInstance(CloseMesh);
-		CloseMesh = 0;
+		CloseMesh.detach();
 	}
-	if(OpenMesh)
+	if(!OpenMesh.empty())
 	{
 		C3DTask::instance().scene().deleteInstance(OpenMesh);
-		OpenMesh = 0;
+		OpenMesh.detach();
 	}
 
 	CSoundManager::instance().unregisterEntity(SoundsDescriptor);
@@ -290,45 +288,42 @@ void CEntity::init(TEntity type, const std::string &name, sint32 totalScore, CRG
 
 void CEntity::load3d()
 {
-	if(!CloseMesh)
+	if(CloseMesh.empty())
 	{
 		string res = CResourceManager::instance().get("entity_"+MeshName+"_close.shape");
 		CloseMesh = C3DTask::instance().scene().createInstance(res);
-		nlassert(CloseMesh);
-		CloseMesh->show();
-		CloseMesh->setTransformMode (UTransformable::DirectMatrix);
-		for(uint i = 0; i < CloseMesh->getNumMaterials(); i++)
+		CloseMesh.show();
+		CloseMesh.setTransformMode (UTransformable::DirectMatrix);
+		for(uint i = 0; i < CloseMesh.getNumMaterials(); i++)
 		{
-			CloseMesh->getMaterial(i).setDiffuse(Color);
-			CloseMesh->getMaterial(i).setAmbient(Color);
+			CloseMesh.getMaterial(i).setDiffuse(Color);
+			CloseMesh.getMaterial(i).setAmbient(Color);
 		}
 	}
 	
-	if(!OpenMesh)
+	if(OpenMesh.empty())
 	{
 		string res = CResourceManager::instance().get("entity_"+MeshName+"_open.shape");
 		OpenMesh = C3DTask::instance().scene().createInstance(res);
-		nlassert(OpenMesh);
-		OpenMesh->hide();
-		OpenMesh->setTransformMode (UTransformable::DirectMatrix);
+		OpenMesh.hide();
+		OpenMesh.setTransformMode (UTransformable::DirectMatrix);
 		
-		for(uint i = 0; i < OpenMesh->getNumMaterials(); i++)
+		for(uint i = 0; i < OpenMesh.getNumMaterials(); i++)
 		{
-			OpenMesh->getMaterial(i).setDiffuse(Color);
-			OpenMesh->getMaterial(i).setAmbient(Color);
+			OpenMesh.getMaterial(i).setDiffuse(Color);
+			OpenMesh.getMaterial(i).setAmbient(Color);
 		}
 	}
 	
-	if(!TraceParticle && CConfigFileTask::instance().configFile().getVar("DisplayParticle").asInt() == 1)
+	if(TraceParticle.empty() && CConfigFileTask::instance().configFile().getVar("DisplayParticle").asInt() == 1)
 	{
 		string res = CResourceManager::instance().get("trace.ps");
-		TraceParticle = dynamic_cast<UParticleSystemInstance *>(C3DTask::instance().scene().createInstance(res));
-		nlassert(TraceParticle);
-		TraceParticle->setTransformMode (UTransformable::RotQuat);	
-		TraceParticle->setOrderingLayer(2);
-		TraceParticle->activateEmitters(true);
-		TraceParticle->show();
-		TraceParticle->setUserColor(CRGBA(0,0,0,0));
+		TraceParticle.cast(C3DTask::instance().scene().createInstance(res));
+		TraceParticle.setTransformMode (UTransformable::RotQuat);
+		TraceParticle.setOrderingLayer(2);
+		TraceParticle.activateEmitters(true);
+		TraceParticle.show();
+		TraceParticle.setUserColor(CRGBA(0,0,0,0));
 		ParticuleActivated = 0;
 	}
 }
@@ -356,7 +351,7 @@ void CEntity::fadeParticleColorTo(NLMISC::CRGBA &color,float duration)
 	if(FadeParticleColor==color || duration<=0) return;
 
 	FadeParticleColor = color;
-	FadeParticleStartColor = TraceParticle->getUserColor();
+	FadeParticleStartColor = TraceParticle.getUserColor();
 	FadeParticleDuration = duration;
 	FadeParticleStartTime = (float)CTimeTask::instance().time();
 }
@@ -369,6 +364,6 @@ void CEntity::fadeParticleColorUpdate()
 
 	CRGBA newCol;
 	newCol.blendFromui(FadeParticleStartColor,FadeParticleColor,(uint)(256 * lpos));
-	TraceParticle->setUserColor(newCol);
+	TraceParticle.setUserColor(newCol);
 }
 

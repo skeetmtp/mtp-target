@@ -79,10 +79,10 @@ void CGuiTextManager::init()
 	_cursorTexture->setWrapT(UTexture::Clamp);
 	
 	_cursorMaterial = C3DTask::instance().driver().createMaterial ();
-	_cursorMaterial->setTexture(_cursorTexture);
-	_cursorMaterial->setBlend(true);
-	_cursorMaterial->setZFunc(UMaterial::always);
-	_cursorMaterial->setDoubleSided();
+	_cursorMaterial.setTexture(_cursorTexture);
+	_cursorMaterial.setBlend(true);
+	_cursorMaterial.setZFunc(UMaterial::always);
+	_cursorMaterial.setDoubleSided();
 	
 	res = CResourceManager::instance().get("entry.tga");
 	_entryTexture = C3DTask::instance().driver().createTextureFile(res);
@@ -91,10 +91,10 @@ void CGuiTextManager::init()
 	_entryTexture->setWrapT(UTexture::Clamp);
 	
 	_entryMaterial = C3DTask::instance().driver().createMaterial ();
-	_entryMaterial->setTexture(_entryTexture);
-	_entryMaterial->setBlend(true);
-	_entryMaterial->setZFunc(UMaterial::always);
-	_entryMaterial->setDoubleSided();
+	_entryMaterial.setTexture(_entryTexture);
+	_entryMaterial.setBlend(true);
+	_entryMaterial.setZFunc(UMaterial::always);
+	_entryMaterial.setDoubleSided();
 	
 	CGuiText::XmlRegister();
 	CGuiTextPercent::XmlRegister();
@@ -110,12 +110,12 @@ void CGuiTextManager::release()
 }
 
 
-UMaterial *CGuiTextManager::cursorMaterial()
+UMaterial CGuiTextManager::cursorMaterial()
 {
 	return _cursorMaterial;
 }
 
-UMaterial *CGuiTextManager::entryMaterial()
+UMaterial CGuiTextManager::entryMaterial()
 {
 	return _entryMaterial;
 }
@@ -130,7 +130,7 @@ void CGuiTextCursor::Reset()
 	_FrameCount = 0;
 }
 
-void CGuiTextCursor::Render(CVector position,int height)
+void CGuiTextCursor::Render(const CVector &position,int height)
 {
 	_FrameCount++;
 	if(_FrameCount<30)
@@ -152,7 +152,7 @@ void CGuiTextCursor::Render(CVector position,int height)
 //
 //
 
-void CGuiText::_init(string text)
+void CGuiText::_init(const string &text)
 {
 	this->text = text;
 	cursorIndex(0);
@@ -163,7 +163,7 @@ void CGuiText::_init(string text)
 	_fontSize    = 12;
 }
 
-CGuiText::CGuiText(string text)
+CGuiText::CGuiText(const string &text)
 {
 	_init(text);
 }
@@ -215,7 +215,7 @@ static string strToMultiline(string str,bool active)
 	return res;
 }
 
-void CGuiText::_render(CVector pos,CVector &maxSize)
+void CGuiText::_render(const CVector &pos,CVector &maxSize)
 {
 	CVector globalPos = globalPosition(pos,maxSize);
 	CVector cursorPos(0,0,0);
@@ -567,7 +567,7 @@ CGuiTextPercent::~CGuiTextPercent()
 	
 }
 
-void CGuiTextPercent::_render(CVector pos,CVector &maxSize)
+void CGuiTextPercent::_render(const CVector &pos,CVector &maxSize)
 {
 	char ch[256];
 	if(_ptrValue)

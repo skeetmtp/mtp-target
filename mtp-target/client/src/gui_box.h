@@ -29,6 +29,8 @@
 //
 // Includes
 //
+#include <nel/3d/u_material.h>
+
 #include "gui_stretched_quad.h"
 #include "gui_container.h"
 
@@ -66,7 +68,7 @@ public:
 	CGuiVBox();
 	virtual ~CGuiVBox();
 	
-	virtual void _render(NLMISC::CVector pos,NLMISC::CVector &maxSize);	
+	virtual void _render(const NLMISC::CVector &pos, NLMISC::CVector &maxSize);	
 	
 	virtual float _width();
 	virtual float _height();
@@ -86,7 +88,7 @@ public:
 	CGuiHBox();
 	virtual ~CGuiHBox();
 	
-	virtual void _render(NLMISC::CVector pos,NLMISC::CVector &maxSize);	
+	virtual void _render(const NLMISC::CVector &pos, NLMISC::CVector &maxSize);	
 	
 	virtual float _width();
 	virtual float _height();
@@ -107,13 +109,11 @@ public:
 	virtual void release();
 	
 	NL3D::UTextureFile	*texture();
-	NL3D::UMaterial *material();
-	
-	
+	NL3D::UMaterial material();
+
 private:
 	NL3D::UTextureFile	*_texture;
-	NL3D::UMaterial *_material;
-	
+	NL3D::UMaterial _material;
 };
 
 #endif

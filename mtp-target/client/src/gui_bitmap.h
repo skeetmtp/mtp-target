@@ -29,6 +29,9 @@
 //
 // Includes
 //
+
+#include <nel/3d/u_material.h>
+
 #include "gui_object.h"
 
 
@@ -43,21 +46,21 @@ public:
 	CGuiBitmap(std::string filename);
 	virtual ~CGuiBitmap();
 
-	virtual void _render(NLMISC::CVector pos,NLMISC::CVector &maxSize);
+	virtual void _render(const NLMISC::CVector &pos, NLMISC::CVector &maxSize);
 
-	NL3D::UMaterial *load(std::string filename);
+	NL3D::UMaterial load(const std::string &filename);
 	
 	virtual float _width();
 	virtual float _height();
 
-	NL3D::UMaterial *material();
+	NL3D::UMaterial material();
 	
 	static void XmlRegister();
 	static CGuiObject *Create();
 	virtual void init(CGuiXml *xml,xmlNodePtr node);
 private:
 	NL3D::UTextureFile	*_texture;
-	NL3D::UMaterial *_material;
+	NL3D::UMaterial _material;
 };
 
 class CGuiBitmapManager : public CSingleton<CGuiBitmapManager>

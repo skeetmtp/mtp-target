@@ -42,7 +42,7 @@ using namespace NL3D;
 
 
 static CVector rayTestStart,rayTestEnd;
-static UMaterial *testMat;
+static UMaterial testMat;
 
 //
 // Functions
@@ -61,9 +61,9 @@ void CEditorTask::init()
 	rayTestStart = CVector(0,0,0);
 	rayTestEnd= CVector(0,0,0);
 	testMat = C3DTask::instance().driver().createMaterial();
-	testMat->setColor(CRGBA(255,255,255,255));
-	testMat->setZWrite(true);
-	testMat->setZFunc(UMaterial::always);
+	testMat.setColor(CRGBA(255,255,255,255));
+	testMat.setZWrite(true);
+	testMat.setZFunc(UMaterial::always);
 	
 }
 
@@ -78,8 +78,8 @@ void CEditorTask::_mouseSelectModule()
 		_selectedElement = NULL;
 		//nlinfo("editor ray test");
 		CViewport vp = C3DTask::instance().scene().getViewport();
-		CMatrix camMat = C3DTask::instance().scene().getCam()->getMatrix();
-		CFrustum frustum = C3DTask::instance().scene().getCam()->getFrustum();
+		CMatrix camMat = C3DTask::instance().scene().getCam().getMatrix();
+		CFrustum frustum = C3DTask::instance().scene().getCam().getFrustum();
 		C3DTask::instance().driver().setFrustum(frustum);
 		CVector rayStart,rayDir,rayEnd;
 		float x = mousePressedPos.x / C3DTask::instance().screenWidth();
@@ -95,10 +95,10 @@ void CEditorTask::_mouseSelectModule()
 		for(i=0;i<CLevelManager::instance().currentLevel().getModuleCount();i++)
 		{
 			CModule *module = CLevelManager::instance().currentLevel().getModule(i);
-			UInstance *mesh = module->mesh();
+			UInstance mesh = module->mesh();
 			CAABBox bbox;
-			mesh->getShapeAABBox(bbox);
-			CAABBox tbbox = CAABBox::transformAABBox(mesh->getMatrix(),bbox);
+			mesh.getShapeAABBox(bbox);
+			CAABBox tbbox = CAABBox::transformAABBox(mesh.getMatrix(),bbox);
 			bool intersect = tbbox.intersect(rayStart,rayEnd);
 			if(intersect)
 			{
@@ -110,10 +110,10 @@ void CEditorTask::_mouseSelectModule()
 		for(i=0;i<CLevelManager::instance().currentLevel().getStartPointCount();i++)
 		{
 			CStartPoint *startpoint = CLevelManager::instance().currentLevel().getStartPoint(i);
-			UInstance *mesh = startpoint->mesh();
+			UInstance mesh = startpoint->mesh();
 			CAABBox bbox;
-			mesh->getShapeAABBox(bbox);
-			CAABBox tbbox = CAABBox::transformAABBox(mesh->getMatrix(),bbox);
+			mesh.getShapeAABBox(bbox);
+			CAABBox tbbox = CAABBox::transformAABBox(mesh.getMatrix(),bbox);
 			bool intersect = tbbox.intersect(rayStart,rayEnd);
 			if(intersect)
 			{
@@ -131,8 +131,8 @@ void CEditorTask::_mouseSelectModule()
 		{
 			CEditableElementCommon *element = *it;
 			CVector rayHit;
-			NL3D :: UInstance* mesh = element->mesh();
-			CMatrix mat = mesh->getMatrix();
+			NL3D :: UInstance mesh = element->mesh();
+			CMatrix mat = mesh.getMatrix();
 			bool intersect = element->intersect(rayStart,rayEnd,rayHit,mat);
 			if(intersect)
 			{
@@ -171,10 +171,10 @@ void CEditorTask::update()
 
 		if (C3DTask::instance().kbPressed(KeySPACE) && C3DTask::instance().kbDown(KeyCONTROL))
 		{
-			CMatrix camMat = C3DTask::instance().scene().getCam()->getMatrix();
+			CMatrix camMat = C3DTask::instance().scene().getCam().getMatrix();
 			CVector camDir = camMat.getJ();
 			CAABBox bbox;
-			_selectedElement->mesh()->getShapeAABBox(bbox);
+			_selectedElement->mesh().getShapeAABBox(bbox);
 			ControlerFreeLookPos = _selectedElement->position()  - camDir * (bbox.getRadius() + 0.1f);
 		}
 		
@@ -247,7 +247,7 @@ void CEditorTask::update()
 		ControlerCamMatrix.rotateZ(_mouseX);
 		ControlerCamMatrix.rotateX(_mouseY);
 		//			nlinfo("set camera matrix");
-		C3DTask::instance().scene().getCam()->setMatrix(ControlerCamMatrix);			
+		C3DTask::instance().scene().getCam().setMatrix(ControlerCamMatrix);			
 
 		if(selectedElement() && dv.norm()!=0.0f)
 		{
@@ -307,8 +307,8 @@ void CEditorTask::update()
 
 void CEditorTask::render()
 {
-	C3DTask::instance().driver().setFrustum(C3DTask::instance().scene().getCam()->getFrustum());
-	C3DTask::instance().driver().setMatrixMode3D(*C3DTask::instance().scene().getCam());
+	C3DTask::instance().driver().setFrustum(C3DTask::instance().scene().getCam().getFrustum());
+	C3DTask::instance().driver().setMatrixMode3D(C3DTask::instance().scene().getCam());
 	if(_selectedElement)
 	{
 		_selectedElement->renderSelection();

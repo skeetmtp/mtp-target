@@ -61,20 +61,20 @@ void CGuiScaleManager::init()
 	nlassert(_textureArrow);
 	
 	_materialArrow = C3DTask::instance().driver().createMaterial ();
-	_materialArrow->setTexture(_textureArrow);
-	_materialArrow->setBlend(true);
-	_materialArrow->setZFunc(UMaterial::always);
-	_materialArrow->setDoubleSided();
+	_materialArrow.setTexture(_textureArrow);
+	_materialArrow.setBlend(true);
+	_materialArrow.setZFunc(UMaterial::always);
+	_materialArrow.setDoubleSided();
 	
 	res = CResourceManager::instance().get("progress.tga");
 	_textureProgress = C3DTask::instance().driver().createTextureFile(res);
 	nlassert(_textureProgress);
 	
 	_materialProgress = C3DTask::instance().driver().createMaterial ();
-	_materialProgress->setTexture(_textureProgress);
-	_materialProgress->setBlend(true);
-	_materialProgress->setZFunc(UMaterial::always);
-	_materialProgress->setDoubleSided();
+	_materialProgress.setTexture(_textureProgress);
+	_materialProgress.setBlend(true);
+	_materialProgress.setZFunc(UMaterial::always);
+	_materialProgress.setDoubleSided();
 	
 	CGuiHScale::XmlRegister();
 	CGuiVScale::XmlRegister();
@@ -93,12 +93,12 @@ void CGuiScaleManager::release()
 	
 }
 
-NL3D::UMaterial *CGuiScaleManager::materialArrow()
+NL3D::UMaterial CGuiScaleManager::materialArrow()
 {
 	return _materialArrow;
 }
 
-NL3D::UMaterial *CGuiScaleManager::materialProgress()
+NL3D::UMaterial CGuiScaleManager::materialProgress()
 {
 	return _materialProgress;
 }
@@ -164,7 +164,7 @@ CGuiHScale::~CGuiHScale()
 	
 }
 
-void CGuiHScale::_render(CVector pos,CVector &maxSize)
+void CGuiHScale::_render(const CVector &pos,CVector &maxSize)
 {
 	if(_ptrValue)
 		_percent = *_ptrValue;
@@ -277,7 +277,7 @@ CGuiVScale::~CGuiVScale()
 	
 }
 
-void CGuiVScale::_render(CVector pos,CVector &maxSize)
+void CGuiVScale::_render(const CVector &pos,CVector &maxSize)
 {
 	CVector globalPos = globalPosition(pos,maxSize);
 	CVector expSize = expandSize(maxSize);

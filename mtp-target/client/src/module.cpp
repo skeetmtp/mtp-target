@@ -56,8 +56,8 @@
 
 #include <nel/3d/u_instance_material.h>
 
-#include "3d/water_height_map.h"
-#include "3d/water_pool_manager.h"
+#include <3d/water_height_map.h>
+#include <3d/water_pool_manager.h>
 
 #include "module.h"
 #include "global.h"
@@ -76,7 +76,7 @@ using namespace NL3D;
 
 
 
-CModule::CModule():CModuleCommon()
+CModule::CModule() : CModuleCommon()
 {
 	mat = C3DTask::instance().driver().createMaterial();
 }
@@ -84,17 +84,15 @@ CModule::CModule():CModuleCommon()
 
 CModule::~CModule()
 {
-	if(Mesh)
+	if(!Mesh.empty())
 	{
 		C3DTask::instance().scene().deleteInstance(Mesh);
-		Mesh = NULL;	
+		Mesh.detach();	
 	}
 }
 
 
-
-
-void CModule::init(const string &name, const std::string &shapeName, uint8 id, CVector position, CVector scale, CAngleAxis rotation)
+void CModule::init(const string &name, const std::string &shapeName, uint8 id, const CVector &position, const CVector &scale, const CAngleAxis &rotation)
 {
 	CModuleCommon::init(name, shapeName, id, position, scale, rotation); 
 
@@ -103,38 +101,34 @@ void CModule::init(const string &name, const std::string &shapeName, uint8 id, C
 	
 	ShapeName = CResourceManager::instance().get(shapeName+".shape");
 	NbFaces = loadMesh(ShapeName, Vertices, Normals, Indices, AutoEdges);
-	
-	
+
 	Mesh = C3DTask::instance().scene().createInstance (ShapeName);
-	if (Mesh == 0)
+	if (Mesh.empty())
 	{
 		nlwarning ("Can't load '%s.shape'", Name.c_str());
 	}
-	Mesh->setTransformMode(UTransformable::RotQuat);
-	Mesh->setRotQuat(CQuat(rotation));
-	Mesh->setPos(position);
-	CVector oldScale = Mesh->getScale();
-	scale.x *= oldScale.x;
-	scale.y *= oldScale.y;
-	scale.z *= oldScale.z;
-	Mesh->setScale(scale);
-	CMatrix mmatrix = mesh()->getMatrix();
+	Mesh.setTransformMode(UTransformable::RotQuat);
+	Mesh.setRotQuat(CQuat(rotation));
+	Mesh.setPos(position);
+	CVector oldScale = Mesh.getScale();
+	oldScale.x *= scale.x;
+	oldScale.y *= scale.y;
+	oldScale.z *= scale.z;
+	Mesh.setScale(oldScale);
+	CMatrix mmatrix = mesh().getMatrix();
 	
 }
 
 
-
-
-
 void CModule::renderSelection()
 {
-	mat->setColor(CRGBA(255,255,255,200));
-	mat->setZWrite(true);
-	mat->setZFunc(UMaterial::always);
-	mat->setBlend(true);
-	mat->setBlendFunc(UMaterial::srcalpha,UMaterial::invsrcalpha);
+	mat.setColor(CRGBA(255,255,255,200));
+	mat.setZWrite(true);
+	mat.setZFunc(UMaterial::always);
+	mat.setBlend(true);
+	mat.setBlendFunc(UMaterial::srcalpha,UMaterial::invsrcalpha);
 	
-	CMatrix matrix = mesh()->getMatrix();
+	CMatrix matrix = mesh().getMatrix();
 
 	float grow = 0.001f; 
 	uint i;
@@ -146,22 +140,22 @@ void CModule::renderSelection()
 		tri.V2 = matrix * (Vertices[Indices[i*3+2]] + grow * Normals[Indices[i*3+2]]);
 
 #if 0
-		C3DTask::instance().driver().drawTriangle(tri,*mat);
+		C3DTask::instance().driver().drawTriangle(tri,mat);
 #else
 		CLine line1(tri.V0,tri.V1);
 		CLine line2(tri.V1,tri.V2);
 		CLine line3(tri.V2,tri.V0);
 		
-		C3DTask::instance().driver().drawLine(line1,*mat);
-		C3DTask::instance().driver().drawLine(line2,*mat);
-		C3DTask::instance().driver().drawLine(line3,*mat);
+		C3DTask::instance().driver().drawLine(line1,mat);
+		C3DTask::instance().driver().drawLine(line2,mat);
+		C3DTask::instance().driver().drawLine(line3,mat);
 #endif
 		
 	}
 	
 }
 
-void CModule::update(NLMISC::CVector pos,NLMISC::CVector rot)
+void CModule::update(const NLMISC::CVector &pos, const NLMISC::CVector &rot)
 {
 	//TODO rot
 	position(pos);
@@ -175,9 +169,9 @@ void CModule::enabled(bool b)
 	CModuleCommon::enabled(b);
 
 	if(b)
-		Mesh->show();
+		Mesh.show();
 	else
-		Mesh->hide();
+		Mesh.hide();
 
 	nlinfo("%s %s",b?"show":"hide",name().c_str());
 }

@@ -125,9 +125,9 @@ void CBackgroundTask::release()
 		C3DTask::instance().driver().deleteTextureFile(Logo);
 		Logo = 0;
 	}
-	if(LogoParticle)
+	if(!LogoParticle.empty())
 	{
 		C3DTask::instance().scene().deleteInstance(LogoParticle);
-		LogoParticle = 0;
+		LogoParticle.detach();
 	}
 }

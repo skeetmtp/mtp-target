@@ -68,7 +68,7 @@ CGuiXml::~CGuiXml()
 }
 
 
-CGuiXml *CGuiXmlManager::Load(string filename)
+CGuiXml *CGuiXmlManager::Load(const string &filename)
 {
 
 	xmlNodePtr node;
@@ -123,7 +123,7 @@ CGuiXml *CGuiXmlManager::Load(string filename)
 }
 
 
-bool CGuiXml::getVector(xmlNodePtr node,string name,CVector &res)
+bool CGuiXml::getVector(xmlNodePtr node,const string &name,CVector &res)
 {
 	node = doc.getFirstChildNode(node,name.c_str());
 	if(node)
@@ -152,7 +152,7 @@ bool CGuiXml::getVector(xmlNodePtr node,string name,CVector &res)
 	return false;
 }
 
-bool CGuiXml::getAlignment(xmlNodePtr node,std::string name,CGuiObject::TGuiAlignment &res)
+bool CGuiXml::getAlignment(xmlNodePtr node,const std::string &name,CGuiObject::TGuiAlignment &res)
 {
 	node = doc.getFirstChildNode(node,name.c_str());
 	if(node)
@@ -183,7 +183,7 @@ bool CGuiXml::getAlignment(xmlNodePtr node,std::string name,CGuiObject::TGuiAlig
 }
 
 
-bool CGuiXml::getString(xmlNodePtr node,std::string name,std::string &res)
+bool CGuiXml::getString(xmlNodePtr node,const std::string &name,std::string &res)
 {
 	node = doc.getFirstChildNode(node,name.c_str());
 	if(node)
@@ -196,7 +196,7 @@ bool CGuiXml::getString(xmlNodePtr node,std::string name,std::string &res)
 	return false;
 }
 
-bool CGuiXml::getBool(xmlNodePtr node,std::string name,bool &res)
+bool CGuiXml::getBool(xmlNodePtr node,const std::string &name,bool &res)
 {
 	node = doc.getFirstChildNode(node,name.c_str());
 	if(node)

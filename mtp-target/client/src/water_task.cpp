@@ -129,8 +129,8 @@ void CWaterTask::init()
 {
 	nelWaterScene = C3DTask::instance().driver().createScene(false);
 
-	nelWaterScene->getCam()->setPerspective(degToRad(CConfigFileTask::instance().configFile().getVar("Fov").asFloat()), 1.33f, 1.0f*GScale, 30000.0f*GScale);
-	nelWaterScene->getCam()->setTransformMode (UTransformable::DirectMatrix);
+	nelWaterScene->getCam().setPerspective(degToRad(CConfigFileTask::instance().configFile().getVar("Fov").asFloat()), 1.33f, 1.0f*GScale, 30000.0f*GScale);
+	nelWaterScene->getCam().setTransformMode (UTransformable::DirectMatrix);
 
 ////
 	if(CConfigFileTask::instance().configFile().getVar("DisplayWater").asInt() == 2)
@@ -219,7 +219,7 @@ void CWaterTask::init()
 		string res;
 		res = CResourceManager::instance().get("water_light.shape");
 		WaterMesh = C3DTask::instance().scene().createInstance(res);
-		WaterMesh->setPos(0.0f,0.0f,1.0f*GScale);
+		WaterMesh.setPos(0.0f,0.0f,1.0f*GScale);
 	}
 
 }
@@ -233,7 +233,7 @@ void CWaterTask::update()
 	waterCameraMatrix.setPos(CVector::Null);
 	*/
 	
-	nelWaterScene->getCam()->setMatrix(C3DTask::instance().scene().getCam()->getMatrix());
+	nelWaterScene->getCam().setMatrix(C3DTask::instance().scene().getCam().getMatrix());
 	
 	nelWaterScene->animate (CTimeTask::instance().time());
 	
@@ -272,28 +272,28 @@ void CWaterTask::release()
 }
 
 
-void CWaterTask::envMap0Name(std::string envMapName)
+void CWaterTask::envMap0Name(const std::string &envMapName)
 {
 	EnvMap0Name = "water_env.tga";
 	if(envMapName.empty()) return;
 	EnvMap0Name = envMapName;
 }
 
-void CWaterTask::envMap1Name(std::string envMapName)
+void CWaterTask::envMap1Name(const std::string &envMapName)
 {
 	EnvMap1Name = "water_env.tga";
 	if(envMapName.empty()) return;
 	EnvMap1Name = envMapName;
 }
 
-void CWaterTask::heightMap0Name(std::string heightMap)
+void CWaterTask::heightMap0Name(const std::string &heightMap)
 {
 	HeightMap0Name = "water_disp.tga";
 	if(heightMap.empty()) return;
 	HeightMap0Name = heightMap;
 }
 
-void CWaterTask::heightMap1Name(std::string heightMap)
+void CWaterTask::heightMap1Name(const std::string &heightMap)
 {
 	HeightMap1Name = "water_disp2.tga";
 	if(heightMap.empty()) return;

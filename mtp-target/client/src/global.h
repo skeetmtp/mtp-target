@@ -21,7 +21,7 @@
 #define MTPT_GLOBAL_H
 
 // Comment this define if you don't want to use FMOD
-#define USE_FMOD
+//#define USE_FMOD
 
 static const float GScale = 0.01f;
 

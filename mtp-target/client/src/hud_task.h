@@ -39,7 +39,7 @@
 class CHudMessage
 {
 public:
-	CHudMessage(float x,float y,float scale,std::string message,NLMISC::CRGBA col,double duration)
+	CHudMessage(float x,float y,float scale,const std::string &message,NLMISC::CRGBA col,double duration)
 	{
 		this->x = x;
 		this->y = y;
@@ -76,7 +76,7 @@ public:
 
 	virtual std::string name() { return "CHudTask"; }
 
-	void setDisplayViewedName(std::string name);
+	void setDisplayViewedName(const std::string &name);
 	std::list<CHudMessage> messages;
 private:
 	std::string _viewedName;
