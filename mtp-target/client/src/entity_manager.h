@@ -46,7 +46,7 @@ public:
 	virtual void init();
 	virtual void update();
 	virtual void render();
-	virtual void release() { }
+	virtual void release() { 	CEntityManager::uninstance();	}
 		
 	void renderNames();
 	virtual std::string name() { return "CEntityManager"; }

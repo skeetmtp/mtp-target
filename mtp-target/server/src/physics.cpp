@@ -637,11 +637,11 @@ class PhysicsThread : public IRunnable
 };
 
 
+static PhysicsThread *physicThread = NULL;
 
 //
 // Functions
 //
-
 void initPhysics()
 {
 	World = dWorldCreate();
@@ -674,7 +674,8 @@ void initPhysics()
 	
 	//		addClient("dummy");
 	
-	thread = IThread::create(new PhysicsThread);
+	physicThread = new PhysicsThread;
+	thread = IThread::create(physicThread);
 	thread->start();
 }
 
@@ -685,6 +686,8 @@ void releasePhysics()
 	{
 		thread->terminate();
 		delete thread;
+		if(physicThread)
+			delete physicThread;
 	}
 
 //	CollisionEntityList.clear();
@@ -692,6 +695,7 @@ void releasePhysics()
 	
 	if(ContactGroup)
 	{
+		dJointGroupEmpty(ContactGroup);
 		dJointGroupDestroy(ContactGroup);
 		ContactGroup = 0;
 	}

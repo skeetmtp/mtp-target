@@ -40,6 +40,14 @@ public:
 		return *Instance;
 	}
 	
+	static void uninstance()
+	{
+		if(Instance)
+		{
+			delete Instance;
+		}
+	}
+	
 protected:
 	
 	CSingleton()

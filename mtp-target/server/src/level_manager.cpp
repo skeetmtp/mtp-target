@@ -34,6 +34,7 @@
 #include "network.h"
 #include "physics.h"
 #include "variables.h"
+#include "lua_engine.h"
 #include "level_manager.h"
 #include "entity_manager.h"
 #include "../../common/net_message.h"
@@ -91,6 +92,8 @@ void CLevelManager::release()
 		delete CurrentLevel;
 		CurrentLevel = 0;
 	}
+	CLuaEngine::instance().release();
+	CLevelManager::uninstance();
 }
 
 bool CLevelManager::newLevel()

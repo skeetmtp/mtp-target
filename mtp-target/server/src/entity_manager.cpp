@@ -93,6 +93,7 @@ void CEntityManager::reset()
 
 void CEntityManager::release()
 {
+	CNetwork::instance().release();
 }
 
 uint8 CEntityManager::findNewId()

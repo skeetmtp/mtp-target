@@ -66,6 +66,7 @@ void CSessionManager::update()
 
 void CSessionManager::release()
 {
+	CSessionManager::uninstance();
 }
 
 void CSessionManager::changeState(CSessionState &ns)

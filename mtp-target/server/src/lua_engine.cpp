@@ -164,6 +164,7 @@ void CLuaEngine::entityEntityCollideEvent(CEntity *entity1, CEntity *entity2)
 		nlwarning("error calling lua function");
 	*/
 
+	CLuaEngine::instance();
 }
 
 void CLuaEngine::entitySceneCollideEvent(CEntity *entity, CModule *module)

@@ -240,6 +240,7 @@ void CNetwork::release()
 	NetworkThread = 0;
 	delete NetworkTask;
 	NetworkTask = 0;
+	CNetwork::uninstance();
 }
 
 void CNetwork::send(uint8 eid, CNetMessage &msg)
