@@ -57,6 +57,7 @@
 
 #include "sound_manager.h"
 #include "interpolator.h"
+#include "../../common/editable_element_common.h"
 
 
 //

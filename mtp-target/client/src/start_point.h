@@ -58,6 +58,7 @@
 #include "sound_manager.h"
 #include "interpolator.h"
 #include "editable_element.h"
+#include "../../common/start_point_common.h"
 
 
 //
