@@ -188,11 +188,11 @@ void CEditorTask::update()
 
 		if (C3DTask::instance().kbPressed(KeyNUMPAD4))
 		{
-			_mouseX += M_PI / 8.0f;
+			_mouseX += (float)Pi / 8.0f;
 		}
 		if (C3DTask::instance().kbPressed(KeyNUMPAD6))
 		{
-			_mouseX -= M_PI / 8.0f;
+			_mouseX -= (float)Pi / 8.0f;
 		}
 		if (C3DTask::instance().kbPressed(KeyNUMPAD8))
 		{

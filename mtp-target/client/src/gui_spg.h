@@ -196,6 +196,17 @@ public:
 	//!Misc compare functions.
 	bool operator > ( const guiSPG<T> &p1 ) const { return p > p1.p; };
 	//!Misc compare functions.
+#ifdef NL_OS_WINDOWS
+	friend bool operator == ( T *p, const guiSPG<T> &p1 );
+	//!Misc compare functions.
+	friend bool operator == ( const guiSPG<T> &p1,const int null );
+	//!Misc compare functions.
+	friend bool operator != ( const guiSPG<T> &p1,const int null );
+	//!Misc compare functions.
+	friend bool operator == ( const int null,const guiSPG<T> &p1 );
+	//!Misc compare functions.
+	friend bool operator != ( const int null,const guiSPG<T> &p1 );
+#else
 	friend bool operator == <> ( T *p, const guiSPG<T> &p1 );
 	//!Misc compare functions.
 	friend bool operator == <> ( const guiSPG<T> &p1,const int null );
@@ -205,6 +216,7 @@ public:
 	friend bool operator == <> ( const int null,const guiSPG<T> &p1 );
 	//!Misc compare functions.
 	friend bool operator != <> ( const int null,const guiSPG<T> &p1 );
+#endif
 };
 
 template <class T>
