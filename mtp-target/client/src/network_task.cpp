@@ -43,6 +43,7 @@
 #include <nel/net/tcp_sock.h>
 #include <nel/net/callback_client.h>
 
+#include "main.h"
 #include "time_task.h"
 #include "mtp_target.h"
 #include "network_task.h"
@@ -50,7 +51,6 @@
 #include "entity_manager.h"
 #include "config_file_task.h"
 #include "../../common/net_message.h"
-#include "main.h"
 
 
 //
@@ -75,6 +75,7 @@ void checkNetworkPaused();
 // Thread
 //
 
+#if OLD_NETWORK
 class CNetworkRunnable : public NLMISC::IRunnable
 {
 public:
@@ -104,7 +105,7 @@ public:
 					}
 					catch(Exception &e)
 					{
-						nlwarning("Malformed Message type '%u' : %s", msg.Type, e.what());
+						nlwarning("Malformed Message type '%hu' : %s", (uint16)msg.type(), e.what());
 					}
 					break;
 				case NLNET::CSock::ConnectionClosed:
@@ -128,6 +129,7 @@ public:
 private:
 	bool stopNetwork;
 };
+#endif // OLD_NETWORK
 
 
 //
@@ -141,6 +143,7 @@ private:
 
 void CNetworkTask::init()
 {
+#if OLD_NETWORK
 	NetworkRunnable = new CNetworkRunnable();
 	nlassert(NetworkRunnable);
 	
@@ -148,10 +151,39 @@ void CNetworkTask::init()
 	nlassert(NetworkThread);
 	
 	NetworkThread->start();
+#endif // OLD_NETWORK
+}
+
+void CNetworkTask::update()
+{
+#if !OLD_NETWORK
+	Sock.update();
+
+	while(Sock.dataAvailable())
+	{
+		CNetMessage msg(CNetMessage::Unknown, true);
+		Sock.receive(msg);
+		try
+		{
+			uint32 nbs;
+			msg.serial(nbs);
+			uint8 t;
+			msg.serial(t);
+			msg.type((CNetMessage::TType)t);
+
+			netCallbacksHandler(msg);
+		}
+		catch(Exception &e)
+		{
+			nlwarning("Malformed Message type '%u' : %s", msg.Type, e.what());
+		}
+	}
+#endif // OLD_NETWORK
 }
 
 void CNetworkTask::release()
 {
+#if OLD_NETWORK
 	if(!NetworkThread || !NetworkRunnable)
 		return;
 	//NetworkThread->terminate();
@@ -159,6 +191,7 @@ void CNetworkTask::release()
 	NetworkThread = 0;
 	delete NetworkRunnable;
 	NetworkRunnable = 0;
+#endif // OLD_NETWORK
 }
 
 bool CNetworkTask::connected()
@@ -176,8 +209,8 @@ string CNetworkTask::connect(const CInetAddress &ip, const string &cookie)
 		nlinfo ("Connection to the TCP address: %s", ip.asString().c_str());
 
 		Sock.connect(ip);
-		Sock.setNoDelay(true);
-		Sock.setNonBlockingMode(false);
+//		Sock.setNoDelay(true);
+//		Sock.setNonBlockingMode(false);
 
 		CNetMessage msgout(CNetMessage::Login);
 		string login = CConfigFileTask::instance().configFile().getVar("Login").asString();
@@ -211,16 +244,17 @@ void CNetworkTask::send(CNetMessage &msg)
 	sendCount++;
 	if((sendCount%100)==0 && sendCount)
 	{
-		double dtime = CTimeTask::instance().time() - sendStartTime;
-		double fbsent = (double)Sock.bytesSent();
-		double fbrceiv = (double)Sock.bytesReceived();
-		double dfbsent = fbsent - sendStartCount;
-		double dfbrceiv = fbrceiv - rceivStartCount;
-		if(dtime>0.1)
-			nlinfo("during %f, up = %fB/s (%f) down = %fB/s (%f)",dtime,dfbsent/dtime,dfbsent,dfbrceiv/dtime,dfbrceiv);
-		sendStartTime = CTimeTask::instance().time();
-		sendStartCount = fbsent;
-		rceivStartCount = fbrceiv;
+// TODO put the new stat
+//		double dtime = CTimeTask::instance().time() - sendStartTime;
+//		double fbsent = (double)Sock.bytesSent();
+//		double fbrceiv = (double)Sock.bytesReceived();
+//		double dfbsent = fbsent - sendStartCount;
+//		double dfbrceiv = fbrceiv - rceivStartCount;
+//		if(dtime>0.1)
+//			nlinfo("during %f, up = %fB/s (%f) down = %fB/s (%f)",dtime,dfbsent/dtime,dfbsent,dfbrceiv/dtime,dfbrceiv);
+//		sendStartTime = CTimeTask::instance().time();
+//		sendStartCount = fbsent;
+//		rceivStartCount = fbrceiv;
 	}
 }
 
@@ -290,13 +324,16 @@ void CNetworkTask::setEditMode(uint8 editMode)
 
 void CNetworkTask::stop()
 {
+#if OLD_NETWORK
 	NetworkThread->terminate();
+#endif // OLD_NETWORK
 }
 
 
 
 void checkNetworkPaused()
 {
+#if OLD_NETWORK
 	{
 		bool pause;
 		{
@@ -320,10 +357,12 @@ void checkNetworkPaused()
 		CSynchronized<PauseFlags>::CAccessor acces(&networkPauseFlags);
 		acces.value().ackPaused = false;
 	}	
+#endif // OLD_NETWORK
 }
 
 bool pauseNetwork(bool waitAck)
 {
+#if OLD_NETWORK
 	bool pause;
 	{
 		CSynchronized<PauseFlags>::CAccessor acces(&networkPauseFlags);
@@ -349,26 +388,33 @@ bool pauseNetwork(bool waitAck)
 	}
 	else
 		return false;
+#endif // OLD_NETWORK
 	return true;
 }
 
 bool isNetworkPaused()
 {
+#if OLD_NETWORK
 	bool ackPaused;
 	{
 		CSynchronized<PauseFlags>::CAccessor acces(&networkPauseFlags);
 		ackPaused = acces.value().ackPaused;
 	}
 	return ackPaused;
+#else
+	return true;
+#endif // OLD_NETWORK
 }
 
 void resumeNetwork()
 {
+#if OLD_NETWORK
 	CSynchronized<PauseFlags>::CAccessor acces(&networkPauseFlags);
 	if(acces.value().pauseCount>0) 
 	{
 		acces.value().pauseCount--;
 		nlassert(acces.value().pauseCount>=0);
 	}	
+#endif // OLD_NETWORK
 }
 

@@ -47,8 +47,12 @@ using namespace NLMISC;
 // Functions
 //
 
-CClient::CClient(uint8 eid, NLNET::CTcpSock *sock) :
-	CEntity(eid)
+#if OLD_NETWORK
+CClient::CClient(uint8 eid, NLNET::CTcpSock *sock)
+#else
+CClient::CClient(uint8 eid, NLNET::TSockId sock)
+#endif
+	: CEntity(eid)
 {
 	nlassert(sock);
 	Sock = sock;
@@ -81,8 +85,9 @@ bool CClient::openClose()
 
 void CClient::display(CLog &log)
 {
-	log.displayNL("  C eid %hu name %-10s score %3d/%4d ping %4hu pos (%.2f,%.2f,%.2f) host %s",
-				  (uint16)id(), name().c_str(), CurrentScore, Score, Ping.getSmoothValue(), Pos.x, Pos.y, Pos.z, sock()->remoteAddr().asString().c_str());
+	// TODO ace: display the good host
+	log.displayNL("  C eid %hu name %-10s score %3d/%4d ping %4hu pos (%.2f,%.2f,%.2f) host %p",
+				  (uint16)id(), name().c_str(), CurrentScore, Score, Ping.getSmoothValue(), Pos.x, Pos.y, Pos.z, sock());
 }
 
 void CClient::setForce(const CVector &clientForce)

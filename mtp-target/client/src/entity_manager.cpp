@@ -87,10 +87,12 @@ void CEntityManager::init()
 	}
 	updateListId.clear();
 
+#if OLD_NETWORK
 	ClientToAddTaskManagerThread.clear();
 	ClientToAddNetworkThread.clear();
 	ClientToRemoveTaskManagerThread.clear();
 	ClientToRemoveNetworkThread.clear();
+#endif // OLD_NETWORK
 }
 
 void CEntityManager::update()
@@ -113,6 +115,7 @@ void CEntityManager::add(uint8 eid, const std::string &name, sint32 totalScore, 
 {
 	nlinfo("CEntityManager::add(%d:%s)",eid,name.c_str());
 	nlassert(!exist(eid));
+#if OLD_NETWORK
 	uint tid = getThreadId();
 	nlassert(tid==TaskManagerThreadId || tid==NetworkThreadId);
 	
@@ -134,12 +137,16 @@ void CEntityManager::add(uint8 eid, const std::string &name, sint32 totalScore, 
 		}
 	}
 	ClientToAddList->push_back(entityToAdd);
+#else
+	entities()[eid]->init(CEntity::Player, name, totalScore, color, texture, "pingoo", spectator, isLocal);
+#endif // OLD_NETWORK
 }
 
 void CEntityManager::remove(uint8 eid)
 {
 	nlinfo("CEntityManager::remove(%d)",eid);
 	nlassert(exist(eid));
+#if OLD_NETWORK
 	uint tid = getThreadId();
 	nlassert(tid==TaskManagerThreadId || tid==NetworkThreadId);
 	std::list<uint8> *ClientToRemoveList;
@@ -159,8 +166,15 @@ void CEntityManager::remove(uint8 eid)
 		}
 	}
 	ClientToRemoveList->push_back(eid);
+#else
+	if(CMtpTarget::instance().controler().Camera.getFollowedEntity() == eid)
+		CMtpTarget::instance().controler().Camera.setFollowedEntity(255);
+	
+	entities()[eid]->reset();
+#endif // OLD_NETWORK
 }
 
+#if OLD_NETWORK
 void CEntityManager::_add(std::list<CEntityInitData> &addList)
 {
 	list<CEntityInitData>::iterator it2;
@@ -182,7 +196,7 @@ void CEntityManager::_remove(std::list<uint8> &removeList)
 		uint8 eid = *it1;
 		if(eid == 255)
 			nlwarning("Can't remove client because eid 255 is not valid");
-		
+
 		nlassert(exist(eid));
 		nlinfo("CEntityManager::_remove(%d)",eid);
 		if(CMtpTarget::instance().controler().Camera.getFollowedEntity() == eid)
@@ -194,12 +208,11 @@ void CEntityManager::_remove(std::list<uint8> &removeList)
 
 }
 
-
 void CEntityManager::flushAddRemoveList()
 {
 	uint tid = getThreadId();
 	nlassert(tid==TaskManagerThreadId || tid==NetworkThreadId);
-	
+
 	if(tid==TaskManagerThreadId)
 	{
 		if(ClientToAddTaskManagerThread.size()==0 && ClientToRemoveTaskManagerThread.size()==0)
@@ -221,9 +234,9 @@ void CEntityManager::flushAddRemoveList()
 		_add(ClientToAddNetworkThread);
 		_remove(ClientToRemoveNetworkThread);
 		resumeAllThread();
-	}		
-	
+	}
 }
+#endif // OLD_NETWORK
 
 
 

@@ -386,6 +386,7 @@ static void cbFullUpdate(CNetMessage &msgin)
 	// reply to the update first (used for the ping)
 	CNetMessage msgout(CNetMessage::Update);
 	CNetworkTask::instance().send(msgout);
+	nlinfo("*********** send the pong %"NL_I64"u", CTime::getLocalTime());
 	
 	//msgin.serial (rsxTime);
 
@@ -697,7 +698,7 @@ static void cbTimeArrival(CNetMessage &msgin)
 
 void netCallbacksHandler(CNetMessage &msgin)
 {
-//	nldebug("Received message type %hu", (uint16)msgin.type());
+	nldebug("NET: Received message type %hu size %u", (uint16)msgin.type(), msgin.length());
 
 	switch(msgin.type())
 	{

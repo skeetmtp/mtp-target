@@ -150,7 +150,9 @@ public:
 		CLuaEngine::instance().levelPostUpdate();
 		
 		checkServicePaused();
+#if OLD_NETWORK
 		CEntityManager::instance().flushAddRemoveList();
+#endif // OLD_NETWORK
 
 		updateConnectedClients();
 
@@ -165,7 +167,6 @@ public:
 
 		releasePhysics();
 	}
-
 };
  
 NLNET_SERVICE_MAIN(CMtpTargetService, "MTS", "mtp_target_service", 0, EmptyCallbackArray, "", "");

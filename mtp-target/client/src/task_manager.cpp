@@ -118,7 +118,9 @@ void CTaskManager::execute()
 			}
 		}
 		checkTaskManagerPaused();
+#if OLD_NETWORK
 		CEntityManager::instance().flushAddRemoveList();
+#endif // OLD_NETWORK
 
 		CHTimer::endBench();
 	}

@@ -53,14 +53,21 @@ public:
 	std::string check(const std::string &login, const std::string &password, bool dontCheck, sint32 &score);
 
 	// this add is to add a client
+#if OLD_NETWORK
 	void addClient(NLNET::CTcpSock *sock);
+#else
+	void addClient(NLNET::TSockId sock);
+#endif // OLD_NETWORK
 		
 //	void add(const std::string &name, NLNET::CTcpSock *sock=0, const std::string &cookie="", uint32 score=0, bool isBot=false, bool isAutomaticBot=false);
 
 	void login(CEntity *c);
 
 	void add(CEntity *entity);
+#if OLD_NETWORK
 	bool inRemoveList(uint8 eid);
+	void flushAddRemoveList();
+#endif // OLD_NETWORK
 	void remove(uint8 eid);
 	void remove(const std::string &name);
 	CEntity *getByName(const std::string &name);
@@ -87,7 +94,6 @@ public:
 	void displayText(uint8 eid, float x,float y, float scale, NLMISC::CRGBA col, double duration, const std::string &text);
 		
 	float slowerVelocity();
-	void flushAddRemoveList();
 		
 	CEntity *getNthEntity(uint8 number);
 	
@@ -97,8 +103,10 @@ public:
 	std::list<uint8> IdUpdateList;
 	
 private:
+#if OLD_NETWORK
 	void _add(std::list<CEntity *> &addList);
 	void _remove(std::list<uint8> &removeList);
+#endif // OLD_NETWORK
 	
 	std::list <CEntity*> Entities;
 
@@ -107,11 +115,12 @@ private:
 	void		updateIdUpdateList();
 		
 
+#if OLD_NETWORK
 	std::list<CEntity *> ClientToAddMainThread;
 	std::list<CEntity *> ClientToAddNetworkThread;
 	std::list<uint8> ClientToRemoveMainThread;
 	std::list<uint8> ClientToRemoveNetworkThread;
-	
+#endif // OLD_NETWORK
 		
 };
 

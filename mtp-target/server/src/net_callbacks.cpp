@@ -190,7 +190,11 @@ static void cbLogin(CClient *c, CNetMessage &msgin)
 			fprintf(fp, "%u %s", ltime, d);
 			fprintf(fp, " %c", (error.empty()?'+':'?'));
 			fprintf(fp, " '%s' '%s'", login.c_str(), texture.c_str());
+#if OLD_NETWORK
 			fprintf(fp, " '%s'", (c->sock()?c->sock()->remoteAddr().ipAddress().c_str():"unknown"));
+#else
+			fprintf(fp, " '%p'", c->sock());
+#endif // OLD_NETWORK
 			if(!error.empty()) fprintf(fp, " '%s'", error.c_str());
 			fprintf(fp, "\n");
 			fclose(fp);
@@ -481,7 +485,7 @@ static void cbUpdate(CClient *c, CNetMessage &msgin)
 
 void netCallbacksHandler(CClient *c, CNetMessage &msgin)
 {
-//	nlinfo ("Received message type %hu from %hu '%s'", (uint16)msgin.type(), c->id(), c->name().c_str());
+	nldebug("NET: Received message type %hu size %u from %hu '%s'", (uint16)msgin.type(), msgin.length(), c->id(), c->name().c_str());
 
 	nlassert(c);
 	nlassert(c->type() == CEntity::Client);

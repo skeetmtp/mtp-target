@@ -89,6 +89,7 @@ void CEntityManager::update()
 void CEntityManager::add(CEntity *entity)
 {
 	nlinfo("CEntityManager::add(0x%p,%d:%s)",entity,entity->id(),entity->name().c_str());
+#if OLD_NETWORK
 	uint tid = myGetThreadId();
 	nlassert(tid==MainThreadId || tid==NetworkThreadId);
 	std::list<CEntity *> *ClientToAddList;
@@ -110,11 +111,15 @@ void CEntityManager::add(CEntity *entity)
 	}
 	
 	ClientToAddList->push_back(entity);
+#else
+	entities().push_back(entity);
+#endif // OLD_NETWORK
 }
 
 void CEntityManager::remove(uint8 eid)
 {
 	nlinfo("CEntityManager::remove(%d)",eid);
+#if OLD_NETWORK
 	uint tid = myGetThreadId();
 	nlassert(tid==MainThreadId || tid==NetworkThreadId);
 	std::list<uint8> *ClientToRemoveList;
@@ -137,8 +142,65 @@ void CEntityManager::remove(uint8 eid)
 	}
 	
 	ClientToRemoveList->push_back(eid);
+#else
+	CEntity *c = 0;
+	
+	{
+		EntityIt it;
+		for( it = entities().begin(); it != entities().end(); it++)
+		{
+			if((*it)->id() == eid)
+			{
+				// only unlink the client from the list
+				c = (*it);
+				entities().erase(it);
+				break;
+			}
+		}
+	}
+	
+	if(!c)
+	{
+		nlwarning("Can't remove client because eid %hu is not found", (uint16)eid);
+	}
+	else
+	{
+		nlinfo("Removing client eid %hu name '%s'", (uint16)c->id(), c->name().c_str());
+		CLuaEngine::instance().entityLeaveEvent(c);
+		CSessionManager::instance().editMode(0);
+		
+		if(c->type() == CEntity::Client)
+		{
+			char d[80];
+			time_t ltime;
+			time(&ltime);
+			struct tm *today = localtime(&ltime);
+			strftime(d, 80, "%Y %m %d %H %M %S", today);
+			FILE *fp = fopen("connection.stat", "ab");
+			if(fp)
+			{
+				fprintf(fp, "%u %s - '%s' '%s'\n", ltime, d, c->name().c_str(),CLevelManager::instance().haveCurrentLevel()?CLevelManager::instance().currentLevel().name().c_str():"");
+				fclose(fp);
+			}
+			fp = fopen("clients_count.stat", "ab");
+			if(fp)
+			{
+				fprintf(fp, "%u %s c %d\n", ltime, d, humanClientCount());
+				fclose(fp);
+			}
+			
+			clientConnected(dynamic_cast<CClient*>(c)->Cookie, false);
+		}
+		
+		CNetMessage msgout(CNetMessage::Logout);
+		msgout.serial(eid);
+		CNetwork::instance().send(msgout);		
+		delete c;
+	}
+#endif // OLD_NETWORK
 }
 
+#if OLD_NETWORK
 bool CEntityManager::inRemoveList(uint8 eid)
 {
 	uint tid = myGetThreadId();
@@ -246,8 +308,6 @@ void CEntityManager::_remove(std::list<uint8> &removeList)
 	
 }
 
-
-
 /* old code
 void CEntityManager::flushAddRemoveList()
 {
@@ -310,7 +370,7 @@ void CEntityManager::flushAddRemoveList()
 	}		
 	
 }
-
+#endif // OLD_NETWORK
 
 void CEntityManager::reset()
 {
@@ -329,6 +389,7 @@ void CEntityManager::release()
 uint8 CEntityManager::findNewId()
 {
 	uint8 ni = 0;
+#if OLD_NETWORK
 	uint8 baseId = 0;
 	uint tid = myGetThreadId();
 	nlassert(tid==MainThreadId || tid==NetworkThreadId);
@@ -370,8 +431,7 @@ uint8 CEntityManager::findNewId()
 			return ni;
 	}
 	nlerror("More than 127 entities, can't add a new one");
-
-	/*
+#else
 	while(true)
 	{
 		EntityConstIt it;
@@ -388,7 +448,7 @@ uint8 CEntityManager::findNewId()
 			nlerror("More than 254 entities, can't add a new one");
 		}	
 	}
-	*/
+#endif // OLD_NETWORK
 	return 255;
 }
 
@@ -415,14 +475,19 @@ void CEntityManager::addBot(const string &name, bool isAutomaticBot)
 
 
 
+#if OLD_NETWORK
 void CEntityManager::addClient(NLNET::CTcpSock *sock)
+#else
+void CEntityManager::addClient(NLNET::TSockId sock)
+#endif // OLD_NETWORK
 {
 	nlassert(sock);
 
 	uint8 eid = findNewId();
 	nlassert(eid != 255);
 
-	nlinfo("Adding client eid %hu from '%s'", (uint16)eid, sock->remoteAddr().asString().c_str());
+	// TODO ace: display the good host
+	nlinfo("Adding client eid %hu from '%p'", (uint16)eid, sock);
 
 	CEntity *e = (CEntity *) new CClient(eid, sock);
 	nlassert(e);
@@ -974,7 +1039,8 @@ NLMISC_DYNVARIABLE(string, Watch1, "")
 				if ((*it)->type() == CEntity::Client)
 				{
 					*pointer += " TCPFrom:";
-					*pointer += ((CClient*)(*it))->sock()->remoteAddr().asString();
+					// TODO ace: display the good host
+					*pointer += NLMISC::toString("%p", ((CClient*)(*it))->sock());
 				}
 				*pointer += " Ping:"+NLMISC::toString((*it)->Ping.getSmoothValue());
 				return;

@@ -36,7 +36,12 @@ class CClient : public CEntity
 {
 public:
 
+#if OLD_NETWORK
 	CClient(uint8 id, NLNET::CTcpSock *sock);
+#else
+	CClient(uint8 id, NLNET::TSockId sock);
+#endif // OLD_NETWORK
+
 	virtual ~CClient();
 
 	// update the new force vector sent by the client
@@ -51,7 +56,11 @@ public:
 
 	// accessors
 
+#if OLD_NETWORK
 	NLNET::CTcpSock			*sock() const { return Sock; }
+#else
+	NLNET::TSockId			sock() const { return Sock; }
+#endif // OLD_NETWORK
 	virtual bool			forceReceived();
 
 	sint32 uid() const { return UId; }
@@ -67,7 +76,11 @@ public:
 
 private:
 
+#if OLD_NETWORK
 	NLNET::CTcpSock		*Sock;
+#else
+	NLNET::TSockId		Sock;
+#endif // OLD_NETWORK
 
 	// we send update information about this entity
 	bool NetworkReady;

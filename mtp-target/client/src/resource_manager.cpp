@@ -220,6 +220,7 @@ bool CResourceManager::waitNetworkMessage(bool stopFlag,bool &received, bool dis
 		//CBackgroundTask::instance().update();
 		CChatTask::instance().update();
 		CGuiTask::instance().update();
+		CNetworkTask::instance().update();
 		
 		if (C3DTask::instance().kbPressed(KeyESCAPE) || !C3DTask::instance().driver().isActive() || !CNetworkTask::instance().connected())
 		{
@@ -245,7 +246,6 @@ bool CResourceManager::waitNetworkMessage(bool stopFlag,bool &received, bool dis
 			CBackgroundTask::instance().render();
 		CChatTask::instance().render();
 		CGuiTask::instance().render();
-		
 		
 		//CFontManager::instance().littlePrintf(3.0f, 29.0f, str.c_str());
 		

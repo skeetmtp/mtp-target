@@ -34,11 +34,15 @@
 #include <nel/misc/mem_stream.h>
 
 #include <nel/net/tcp_sock.h>
+#include <nel/net/buf_client.h>
+#include <nel/net/buf_server.h>
 
 
 //
 // Classes
 //
+
+#define OLD_NETWORK 0
 
 //
 // Main class that manage buffer messages, receive and send
@@ -81,6 +85,7 @@ public:
 	CNetMessage(TType type = Unknown, bool inputStream = false);
 
 	TType type() const { return Type; }
+	void type(TType t) { Type = t; }
 
 	void setHeader (TType type);
 
@@ -88,8 +93,16 @@ private:
 
 	TType Type;
 
+#if OLD_NETWORK
 	bool send (NLNET::CTcpSock *ts);
 	NLNET::CSock::TSockResult receive (NLNET::CTcpSock *ts);
+#else
+#ifdef MTPT_SERVER
+	bool send (NLNET::CBufServer *sock, NLNET::TSockId id);
+#else
+	bool send (NLNET::CBufClient *sock);
+#endif // MTPT_SERVER
+#endif // OLD_NETWORK
 
 	friend class CNetwork;
 	friend class CNetworkTask;

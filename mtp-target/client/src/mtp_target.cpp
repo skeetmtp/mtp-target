@@ -161,7 +161,9 @@ void CMtpTarget::init()
 				*/
 			}
 			//we can call this function safely since there no other thread in replay mode
+#if OLD_NETWORK
 			CEntityManager::instance().flushAddRemoveList();
+#endif // OLD_NETWORK
 			
 			char cmd[10];
 			float t =0;
@@ -578,8 +580,8 @@ void mtpTarget::init()
 //	SleepTime = CConfigFileTask::instance().configFile().getVar("Sleep").asInt();
 	
 
-	if(NLMISC::DebugLog!=0)
-		NLMISC::DebugLog->addNegativeFilter("LNET");
+//	if(NLMISC::DebugLog!=0)
+//		NLMISC::DebugLog->addNegativeFilter("LNET");
 
 	setReportEmailFunction ((void*)sendEmail);
 

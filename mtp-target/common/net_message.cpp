@@ -41,13 +41,15 @@ using namespace NLMISC;
 
 CNetMessage::CNetMessage(TType type, bool inputStream) : CMemStream(inputStream)
 {
-	setHeader(type);
+	if(!inputStream)
+		setHeader(type);
 }
 
 void CNetMessage::setHeader(TType type)
 {
-	uint16 size = 0;
-	serial(size);
+	static uint32 nextsendvalue = 0;
+	serial(nextsendvalue);
+	nextsendvalue++;
 
 	nlassert(type < 256);
 	Type = type;
@@ -56,21 +58,31 @@ void CNetMessage::setHeader(TType type)
 }
 
 
+#if OLD_NETWORK
 bool CNetMessage::send(NLNET::CTcpSock *sock)
+#else
+#ifdef MTPT_SERVER
+bool CNetMessage::send (NLNET::CBufServer *sock, NLNET::TSockId id)
+#else
+bool CNetMessage::send (NLNET::CBufClient *sock)
+#endif // MTPT_SERVER
+#endif // OLD_NETWORK
 {
 	nlassert(sock);
 
 	// put the size in the begin of the message, size is without the header size
+#if OLD_NETWORK
 	uint32 len = length();
 	nlassert(len-3<(1<<16));
 	uint16 size = (uint16)len-3;
 	poke(size, 0);
+#endif // OLD_NETWORK
 
 //	nlinfo("real send %"NL_I64"d", CTime::getLocalTime());
-//	nlinfo("Send a message type %hu size %hu", (uint16)buffer()[1], (uint16)buffer()[0]);
+	nldebug("NET: Send a message type %hu size %u", (uint16)buffer()[4], this->length());
 
+#if OLD_NETWORK
 	NLNET::CSock::TSockResult res = sock->send(buffer(), len, false);
-
 	if(res != NLNET::CSock::Ok)
 	{
 		nlwarning("Send failed: %s (code %u)", NLNET::CSock::errorString(NLNET::CSock::getLastError()).c_str(), NLNET::CSock::getLastError());
@@ -78,9 +90,20 @@ bool CNetMessage::send(NLNET::CTcpSock *sock)
 		//sock->disconnect();
 		return false;
 	}
+#else
+#ifdef MTPT_SERVER
+	sock->send(*this, id);
+	sock->flush(id);
+#else
+	sock->send(*this);
+	sock->flush();
+#endif // MTPT_SERVER
+#endif // OLD_NETWORK
+
 	return true;
 }
 
+#if OLD_NETWORK
 NLNET::CSock::TSockResult CNetMessage::receive(NLNET::CTcpSock *sock)
 {
 	nlassert (sock);
@@ -117,3 +140,4 @@ NLNET::CSock::TSockResult CNetMessage::receive(NLNET::CTcpSock *sock)
 
 	return NLNET::CSock::Ok;
 }
+#endif // OLD_NETWORK
