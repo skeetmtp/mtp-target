@@ -55,6 +55,7 @@
 #include "entity.h"
 #include "global.h"
 #include "3d_task.h"
+#include "hud_task.h"
 #include "time_task.h"
 #include "mtp_target.h"
 #include "font_manager.h"
@@ -72,12 +73,16 @@ CEntity::CEntity()
 {
 	Type = Unknown;
 	TraceParticle = 0;
+	ImpactParticle = 0;
 	Rank = 255;
+	StartPointId = 255;
 	LastSent2MePos = CVector::Null;
 	LastSent2OthersPos = CVector::Null;
 	_interpolator = 0;
 	Ready = false;
 	luaProxy = 0;
+	showCollideWhenFly = false;
+	showCollideWhenFlyPos = CVector(0,0,0);
 }
 
 void CEntity::swapOpenClose()
@@ -165,8 +170,31 @@ void CEntity::update()
 */
 	}
 
-	SoundsDescriptor.update3d(ObjMatrix.getPos(), CVector(0,0,0)); // todo : velocity
+	SoundsDescriptor.update3d(interpolator().getMatrix().getPos(), CVector(0,0,0)); // todo : velocity
 
+	if(!ImpactParticle.empty())
+	{
+		ImpactParticle.setPos(showCollideWhenFlyPos);
+	}
+
+	if(showCollideWhenFly)
+	{
+		if(isLocal())
+		{
+			SoundsDescriptor.play(CSoundManager::CEntitySoundsDescriptor::Impact);
+			CHudTask::instance().addMessage(CHudMessage(0,15,1,string("don't touch anything when you fly"),CRGBA(255,255,0,255),5));
+			if(!ImpactParticle.empty())
+			{
+				//ImpactParticle.setPos(showCollideWhenFlyPos);
+				ImpactParticle.activateEmitters(true);
+				ImpactParticle.show();
+			}
+			//ImpactParticle.setPos(interpolator().position());
+			//ImpactParticle.setScale(100,100,100);
+		}
+		showCollideWhenFly = false;
+	}
+	
 	if(!TraceParticle.empty())
 	{
 		TraceParticle.setPos(interpolator().position());
@@ -242,7 +270,12 @@ void CEntity::reset()
 	{
 		C3DTask::instance().scene().deleteInstance(TraceParticle);
 	}
-
+	
+	if(!ImpactParticle.empty())
+	{
+		C3DTask::instance().scene().deleteInstance(ImpactParticle);
+	}
+	
 	if(!CloseMesh.empty())
 	{
 		nlinfo(">>   C3DTask::instance().scene().deleteInstance(CloseMesh);");
@@ -271,6 +304,14 @@ void CEntity::reset()
 	ObjMatrix.rotateY(1.0f);
 	ParticuleActivated = 0;
 	Ready = false;
+	StartPointId = 255;
+	showCollideWhenFly = false;
+	showCollideWhenFlyPos = CVector(0,0,0);
+	if(!ImpactParticle.empty())
+	{
+		ImpactParticle.activateEmitters(false);
+		ImpactParticle.hide();
+	}
 }
 
 void CEntity::init(TEntity type, const std::string &name, sint32 totalScore, CRGBA &color, const std::string &texture, const std::string &meshname, bool spectator, bool isLocal)
@@ -361,6 +402,18 @@ void CEntity::load3d()
 		TraceParticle.setUserColor(CRGBA(0,0,0,0));
 		ParticuleActivated = 0;
 	}
+	
+	if(ImpactParticle.empty() && CConfigFileTask::instance().configFile().getVar("DisplayParticle").asInt() == 1)
+	{
+		string res = CResourceManager::instance().get("impact.ps");
+		ImpactParticle.cast(C3DTask::instance().scene().createInstance(res));
+		ImpactParticle.setTransformMode (UTransformable::RotQuat);
+		ImpactParticle.setOrderingLayer(2);
+		ImpactParticle.activateEmitters(false);
+		ImpactParticle.hide();
+		//ImpactParticle.setScale(10,10,10);
+	}
+
 }
 
 
@@ -433,4 +486,19 @@ void CEntity::totalScore(sint32 score)
 		CMtpTarget::instance().displayTutorialInfo(score<=CConfigFileTask::instance().configFile().getVar("MinTotalScoreToHideTutorial").asInt());
 	}
 	TotalScore = score; 
+}
+
+void CEntity::startPointId(uint8 spid) 
+{ 
+	StartPointId = spid;
+	if(isLocal() && CLevelManager::instance().levelPresent())
+	{
+		CMtpTarget::instance().controler().Camera.setInitialPosition(CLevelManager::instance().currentLevel().cameraPosition(StartPointId));
+	}
+}
+
+void CEntity::collideWhenFly(CVector &pos)
+{
+	showCollideWhenFlyPos = pos;
+	showCollideWhenFly = true;
 }

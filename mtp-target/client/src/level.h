@@ -72,6 +72,9 @@ public:
 	
 	NLMISC::CVector startPosition(uint32 id);
 
+	NLMISC::CVector cameraPosition(uint32 id);
+	uint32 getCameraCount();
+	
 	CModule *getModule(uint32 id);
 	CModule *getModule(std::string &name);
 	uint32 getModuleCount();
@@ -115,6 +118,7 @@ private:
 //	std::vector<NL3D::UInstance *>	Meshes;
 	std::vector<CModule *>			Modules;
 	std::vector<CParticles *>		Particles;
+	std::vector<CLuaVector>			Cameras;
 	//	std::vector<NL3D::UInstance *>	StartPositions;
 	std::vector<CStartPoint *>	StartPoints;
 	

@@ -85,6 +85,7 @@ public:
 	void		renderName() const;
 	void		close();
 	void		swapOpenClose();
+	void		collideWhenFly(NLMISC::CVector &pos);
 	void		collisionWithWater(bool col);
 	bool        openClose() {return OpenClose;};
 	bool		isLocal();
@@ -118,12 +119,15 @@ public:
 
 	CExtendedInterpolator &interpolator() const;
 
-
+	uint8				 startPointId() const { return StartPointId; }
+	void				 startPointId(uint8 spid);
+	
 	
 	NL3D::UInstance CloseMesh, OpenMesh;
 	CEntityProxy		*luaProxy;
 	
 	NL3D::UParticleSystemInstance TraceParticle;
+	NL3D::UParticleSystemInstance ImpactParticle;
 	
 	NLMISC::CVector		 LastSent2MePos;
 	NLMISC::CVector		 LastSent2OthersPos;
@@ -136,6 +140,7 @@ private:
 
 	TEntity			Type;
 	uint8			Id;
+	uint8			StartPointId;
 	uint8			Rank;
 	std::string		Name;
 	std::string		MeshName;
@@ -145,6 +150,10 @@ private:
 	sint32			TotalScore;
 	uint16			Ping;
 	bool			OpenClose; // open=true, close=false
+
+	bool			showCollideWhenFly;
+	NLMISC::CVector	showCollideWhenFlyPos;
+	
 	CMatrix			ObjMatrix;
 	CExtendedInterpolator *_interpolator;
 	

@@ -581,6 +581,17 @@ static void cbExecLua(CNetMessage &msgin)
 		CLevelManager::instance().currentLevel().execLuaCode(luaCode);
 }
 
+static void cbCollideWhenFly(CNetMessage &msgin)
+{
+	uint8 eid;
+	CVector pos;
+	msgin.serial(eid);
+	msgin.serial(pos);
+	nlinfo("collide in flying mode (entity %d at pos=%f,%f,%f)",eid,pos.x,pos.y,pos.z);
+	if(CEntityManager::instance().exist(eid))
+		CEntityManager::instance()[eid].collideWhenFly(pos);
+}
+
 //
 // Callback handler
 //
@@ -613,6 +624,7 @@ void netCallbacksHandler(CNetMessage &msgin)
 	SWITCH_CASE(EditMode);
 	SWITCH_CASE(EnableElement);
 	SWITCH_CASE(ExecLua);
+	SWITCH_CASE(CollideWhenFly);
 	
 	default: nlinfo("Received an unknown message type %hu", (uint16)msgin.type()); break;
 	}

@@ -295,6 +295,7 @@ void CMtpTarget::startSession(float timeBeforeSessionStart, float timeBeforeTime
 {
 	nlinfo("level '%s' loaded, it timeouts in %g seconds", levelName.c_str(), timeBeforeTimeout);
 	
+	C3DTask::instance().mouseListener().reset();
 	NewSession = true;
 	TimeBeforeSessionStart = timeBeforeSessionStart;
 	TimeBeforeTimeout = timeBeforeTimeout;

@@ -75,6 +75,13 @@ void C3dMouseListener::init()
 	_inverseMouse = CConfigFileTask::instance().configFile().getVar("InverseMouse").asInt() == 1;
 }
 
+void C3dMouseListener::reset()
+{
+	MouseX = 0.0f;
+	MouseY = 0.0f;
+	MouseWheel = 0;
+}
+
 
 void C3dMouseListener::operator ()(const CEvent& event)
 {

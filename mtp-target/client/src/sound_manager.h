@@ -61,7 +61,7 @@ public:
 		CEntitySoundsDescriptor();
 		~CEntitySoundsDescriptor();
 		
-		enum TSoundId { BallOpen, BallClose, Splash, SoundCount };
+		enum TSoundId { BallOpen, BallClose, Splash, Impact, SoundCount };
 		void play(TSoundId sound, bool loop = false);
 		void stop(TSoundId sound);
 		void update3d(const NLMISC::CVector &position, const NLMISC::CVector &velocity);

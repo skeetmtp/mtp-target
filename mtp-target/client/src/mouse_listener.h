@@ -62,6 +62,8 @@ public:
 
 	void init ();
 
+	void reset();
+		
 	/** 
 	  * Register the listener to the server.
 	  */

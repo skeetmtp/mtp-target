@@ -89,7 +89,8 @@ void CSoundManager::init()
 	entitySoundSamples[CSoundManager::CEntitySoundsDescriptor::BallOpen]  = loadSoundSample(CResourceManager::instance().get(CConfigFileTask::instance().configFile().getVar("SoundBallOpen").asString()));
 	entitySoundSamples[CSoundManager::CEntitySoundsDescriptor::BallClose] = loadSoundSample(CResourceManager::instance().get(CConfigFileTask::instance().configFile().getVar("SoundBallClose").asString()));
 	entitySoundSamples[CSoundManager::CEntitySoundsDescriptor::Splash]    = loadSoundSample(CResourceManager::instance().get(CConfigFileTask::instance().configFile().getVar("SoundSplash").asString()));
-
+	entitySoundSamples[CSoundManager::CEntitySoundsDescriptor::Impact]    = loadSoundSample(CResourceManager::instance().get(CConfigFileTask::instance().configFile().getVar("SoundImpact").asString()));
+	
 	// load all gui samples
 	for (uint i = 0; i < CSoundManager::GuiSoundCount; i++)
 		guiChannels[i] = -1;

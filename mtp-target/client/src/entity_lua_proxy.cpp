@@ -51,6 +51,7 @@ Lunar<CEntityProxy>::RegType CEntityProxy::methods[] =
 		bind_method(CEntityProxy, setCurrentScore),	
 		bind_method(CEntityProxy, setColor),	
 		bind_method(CEntityProxy, cacheFile),	
+		bind_method(CEntityProxy, setStartPointId),	
 	{0,0}
 };
 
@@ -130,4 +131,12 @@ int CEntityProxy::cacheFile(lua_State *luaSession)
 	CResourceManager::instance().get(filename);
 	return 0;	
 }
+
+int CEntityProxy::setStartPointId(lua_State *luaSession)
+{
+	uint8 startPointId = (uint8)luaL_checknumber(luaSession,1);
+	_entity->startPointId(startPointId);
+	return 0;	
+}
+
 

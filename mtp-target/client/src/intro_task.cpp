@@ -55,6 +55,7 @@ using namespace NLNET;
 // Variables
 //
 
+#define SHARD_LIST_FILE "shard_list.xml"
 
 //
 // Classes
@@ -269,7 +270,7 @@ void CIntroTask::updateLoginOnline()
 		else
 		*/
 		{
-			getShardListFromFile("shard_list.xml");
+			getShardListFromFile(SHARD_LIST_FILE);
 			ServerId = 0;
 			
 			serverVbox->elements.clear();
@@ -405,6 +406,7 @@ void CIntroTask::updateConnectionOnLine()
 		// stop the background
 		CBackgroundTask::instance().stop();
 		// go to the game task
+		CResourceManager::instance().get(string(SHARD_LIST_FILE));		
 		CTaskManager::instance().add(CGameTask::instance(), 60);
 		
 		CGuiObjectManager::instance().objects.clear();

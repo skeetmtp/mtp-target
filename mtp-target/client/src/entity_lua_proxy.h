@@ -55,6 +55,7 @@ public:
 	int setCurrentScore(lua_State *luaSession);
 	int setColor(lua_State *luaSession);
 	int cacheFile(lua_State *luaSession);
+	int setStartPointId(lua_State *luaSession);
 	
 	static const char className[];	
 	static Lunar<CEntityProxy>::RegType methods[];	

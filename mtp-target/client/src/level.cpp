@@ -100,7 +100,7 @@ CLevel::CLevel(const string &filename)
 	luaGetGlobalVariable(LuaState, Author);
 	nlinfo("author name '%s'", Author.c_str());
 	
-	vector<CLuaVector> Cameras;
+	Cameras.clear();
 	luaGetGlobalVector(LuaState, Cameras);
 	
 	for(uint i = 0; i < Cameras.size(); i++)
@@ -108,7 +108,8 @@ CLevel::CLevel(const string &filename)
 		nlinfo("camera %g %g %g", Cameras[i].x, Cameras[i].y, Cameras[i].z);
 
 		uint8 eid = CMtpTarget::instance().controler().getControledEntity();
-		if (i == 0 || eid != 255 && CEntityManager::instance()[eid].rank() == (uint8)i)
+		CEntityManager::instance()[eid].startPointId(CEntityManager::instance()[eid].rank());
+		if (i == 0 || eid != 255 && CEntityManager::instance()[eid].startPointId() == (uint8)i)
 		{
 			CMtpTarget::instance().controler().Camera.setInitialPosition(Cameras[i]);
 		}
@@ -393,6 +394,17 @@ CVector CLevel::startPosition(uint32 id)
 	return StartPoints[id]->position();
 }
 
+CVector CLevel::cameraPosition(uint32 id)
+{
+	if(Cameras.size()==0) return CVector::Null;
+	return Cameras[id];
+}
+
+uint32 CLevel::getCameraCount()
+{
+	return Cameras.size();
+}
+
 void CLevel::reset()
 {
 	nlinfo("--level reset--");
@@ -406,14 +418,15 @@ void CLevel::reset()
 	luaGetGlobalVariable(LuaState, Author);
 	nlinfo("author name '%s'", Author.c_str());
 	
-	vector<CLuaVector> Cameras;
+	Cameras.clear();
 	luaGetGlobalVector(LuaState, Cameras);
 	
 	for(uint i = 0; i < Cameras.size(); i++)
 	{
 		nlinfo("camera %g %g %g", Cameras[i].x, Cameras[i].y, Cameras[i].z);
 		uint8 eid = CMtpTarget::instance().controler().getControledEntity();
-		if (i == 0 || eid != 255 && CEntityManager::instance()[eid].rank() == (uint8)i)
+		CEntityManager::instance()[eid].startPointId(CEntityManager::instance()[eid].rank());
+		if (i == 0 || eid != 255 && CEntityManager::instance()[eid].startPointId() == (uint8)i)
 		{
 			CMtpTarget::instance().controler().Camera.setInitialPosition(Cameras[i]);
 		}
