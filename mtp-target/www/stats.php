@@ -8,6 +8,7 @@
 	$userCountPerMinuteTodayMax;
 	$lastHour = 0;
 	$lastDay = 0;
+	$lastMinute = 0;
 	
 	$lastRestartTime = mktime();
 	
@@ -17,8 +18,7 @@
 		$userCountPerHourToday[$i]=0;
 		$userCountPerHourTodayMax[$i]=0;
 	}
-	for($i=0;$i<60;$i++)
-		$userCountPerMinuteTodayMax[i]=0;
+	$userCountPerMinuteTodayMax = array_fill(0,60,-1);
 	
 	$playerCount = 0;
 	while (!feof($fp)):
@@ -31,7 +31,7 @@
 		//printf("[%s] -> [%s]<br>",$sname,$name);
 		
 		$hour = intval($shour);
-		$min = intval($smin);
+		$minute = intval($smin);
 		$sec = intval($ssec);
 		$day = intval($sday);
 		if(strlen($line)!=0)
@@ -40,8 +40,15 @@
 			{
 				//printf("%dh0 = %d<br>",$lastHour,$userCountPerHourTotal[$lastHour]);
 				$lastHour=$hour;
+				$userCountPerMinuteTodayMax = array_fill(0,60,-1);
+				$userCountPerMinuteTodayMax[0]=$playerCount;
+				/*
 				for($i=0;$i<60;$i++)
-					$userCountPerMinuteTodayMax[i]=0;
+				{
+					printf("%d<br>",$userCountPerMinuteTodayMax[$i]);
+				}
+				printf("<hr>");
+				*/
 			}
 			
 			if($lastDay!=$day)
@@ -52,24 +59,24 @@
 					$userCountPerHourToday[$i]=0;
 					$userCountPerHourTodayMax[$i]=0;
 				}
-				//printf("<hr>",$name);
+				//printf("<hr>");
 			}
 			
 			if($inout=='+')
 			{
+				$lastMinute = $minute;
 				$playerCount++;
 				$userCountPerHourTotal[$hour]++;
 				$userCountPerHourToday[$hour]++;
 				if($playerCount>$userCountPerHourTodayMax[$hour])
 					$userCountPerHourTodayMax[$hour] = $playerCount;
-				if($playerCount>$userCountPerMinuteTodayMax[$min])
-					$userCountPerMinuteTodayMax[$min] = $playerCount;
-					
-				//printf("%d:%d [%s] comes(%d,%d) in<br>",$hour,$min,$name,$playerCount,$userCountPerHourToday[$hour]);
+				if($playerCount>$userCountPerMinuteTodayMax[$minute])
+					$userCountPerMinuteTodayMax[$minute] = $playerCount;
+				//printf("%d:%d [%s] comes(%d,%d,%d) in<br>",$hour,$minute,$name,$playerCount,$userCountPerHourToday[$hour],$userCountPerMinuteTodayMax[$minute]);
 			}
 			else if($inout=='#')
 			{
-				$lastRestartTime = mktime($hour,$min,$sec);
+				$lastRestartTime = mktime($hour,$minute,$sec);
 				$playerCount = 0;
 				//printf("<hr>",$name);
 			}
@@ -127,18 +134,28 @@ Total login :
 		printf("</td>\n");
 	}
 	printf("</tr>\n");
+	
 	printf("<tr>\n");
 	for($i=0;$i<24;$i++)
 	{
-		printf("<td>%d</td>\n",$i);
+		printf("<td width=20>%d</td>\n",$userCountPerHourTotal[$i]);
 	}
 	printf("</tr>\n");	
+
 	printf("<tr>\n");
 	for($i=0;$i<24;$i++)
 	{
 		printf("<td><img src=\"./img/hr%d.png\" width=\"10\"/></td>\n",($i%12)+1);
 	}
 	printf("</tr>\n");	
+	
+	printf("<tr>\n");
+	for($i=0;$i<24;$i++)
+	{
+		printf("<td>%d</td>\n",$i);
+	}
+	printf("</tr>\n");	
+
 ?>
 </table>
 
@@ -201,7 +218,7 @@ Today Max simultaneous user :
 	for($i=0;$i<24;$i++)
 	{
 		printf("<td valign=\"bottom\">\n");
-		if($maxToday!=0)
+		if($maxTodayMax!=0)
 			printf("\t<img align=\"bottom\" src=\"./img/vh.png\" height=\"%d\" width=\"6\" alt='today simultaneous user : %d' title='today simultaneous user : %d' />\n",$userCountPerHourTodayMax[$i]*100/$maxTodayMax,$userCountPerHourTodayMax[$i],$userCountPerHourTodayMax[$i]);
 		printf("</td>\n");
 	}
@@ -230,8 +247,10 @@ Last hour max simultaneous user :
 <?php
 	$maxHourMax = 0;
 	
-	for($i=0;$i<60;$i++)
+	for($i=0;$i<60 && $i<$lastMinute;$i++)
 	{
+		if($userCountPerMinuteTodayMax[$i]==-1 && $i>0 && $i<$lastMinute)
+			$userCountPerMinuteTodayMax[$i]=$userCountPerMinuteTodayMax[$i-1];
 		if($userCountPerMinuteTodayMax[$i]>$maxHourMax)
 			$maxHourMax = $userCountPerMinuteTodayMax[$i];
 		
@@ -240,18 +259,20 @@ Last hour max simultaneous user :
 	for($i=0;$i<60;$i++)
 	{
 		printf("<td valign=\"bottom\">\n");
-		if($maxToday!=0)
+		if($maxHourMax!=0)
 			printf("\t<img align=\"bottom\" src=\"./img/vp.png\" height=\"%d\" width=\"6\" alt='today simultaneous user : %d' title='today simultaneous user : %d' />\n",$userCountPerMinuteTodayMax[$i]*100/$maxHourMax,$userCountPerMinuteTodayMax[$i],$userCountPerMinuteTodayMax[$i]);
 		printf("</td>\n");
 	}
 	printf("</tr>\n");
 	/*
 	printf("<tr>\n");
-	for($i=0;$i<24;$i++)
+	for($i=0;$i<60 && $i<=$lastMinute;$i++)
 	{
 		printf("<td>%d</td>\n",$i);
 	}
 	printf("</tr>\n");	
+	*/
+	/*
 	printf("<tr>\n");
 	for($i=0;$i<24;$i++)
 	{
