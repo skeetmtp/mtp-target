@@ -203,7 +203,7 @@ void CNetwork::init()
 	updateCount = 0;
 }
 
-static sint8 computeMantis(float x,float &mx,sint8 &dx)
+static sint8 computeMantis8_8(float x,float &mx,sint8 &dx)
 {
 	float ax = (float)fabs(x);
 	sint8 sx = 0;
@@ -230,11 +230,11 @@ static sint8 computeMantis(float x,float &mx,sint8 &dx)
 	return sx;	
 }
 
-static serial8_8fp(CNetMessage &msgout,float x)
+static void serial8_8fp(CNetMessage &msgout,float x)
 {
 	float mx;
 	sint8 dx;
-	sint8 sx = computeMantis(x,mx,dx);
+	sint8 sx = computeMantis8_8(x,mx,dx);
 	//sint8 dx = (sint8)(x*mx);
 	msgout.serial(sx);
 	msgout.serial(dx);
@@ -242,6 +242,8 @@ static serial8_8fp(CNetMessage &msgout,float x)
 
 void CNetwork::update()
 {
+	if(CEntityManager::instance().humanClientCount()==0) return;
+	
 	updateCount++;
 	if((updateCount%MT_NETWORK_FULL_UPDATE_PERIODE)==0)
 	{
@@ -329,6 +331,7 @@ void CNetwork::release()
 	NetworkTask = 0;
 	CNetwork::uninstance();
 }
+
 
 void CNetwork::send(uint8 eid, CNetMessage &msg)
 {

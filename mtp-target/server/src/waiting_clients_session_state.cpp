@@ -51,6 +51,7 @@ using namespace NLMISC;
 
 void CWaitingClientsSessionState::update()
 {
+	/*
 	CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
 	CEntityManager::EntityConstIt it;
 
@@ -68,8 +69,13 @@ void CWaitingClientsSessionState::update()
 				humanClientCount++;
 		}
 	}
+	*/
+	uint humanClientCount = CEntityManager::instance().humanClientCount();
+
 	if(humanClientCount >= NbWaitingClients)
 	{
+		CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
+		CEntityManager::EntityConstIt it;
 		// ok to launch a session
 		changeState(CWaitingReadySessionState::instance());
 

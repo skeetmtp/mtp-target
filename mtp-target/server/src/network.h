@@ -61,6 +61,7 @@ public:
 	// send a message to all connected clients
 	void sendChat(const std::string &msg);
 
+
 private:
 
 	CNetworkTask		*NetworkTask;

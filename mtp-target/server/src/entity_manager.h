@@ -70,7 +70,8 @@ public:
 	uint8 nbEntities();
 
 	bool connected(const std::string &name);
-
+	uint humanClientCount();
+		
 private:
 
 	CEntities Entities;

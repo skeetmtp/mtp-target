@@ -692,3 +692,27 @@ NLMISC_DYNVARIABLE(string, Watch5, "")
 		*pointer = "Entity "+NLMISC::toString(WatchingId)+" not found                                       ";
 	}
 }
+
+
+uint CEntityManager::humanClientCount()
+{
+	CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
+	CEntityManager::EntityConstIt it;
+	
+	uint res = 0;
+	for(it = acces.value().begin(); it != acces.value().end(); it++)
+	{
+		if((*it)->type() == CEntity::Client)
+		{
+			res++;
+		}
+		else if ((*it)->type() == CEntity::Bot)
+		{
+			CBot *b = (CBot *)(*it);
+			if(!b->isAutomaticBot())
+				res++;
+		}
+	}
+	return res;
+}
+
