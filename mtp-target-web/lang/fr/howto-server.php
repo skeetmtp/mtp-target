@@ -42,3 +42,17 @@ Si vous disposez d'une IP statique ou d'un systeme de nommage d'IP dynamique (co
 Vous pouvez maintenant lancer le client en utilisant le mode LAN.
 </p>
 
+<h3>Les different réglages possibles</h3>
+
+<p>C'est une liste des parametres interessant(a completer)</p>
+
+<ul>
+<li>Activer les level de type 1(easy) et 2(expert) :
+    <pre>ReleaseLevel         = { 1, 2 };</pre>
+</li>
+
+<li>Desactiver les optimisation reseaux(plus de bande passante consommée mais moins de saccades) déjà à 1 par defaut :
+    <pre>DisableNetworkOptimization = 1;</pre>
+</li>
+</ul>
+

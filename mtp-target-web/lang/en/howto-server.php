@@ -42,3 +42,17 @@ If you have a static IP or DNS hosting service (like dyndns,dtdns...), you can  
 You can run the game client, using LAN mode.
 </p>
 
+<h3>Server settings</h3>
+
+<p>Here is a list of usefull settings (not complete)</p>
+
+<ul>
+<li>Enable level of type 1(easy) et type 2(expert) :
+    <pre>ReleaseLevel         = { 1, 2 };</pre>
+</li>
+
+<li>Disable network optimization(more bandwidth needed but less jerks) default = 1:
+    <pre>DisableNetworkOptimization = 1;</pre>
+</li>
+</ul>
+
