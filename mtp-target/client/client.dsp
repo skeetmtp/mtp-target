@@ -404,6 +404,14 @@ SOURCE=.\Src\time_task.cpp
 
 SOURCE=.\Src\time_task.h
 # End Source File
+# Begin Source File
+
+SOURCE=.\src\water_task.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\src\water_task.h
+# End Source File
 # End Group
 # Begin Group "gui"
 

@@ -41,6 +41,7 @@ extern "C"
 #include "sky_task.h"
 #include "hud_task.h"
 #include "mtp_target.h"
+#include "water_task.h"
 #include "editor_task.h"
 #include "task_manager.h"
 #include "entity_manager.h"
@@ -199,24 +200,29 @@ CLevel::CLevel(const string &filename)
 	luaGetGlobalVariable(LuaState, skyShapeFileName);
 	nlinfo("skyShapeFileName '%s'", skyShapeFileName.c_str());
 	CSkyTask::instance().shapeName(skyShapeFileName);
+
+	CTaskManager::instance().add(CSkyTask::instance(), 100);
+	
+
+
 	string skyEnvMap0Name;
 	luaGetGlobalVariable(LuaState, skyEnvMap0Name);
 	nlinfo("skyEnvMap0Name '%s'", skyEnvMap0Name.c_str());
-	CSkyTask::instance().envMap0Name(skyEnvMap0Name);
+	CWaterTask::instance().envMap0Name(skyEnvMap0Name);
 	string skyEnvMap1Name;
 	luaGetGlobalVariable(LuaState, skyEnvMap1Name);
 	nlinfo("skyEnvMap1Name '%s'", skyEnvMap1Name.c_str());
-	CSkyTask::instance().envMap1Name(skyEnvMap1Name);
+	CWaterTask::instance().envMap1Name(skyEnvMap1Name);
 	string skyHeightMap0Name;
 	luaGetGlobalVariable(LuaState, skyHeightMap0Name);
 	nlinfo("skyHeightMap0Name '%s'", skyHeightMap0Name.c_str());
-	CSkyTask::instance().heightMap0Name(skyHeightMap0Name);
+	CWaterTask::instance().heightMap0Name(skyHeightMap0Name);
 	string skyHeightMap1Name;
 	luaGetGlobalVariable(LuaState, skyHeightMap1Name);
 	nlinfo("skyHeightMap1Name '%s'", skyHeightMap1Name.c_str());
-	CSkyTask::instance().heightMap1Name(skyHeightMap1Name);
+	CWaterTask::instance().heightMap1Name(skyHeightMap1Name);
+	CTaskManager::instance().add(CWaterTask::instance(), 99);
 	
-	CTaskManager::instance().add(CSkyTask::instance(), 100);
 
 	CTaskManager::instance().add(CLensFlareTask::instance(), 140);
 	

@@ -232,9 +232,9 @@ void C3DTask::update()
 void C3DTask::render()
 {
 //	nlinfo("C3DTask::render():begin render");
-	Driver->enableFog(true);
+	C3DTask::instance().driver().enableFog(true);
 	Scene->render();
-	Driver->enableFog(false);
+	C3DTask::instance().driver().enableFog(false);
 	CEntityManager::instance().renderNames();
 //	nlinfo("C3DTask::render():end render");
 }

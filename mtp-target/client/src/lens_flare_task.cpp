@@ -281,9 +281,7 @@ void CLensFlareTask::render()
 {
 	nlassert(LensFlare);
 	
-	C3DTask::instance().driver().enableFog(true);
-	C3DTask::instance().scene().render();
-	C3DTask::instance().driver().enableFog(false);
+//	C3DTask::instance().scene().render();
 
 	// vector to sun
 	//==============
