@@ -57,7 +57,7 @@ echo "<h3>$menuLinkText_Download</h3>";
 			printf("</tr>");
 		}
 	?>
-	<tr><td bgcolor="<?php echo $table_news_head_color;?>"><b>&nbsp;Linux Full version&nbsp;</b></td></tr>
+	<tr><td bgcolor="<?php echo $table_news_head_color;?>"><b>&nbsp;GNU/Linux Full version&nbsp;</b></td></tr>
 	<?php
 
 		$dirname = "./download/";
