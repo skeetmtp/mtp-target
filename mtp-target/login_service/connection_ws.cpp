@@ -423,7 +423,8 @@ static void cbBanClient(CMessage &msgin, const std::string &serviceName, uint16 
 		string request = toString("insert into ban (Ip,Date,Duration) values ('%s',NOW(),%d);",ip.c_str(),duration);
 		sqlQuery(request, nbrow, row, result);
 	}
-	//sqlQuery("update user set Score=Score+"+toString(score)+" where UId="+toString(uid), nbrow, row, result);
+	string request = toString("insert into moderator_log (Moderator,Target,Command,Date) values ('%s','%s','%s %d',NOW());",kickerName.c_str(),userName.c_str(),"ban",duration);
+	sqlQuery(request, nbrow, row, result);
 }
 
 static const TUnifiedCallbackItem WSCallbackArray[] =
