@@ -106,6 +106,7 @@ string sqlQuery(const string &query, sint32 &nbRow, MYSQL_ROW &firstRow, MYSQL_R
 			firstRow = mysql_fetch_row(result);
 			if(firstRow == 0)
 			{
+				mysql_free_result(result);
 				nlwarning("mysql_fetch_row (%s) failed: %s", query.c_str (),  mysql_error(DatabaseConnection));
 				return toString("mysql_fetch_row (%s) failed: %s", query.c_str (),  mysql_error(DatabaseConnection));
 			}
@@ -114,6 +115,7 @@ string sqlQuery(const string &query, sint32 &nbRow, MYSQL_ROW &firstRow, MYSQL_R
 		{
 			firstRow = 0;
 		}
+		mysql_free_result(result);
 	}
 
 	return "";
@@ -143,6 +145,11 @@ void cbDatabaseVar(CConfigFile::CVar &var)
 	DatabaseLogin = IService::getInstance()->ConfigFile.getVar("DatabaseLogin").asString ();
 	DatabasePassword = IService::getInstance()->ConfigFile.getVar("DatabasePassword").asString ();
 
+	if(DatabaseConnection)
+	{
+		mysql_close(DatabaseConnection);
+		DatabaseConnection = 0;
+	}
 	MYSQL *db = mysql_init(0);
 	if(db == 0)
 	{
@@ -153,6 +160,8 @@ void cbDatabaseVar(CConfigFile::CVar &var)
 	DatabaseConnection = mysql_real_connect(db, DatabaseHost.c_str(), DatabaseLogin.c_str(), DatabasePassword.c_str(), DatabaseName.c_str(),0,0,0);
 	if (DatabaseConnection == 0 || DatabaseConnection != db)
 	{
+		mysql_close(db);
+		DatabaseConnection = 0;
 		nlerror("mysql_real_connect() failed to '%s' with login '%s' and database name '%s'", DatabaseHost.c_str(), DatabaseLogin.c_str(), DatabaseName.c_str());
 		return;
 	}
