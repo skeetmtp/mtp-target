@@ -390,7 +390,17 @@ void CNetwork::sleep(TTime timeout)
 						if(c->sock() != sockid)
 							continue;
 						
+						CEntityManager::EntityConstIt itNext = it;
+						itNext++;
+						uint8 eid = c->id();
 						netCallbacksHandler(c, msg);
+						bool currentEntityPresent = CEntityManager::instance().getById(eid)!=NULL;
+						if(!currentEntityPresent)
+						{
+							it = itNext;
+							if(it==CEntityManager::instance().entities().end())
+								break;
+						}	
 					}
 				}
 				
