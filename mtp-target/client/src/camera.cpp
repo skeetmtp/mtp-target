@@ -104,6 +104,7 @@ CCamera::CCamera()
 	CurrentBackDist		= CloseBackDist;
 	CurrentTargetHeight   = CloseTargetHeight;
 	CurrentTargetBackDist = CloseTargetBackDist;
+	CurrentHeightSpeed  = 0;
 
 	ActiveMatrix = &MatrixFollow;
 	Facing = 0;
