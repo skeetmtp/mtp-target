@@ -1,4 +1,7 @@
 <?php
+
+
+
 	$fp = fopen("../server/connection.stat", "r");
 	if (!$fp) {echo "<p>Unable to open remote file.</p>"; exit;}
 	
@@ -106,7 +109,12 @@
 	
 	fclose($fp);
 
+	$t1 = strtotime(date("l dS of F Y H:i:s"));
+	$t2 = strtotime(date("l dS of F Y H:i:s",$lastRestartTime));
+	
+	//printf("%d %d %d <br>",$t1-$t2, $t1,$t2);
 	$serverUptime = mktime() - $lastRestartTime;
+	//$serverUptime = $serverUptime - mktime(1);
 
 	printf("Server uptime : ");
 	if(date("z",$serverUptime)!="0")
@@ -114,6 +122,9 @@
 	else
 		printf("%s<br>\n",date("H:i:s",$serverUptime));
 	printf("Current logged user : %d<br>\n",$playerCount);
+	
+	printf("report date  : %s<br>\n",date("l dS of F Y H:i:s"));
+	printf("Last restart : %s<br>\n",date("l dS of F Y H:i:s",$lastRestartTime));
 	
 ?>
 
