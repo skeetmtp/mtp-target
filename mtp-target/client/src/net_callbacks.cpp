@@ -608,8 +608,11 @@ static void cbEndSession(CNetMessage &msgin)
 		//CEntity *entity = mtpTarget::instance().World.getEntityById(id);
 		//nlassert(entity!=0);
 		//entity->setScore(currentScore, totalScore);
-		CEntityManager::instance()[eid].currentScore(currentScore);
-		CEntityManager::instance()[eid].totalScore(totalScore);
+		if(CEntityManager::instance().exist(eid))
+		{
+			CEntityManager::instance()[eid].currentScore(currentScore);
+			CEntityManager::instance()[eid].totalScore(totalScore);
+		}
 	}
 	mtpTarget::instance().endSession();
 	
