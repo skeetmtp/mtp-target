@@ -301,23 +301,25 @@ void CEntityManager::remove(uint8 eid)
 	CEntity *c = 0;
 
 	{
-		EntityIt it;
-		CEntities::CWriteAccessor acces(entities());
-		for( it = acces.value().begin(); it != acces.value().end(); it++)
-		{
-			if((*it)->id() == eid)
-			{
-				// only unlink the client from the list
-				c = (*it);
-				acces.value().erase(it);
-				break;
-			}
-		}
 		CNetMessage msgout(CNetMessage::UpdateList);
-		for( it = acces.value().begin(); it != acces.value().end(); it++)
 		{
-			uint8 eid = (*it)->id();
-			msgout.serial(eid);
+			EntityIt it;
+			CEntities::CWriteAccessor acces(entities());
+			for( it = acces.value().begin(); it != acces.value().end(); it++)
+			{
+				if((*it)->id() == eid)
+				{
+					// only unlink the client from the list
+					c = (*it);
+					acces.value().erase(it);
+					break;
+				}
+			}
+			for( it = acces.value().begin(); it != acces.value().end(); it++)
+			{
+				uint8 eid = (*it)->id();
+				msgout.serial(eid);
+			}
 		}
 		CNetwork::instance().send(msgout);
 	}
