@@ -83,7 +83,9 @@ private:
 	guiSPG<CGuiText> passwordText;
 	guiSPG<CGuiButton> loginButton;
 	guiSPG<CGuiButton> backButton1;
-
+	guiSPG<CGuiButton> serverListBackButton;
+	guiSPG<CGuiListView> serverListView;
+	
 	guiSPG<CGuiFrame> loginLanFrame;
 	guiSPG<CGuiText> loginLanText;
 	guiSPG<CGuiText> passwordLanText;

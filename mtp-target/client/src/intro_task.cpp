@@ -83,13 +83,27 @@ private:
 class CGuiExitButtonEventBehaviour : public CGuiButtonEventBehaviour
 {
 public:
-	CGuiExitButtonEventBehaviour() {}
+	CGuiExitButtonEventBehaviour(){}
 	virtual ~CGuiExitButtonEventBehaviour() {}
 	virtual void onPressed()
 	{
 		CTaskManager::instance().exit();
 	}
 private:
+};
+
+class CGuiServerListConnectButtonEventBehaviour : public CGuiButtonEventBehaviour
+{
+public:
+	CGuiServerListConnectButtonEventBehaviour(CGuiListView *serverListView) {_serverListView=serverListView;}
+	virtual ~CGuiServerListConnectButtonEventBehaviour() {}
+	virtual void onPressed()
+	{
+		nlinfo("user want to connect to server : %d",_serverListView->selectedRow());
+		CIntroTask::instance().doConnectionOnLine(_serverListView->selectedRow());
+	}
+private:
+	guiSPG<CGuiListView> _serverListView;
 };
 
 class CGuiLaunchServerEventBehaviour : public CGuiListViewEventBehaviour
@@ -99,8 +113,8 @@ public:
 	virtual ~CGuiLaunchServerEventBehaviour() {}
 	virtual void onPressed(uint rowId)
 	{
-		//CIntroTask::instance().doConnectionOnLine(rowId);
-		nlinfo("user launch server : %d",rowId);
+		nlinfo("user want to connect to server : %d",rowId);
+		CIntroTask::instance().doConnectionOnLine(rowId);
 	}
 private:
 };
@@ -174,6 +188,12 @@ void CIntroTask::updateInit()
 	row3->elements.push_back(new CGuiText(string("120")));
 	listView->rows.push_back(row3);
 	
+	guiSPG<CGuiHBox> row4 = new CGuiHBox;
+	row4->elements.push_back(new CGuiText(string("Fake one")));
+	row4->elements.push_back(new CGuiText(string("0")));
+	row4->elements.push_back(new CGuiText(string("3")));
+	listView->rows.push_back(row4);
+	
 	
 	CGuiObjectManager::instance().objects.push_back(testFrame);
 	State = eNone;
@@ -213,6 +233,12 @@ void CIntroTask::updateInit()
 	serverVbox = (CGuiVBox *)xml->get("serverVbox");
 	backButton2 = (CGuiButton *)xml->get("bBack");
 	
+	serverListBackButton	= new CGuiButton();
+	serverListBackButton->element(new CGuiText("Back"));
+	serverListBackButton->minWidth(80);
+	
+	serverListView = new CGuiListView;
+
 	CGuiObjectManager::instance().objects.push_back(menuFrame);
 	State = eMenu;
 
@@ -284,9 +310,31 @@ void CIntroTask::updateLoginOnline()
 			// TODO skeet: if CLoginClientMtp::ShardList.size() is 0 then you must
 			// handle the case where no shard are available
 
-			serverVbox->elements.clear();
+			serverListFrame = new CGuiFrame();
+
+			guiSPG<CGuiVBox> serverListVBox = new CGuiVBox;
+			serverListFrame->element(serverListVBox);
+
+			serverListView->rows.clear();
+			serverListVBox->elements.push_back(serverListView);
+			serverListView->eventBehaviour = new CGuiLaunchServerEventBehaviour;
+			
+			guiSPG<CGuiHBox> header = new CGuiHBox;
+			header->elements.push_back(new CGuiText(string("Server")));
+			header->elements.push_back(new CGuiText(string("Players")));
+			//header->elements.push_back(new CGuiText(string("Ping")));
+			serverListView->rows.push_back(header);
+			
+			
+			//serverVbox->elements.clear();
 			for(uint i = 0; i < CLoginClientMtp::ShardList.size(); i++)
 			{
+				guiSPG<CGuiHBox> row = new CGuiHBox;
+				row->elements.push_back(new CGuiText(CLoginClientMtp::ShardList[i].ShardName));
+				row->elements.push_back(new CGuiText(toString(CLoginClientMtp::ShardList[i].ShardNbPlayers)));
+				//row->elements.push_back(new CGuiText(string("34"))); //ping
+				serverListView->rows.push_back(row);
+				/*
 				guiSPG<CGuiXml> xml = 0;
 				xml = CGuiXmlManager::instance().Load("server_item.xml");
 				{
@@ -296,8 +344,22 @@ void CIntroTask::updateLoginOnline()
 					serverButton->eventBehaviour = new CGuiServerButtonEventBehaviour(i);
 					btextServer->text = CLoginClientMtp::ShardList[i].ShardName;
 					serverVbox->elements.push_back(serverItemHBox);
-				}			
+				}
+				*/
 			}
+
+
+			guiSPG<CGuiButton> serverListConnectButton	= new CGuiButton();
+			serverListConnectButton->element(new CGuiText("Connect"));
+			serverListConnectButton->minWidth(80);
+			serverListConnectButton->eventBehaviour = new CGuiServerListConnectButtonEventBehaviour(serverListView);
+			guiSPG<CGuiHBox> serverListButtonBox = new CGuiHBox;
+			serverListButtonBox->elements.push_back(serverListConnectButton);
+			serverListButtonBox->elements.push_back(serverListBackButton);
+			
+
+			serverListVBox->elements.push_back(serverListButtonBox);
+
 			CGuiObjectManager::instance().objects.clear();
 			CGuiObjectManager::instance().objects.push_back(serverListFrame);
 			State = eServerList;
@@ -342,9 +404,9 @@ void CIntroTask::updateServerList()
 	if(_autoLogin==1)
 		doConnectionOnLine(0);
 
-	if(backButton2->pressed())
+	if(backButton2->pressed() || serverListBackButton->pressed())
 	{
-		State = eLoginOnlan;
+		State = eMenu;
 		CGuiObjectManager::instance().objects.clear();
 		CGuiObjectManager::instance().objects.push_back(menuFrame);
 		return;

@@ -63,6 +63,8 @@ public:
 	
 	float spacing();
 	void spacing(float spacing);
+
+	uint selectedRow() {return _selectedRow-1;};
 	
 	virtual void _render(const NLMISC::CVector &pos, NLMISC::CVector &maxSize);	
 	

@@ -134,6 +134,8 @@ string CLoginClientMtp::authenticate (const string &loginServiceAddr, const stri
 		string addr = loginServiceAddr;
 		if(addr.find(":") == string::npos)
 			addr += ":49997";
+		if(_CallbackClient->connected())
+			_CallbackClient->disconnect();
 		_CallbackClient->connect (CInetAddress(addr));
 	}
 	catch (ESocket &e)
