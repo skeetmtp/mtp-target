@@ -151,10 +151,6 @@ void CFontManager::printf(const NLMISC::CRGBA &col, float x, float y, float scal
 	{
 		*ptr = toupper(*ptr);
 
-		//TODO manage '-' char
-		if(*ptr =='-')
-			*ptr = '.';
-
 		if (*ptr == ' ')
 		{
 			px += 22*scale;
