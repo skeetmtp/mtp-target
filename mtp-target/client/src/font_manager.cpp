@@ -180,10 +180,10 @@ sint32 CFontManager::strfind(string &str,CReplaceString **found)
 
 void CFontManager::drawSpecial(float x, float y,float width,float height, NL3D::UMaterial &material)
 {
-	float realX = C3DTask::instance().screenWidth()*8*x/800.0f;
-	float realY = C3DTask::instance().screenHeight()-C3DTask::instance().screenHeight()*(16*(y+1)+4)/600.0f;
-	float realW = C3DTask::instance().screenWidth()*width/800;
-	float realH = C3DTask::instance().screenHeight()*height/600;
+	float realX = 8*x;
+	float realY = C3DTask::instance().screenHeight()-(16*(y+1)+4);
+	float realW = width;
+	float realH = height;
 
 	CQuadUV		quad;
 	quad.V0.set(realX      , realY      , 0);
