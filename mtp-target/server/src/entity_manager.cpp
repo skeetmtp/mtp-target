@@ -419,9 +419,11 @@ void CEntityManager::login(CEntity *e)
 		msgout.serial(e->Texture);
 		bool s = e->spectator();
 		msgout.serial(s);
-		string CurrentLevel;
-		if(CLevelManager::instance().haveCurrentLevel())
-			CurrentLevel = CLevelManager::instance().levelName();
+		string CurrentLevel="";
+		/* currently client crash when startsession on login, btw startsession on login is a bad idea
+		if(CLevelManager::instance().haveCurrentLevel())// && MTPT_NETWORK_VERSION>=2)
+			CurrentLevel = CLevelManager::instance().currentLevel().fileName();
+		*/
 		msgout.serial(CurrentLevel);
 		float timeBeforeTimeout;
 		if (CSessionManager::instance().startTime() == 0)
@@ -430,7 +432,9 @@ void CEntityManager::login(CEntity *e)
 		}
 		else
 		{
-			timeBeforeTimeout = (float)((TTime)CLevelManager::instance().timeTimeout() - CTime::getLocalTime()-CSessionManager::instance().startTime())/1000.0f;
+			TTime currentTime = CTime::getLocalTime();
+			timeBeforeTimeout = (float)(CSessionManager::instance().startTime()+(TTime)CLevelManager::instance().timeTimeout()-currentTime);
+			//timeBeforeTimeout = (float)((TTime)CLevelManager::instance().timeTimeout() - CTime::getLocalTime()-CSessionManager::instance().startTime())/1000.0f;
 		}
 		msgout.serial(timeBeforeTimeout);
 		CNetwork::instance().send(nid, msgout);
