@@ -446,6 +446,7 @@ class PhysicsThread : public IRunnable
 			TTime newTime = CTime::getLocalTime();
 			deltaTime = (float)(newTime - lastTime)/1000.0f;
 			int   nbLoop = int(deltaTime / worldStep);
+			nlinfo("physic nbloop = %d",nbLoop);
 			float missedTime = deltaTime - nbLoop * worldStep;
 			lastTime = newTime-(TTime)missedTime;
 			{
