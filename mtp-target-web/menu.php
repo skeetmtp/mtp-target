@@ -28,7 +28,7 @@
       $default_page = $default_first_time;
       setcookie("mtp_target_default_page",$default_later,time()+3600*24*30);
   }
-  if (!isset($page)) $page = $default_page;
+  if (!isset($page) || !file_exists($page)) $page = $default_page;
 
 
   $menu_array = array (
