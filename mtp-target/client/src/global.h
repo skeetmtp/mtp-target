@@ -20,7 +20,7 @@
 #ifndef MTPT_GLOBAL_H
 #define MTPT_GLOBAL_H
 
-#include <nel/misc/types_nl.h
+#include <nel/misc/types_nl.h>
 
 // Comment this define if you don't want to use FMOD
 // Actually, no sound on linux because fmod is not free
