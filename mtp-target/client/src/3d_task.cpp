@@ -153,20 +153,6 @@ void C3DTask::init()
 		return;
 	}
 
-	// Set the cache size for the font manager (in bytes)
-	Driver->setFontManagerMaxMemory (2000000);
-
-	// Create a Text context for later text rendering
-	TextContext = Driver->createTextContext (CPath::lookup("n019003l.pfb"));
-
-	if (TextContext == 0)
-	{
-		nlwarning ("Can't create text context");
-		return;
-	}
-
-	TextContext->setKeep800x600Ratio(false);
-
 	Driver->EventServer.addListener (EventCharId, &InterfaceListener);
 
 	Driver->setAmbientColor(AmbientColor);

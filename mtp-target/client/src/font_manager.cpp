@@ -26,6 +26,7 @@
 
 #include "3d_task.h"
 #include "font_manager.h"
+#include "config_file_task.h"
 #include "resource_manager.h"
 
 
@@ -92,6 +93,36 @@ void CFontManager::init()
 
 	FontWidth = 22;
 	FontHeight = 20;
+
+	// Set the cache size for the font manager (in bytes)
+	C3DTask::instance().driver().setFontManagerMaxMemory (2000000);
+	
+	// Create a Text context for later text rendering
+	//	TextContext = Driver->createTextContext (CPath::lookup("n019003l.pfb"));
+	LittleTextContext = C3DTask::instance().driver().createTextContext (CPath::lookup(CConfigFileTask::instance().configFile().getVar("LittleFont").asString()));
+	nlassert(LittleTextContext != 0);
+	LittleTextContext->setKeep800x600Ratio(false);
+	LittleTextContext->setHotSpot (UTextContext::BottomLeft);
+	LittleTextContext->setFontSize (12);
+	LittleTextContext->setShaded(true);
+
+	BigFontSize = CConfigFileTask::instance().configFile().getVar("BigFontSize").asInt();
+	BigTextContext = C3DTask::instance().driver().createTextContext (CPath::lookup(CConfigFileTask::instance().configFile().getVar("BigFont").asString()));
+	nlassert(BigTextContext != 0);
+	BigTextContext->setKeep800x600Ratio(false);
+	BigTextContext->setHotSpot (UTextContext::BottomLeft);
+	BigTextContext->setFontSize (BigFontSize);
+	BigTextContext->setShaded(true);
+	
+	
+	GUIFontSize = CConfigFileTask::instance().configFile().getVar("GUIFontSize").asInt();
+	GUITextContext = C3DTask::instance().driver().createTextContext (CPath::lookup(CConfigFileTask::instance().configFile().getVar("GUIFont").asString()));
+	nlassert(GUITextContext != 0);
+	GUITextContext->setKeep800x600Ratio(false);
+	GUITextContext->setHotSpot (UTextContext::BottomLeft);
+	GUITextContext->setFontSize (GUIFontSize);
+	GUITextContext->setColor(CRGBA(0,0,0));
+	GUITextContext->setShaded(false);
 }
 
 void CFontManager::release()
@@ -114,12 +145,8 @@ void CFontManager::littlePrintf(const CRGBA &col, float x, float y, const char *
 	char *str;
 	NLMISC_CONVERT_VARGS (str, format, 256);
 
-	C3DTask::instance().textContext().setHotSpot (UTextContext::BottomLeft);
-	C3DTask::instance().textContext().setColor (col);
-	C3DTask::instance().textContext().setFontSize (12);
-	C3DTask::instance().textContext().setShaded(true);
-	C3DTask::instance().textContext().printfAt (8*x/C3DTask::instance().screenWidth(), (C3DTask::instance().screenHeight()-16*y-16)/C3DTask::instance().screenHeight(), str);
-	C3DTask::instance().textContext().setKeep800x600Ratio (true);
+	LittleTextContext->setColor (col);
+	LittleTextContext->printfAt (8*x/C3DTask::instance().screenWidth(), (C3DTask::instance().screenHeight()-16*y-16)/C3DTask::instance().screenHeight(), str);
 }
 
 void CFontManager::littlePrintf(float x, float y, const char *format ...)
@@ -129,12 +156,8 @@ void CFontManager::littlePrintf(float x, float y, const char *format ...)
 	char *str;
 	NLMISC_CONVERT_VARGS (str, format, 256);
 
-	C3DTask::instance().textContext().setHotSpot (UTextContext::BottomLeft);
-	C3DTask::instance().textContext().setColor (CRGBA (255,255,255,255));
-	C3DTask::instance().textContext().setFontSize (12);
-	C3DTask::instance().textContext().setShaded(true);
-	C3DTask::instance().textContext().printfAt (8*x/C3DTask::instance().screenWidth(), (C3DTask::instance().screenHeight()-16*y-16)/C3DTask::instance().screenHeight(), str);
-	C3DTask::instance().textContext().setKeep800x600Ratio (true);
+	LittleTextContext->setColor (CRGBA (255,255,255,255));
+	LittleTextContext->printfAt (8*x/C3DTask::instance().screenWidth(), (C3DTask::instance().screenHeight()-16*y-16)/C3DTask::instance().screenHeight(), str);
 }
 
 
@@ -192,13 +215,16 @@ void CFontManager::printf(const NLMISC::CRGBA &col, float x, float y, float scal
 					quad.Uv3.U= rx1/256.0f;
 					quad.Uv3.V= ry1/256.0f;
 
-					C3DTask::instance().driver().drawQuad (quad, Material);
+//					C3DTask::instance().driver().drawQuad (quad, Material);
 					px += CharW[j]*scale;
 					break;
 				}
 			}
 		}
 	}
+
+	BigTextContext->setColor (col);
+	BigTextContext->printfAt (x/(float)C3DTask::instance().screenWidth(), 1.0f-y/(float)C3DTask::instance().screenHeight(), str);
 }
 
 

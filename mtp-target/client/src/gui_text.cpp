@@ -160,7 +160,6 @@ void CGuiText::_init(const string &text)
 	_isEntry     = false;	
 	_isPassword  = false;
 	_isMultiline = true;
-	_fontSize    = 12;
 }
 
 CGuiText::CGuiText(const string &text)
@@ -235,12 +234,11 @@ void CGuiText::_render(const CVector &pos,CVector &maxSize)
 		globalPos += CVector(2,2,0);
 
 	text = strToMultiline(text,isMultiline());
-	CGuiMultilineText::Print(globalPos.x , globalPos.y, CRGBA(0,0,0,255), false, _fontSize, cursorIndex(), cursorPos, strToPassword(text,isPassword()));
+	CGuiMultilineText::Print(globalPos.x , globalPos.y, cursorIndex(), cursorPos, strToPassword(text,isPassword()));
 
-		
 	if(focused() && isEntry())
 	{
-		CGuiTextCursor::Render(cursorPos,_fontSize);
+		CGuiTextCursor::Render(cursorPos,CFontManager::instance().guiFontSize());
 		if(isEditable())
 		{
 			string res = C3DTask::instance().kbGetString();
@@ -439,7 +437,7 @@ void CGuiText::cursorRight()
 
 float CGuiText::_width()
 {
-	float w = CGuiMultilineText::Size(false, _fontSize,text).x;
+	float w = CGuiMultilineText::Size(false, CFontManager::instance().guiFontSize(),text).x;
 	if(isEntry())
 		return w + 4;
 	else
@@ -448,7 +446,7 @@ float CGuiText::_width()
 
 float CGuiText::_height()
 {
-	float h = CGuiMultilineText::Size(false, _fontSize,text).y;
+	float h = CGuiMultilineText::Size(false, CFontManager::instance().guiFontSize(),text).y;
 	if(isEntry())
 		return h + 4;
 	else
@@ -494,16 +492,6 @@ void CGuiText::isMultiline(bool isMultiline)
 bool CGuiText::isMultiline()
 {
 	return _isMultiline;
-}
-
-void CGuiText::fontSize(uint fontSize)
-{
-	_fontSize = fontSize;
-}
-
-uint CGuiText::fontSize()
-{
-	return _fontSize;
 }
 
 void CGuiText::cursorIndex(int cursorIndex)

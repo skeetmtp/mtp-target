@@ -498,16 +498,7 @@ void CIntroTask::update()
 
 void CIntroTask::render()
 {
-	float x = 0;
-	float y = 0;
-	string versionStr = toString("v%s %s",MTPT_RELEASE_VERSION_NUMBER,MTPT_RELEASE_VERSION_NAME);
-	
-	C3DTask::instance().textContext().setHotSpot (UTextContext::BottomLeft);
-	C3DTask::instance().textContext().setColor (CRGBA(0,0,0,255));
-	C3DTask::instance().textContext().setFontSize (12);
-	C3DTask::instance().textContext().setShaded(false);
-	C3DTask::instance().textContext().setKeep800x600Ratio (true);
-	C3DTask::instance().textContext().printAt (CGuiObject::ToProportionalX(x), CGuiObject::ToProportionalY(y), ucstring(versionStr.c_str()));	
+	CFontManager::instance().littlePrintf(0.0f, 0.0f, toString("v%s %s",MTPT_RELEASE_VERSION_NUMBER,MTPT_RELEASE_VERSION_NAME).c_str());
 }
 
 void CIntroTask::release()

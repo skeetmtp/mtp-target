@@ -71,9 +71,6 @@ class CGuiText : public CGuiObject
 	void isMultiline(bool isMultiline);
 	bool isMultiline();
 	
-	void fontSize(uint fontSize);
-	uint fontSize();
-	
 	void cursorIndex(int cursorIndex);
 	uint cursorIndex();
 	
@@ -98,8 +95,6 @@ private:
 	bool _isEntry;
 	bool _isPassword;
 	bool _isMultiline;
-	uint _fontSize;
-	
 };
 
 

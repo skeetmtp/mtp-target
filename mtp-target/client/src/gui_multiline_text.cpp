@@ -23,12 +23,15 @@
 //
 #include "stdpch.h"
 
+#include <nel/3d/u_material.h>
+
 #include "3d_task.h"
 #include "time_task.h"
+#include "gui_object.h"
+#include "font_manager.h"
 #include "resource_manager.h"
 #include "gui_multiline_text.h"
-#include "gui_object.h"
-#include <nel/3d/u_material.h>
+
 
 //
 // Namespaces
@@ -75,15 +78,15 @@ CGuiMultilineText::~CGuiMultilineText()
 }
 
 
-void CGuiMultilineText::Printf(float x, float y, CRGBA color,bool shaded,int size,int cursorIndex, CVector &cursorPos, const char *format ...)
+void CGuiMultilineText::Printf(float x, float y, int cursorIndex, CVector &cursorPos, const char *format ...)
 {
 	string str;
 	NLMISC_CONVERT_VARGS (str, format, 256);
 
-	Print(x,y,color,shaded,size,cursorIndex,cursorPos,str);
+	Print(x,y,cursorIndex,cursorPos,str);
 }
 
-void CGuiMultilineText::Print(float x, float y, CRGBA color,bool shaded,int size,int cursorIndex, CVector &cursorPos, const string &str)
+void CGuiMultilineText::Print(float x, float y, int cursorIndex, CVector &cursorPos, const string &str)
 {
 	if(str.size()==0)
 	{
@@ -91,54 +94,45 @@ void CGuiMultilineText::Print(float x, float y, CRGBA color,bool shaded,int size
 		cursorPos.y = y;
 		return;
 	}
-	C3DTask::instance().textContext().setHotSpot (UTextContext::BottomLeft);
-	C3DTask::instance().textContext().setColor (color);
-	C3DTask::instance().textContext().setFontSize (size);
-	C3DTask::instance().textContext().setShaded(shaded);
-	C3DTask::instance().textContext().setKeep800x600Ratio (true);
 
-	UTextContext::CStringInfo stringInfo = C3DTask::instance().textContext().getStringInfo(ucstring(str));
+	UTextContext::CStringInfo stringInfo = CFontManager::instance().guiTextContext().getStringInfo(ucstring(str));
 
-	UTextContext::CStringInfo defaultStringInfo = C3DTask::instance().textContext().getStringInfo(ucstring("Yg"));
+	UTextContext::CStringInfo defaultStringInfo = CFontManager::instance().guiTextContext().getStringInfo(ucstring("Yg"));
 	float StringHeight = defaultStringInfo.StringHeight; //to find max height
 	float StringLine = defaultStringInfo.StringLine;
-	
-	
+
 	std::vector<std::string> vstr;
 	Split(str, '\n', std::back_inserter(vstr));
 	int subStringStart = 0;
 	for( std::vector<std::string>::size_type i = 0; i < vstr.size(); ++i ) 
 	{
 		int subStringLen = vstr[i].size();
-		C3DTask::instance().textContext().printAt (CGuiObject::ToProportionalX(x), 1.0f - CGuiObject::ToProportionalY(y - StringLine + StringHeight), ucstring(ucstring(vstr[i])));
+		CFontManager::instance().guiTextContext().printAt (CGuiObject::ToProportionalX(x), 1.0f - CGuiObject::ToProportionalY(y - StringLine + StringHeight), ucstring(ucstring(vstr[i])));
 
 		if(subStringStart <= cursorIndex && cursorIndex <= subStringStart+subStringLen)
 		{
 			string subSubString = vstr[i].substr(0,cursorIndex-subStringStart);
-			UTextContext::CStringInfo subStringInfo = C3DTask::instance().textContext().getStringInfo(ucstring(subSubString));
-			cursorPos.y = y - size + StringHeight - StringLine + 1;
+			UTextContext::CStringInfo subStringInfo = CFontManager::instance().guiTextContext().getStringInfo(ucstring(subSubString));
+			cursorPos.y = y - /*TODO ace*/12 + StringHeight - StringLine + 1;
 			cursorPos.x = x + subStringInfo.StringWidth;
 		}
 
 		y += StringHeight + MultilineStringYSpace;
 		subStringStart += subStringLen+1;
 	}
-	C3DTask::instance().textContext().setKeep800x600Ratio (true);
 }
 	
 
 CVector CGuiMultilineText::Size(bool shaded,int size,const std::string &str)
 {
-	C3DTask::instance().textContext().setHotSpot (UTextContext::BottomLeft);
-	C3DTask::instance().textContext().setFontSize (size);
-	C3DTask::instance().textContext().setShaded(shaded);
-	C3DTask::instance().textContext().setKeep800x600Ratio (true);
+	CFontManager::instance().guiTextContext().setFontSize (size);
+	CFontManager::instance().guiTextContext().setShaded(shaded);
 
-	UTextContext::CStringInfo defaultStringInfo = C3DTask::instance().textContext().getStringInfo(ucstring("Yg"));
+	UTextContext::CStringInfo defaultStringInfo = CFontManager::instance().guiTextContext().getStringInfo(ucstring("Yg"));
 	float StringHeight = defaultStringInfo.StringHeight; //to find max height
 	float StringLine = defaultStringInfo.StringLine;
 	
-	UTextContext::CStringInfo stringInfo = C3DTask::instance().textContext().getStringInfo(ucstring(str));
+	UTextContext::CStringInfo stringInfo = CFontManager::instance().guiTextContext().getStringInfo(ucstring(str));
 	CVector res;
 	res.y = StringHeight;
 	
@@ -153,7 +147,7 @@ CVector CGuiMultilineText::Size(bool shaded,int size,const std::string &str)
 
 	for( std::vector<std::string>::size_type i = 0; i < vstr.size(); ++i ) 
 	{
-		UTextContext::CStringInfo subStringInfo = C3DTask::instance().textContext().getStringInfo(ucstring(vstr[i]));
+		UTextContext::CStringInfo subStringInfo = CFontManager::instance().guiTextContext().getStringInfo(ucstring(vstr[i]));
 		if(subStringInfo.StringWidth>res.x)
 			res.x = subStringInfo.StringWidth;
 	}

@@ -31,8 +31,8 @@
 //
 
 #include <nel/3d/u_texture.h>
+#include <nel/3d/u_text_context.h>
 #include <nel/3d/u_material.h>
-
 
 
 //
@@ -49,7 +49,7 @@ public:
 	virtual void release();
 
 	virtual std::string name() { return "CFontManager"; }
-	
+
 	NL3D::UMaterial &material() { return Material; }
 
 	void littlePrintf(float x, float y, const char *format ...);
@@ -59,14 +59,22 @@ public:
 	
 	uint32 fontWidth() const { return FontWidth; }
 	uint32 fontHeight() const { return FontHeight; }
-	
+
+	uint32 guiFontSize() const { return GUIFontSize; }
+
+	NL3D::UTextContext	&guiTextContext() const { nlassert(GUITextContext); return *GUITextContext; }
+
 private:
 
 	uint32 FontHeight;
 	uint32 FontWidth;
+
+	uint32 GUIFontSize, BigFontSize;
+
+	NL3D::UTextContext	*LittleTextContext, *BigTextContext, *GUITextContext;
 	
-	NL3D::UTextureFile *Texture;
-	NL3D::UMaterial Material;
+	NL3D::UTextureFile	*Texture;
+	NL3D::UMaterial		 Material;
 
 };
 

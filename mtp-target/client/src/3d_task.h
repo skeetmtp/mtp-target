@@ -32,7 +32,6 @@
 
 #include <nel/3d/u_scene.h>
 #include <nel/3d/u_instance.h>
-#include <nel/3d/u_text_context.h>
 #include <nel/3d/u_texture.h>
 
 #include "mouse_listener.h"
@@ -55,7 +54,6 @@ public:
 	
 	NL3D::UDriver		&driver() const { nlassert(Driver); return *Driver; }
 	NL3D::UScene		&scene() const { nlassert(Scene); return *Scene; }
-	NL3D::UTextContext	&textContext() const { nlassert(TextContext); return *TextContext; }
 	C3dMouseListener	&mouseListener() const { nlassert(MouseListener); return *MouseListener; }
 
 	uint16				screenWidth() const { return ScreenWidth; }
@@ -76,7 +74,6 @@ public:
 private:
 	
 	NL3D::UDriver			*Driver;
-	NL3D::UTextContext		*TextContext;
 	NL3D::UScene			*Scene;
 	
 	uint16					 ScreenWidth;
