@@ -63,10 +63,12 @@ do{ \
 	}	\
 }while(false)
 
+/*
 #define MT_LUA_CALL(argCount,retCount) \
 do \
 { \
-	int status = 0; lua_pcall(LuaSession, argCount, retCount); \
+	int status = 0; \
+	lua_pcall(LuaSession, argCount, retCount); \
 	if (status) {\
 		const char *msg = lua_tostring(session(), -1);\
 		if (msg == 0) msg = "(error with no message)";\
@@ -75,7 +77,7 @@ do \
 		return;\
 	}\
 }while(false)
-
+*/
 
 //////////////////////////////////////////////////////////////////////////////////////
 //
@@ -173,6 +175,11 @@ void CLuaEngine::entityEntityCollideEvent(CEntity *entity1, CEntity *entity2)
 		return;
 //	nlinfo("CLuaEngine::entityEntityCollideEvent(0x%p[0x%p],0x%p[0x%p])",entity1,entity1->luaProxy,entity2,entity2->luaProxy);
 	lua_getglobal(session(), "entityEntityCollideEvent");
+	if (lua_isnil(session(), -1))
+	{
+		lua_pop(session(), 1);
+		return;
+	}
 	Lunar<CEntityProxy>::push(session(), entity1->luaProxy);
 	Lunar<CEntityProxy>::push(session(), entity2->luaProxy);
 	int status = lua_pcall (session(),2,0,0);
@@ -197,6 +204,11 @@ void CLuaEngine::entitySceneCollideEvent(CEntity *entity, CModule *module)
 	int res ;
 //	nlinfo("CLuaEngine::entitySceneCollideEvent(0x%p[0x%p],0x%p[0x%p](%s)",entity,entity->luaProxy,module,module->luaProxy,module->name().c_str());
 	lua_getglobal(session(), "entitySceneCollideEvent");
+	if (lua_isnil(session(), -1))
+	{
+		lua_pop(session(), 1);
+		return;
+	}
 	Lunar<CEntityProxy>::push(session(), entity->luaProxy);
 	Lunar<CModuleProxy>::push(session(), module->luaProxy);
 	res = lua_pcall (session(),2,0,0);
@@ -219,6 +231,11 @@ void CLuaEngine::entityWaterCollideEvent(CEntity *entity)
 	int res ;
 //	nlinfo("CLuaEngine::entityWaterCollideEvent(0x%p)",entity);
 	lua_getglobal(session(), "entityWaterCollideEvent");
+	if (lua_isnil(session(), -1))
+	{
+		lua_pop(session(), 1);
+		return;
+	}
 	Lunar<CEntityProxy>::push(session(), entity->luaProxy);
 	res = lua_pcall (session(),1,0,0);
     if (res) {
@@ -241,6 +258,11 @@ void CLuaEngine::entityLeaveEvent(CEntity *entity)
 	int res ;
 	//	nlinfo("CLuaEngine::entityWaterCollideEvent(0x%p)",entity);
 	lua_getglobal(session(), "entityLeaveEvent");
+	if (lua_isnil(session(), -1))
+	{
+		lua_pop(session(), 1);
+		return;
+	}
 	Lunar<CEntityProxy>::push(session(), entity->luaProxy);
 	res = lua_pcall (session(),1,0,0);	
     if (res) {
@@ -259,6 +281,11 @@ void CLuaEngine::levelInit()
 	int res ;
 //	nlinfo("CLuaEngine::entityWaterCollideEvent(0x%p)",entity);
 	lua_getglobal(session(), "levelInit");
+	if (lua_isnil(session(), -1))
+	{
+		lua_pop(session(), 1);
+		return;
+	}
 	res = lua_pcall (session(),0,0,0);
     if (res) {
 		const char *msg = lua_tostring(session(), -1);
@@ -281,6 +308,11 @@ void CLuaEngine::levelPreUpdate()
 	int res ;
 //	nlinfo("CLuaEngine::entityWaterCollideEvent(0x%p)",entity);
 	lua_getglobal(session(), "levelPreUpdate");
+	if (lua_isnil(session(), -1))
+	{
+		lua_pop(session(), 1);
+		return;
+	}
 	res = lua_pcall (session(),0,0,0);
     if (res) {
 		const char *msg = lua_tostring(session(), -1);
@@ -302,6 +334,11 @@ void CLuaEngine::levelPostUpdate()
 	int res ;
 //	nlinfo("CLuaEngine::entityWaterCollideEvent(0x%p)",entity);
 	lua_getglobal(session(), "levelPostUpdate");
+	if (lua_isnil(session(), -1))
+	{
+		lua_pop(session(), 1);
+		return;
+	}
 	res = lua_pcall (session(),0,0,0);
     if (res) {
 		const char *msg = lua_tostring(session(), -1);
@@ -323,6 +360,11 @@ void CLuaEngine::levelEndSession()
 	int res ;
 //	nlinfo("CLuaEngine::entityWaterCollideEvent(0x%p)",entity);
 	lua_getglobal(session(), "levelEndSession");
+	if (lua_isnil(session(), -1))
+	{
+		lua_pop(session(), 1);
+		return;
+	}
 	res = lua_pcall (session(),0,0,0);
     if (res) {
 		const char *msg = lua_tostring(session(), -1);
