@@ -17,8 +17,12 @@
 	$playerCount = 0;
 	while (!feof($fp)):
 		$line = fgets($fp, 2048);
-		$out = array($line);
-		list ($ttime, $year, $month, $sday, $shour, $min, $sec, $inout, $name)= split (" ", $out[0]);
+		$out = array(substr($line,0,strlen($line)-1));//remove \n
+		list ($ttime, $year, $month, $sday, $shour, $min, $sec, $inout, $sname)= split (" ", $out[0]);
+
+		$name = str_replace("'","",$sname);
+
+		//printf("[%s] -> [%s]<br>",$sname,$name);
 		
 		$hour = intval($shour);
 		$day = intval($sday);
@@ -43,7 +47,7 @@
 				$userCountPerHourTotal[$hour]++;
 				$userCountPerHourToday[$hour]++;
 				$playerCount++;
-				//printf("%d:%d <%s> comes(%d,%d) in<br>",$hour,$min,$name,$playerCount,$userCountPerHourToday[$hour]);
+				//printf("%d:%d [%s] comes(%d,%d) in<br>",$hour,$min,$name,$playerCount,$userCountPerHourToday[$hour]);
 			}
 			else if($inout=='#')
 			{
@@ -54,13 +58,13 @@
 			{
 				if(strlen($name)>3)
 					$playerCount++;
-				//printf("invalid login(%d)<br>",$playerCount);
+				//printf("invalid login(%d) %s(%d)<br>",$playerCount,$name,strlen($name));
 			}
 			else if($inout=='-')
 			{
 				if(strlen($name)>3)
 					$playerCount--;
-				//printf("<%s> leaves(%d)<br>",$name,$playerCount);
+				//printf("[%s](%d) leaves(%d)<br>",$name,strlen($name),$playerCount);
 			}
 		}
 		$fp++;
