@@ -40,6 +40,7 @@ extern "C"
 #include "entity_manager.h"
 #include "net_callbacks.h"
 #include "network.h"
+#include "variables.h"
 #include "lua_engine.h"
 #include "../../common/lua_nel.h"
 #include "../../common/lua_utility.h"
@@ -126,6 +127,19 @@ void CLevel::_luaInit()
 	luaGetGlobalVariable(_luaSession, Name);
 	//	nlinfo("level name '%s'", Name.c_str());
 	
+
+	uint32 ClientBounce = 1;
+	luaGetGlobalVariable(_luaSession, ClientBounce);
+	this->ClientBounce = ClientBounce!=0;
+	//nlinfo("ClientBounce = %f",ClientBounce);
+	ClientBounceCoef = BounceClient;
+	luaGetGlobalVariable(_luaSession, ClientBounceCoef);
+	//nlinfo("ClientBounceCoef = %f",ClientBounceCoef);
+	ClientBounceVel = BounceVelClient;
+	luaGetGlobalVariable(_luaSession, ClientBounceVel);
+	//nlinfo("ClientBounceVel = %f",ClientBounceVel);
+	
+
 	luaGetGlobalVector(_luaSession, Cameras);
 
 /*

@@ -35,6 +35,7 @@
 #include "physics.h"
 #include "variables.h"
 #include "lua_engine.h"
+#include "level_manager.h"
 #include "entity_manager.h"
 //#include "../../common/level_manager.h"
 
@@ -310,8 +311,16 @@ static void nearCallback(void *data, dGeomID o1, dGeomID o2)
 //			contact[i].surface.mu = dInfinity;
 			contact[i].surface.mu = 0;
 			contact[i].surface.mu2 = 0;
-			contact[i].surface.bounce = BounceClient;
-			contact[i].surface.bounce_vel = BounceVelClient;
+			if(CLevelManager::instance().haveCurrentLevel())
+			{
+				contact[i].surface.bounce = BounceClient;
+				contact[i].surface.bounce_vel = BounceVelClient;
+			}
+			else
+			{
+				contact[i].surface.bounce = CLevelManager::instance().currentLevel().clientBounceCoef();
+				contact[i].surface.bounce_vel = CLevelManager::instance().currentLevel().clientBounceVel();
+			}
 			/*
 			contact[i].surface.mode = dContactMu2;
 			contact[i].surface.mu = dInfinity;
@@ -333,8 +342,8 @@ static void nearCallback(void *data, dGeomID o1, dGeomID o2)
 					contact[i].surface.mode = dContactBounce;
 					contact[i].surface.mu = dInfinity;
 					contact[i].surface.mu2 = 0;
-					contact[i].surface.bounce = BounceScene;
-					contact[i].surface.bounce_vel = BounceVelScene;
+					contact[i].surface.bounce = module->bounceCoef();// BounceScene;
+					contact[i].surface.bounce_vel = module->bounceVel();//BounceVelScene;
 				}
 				else
 				{
@@ -386,7 +395,8 @@ static void nearCallback(void *data, dGeomID o1, dGeomID o2)
 				//SKEET_WARNING
 				//entity->CurrentScore = module->score();
 				entity->Accel = module->accel();
-				entity->Friction = module->friction();
+				if(module->friction()>0)
+					entity->Friction = module->friction();
 				
 				// disable the command if the entity touch a target
 				

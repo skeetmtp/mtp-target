@@ -55,6 +55,8 @@ public:
 	
 	int setCollide(lua_State *L);
 	int setBounce(lua_State *L);
+	int setBounceCoef(lua_State *L);
+	int setBounceVel(lua_State *L);
 	int setScore(lua_State *L);
 	int getScore(lua_State *L);
 	int setAccel(lua_State *L);

@@ -73,6 +73,14 @@ public:
 	void save();
 	bool changed();
 	
+	bool clientBounce() const { return ClientBounce; }
+	void clientBounce(bool b);
+	float clientBounceCoef() {return ClientBounceCoef;}
+	void clientBounceCoef(float c) {ClientBounceCoef = c;}
+	float clientBounceVel() {return ClientBounceVel;}
+	void clientBounceVel(float v) {ClientBounceVel=v;}
+	
+	
 	CLevelProxy		*luaProxy;
 private:
 
@@ -94,6 +102,10 @@ private:
 	std::string					FileName;
 
 	bool						Valid;
+	bool						ClientBounce;
+	float						ClientBounceCoef;
+	float						ClientBounceVel;
+	
 };
 
 #endif

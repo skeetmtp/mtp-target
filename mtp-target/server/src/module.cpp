@@ -26,6 +26,7 @@
 
 #include <nel/misc/path.h>
 
+#include "variables.h"
 #include "module.h"
 #include "physics.h"
 #include "network.h"
@@ -78,6 +79,8 @@ CModule::CModule() : CModuleCommon()
 {
 	luaProxy = 0;
 	triMeshDataId = 0;
+	BounceCoef = BounceScene;
+	BounceVel = BounceVelScene;	
 }
 
 void CModule::init(const std::string &name, const std::string &shapeName, uint8 id, const NLMISC::CVector &position, const NLMISC::CVector &scale, const NLMISC::CAngleAxis &rotation, const NLMISC::CRGBA &color)

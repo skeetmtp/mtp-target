@@ -59,6 +59,8 @@ Lunar<CModuleProxy>::RegType CModuleProxy::methods[] =
 		bind_method(CModuleProxy, setShapeName),	
 		bind_method(CModuleProxy, getPos),	
 		bind_method(CModuleProxy, setPos),	
+		bind_method(CModuleProxy, setBounceCoef),	
+		bind_method(CModuleProxy, setBounceVel),	
 	{0,0}
 };
 
@@ -201,3 +203,16 @@ int CModuleProxy::getPos(lua_State *luaSession)
 }
 
 
+int CModuleProxy::setBounceCoef(lua_State *L)
+{
+	float c = (float)luaL_checknumber(L,1);
+	_module->bounceCoef(c);
+	return 0;	
+}
+
+int CModuleProxy::setBounceVel(lua_State *L)
+{
+	float v = (float)luaL_checknumber(L,1);
+	_module->bounceVel(v);
+	return 0;	
+}

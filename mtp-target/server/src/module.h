@@ -53,6 +53,11 @@ public:
 
 	virtual void	enabled(bool b);
 	virtual void	visible(bool b);
+
+	float bounceCoef() {return BounceCoef;}
+	void bounceCoef(float c) {BounceCoef = c;}
+	float bounceVel() {return BounceVel;}
+	void bounceVel(float v) {BounceVel=v;}
 	
 	
 
@@ -68,6 +73,8 @@ private:
 	lua_State			*LuaState;
 	dTriMeshDataID		triMeshDataId;
 	bool				Visible;
+	float				BounceCoef;
+	float				BounceVel;
 };
 
 
