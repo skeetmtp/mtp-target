@@ -244,6 +244,8 @@ bool CLevelManager::newLevel(string &str1, string &str2)
 
 			nlinfo("'%s' level loaded",newLevel->name().c_str());
 			resumePhysics();
+			if(voteSucceed) //a vote has occured, random next map
+				NextLevelId = rand()%levels.size();
 			return true;
 		}
 		else
@@ -252,8 +254,6 @@ bool CLevelManager::newLevel(string &str1, string &str2)
 			NextLevelId++;
 		}
 	}
-	if(voteSucceed) //a vote has occured, random next map
-		NextLevelId = rand()%levels.size();
 
 	nlwarning("newLevel() : no valid level found");
 	resumePhysics();
