@@ -6,24 +6,23 @@ include_once("stat_game.php");
 	//$uid = 5453;
 	$cacheFileName = $cache_dir."/test.html";
 	
-	/*
+	
+	printf("<center><b>Online server list</b></center><br>\n");
+	
 	if(isCacheFileUpToDate($cacheFileName))
 	{
 		include($cacheFileName);
 		return;
 	}
-	*/
 	
 	$html_fp = fopen($cacheFileName, "wt");
 
-/*
-	$requete = "SELECT user.Login,SUM(user_session.Score) as s FROM session,user_session,user WHERE session.Id=user_session.SessionId AND user_session.UId=user.UId AND TO_DAYS(NOW())-TO_DAYS(session.Date)=30 GROUP BY user_session.UId ORDER BY s DESC LIMIT 0,1 ;";
+	$requete = "SELECT * FROM shard WHERE State='Online';";
 	$result=exec_game_db_requete($requete);
-	if($line = mysql_fetch_array($result))
+	while($line = mysql_fetch_array($result))
 	{
-		printf("%s %s<br>",$line[0],$line[1]);
+		fprintf($html_fp,"<b><a href=\"?page=stat_server.php&p_server_id=%d\">%s</a></b><br>\n",$line[0],$line[3]);
 	}
-*/
 
 	fclose($html_fp);	  
 	include($cacheFileName);	

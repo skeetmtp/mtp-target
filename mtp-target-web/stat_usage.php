@@ -17,7 +17,7 @@ include_once("stat_game.php");
 	$html_fp = fopen($cacheFileName, "wt");
 
 
-	$monthToCompute = 7;
+	$monthToCompute = 9;
 	$requete = "SELECT COUNT(DISTINCT user_session.UId) FROM session,user_session WHERE session.Id=user_session.SessionId AND MONTH(session.Date)=$monthToCompute AND YEAR(NOW())=YEAR(session.Date);";
 	$result=exec_game_db_requete($requete);
 	if($line = mysql_fetch_array($result))

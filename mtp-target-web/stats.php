@@ -19,6 +19,7 @@
 <li><a href="?page=stat_ranking_of_the_day.php">Today score ranking</a></li>
 <li><a href="?page=stat_ranking_per_score_of_the_day.php">Score of the day ranking</a></li>
 <li><a href="?page=logged.php">Players online</a></li>
+<li><a href="?page=stat_server_up_list.php">Servers online</a></li>
 </ul>
 
 <h3>Other statistics</h3>
