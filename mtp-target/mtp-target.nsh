@@ -1,7 +1,7 @@
 ; Define your application name
 !define APPNAME "mtp-target"
-!define APPVERSION "1.0.4"
-!define APPOLDVERSION "1.0.3"
+!define APPVERSION "1.1.0"
+!define APPOLDVERSION "1.0.4"
 !define APPNAMEANDVERSION "${APPNAME} ${APPVERSION}"
 
 Function IsMtptInstalledUpdate
@@ -33,4 +33,3 @@ Function IsMtptInstalledPatch
  lbl_end:
  Pop $R0
 FunctionEnd
-

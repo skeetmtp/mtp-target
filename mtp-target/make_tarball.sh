@@ -1,6 +1,6 @@
 #!/bin/sh -
 
-VERSION=1.0.4
+VERSION=1.1.0
 
 DEST=tmp/mtp-target
 CDEST=$DEST/client
