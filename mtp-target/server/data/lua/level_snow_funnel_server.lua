@@ -7,6 +7,7 @@ local clientId = 0;
 
 function Entity:init()
   self:setCurrentScore(0);
+  self:setOpenCloseMax(0);
   --print(self:getName());
   --print("entity init");
   self:setStartPointId(clientId+getSessionId()*2);
