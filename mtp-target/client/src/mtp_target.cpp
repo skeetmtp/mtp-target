@@ -115,6 +115,14 @@ void CMtpTarget::init()
 	CTaskManager::instance().add(CSwap3DTask::instance(), 10000);
 	CTaskManager::instance().add(CFontManager::instance(), 40);
 
+	CConfigFile::CVar &var = CConfigFileTask::instance().configFile().getVar("NegFiltersDebug");
+	for(sint i = 0; i < var.size(); i++)
+		DebugLog->addNegativeFilter(var.asString(i).c_str());
+
+	CConfigFile::CVar &var2 = CConfigFileTask::instance().configFile().getVar("NegFiltersInfo");
+	for(sint i = 0; i < var2.size(); i++)
+		InfoLog->addNegativeFilter(var2.asString(i).c_str());
+
 	if(CConfigFileTask::instance().configFile().getVar("Sound").asInt() == 1)
 		CTaskManager::instance().add(CSoundManager::instance(), 50);
 	nlinfo("default tasks set");
@@ -578,10 +586,6 @@ void mtpTarget::init()
 //	}
 	
 //	SleepTime = CConfigFileTask::instance().configFile().getVar("Sleep").asInt();
-	
-
-//	if(NLMISC::DebugLog!=0)
-//		NLMISC::DebugLog->addNegativeFilter("LNET");
 
 	setReportEmailFunction ((void*)sendEmail);
 

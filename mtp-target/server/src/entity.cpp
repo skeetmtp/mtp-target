@@ -136,7 +136,7 @@ void CEntity::init ()
 }
 
 
-CEntity::CEntity(uint8 eid)
+CEntity::CEntity(uint8 eid) : Ping(50)
 {
 	nlassert(eid!=255);
 	init();
@@ -145,7 +145,7 @@ CEntity::CEntity(uint8 eid)
 	_luaInit();
 }
 
-CEntity::CEntity(uint8 eid, const std::string &name)
+CEntity::CEntity(uint8 eid, const std::string &name) : Ping(50)
 {
 	nlassert(eid!=255);
 	init();

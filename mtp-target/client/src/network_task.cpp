@@ -157,12 +157,25 @@ void CNetworkTask::init()
 void CNetworkTask::update()
 {
 #if !OLD_NETWORK
+H_BEFORE(SockUpdate);
 	Sock.update();
+H_AFTER(SockUpdate);
 
+//	nlinfo("Calling update %"NL_I64"u", CTime::getLocalTime());
+
+H_BEFORE(NTLoop);
 	while(Sock.dataAvailable())
 	{
+		H_AUTO(NTLoopOnce);
+
+		H_BEFORE(NTLoopMsg);
 		CNetMessage msg(CNetMessage::Unknown, true);
+		H_AFTER(NTLoopMsg);
+
+		H_BEFORE(NTLoopReceive);
 		Sock.receive(msg);
+		H_AFTER(NTLoopReceive);
+		
 		try
 		{
 			uint32 nbs;
@@ -171,13 +184,16 @@ void CNetworkTask::update()
 			msg.serial(t);
 			msg.type((CNetMessage::TType)t);
 
+			H_BEFORE(NTLoopCallback);
 			netCallbacksHandler(msg);
+			H_AFTER(NTLoopCallback);
 		}
 		catch(Exception &e)
 		{
 			nlwarning("Malformed Message type '%u' : %s", msg.Type, e.what());
 		}
 	}
+H_AFTER(NTLoop);
 #endif // OLD_NETWORK
 }
 

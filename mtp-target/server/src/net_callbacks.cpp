@@ -503,7 +503,7 @@ next:
 // Callback handler
 //
 
-#define SWITCH_CASE(_n) case CNetMessage::_n: cb##_n(c, msgin); break
+#define SWITCH_CASE(_n) case CNetMessage::_n: { H_AUTO(_n); cb##_n(c, msgin); } break
 
 void netCallbacksHandler(CClient *c, CNetMessage &msgin)
 {

@@ -192,8 +192,8 @@ static void cbUpdate(CNetMessage &msgin)
 	msgin.serial(pingnb);
 	CNetMessage msgout(CNetMessage::Update);
 	msgout.serial(pingnb);
-	CNetworkTask::instance().send(msgout);
 	nlinfo("*********** send the pong %u %"NL_I64"u", pingnb, CTime::getLocalTime());
+	CNetworkTask::instance().send(msgout);
 	
 	//msgin.serial (rsxTime);
 
@@ -701,11 +701,11 @@ static void cbTimeArrival(CNetMessage &msgin)
 // Callback handler
 //
 
-#define SWITCH_CASE(_n) case CNetMessage::_n: cb##_n(msgin); break
+#define SWITCH_CASE(_n) case CNetMessage::_n: { H_AUTO(_n); cb##_n(msgin); } break
 
 void netCallbacksHandler(CNetMessage &msgin)
 {
-	nldebug("NET: Received message type %hu size %u", (uint16)msgin.type(), msgin.length());
+	nldebug("NET: %"NL_I64"u Received message type %hu size %u", CTime::getLocalTime(), (uint16)msgin.type(), msgin.length());
 
 	switch(msgin.type())
 	{
@@ -734,5 +734,4 @@ void netCallbacksHandler(CNetMessage &msgin)
 	
 	default: nlwarning("Received an unknown message type %hu", (uint16)msgin.type()); break;
 	}
-	
 }
