@@ -389,12 +389,41 @@ static void cbScoreUpdate(CMessage &msgin, const std::string &serviceName, uint1
 	}
 }
 
+static void cbBanClient(CMessage &msgin, const std::string &serviceName, uint16 sid)
+{
+	string reason;
+	CMysqlResult result;
+	MYSQL_ROW row;
+	sint32 nbrow;
+
+	// find if the shard is valid
+	reason = sqlQuery("select * from shard where InternalId="+toString(sid), nbrow, row, result);
+	if(!reason.empty()) return;
+	if(nbrow != 1)
+	{
+		nlwarning("nbrow is %d", nbrow);
+		return;
+	}
+
+	sint32 shardId = atoi(row[0]);
+
+	string ip;
+	string userName;
+	string kickerName;
+	uint32 duration;
+	msgin.serial(ip, userName, kickerName, duration);
+
+	sqlQuery("insert into ban (Ip) values ("+ip+")", nbrow, row, result);
+	//sqlQuery("update user set Score=Score+"+toString(score)+" where UId="+toString(uid), nbrow, row, result);
+}
+
 static const TUnifiedCallbackItem WSCallbackArray[] =
 {
 	{ "CC", cbWSClientConnected },
 	{ "WS_IDENT", cbWSIdentification },
 	{ "SCS", cbWSShardChooseShard },
 	{ "SU", cbScoreUpdate },
+	{ "BC", cbBanClient},
 };
 
 

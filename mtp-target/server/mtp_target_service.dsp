@@ -428,6 +428,14 @@ SOURCE=.\Src\waiting_start_session_state.h
 # End Group
 # Begin Source File
 
+SOURCE=.\src\command.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\src\command.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\common\constant.h
 # End Source File
 # Begin Source File
