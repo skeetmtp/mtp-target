@@ -225,7 +225,8 @@ void CFontManager::littlePrintf(float x, float y, const char *format ...)
 	NLMISC_CONVERT_VARGS (str, format, 256);
 
 	CReplaceString  *replaceString;
-	sint32 strFoundOffset = strfind(string(str),&replaceString);
+	string strtmp = str;
+	sint32 strFoundOffset = strfind(strtmp,&replaceString);
 
 	if(strFoundOffset<0)
 	{
