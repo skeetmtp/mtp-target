@@ -58,7 +58,7 @@
 					printf("<tr>");
 					$entryjpg = str_replace(".tga", ".jpg", $entry);
 					$cfgEntry = strstr($entry,"ping_ball_");
-					$cfgEntry = substr($cfgEntry,strlen("ping_ball_"),strlen($cfgEntry)-4);
+					$cfgEntry = substr($cfgEntry,strlen("ping_ball_"),strlen($cfgEntry)-4-strlen("ping_ball_"));
 					printf("<td><a href=\"../user_texture/$entry\"><img src=\"../user_texture/$entryjpg\" ALT=\"file\"></a></td>");
 					echo "<td><table>";
 					echo "<tr><td>Name: $entry</td></tr>";
