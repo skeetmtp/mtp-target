@@ -10,7 +10,7 @@
 		
 			$DBHost = "127.0.0.1";
 			$DBUserName = "root";
-			$DBPassword = "";
+			$DBPassword = "lgt3ki";
 			$DBName = "nel";
 	
 			$MySqlLinkIdentifier = mysql_connect( $DBHost, $DBUserName, $DBPassword ) or die("cannot connect to $DBHost");
@@ -146,7 +146,10 @@
 
 		$ext  = "tga lua dds ps shape xml";
 		$extArray = explode(" ", $ext);
+		$user_texture_ext  = "dds";
+		$user_texture_extArray = explode(" ", $user_texture_ext);
 
+		$sourceDirname = "/home/skeet/cvs/code/mtp-target/";
 		$exportDirname = "./export/";
 		$crcFilename = "crc.txt";
 		$crcTempFilename = "crc_temp.txt";
@@ -158,8 +161,8 @@
 		$crcfp = fopen($fullCrcTempFilename,"wt");
 		if(!$crcfp) die("error opening crc file : ".$fullCrcTempFilename);
 		
-		crcAddDir($crcfp,"../server/data/",$exportDirname,$extArray);
-		crcAddDir($crcfp,"../user_texture/",$exportDirname,$extArray);
+		crcAddDir($crcfp,$sourceDirname."server/data/",$exportDirname,$extArray);
+		crcAddDir($crcfp,$sourceDirname."user_texture/",$exportDirname,$user_texture_extArray);
 		
 		fclose($crcfp);
 		if(file_exists($fullCrcFilename))
