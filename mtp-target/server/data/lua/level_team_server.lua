@@ -97,7 +97,7 @@ end
 
 
 function Module:collide( entity )
-  if(self:parent():getTeam() == entity:parent():getTeam()) then
+  if(self:parent():getTeam()==entity:parent():getTeam() and entity:getIsOpen()==0) then
     entity:setCurrentScore(self:getScore())
   else
     entity:setCurrentScore(-self:getScore())
