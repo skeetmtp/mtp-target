@@ -179,6 +179,7 @@ void CEntityManager::startSession()
 			if(entities()[i]->type() != CEntity::Unknown)
 			{
 				entities()[i]->close();
+				entities()[i]->sessionStart();
 			}
 		}
 	}
