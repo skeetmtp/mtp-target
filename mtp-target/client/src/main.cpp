@@ -25,10 +25,14 @@
 #include "stdpch.h"
 
 #ifdef NL_OS_WINDOWS
+// these defines is for IsDebuggerPresent(). it'll not compile on windows 95
+// just comment this and the IsDebuggerPresent to compile on windows 95
+#	define _WIN32_WINDOWS	0x0410
+#	define WINVER			0x0400
 #	include <windows.h>
 #	undef min
 #	undef max
-	HINSTANCE ghInstance = 0;
+HINSTANCE ghInstance = 0;
 #endif
 
 #include <string>
@@ -60,7 +64,6 @@ uint NetworkThreadId = 0;
 
 
 #ifdef NL_OS_WINDOWS
-extern "C" { WINBASEAPI BOOL WINAPI IsDebuggerPresent(VOID); }
 
 int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
 {
