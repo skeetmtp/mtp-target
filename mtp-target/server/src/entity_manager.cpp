@@ -288,6 +288,7 @@ void CEntityManager::remove(const string &name)
 		}
 	}
 	remove(eid);
+	sendUpdateList();
 }
 
 void CEntityManager::remove(uint8 eid)

@@ -359,7 +359,7 @@ static void cbFullUpdate(CNetMessage &msgin)
 static void cbUpdateList(CNetMessage &msgin)
 {
 	uint8 eid;
-	
+	nlinfo("getting new update list");
 	CEntityManager::instance().updateListId.clear();
 	while(msgin.getPos() < (sint32)msgin.length())
 	{
