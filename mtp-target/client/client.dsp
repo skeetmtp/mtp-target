@@ -526,6 +526,14 @@ SOURCE=.\Src\gui_frame.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\src\gui_listview.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\src\gui_listview.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\Src\gui_mouse_listener.cpp
 # End Source File
 # Begin Source File
