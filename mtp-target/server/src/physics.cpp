@@ -647,8 +647,9 @@ void initPhysics()
 	World = dWorldCreate();
 	nlassert(World);
 	dWorldSetGravity(World, 0.0f, 0.0f, 0.0f);
-	//dWorldSetERP(World,0.1f);
-	//dWorldSetCFM(World,1e-2);
+	//dWorldSetERP(World,0.2f);
+	//decrease CFM to prevent bodies from follow module edge when 2 modules are in contact
+	dWorldSetCFM(World,1e-2); //default is 1e-5
 	
 	{
 		CSynchronized<dSpaceID>::CAccessor acces(&Space);
