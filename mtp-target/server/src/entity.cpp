@@ -217,7 +217,10 @@ void CEntity::reset()
 
 void CEntity::update() 
 {
-		H_AUTO(CEntityUpdate);
+	if(luaProxy)
+		luaProxy->call("preUpdate");
+
+	H_AUTO(CEntityUpdate);
 	set<CModule *>::iterator mit;
 	for(mit=collideModules.begin();mit!=collideModules.end();mit++)
 		CLuaEngine::instance().entitySceneCollideEvent(this,*mit);	
