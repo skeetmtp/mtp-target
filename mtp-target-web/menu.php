@@ -64,13 +64,13 @@
         //echo "##$REQUEST_URI##";
         if($page == $default_page)
         {
-        	echo "<a href=\"?lang=en\"><img src=\"$image_dir/en.png\" ALT=\"English\"></a>";
-        	echo "<a href=\"?lang=fr\"><img src=\"$image_dir/fr.png\" ALT=\"French\"></a>";
+        	echo "<a href=\"?lang=en\"><img src=\"$image_dir/en.png\" ALT=\"English\"></a>\n";
+        	echo "<a href=\"?lang=fr\"><img src=\"$image_dir/fr.png\" ALT=\"French\"></a>\n";
         }
         else
         {
-        	echo "<a href=\"$REQUEST_URI&lang=en\"><img src=\"$image_dir/en.png\" ALT=\"English\"></a>";
-        	echo "<a href=\"$REQUEST_URI&lang=fr\"><img src=\"$image_dir/fr.png\" ALT=\"French\"></a>";
+        	echo "<a href=\"$REQUEST_URI&lang=en\"><img src=\"$image_dir/en.png\" ALT=\"English\"></a>\n";
+        	echo "<a href=\"$REQUEST_URI&lang=fr\"><img src=\"$image_dir/fr.png\" ALT=\"French\"></a>\n";
         }
         ?>
     </td>
