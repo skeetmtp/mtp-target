@@ -73,9 +73,9 @@ void CRunningSessionState::update()
 				if(c->InGame)
 				{
 					const dReal *vel = dBodyGetLinearVel(c->Body);
-					c->LastVel[(*it)->LastVelPos%10]  =(float)fabs(vel[0]);
-					c->LastVel[(*it)->LastVelPos%10] +=(float)fabs(vel[1]);
-					c->LastVel[(*it)->LastVelPos%10] +=(float)fabs(vel[2]);
+					c->LastVel[c->LastVelPos%10]  =(float)fabs(vel[0]);
+					c->LastVel[c->LastVelPos%10] +=(float)fabs(vel[1]);
+					c->LastVel[c->LastVelPos%10] +=(float)fabs(vel[2]);
 					c->LastVelPos++;
 
 					float val = 0.0f;
