@@ -421,7 +421,7 @@ void CEntityManager::login(CEntity *e)
 		msgout.serial(s);
 		string CurrentLevel;
 		if(CLevelManager::instance().haveCurrentLevel())
-			CLevelManager::instance().levelName();
+			CurrentLevel = CLevelManager::instance().levelName();
 		msgout.serial(CurrentLevel);
 		float timeBeforeTimeout;
 		if (CSessionManager::instance().startTime() == 0)
@@ -1099,7 +1099,8 @@ bool CEntityManager::everyBodyReady()
 					string timeoutMsg = toString("kick %s : wait for ready timeout",(*it)->name().c_str());
 					msgs.push_back(timeoutMsg);
 				}
-				res = false;
+				else
+					res = false;
 				break;
 			}
 		}	
