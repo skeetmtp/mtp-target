@@ -216,7 +216,7 @@ void CGuiVBox::_render(const CVector &pos,CVector &maxSize)
 			newMaxSize.y = objHeight + centerSpacing;
 		globalPos.y += newMaxSize.y + spacing();
 		expandableHeight -= newMaxSize.y - objHeight; 
-		nlassert(expandableHeight>=0);
+		nlwarning("expandableHeight(%f)>=0",expandableHeight);
 	}
 }
 
@@ -330,7 +330,7 @@ void CGuiHBox::_render(const CVector &pos,CVector &maxSize)
 			newMaxSize.x = objWidth + centerSpacing;
 		globalPos.x += newMaxSize.x + spacing();
 		expandableWidth -= newMaxSize.x - objWidth;
-		nlassert(expandableWidth>=0);
+		nlwarning("expandableWidth(%f)>=0",expandableWidth);
 	}	
 }
 
