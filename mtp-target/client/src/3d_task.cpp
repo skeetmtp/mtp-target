@@ -272,6 +272,7 @@ void C3DTask::render()
 		vp.init(0.69f,0.55f,0.3f,0.3f);
 		s.init(0.69f,0.55f,0.3f,0.3f);
 
+		LevelParticle.hide();
 		CMatrix m;
 		m.identity();
 		m.setPos(CLevelManager::instance().currentLevel().ExternalCameras[0].first);
@@ -282,6 +283,7 @@ void C3DTask::render()
 		Driver->setScissor(s);
 		Driver->clearBuffers();
 		Scene->render();
+		LevelParticle.show();
 
 		vp.init(0,0,1,1);
 		s.init(0,0,1,1);

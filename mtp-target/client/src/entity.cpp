@@ -72,7 +72,8 @@ using namespace NL3D;
 CEntity::CEntity()
 {
 	Type = Unknown;
-	TraceParticle = 0;
+	TraceParticleOpen = 0;
+	TraceParticleClose = 0;
 	ImpactParticle = 0;
 	Rank = 255;
 	StartPointId = 255;
@@ -86,8 +87,10 @@ CEntity::CEntity()
 	addOpenCloseKey = false;
 	addChatLine = "";
 	addCrashEventKey = CCrashEvent(false,CVector::Null);
-	FadeParticleDuration = 1.0f;
-	FadeParticleStartTime = 0.0f;
+	FadeOpenParticleDuration = 1.0f;
+	FadeOpenParticleStartTime = 0.0f;
+	FadeCloseParticleDuration = 1.0f;
+	FadeCloseParticleStartTime = 0.0f;
 }
 
 void CEntity::swapOpenClose()
@@ -96,7 +99,8 @@ void CEntity::swapOpenClose()
 
 	if (OpenClose)
 	{
-		ParticuleActivated = 1;
+		ParticuleOpenActivated = 1;
+		ParticuleCloseActivated = 0;
 		if(!CloseMesh.empty())
 			CloseMesh.hide();
 		if(!OpenMesh.empty())
@@ -106,7 +110,8 @@ void CEntity::swapOpenClose()
 	}
 	else
 	{
-		ParticuleActivated = 0;
+		ParticuleOpenActivated = 0;
+		ParticuleCloseActivated = 1;
 		if(!CloseMesh.empty())
 			CloseMesh.show();
 		if(!OpenMesh.empty())
@@ -134,7 +139,8 @@ void CEntity::close()
 {
 	OpenClose = false;
 	
-	ParticuleActivated = 0;
+	ParticuleOpenActivated = 0;
+	ParticuleCloseActivated = 0;
 	if(!CloseMesh.empty())
 		CloseMesh.show();
 	if(!OpenMesh.empty())
@@ -209,30 +215,38 @@ void CEntity::update()
 		showCollideWhenFly = false;
 	}
 	
-	if(!TraceParticle.empty())
+	if(!TraceParticleOpen.empty())
 	{
-		TraceParticle.setPos(interpolator().currentPosition());
-		
-		// we activate
-		if (ParticuleActivated != -1 && TraceParticle.isSystemPresent())
+		TraceParticleOpen.setPos(interpolator().currentPosition());
+		if (ParticuleOpenActivated != -1 && TraceParticleOpen.isSystemPresent())
 		{
-			//if (ParticuleActivated == 0 || CMtpTarget::instance().controler().getControledEntity() != this)
-			
-			
-			//TraceParticle->activateEmitters(ParticuleActivated==1);
-			if(ParticuleActivated==1)
-				fadeParticleColorTo(CRGBA(255,255,255,255),1);
+			if(ParticuleOpenActivated==1)
+				fadeOpenParticleColorTo(CRGBA(255,255,255,255),1);
 			else
-				fadeParticleColorTo(CRGBA(0,0,0,0),1);
-
-			//if(ParticuleActivated==1 && CMtpTarget::instance().controler().getControledEntity()!=id())
-			//	TraceParticle->show();
-
-			ParticuleActivated = -1;
+				fadeOpenParticleColorTo(CRGBA(0,0,0,0),1);
+			
+			ParticuleOpenActivated = -1;
 		}
 	}
+	
+	if(!TraceParticleClose.empty())
+	{
+		TraceParticleClose.setPos(interpolator().currentPosition());
+		if (ParticuleCloseActivated != -1 && TraceParticleClose.isSystemPresent())
+		{
+			if(ParticuleCloseActivated==1)
+				fadeCloseParticleColorTo(CRGBA(255,255,255,255),1);
+			else
+				fadeCloseParticleColorTo(CRGBA(0,0,0,0),1);
+			
+			ParticuleCloseActivated = -1;
+		}
+	}
+	
+	// we activate
 
-	fadeParticleColorUpdate();
+	fadeOpenParticleColorUpdate();
+	fadeCloseParticleColorUpdate();
 }
 
 void CEntity::collisionWithWater(bool col)
@@ -315,9 +329,13 @@ void CEntity::reset()
 	//nlinfo(">> 0x%p::CEntity::reset() (eid %u)",this, Id);
 	interpolator().entity(this);
 	
-	if(!TraceParticle.empty())
+	if(!TraceParticleOpen.empty())
 	{
-		C3DTask::instance().scene().deleteInstance(TraceParticle);
+		C3DTask::instance().scene().deleteInstance(TraceParticleOpen);
+	}
+	if(!TraceParticleClose.empty())
+	{
+		C3DTask::instance().scene().deleteInstance(TraceParticleClose);
 	}
 	
 	if(!ImpactParticle.empty())
@@ -349,10 +367,11 @@ void CEntity::reset()
 	TotalScore = 0;
 	Ping = 0;
 	OpenClose = false;
+	ParticuleOpenActivated = 0;
+	ParticuleCloseActivated = 1;
 	ObjMatrix.identity();
 	ObjMatrix.rotateX(1.0f);
 	ObjMatrix.rotateY(1.0f);
-	ParticuleActivated = 0;
 	Ready = false;
 	StartPointId = 255;
 	showCollideWhenFly = false;
@@ -369,6 +388,12 @@ void CEntity::sessionReset()
 	if(ReplayFile.empty())
 		interpolator().reset();
 	OpenClose = false;
+	if(!TraceParticleOpen.empty())
+		TraceParticleOpen.setUserColor(CRGBA(0,0,0,0));
+	if(!TraceParticleClose.empty())
+		TraceParticleClose.setUserColor(CRGBA(0,0,0,0));
+	ParticuleOpenActivated = 0;
+	ParticuleCloseActivated = 1;
 	showCollideWhenFly = false;
 	showCollideWhenFlyPos = CVector(0,0,0);
 	if(!ImpactParticle.empty())
@@ -466,19 +491,34 @@ void CEntity::load3d()
 	OpenMesh.setTransformMode (UTransformable::DirectMatrix);
 
 
-	if(TraceParticle.empty() && CConfigFileTask::instance().configFile().getVar("DisplayParticle").asInt() == 1)
+	if(CConfigFileTask::instance().configFile().getVar("DisplayParticle").asInt() == 1)
 	{
-		string TraceFilename = "trace.ps";
+		string TraceFilename = "trace";
 		if(!Trace.empty())
-			TraceFilename = Trace+".ps";
-		string res = CResourceManager::instance().get(TraceFilename);
-		TraceParticle.cast(C3DTask::instance().scene().createInstance(res));
-		TraceParticle.setTransformMode (UTransformable::RotQuat);
-		TraceParticle.setOrderingLayer(2);
-		TraceParticle.activateEmitters(true);
-		TraceParticle.show();
-		TraceParticle.setUserColor(CRGBA(0,0,0,0));
-		ParticuleActivated = OpenClose ? 1:0;
+			TraceFilename = Trace;
+
+		if(TraceParticleOpen.empty())
+		{
+			string res = CResourceManager::instance().get(TraceFilename+"_open.ps");
+			TraceParticleOpen.cast(C3DTask::instance().scene().createInstance(res));
+			TraceParticleOpen.setTransformMode (UTransformable::RotQuat);
+			TraceParticleOpen.setOrderingLayer(2);
+			TraceParticleOpen.activateEmitters(true);
+			TraceParticleOpen.show();
+			TraceParticleOpen.setUserColor(CRGBA(0,0,0,0));
+		}
+		if(TraceParticleClose.empty())
+		{
+			string res = CResourceManager::instance().get(TraceFilename+"_close.ps");
+			TraceParticleClose.cast(C3DTask::instance().scene().createInstance(res));
+			TraceParticleClose.setTransformMode (UTransformable::RotQuat);
+			TraceParticleClose.setOrderingLayer(2);
+			TraceParticleClose.activateEmitters(true);
+			TraceParticleClose.show();
+			TraceParticleClose.setUserColor(CRGBA(0,0,0,0));
+		}
+		ParticuleOpenActivated = OpenClose ? 1:0;
+		ParticuleCloseActivated = OpenClose ? 0:1;
 	}
 	
 	if(ImpactParticle.empty() && CConfigFileTask::instance().configFile().getVar("DisplayParticle").asInt() == 1)
@@ -507,27 +547,50 @@ void CEntity::setIsLocal(bool local)
 }
 
 
-void CEntity::fadeParticleColorTo(const NLMISC::CRGBA &color,float duration)
+void CEntity::fadeOpenParticleColorTo(const NLMISC::CRGBA &color,float duration)
 {
-	if(FadeParticleColor==color || duration<=0) return;
-
-	FadeParticleColor = color;
-	FadeParticleStartColor = TraceParticle.getUserColor();
-	FadeParticleDuration = duration;
-	FadeParticleStartTime = (float)CTimeTask::instance().time();
+	if(FadeOpenParticleColor==color || duration<=0) return;
+	
+	FadeOpenParticleColor = color;
+	FadeOpenParticleStartColor = TraceParticleOpen.getUserColor();
+	FadeOpenParticleDuration = duration;
+	FadeOpenParticleStartTime = (float)CTimeTask::instance().time();
 }
 
-void CEntity::fadeParticleColorUpdate()
+void CEntity::fadeOpenParticleColorUpdate()
 {
 	float time = (float)CTimeTask::instance().time();
-	float lpos = (time  - FadeParticleStartTime) / FadeParticleDuration;
+	float lpos = (time  - FadeOpenParticleStartTime) / FadeOpenParticleDuration;
 	if(lpos<0 || 1<lpos) return;
-
+	
 	CRGBA newCol;
-	newCol.blendFromui(FadeParticleStartColor,FadeParticleColor,(uint)(256 * lpos));
-	if(!TraceParticle.empty())
-		TraceParticle.setUserColor(newCol);
+	newCol.blendFromui(FadeOpenParticleStartColor,FadeOpenParticleColor,(uint)(256 * lpos));
+	if(!TraceParticleOpen.empty())
+		TraceParticleOpen.setUserColor(newCol);
 }
+
+void CEntity::fadeCloseParticleColorTo(const NLMISC::CRGBA &color,float duration)
+{
+	if(FadeCloseParticleColor==color || duration<=0) return;
+	
+	FadeCloseParticleColor = color;
+	FadeCloseParticleStartColor = TraceParticleClose.getUserColor();
+	FadeCloseParticleDuration = duration;
+	FadeCloseParticleStartTime = (float)CTimeTask::instance().time();
+}
+
+void CEntity::fadeCloseParticleColorUpdate()
+{
+	float time = (float)CTimeTask::instance().time();
+	float lpos = (time  - FadeCloseParticleStartTime) / FadeCloseParticleDuration;
+	if(lpos<0 || 1<lpos) return;
+	
+	CRGBA newCol;
+	newCol.blendFromui(FadeCloseParticleStartColor,FadeCloseParticleColor,(uint)(256 * lpos));
+	if(!TraceParticleClose.empty())
+		TraceParticleClose.setUserColor(newCol);
+}
+
 
 
 void  CEntity::color(const NLMISC::CRGBA &col) 

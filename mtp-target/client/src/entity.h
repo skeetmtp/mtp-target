@@ -115,7 +115,8 @@ public:
 	
 	void				 load3d();
 
-	void				 fadeParticleColorTo(const NLMISC::CRGBA &color,float duration);
+	void				 fadeOpenParticleColorTo(const NLMISC::CRGBA &color,float duration);
+	void				 fadeCloseParticleColorTo(const NLMISC::CRGBA &color,float duration);
 
 	CExtendedInterpolator &interpolator() const;
 
@@ -126,7 +127,8 @@ public:
 	NL3D::UInstance		CloseMesh, OpenMesh;
 	CEntityProxy		*LuaProxy;
 	
-	NL3D::UParticleSystemInstance TraceParticle;
+	NL3D::UParticleSystemInstance TraceParticleOpen;
+	NL3D::UParticleSystemInstance TraceParticleClose;
 	NL3D::UParticleSystemInstance ImpactParticle;
 	
 	NLMISC::CVector		 LastSent2MePos;
@@ -137,11 +139,16 @@ public:
 	CCrashEvent			 addCrashEventKey;
 private:
 	
-	NLMISC::CRGBA   FadeParticleColor;
-	NLMISC::CRGBA   FadeParticleStartColor;
-	float           FadeParticleDuration;
-	float           FadeParticleStartTime;
-
+	NLMISC::CRGBA   FadeOpenParticleColor;
+	NLMISC::CRGBA   FadeOpenParticleStartColor;
+	float           FadeOpenParticleDuration;
+	float           FadeOpenParticleStartTime;
+	
+	NLMISC::CRGBA   FadeCloseParticleColor;
+	NLMISC::CRGBA   FadeCloseParticleStartColor;
+	float           FadeCloseParticleDuration;
+	float           FadeCloseParticleStartTime;
+	
 	TEntity			Type;
 	uint8			Id;
 	uint8			StartPointId;
@@ -171,7 +178,8 @@ private:
 	void luaInit();
 	void init(TEntity type, const std::string &name, sint32 totalScore, NLMISC::CRGBA &color, const std::string &texture, const std::string &meshname, bool spectator, bool isLocal, const std::string &trace);
 	void id(uint8 nid);
-	void fadeParticleColorUpdate();
+	void fadeOpenParticleColorUpdate();
+	void fadeCloseParticleColorUpdate();
 	
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
@@ -181,7 +189,8 @@ private:
 
 	CSoundManager::CEntitySoundsDescriptor	SoundsDescriptor;
 
-	sint	ParticuleActivated;
+	sint	ParticuleOpenActivated;
+	sint	ParticuleCloseActivated;
 
 	bool	Spectator;
 	bool    Ready;
