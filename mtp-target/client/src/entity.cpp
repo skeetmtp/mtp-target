@@ -234,7 +234,7 @@ void CEntity::id(uint8 nid)
 
 void CEntity::reset()
 {
-	//nlinfo(">> 0x%p::CEntity::reset()",this);
+	nlinfo(">> 0x%p::CEntity::reset()",this);
 	interpolator().entity(this);
 	
 	if(!TraceParticle.empty())
@@ -244,7 +244,7 @@ void CEntity::reset()
 	}
 	if(!CloseMesh.empty())
 	{
-		//nlinfo(">>   C3DTask::instance().scene().deleteInstance(CloseMesh);");
+		nlinfo(">>   C3DTask::instance().scene().deleteInstance(CloseMesh);");
 		C3DTask::instance().scene().deleteInstance(CloseMesh);
 		//CloseMesh.detach();
 	}
@@ -291,7 +291,7 @@ void CEntity::init(TEntity type, const std::string &name, sint32 totalScore, CRG
 
 void CEntity::load3d()
 {
-	//nlinfo(">> 0x%p::CEntity::load3d()",this);
+	nlinfo(">> 0x%p::CEntity::load3d()",this);
 	string TextureFilename;
 	bool ok;
 	if(!Texture.empty())
@@ -380,6 +380,7 @@ void CEntity::fadeParticleColorUpdate()
 
 	CRGBA newCol;
 	newCol.blendFromui(FadeParticleStartColor,FadeParticleColor,(uint)(256 * lpos));
-	TraceParticle.setUserColor(newCol);
+	if(!TraceParticle.empty())
+		TraceParticle.setUserColor(newCol);
 }
 
