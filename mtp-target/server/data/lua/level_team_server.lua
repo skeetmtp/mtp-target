@@ -77,9 +77,8 @@ end
 function entityWaterCollideEvent ( entity )
   pos = CVector(1,2,3.456);
   pos = entity:getStartPointPos();
-  entity:setPos(pos);
-  entity:setOpenCloseCount(0);
-  --entity:setPos(entity:getStartPointPos());
+  --entity:setPos(pos);
+  --entity:setOpenCloseCount(0);
 end
 
 ---------------------- Module ----------------------
