@@ -59,8 +59,7 @@ public:
 
 	CTaskManager();
 
-private:
-
+protected:
 	std::list<ITask*>	Tasks;
 	std::list<ITask*>	OrderSortedTasks;
 
@@ -68,7 +67,7 @@ private:
 
 	bool Benching;
 
-	friend struct displayTasksClass;
+	friend struct commands_displayTasksClass;
 };
 
 
