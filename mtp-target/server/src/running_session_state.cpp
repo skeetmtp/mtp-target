@@ -98,8 +98,8 @@ void CRunningSessionState::update()
 		if(CSessionManager::instance().forceEnding() || everybodyStopped)
 		{
 
-			if(IService::getInstance()->ConfigFile.getVar("CheckAfk").asInt()!=0)
-				CEntityManager::instance().checkAfkClient();
+			CLuaEngine::instance().levelEndSession();
+			CEntityManager::instance().checkAfkClient();//kick away client
 
 			CEntityManager::EntityConstIt  bestit1 = CEntityManager::instance().entities().end();
 			CEntityManager::EntityConstIt  bestit2 = CEntityManager::instance().entities().end();
@@ -141,7 +141,6 @@ void CRunningSessionState::update()
 				}
 			}
 
-			CLuaEngine::instance().levelEndSession();
 //			CMessage msgout("END_SESSION");
 			CNetMessage msgout(CNetMessage::EndSession);
 //			uint8 nb = CEntityManager::instance().entities().size();

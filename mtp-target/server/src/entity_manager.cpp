@@ -1089,6 +1089,9 @@ void CEntityManager::saveAllValidReplay()
 
 void CEntityManager::checkAfkClient()
 {
+	if(IService::getInstance()->ConfigFile.getVar("CheckAfk").asInt()==0)
+		return;
+	
 	vector<uint8> IdToRemove;
 	vector<string> msgs;
 	{
