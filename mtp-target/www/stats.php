@@ -1,5 +1,5 @@
 <?php
-	$fp = fopen("connection.stat", "r");
+	$fp = fopen("../server/connection.stat", "r");
 	if (!$fp) {echo "<p>Unable to open remote file.</p>"; exit;}
 	
 	$userCountPerHourTotal;
