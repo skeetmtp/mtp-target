@@ -64,6 +64,7 @@ public:
 		Logout,				//    SC
 		OpenClose,			// CS SC
 		Ready,				// CS SC
+		EverybodyReady,		//    SC
 		RequestCRCKey,		// CS SC
 		RequestDownload,	// CS SC
 		SessionState,		//    SC

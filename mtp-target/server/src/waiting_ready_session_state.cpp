@@ -70,7 +70,7 @@ void CWaitingReadySessionState::update()
 		changeState(CWaitingStartSessionState::instance());
 		CSessionManager::instance().startTime(currentTime+(TTime)TimeBeforeStart);
 		
-		CNetMessage msgout(CNetMessage::Ready);
+		CNetMessage msgout(CNetMessage::EverybodyReady);
 		CNetwork::instance().send(msgout);
 		/*
 		for(it = acces.value().begin(); it != acces.value().end(); it++)

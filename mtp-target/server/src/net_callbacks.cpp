@@ -207,6 +207,10 @@ static void cbReady(CClient *c, CNetMessage &msgin)
 {
 	c->Ready = true;
 	nlinfo("Client '%s' is ready to play", c->name().c_str());
+	CNetMessage msgout(CNetMessage::Ready);
+	uint8 eid = c->id();
+	msgout.serial(eid);
+	CNetwork::instance().sendAllExcept(eid,msgout);
 }
 
 static void cbRequestCRCKey(CClient *c, CNetMessage &msgin)
