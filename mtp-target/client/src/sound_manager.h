@@ -29,6 +29,9 @@
 //
 // Includes
 //
+#include <fstream>
+#include <iostream>
+#include <vector>
 
 #ifdef USE_FMOD
 #	include <fmod.h>
@@ -98,7 +101,9 @@ public:
 	void stopGuiSound(TGuiSound sound);
 	
 	// streams
-	void playStream(const std::string &filename, bool loop = false); // you can only play one stream at a time (the old stream will be automaticaly stopped)
+	// you can only play one stream at a time (the old stream will be automaticaly stopped)
+	//void playStream(const std::string &filename, bool loop = false); // you can only play one stream at a time (the old stream will be automaticaly stopped)
+	void playStream(bool useM3U = false); // for m3u list support
 	void stopStream();
 
 #ifdef USE_FMOD
@@ -125,6 +130,14 @@ public:
 
 	friend class CSingleton<CSoundManager>;
 	CSoundManager();
+
+	std::string getNextMusicRes(); // get next file url from m3u playlist
+	std::ifstream m3uFile; // stream for playlist file
+	bool useM3U; // classic music or m3u playlist
+	bool useM3Ushuffle; // shuffle playlist or not
+	std::vector<std::string> m3uVector; // for holding playlist at runtime
+	int m3uNowPlaying; // number of now playing file
+	
 private:
 	bool isInit;
 

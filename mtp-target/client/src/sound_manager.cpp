@@ -23,6 +23,7 @@
 //
 
 #include "stdpch.h"
+#include <string>
 
 #include "sound_manager.h"
 #include "config_file_task.h"
@@ -98,9 +99,8 @@ void CSoundManager::init()
 	guiSoundSamples[CSoundManager::GuiReady] = loadSoundSample(CResourceManager::instance().get(CConfigFileTask::instance().configFile().getVar("SoundGuiReady").asString()));
 #endif
 
-	isInit = true;
-
-	if (CConfigFileTask::instance().configFile().getVar("Music").asInt() == 1)
+	/*
+       	if (CConfigFileTask::instance().configFile().getVar("Music").asInt() == 1)
 	{
 		string res = CResourceManager::instance().get("zik.mp3");
 		if(res.empty())
@@ -112,6 +112,50 @@ void CSoundManager::init()
 			playStream(res);
 		}
 	}
+	*/
+
+	//changed for supporting m3u playlists
+
+	isInit = true;
+	useM3U = false;
+	useM3Ushuffle = true;
+
+	if (CConfigFileTask::instance().configFile().getVar("Music").asInt() == 1)
+	{
+		if (CConfigFileTask::instance().configFile().getVar("M3UList").asString() != "")
+		{
+			m3uFile.open(CConfigFileTask::instance().configFile().getVar("M3UList").asString().c_str());
+			if (m3uFile.good())
+			{
+				string cline;
+				m3uNowPlaying = 0;
+				while (!m3uFile.eof())
+				{
+					do 
+					{
+						if (m3uFile.good())
+							std::getline(m3uFile, cline);
+					} while (cline[0] == '#' || cline[0] == ' ');
+					m3uVector.push_back(cline);
+				}
+				useM3U = true;
+				if (CConfigFileTask::instance().configFile().getVar("M3UShuffle").asInt() == 0)
+					useM3Ushuffle = false;
+				playStream(useM3U);
+			}
+			else
+			{
+				nlwarning("CSoundManager: Can't load '%s'", 
+					CConfigFileTask::instance().configFile().getVar("M3UList").asString().c_str());
+				playStream(useM3U);
+			}
+		}
+		else 
+		{
+			playStream(useM3U);
+		}
+	}
+
 }
 
 void CSoundManager::update()
@@ -397,13 +441,13 @@ if(!isInit) return;
 // -----------------------------------------------------------------------------
 // streams methods
 // -----------------------------------------------------------------------------
-
+// was unused anyway btw. gave a conversion error...
+/*
 #ifdef USE_FMOD
 static signed char CSoundTaskStreamEndCallback(FSOUND_STREAM *stream, void *buff, int len, int param)
 {
 	if (buff == 0)
 	{
-		// if we are here, the stream is in loop mode : restart it
 		if (! FSOUND_Stream_Stop(stream))
 		{
 			nlwarning("CSoundManager: Can't stop stream (%s)", FMOD_ErrorString(FSOUND_GetError()));
@@ -416,8 +460,43 @@ static signed char CSoundTaskStreamEndCallback(FSOUND_STREAM *stream, void *buff
 	return true;
 }
 #endif
+*/
+
+//get called when stream ends
+#ifdef USE_FMOD
+static signed char F_CALLBACKAPI CSoundTaskStreamEndCallback(FSOUND_STREAM *stream, void *buff, int len, void *param)
+{
+  CSoundManager::instance().playStream(CSoundManager::instance().useM3U);
+  
+  return true;
+}
+
+
+// inserted for supporting m3u playlists
+// returns next or shuffled valid m3u list entry
+string CSoundManager::getNextMusicRes()
+{
+    string cline;
+   
+    if (useM3Ushuffle)
+	{
+		srand( NLMISC::CTime::getSecondsSince1970() );
+		cline =  m3uVector.at(rand()%m3uVector.size());
+	}
+    else
+	{
+		if (m3uNowPlaying == (int)(m3uVector.size()) - 1)
+			m3uNowPlaying = 0;
+		cline = m3uVector.at(m3uNowPlaying);
+		m3uNowPlaying++;
+	}
+
+    return cline;
+}
+#endif
 
 // -----------------------------------------------------------------------------
+/*
 void CSoundManager::playStream(const std::string &filename, bool loop)
 {
 if(!isInit) return;
@@ -433,16 +512,61 @@ if(!isInit) return;
 		}
 		else
 		{
-			/*
-			if (loop)
-			{
-				if (! FSOUND_Stream_SetEndCallback(streamStream, CSoundTaskStreamEndCallback, 0))
-				{
-					nlwarning("CSoundManager: Can't set end stream callback (%s)", FMOD_ErrorString(FSOUND_GetError()));
-				}
-			}
-			*/
+			
+		//if (loop)
+		//{
+		//	if (! FSOUND_Stream_SetEndCallback(streamStream, CSoundTaskStreamEndCallback, 0))
+		//	{
+		//		nlwarning("CSoundManager: Can't set end stream callback (%s)", FMOD_ErrorString(FSOUND_GetError()));
+		//	}
+		//}
+			
 			if (FSOUND_Stream_Play(FSOUND_FREE, streamStream) == -1)
+			{
+				nlwarning("CSoundManager: Can't play stream (%s)", FMOD_ErrorString(FSOUND_GetError()));
+			}
+		}
+	}
+#endif
+}
+*/
+// -----------------------------------------------------------------------------
+
+void CSoundManager::playStream(bool useM3U)
+{
+if(!isInit) return;
+#ifdef USE_FMOD
+        std::string longName; 
+        stopStream();
+	if (useM3U)
+	  {
+	    longName = getNextMusicRes();
+	  }
+	else
+	  {
+	    nlwarning("using default sound...");
+	    longName = NLMISC::CPath::lookup("zik.mp3", false);
+	  }
+	if (! longName.empty())
+	{
+	  if (useM3U)
+	    streamStream = FSOUND_Stream_Open(longName.c_str(), FSOUND_NORMAL, 0, 0);
+	  else
+	    streamStream = FSOUND_Stream_Open(longName.c_str(), FSOUND_NORMAL | FSOUND_LOOP_NORMAL, 0, 0);
+
+	  if (streamStream == 0)
+		{
+			nlwarning("CSoundManager: Can't load stream '%s' (%s)", longName.c_str(), FMOD_ErrorString(FSOUND_GetError()));
+		}
+		else
+		{
+			
+	        if (! FSOUND_Stream_SetEndCallback(streamStream, CSoundTaskStreamEndCallback, 0))
+			{
+				nlwarning("CSoundManager: Can't set end stream callback (%s)", FMOD_ErrorString(FSOUND_GetError()));
+			}
+			
+		if (FSOUND_Stream_Play(FSOUND_FREE, streamStream) == -1)
 			{
 				nlwarning("CSoundManager: Can't play stream (%s)", FMOD_ErrorString(FSOUND_GetError()));
 			}

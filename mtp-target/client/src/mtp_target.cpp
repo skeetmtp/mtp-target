@@ -251,6 +251,7 @@ bool CMtpTarget::error()
 
 void CMtpTarget::_error()
 {
+	nlinfo("error occured : stop all and reset");
 	reset();
 	CGameTask::instance().stop();
 	CEditorTask::instance().stop();
