@@ -20,6 +20,12 @@ Display commands list.
 
 <b>Moderator</b> commands :
 <ul>
+
+<li><b>/playerlist</b><br>
+Display player list like this : id#userName<br>
+In any command you can use <i>id</i> instead of <i>userName</i>
+</li><br>
+
 <li><b>/kick userName</b><br>
 kick the user from current server.
 </li><br>

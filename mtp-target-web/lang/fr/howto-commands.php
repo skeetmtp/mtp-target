@@ -21,6 +21,12 @@ Affiche la liste de commandes.
 
 Commandes pour les <b>Moderateurs</b> :
 <ul>
+
+<li><b>/playerlist</b><br>
+Affiche la liste des joueur, comme ceci : id#NomJoueur<br>
+Dans toutes les commandes vous pouvez utiliser <i>id</i> a la place du <i>NomJoueur</i>
+</li><br>
+
 <li><b>/kick NomJoueur</b><br>
 Expulse le joueur du serveur.
 </li><br>
