@@ -1,5 +1,18 @@
 <table border="0" bgcolor="<?php echo $table_newsheader_bgcolor_color?>" CELLPADDING=2 CELLSPACING=2>
 <tr>
+    <th bgcolor="<?php echo $table_newsheader_head_color;?>"><center>&nbsp;Newsletter par email&nbsp;</center></th>
+</tr>
+<tr><td bgcolor="<?php echo $table_newsheader_row_color;?>">
+<b>Newsletter :</b><br>
+Si vous voullez recevoir la newletter par email, pour être au courant quand une nouvelle version de
+Mtp Target est disponible et savoir ce qu'il y a de nouveau, enregistrez vous simplement dans le
+forum et mettez votre email içi. Vous recevrez moins de un email par semaine.
+Si vous voullez vous inscrire au forum et ne pas recevoir la newsletter,
+laissez juste votre email vide dans votre profil du forum.</td></tr>
+</table>
+
+<table border="0" bgcolor="<?php echo $table_newsheader_bgcolor_color?>" CELLPADDING=2 CELLSPACING=2>
+<tr>
     <th bgcolor="<?php echo $table_newsheader_head_color;?>"><center>&nbsp;Nous avons besoin de votre aide&nbsp;</center></th>
 </tr>
 <tr><td bgcolor="<?php echo $table_newsheader_row_color;?>">
