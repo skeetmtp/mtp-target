@@ -71,7 +71,7 @@ private:
 	
 	guiSPG<CGuiFrame> menuFrame;
 	guiSPG<CGuiButton> playOnLineButton;
-//	guiSPG<CGuiButton> playOnLanButton;
+	guiSPG<CGuiButton> playOnLanButton;
 	guiSPG<CGuiButton> exitButton3;
 	
 	guiSPG<CGuiFrame> loginFrame;
@@ -79,6 +79,13 @@ private:
 	guiSPG<CGuiText> passwordText;
 	guiSPG<CGuiButton> loginButton;
 	guiSPG<CGuiButton> backButton1;
+
+	guiSPG<CGuiFrame> loginLanFrame;
+	guiSPG<CGuiText> loginLanText;
+	guiSPG<CGuiText> passwordLanText;
+	guiSPG<CGuiText> serverLanText;
+	guiSPG<CGuiButton> loginLanButton;
+	guiSPG<CGuiButton> backLanButton1;
 	
 	guiSPG<CGuiFrame> serverListFrame;
 	guiSPG<CGuiVBox> serverVbox;

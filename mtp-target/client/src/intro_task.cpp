@@ -130,7 +130,7 @@ void CIntroTask::updateInit()
 	xml = CGuiXmlManager::instance().Load("menu.xml");
 	menuFrame = (CGuiFrame *)xml->get("menuFrame");
 	playOnLineButton = (CGuiButton *)xml->get("bPlayOnline");
-	//playOnLanButton = (CGuiButton *)xml->get("bPlayOnlan");
+	playOnLanButton = (CGuiButton *)xml->get("bPlayOnlan");
 	exitButton3 = (CGuiButton *)xml->get("bExit");
 	exitButton3->eventBehaviour = new CGuiExitButtonEventBehaviour();
 	
@@ -142,6 +142,17 @@ void CIntroTask::updateInit()
 	passwordText->text = CConfigFileTask::instance().configFile().getVar("Password").asString();
 	loginButton = (CGuiButton *)xml->get("bLogin");
 	backButton1 = (CGuiButton *)xml->get("bBack");
+
+	xml = CGuiXmlManager::instance().Load("login_lan.xml");
+	loginLanFrame = (CGuiFrame *)xml->get("loginFrame");
+	loginLanText = (CGuiText*)xml->get("loginEntry");
+	loginLanText->text = CConfigFileTask::instance().configFile().getVar("Login").asString();
+	passwordLanText = (CGuiText*)xml->get("passwordEntry");
+	passwordLanText->text = CConfigFileTask::instance().configFile().getVar("Password").asString();
+	serverLanText = (CGuiText*)xml->get("serverEntry");
+	serverLanText->text = CConfigFileTask::instance().configFile().getVar("ServerHost").asString();
+	loginLanButton = (CGuiButton *)xml->get("bLogin");
+	backLanButton1 = (CGuiButton *)xml->get("bBack");
 	
 	xml = CGuiXmlManager::instance().Load("server_list.xml");
 	serverListFrame = (CGuiFrame *)xml->get("serverListFrame");
@@ -168,14 +179,12 @@ void CIntroTask::updateMenu()
 		CGuiObjectManager::instance().objects.push_back(loginFrame);
 		State = eLoginOnline;
 	}
-	/*
 	if(playOnLanButton->pressed())
 	{
 		CGuiObjectManager::instance().objects.clear();
-		CGuiObjectManager::instance().objects.push_back(loginFrame);
+		CGuiObjectManager::instance().objects.push_back(loginLanFrame);
 		State = eLoginOnlan;
 	}
-	*/
 	
 }
 
@@ -300,7 +309,7 @@ void CIntroTask::updateLoginOnlan()
 {
 	if(State!=eLoginOnlan) return;
 	
-	if(backButton1->pressed())
+	if(backLanButton1->pressed())
 	{
 		State = eMenu;
 		CGuiObjectManager::instance().objects.clear();
@@ -308,12 +317,14 @@ void CIntroTask::updateLoginOnlan()
 		return;
 	}
 	
-	if(loginButton->pressed() || _autoLogin)
+	if(loginLanButton->pressed() || _autoLogin)
 	{
-		loginText->text = NLMISC::strlwr(loginText->text);
-		passwordText->text = NLMISC::strlwr(passwordText->text);
+		loginLanText->text = NLMISC::strlwr(loginLanText->text);
+		passwordLanText->text = NLMISC::strlwr(passwordLanText->text);
+		serverLanText->text = NLMISC::strlwr(serverLanText->text);
 		CConfigFileTask::instance().configFile().getVar("Login").setAsString(loginText->text);
 		CConfigFileTask::instance().configFile().getVar("Password").setAsString(passwordText->text);
+		CConfigFileTask::instance().configFile().getVar("ServerHost").setAsString(serverLanText->text);
 		CConfigFileTask::instance().configFile().save();
 		
 		CGuiObjectManager::instance().objects.clear();
@@ -448,7 +459,7 @@ void CIntroTask::updateConnectionOnLan()
 	{
 		_autoLogin = 0;
 		error(res);
-		CGuiObjectManager::instance().objects.push_back(loginFrame);
+		CGuiObjectManager::instance().objects.push_back(loginLanFrame);
 		State = eLoginOnlan;
 		return;
 	}

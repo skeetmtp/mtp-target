@@ -9,7 +9,6 @@
 			<object class="CGuiVBox" name="vbox">
 				<alignment>eAlignExpandHorizontal|eAlignExpandVertical</alignment>
 				<element>
-					<!--
 					<object class="CGuiButton" name="bPlayOnline">
 						<minSize>150,0</minSize>
 						<element>
@@ -26,7 +25,7 @@
 							</object>
 						</element>
 					</object>
-					-->
+					<!--
 					<object class="CGuiButton" name="bPlayOnline">
 						<minSize>150,0</minSize>
 						<element>
@@ -35,6 +34,7 @@
 							</object>
 						</element>
 					</object>
+					-->
 					<object class="CGuiButton" name="bExit">
 						<minSize>150,0</minSize>
 						<element>
