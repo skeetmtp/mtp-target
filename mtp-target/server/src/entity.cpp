@@ -220,6 +220,7 @@ void CEntity::reset()
     dBodySetMass(Body, &m);
 	DefaultAccel = 0;
 	DefaultFriction = 0;
+	MaxLinearVelocity = 0;
 }
 
 void CEntity::update() 
@@ -272,7 +273,7 @@ void CEntity::isOpen(bool open)
 
 bool CEntity::openClose()
 {
-		if(FreezeCommand)
+	if(FreezeCommand)
 	{
 		nlinfo("Client '%s' tries to %s but he is frozen", Name.c_str(), (OpenClose?"open":"close"));
 		return false;
@@ -307,6 +308,10 @@ bool CEntity::openClose()
 		dRSetIdentity(R);
 		dBodySetRotation(Body, R);
 	}
+
+	if(luaProxy)
+		luaProxy->call("onOpenCloseSwitch");
+	
 	return true;
 }
 
@@ -323,6 +328,7 @@ void CEntity::setForce(const CVector &clientForce)
 	// can't move because no more open close left
 	if(NbOpenClose >= MaxOpenClose)
 	{
+		Force = CVector::Null;
 		//nlinfo("can't update user, max open close reached");
 		return;
 	}
