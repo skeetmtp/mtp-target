@@ -117,7 +117,7 @@ bool downloadFile (const string &source, const string &dest, void *data=NULL)
 	FILE *fp = fopen (dest.c_str(), "wb");
 	if (fp == NULL)
 	{
-		nlwarning("Can't open file '%s' for writing: code=%d %s (error code 37)", dest.c_str (), errno, strerror(errno));
+		nlwarning("Can't open file '%s' for writing: (error code 37)", dest.c_str ());
 		return false;
 		//throw Exception ("Can't open file '%s' for writing: code=%d %s (error code 37)", dest.c_str (), errno, strerror(errno));
 	}
