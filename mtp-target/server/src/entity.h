@@ -101,6 +101,7 @@ public:
 	std::set<CModule *> collideModules;
 	std::set<CEntity *> collideEntity;
 	bool                collideWater;
+	bool                callOpenCloseLua;
 public:
 
 	// ugly public variables

@@ -240,6 +240,7 @@ void CEntity::reset()
 	collideModules.clear();
 	collideEntity.clear();
 	collideWater = false;
+	callOpenCloseLua = false;
 	MaxLinearVelocity = 0;
 	MaxOpenClose = (uint32)DefaultMaxOpenClose;
 	dMass m;
@@ -262,6 +263,7 @@ void CEntity::update()
 		collideModules.clear();
 		collideEntity.clear();
 		collideWater = false;
+		callOpenCloseLua = false;
 		return;
 	}
 	
@@ -293,8 +295,17 @@ void CEntity::update()
 	collideEntity.clear();
 
 	if(collideWater)
+	{
 		CLuaEngine::instance().entityWaterCollideEvent(this);	
-	collideWater = false;
+		collideWater = false;
+	}
+
+	if(callOpenCloseLua)
+	{
+		if(luaProxy)
+			luaProxy->call("onOpenCloseSwitch");
+		callOpenCloseLua = false;
+	}
 	
 	if(luaProxy)
 		luaProxy->call("update");
@@ -358,8 +369,7 @@ bool CEntity::openClose()
 		dBodySetRotation(Body, R);
 	}
 
-	if(luaProxy)
-		luaProxy->call("onOpenCloseSwitch");
+	callOpenCloseLua = true;
 	
 	return true;
 }
