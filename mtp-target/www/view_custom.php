@@ -64,7 +64,7 @@
 					echo "<tr><td>Name: $entry</td></tr>";
 					echo "<tr><td>Uploaded: $moddate</td></tr>";
 					echo "<tr><td>Add the following line in mtp_target.cfg</td></tr>";
-					echo "<tr><td>EntityTexture = \"$cfgEntry\";</td></tr>";
+					echo "<tr><td><b>EntityTexture = \"$cfgEntry\";</b></td></tr>";
 					echo "</table>";
 					printf("</td></tr>");
 					printf("\n");
