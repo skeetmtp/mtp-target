@@ -2,6 +2,8 @@
 
 $uploaddir = '/home/ace/cvs/mtp-target/user_texture/';
 $uploadfilename = strtolower($_FILES['userfile']['name']);
+$uploadcrcflagname = 'update_crc_flag.txt';
+$uploadcrcflagfilename = $uploaddir.$uploadcrcflagname;
 $uploadfile = $uploaddir . $uploadfilename;
 $maxfilesize = 300000; // some tga are bigger because they add some dumb extra infos
 
@@ -23,8 +25,17 @@ if(!ereg("ping_ball_([[:alnum:]]+).tga", $uploadfilename, $regs))
 if (move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile))
 {
    system("convert ".$uploaddir."ping_ball_".$regs[1].".tga ".$uploaddir."ping_ball_".$regs[1].".jpg");
+   $fp = fopen($uploadcrcflagfilename,"at");
+   if(!$fp)
+	   echo "<p>cannot open ".$uploadcrcflagname;
+   else
+   {
+   	fwrite($fp,sprintf("%s\n",$uploadfilename));
+   	fclose($fp);
+   }
 
-   echo "<p>The file '".$uploadfilename."' was uploaded. Don't forget  to add the following line in your mtp_target.cfg: ";
+   echo "<p>The file '".$uploadfilename."' was uploaded(will be available on servers within 15 min).";
+   echo "<p>Don't forget  to add the following line in your mtp_target.cfg: ";
    echo '<pre>EntityTexture = "'.$regs[1].'";</pre></p>';
 }
 else
