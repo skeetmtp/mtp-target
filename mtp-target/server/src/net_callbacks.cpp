@@ -464,7 +464,12 @@ void netCallbacksHandler(CClient *c, CNetMessage &msgin)
 
 	nlassert(c);
 	nlassert(c->type() == CEntity::Client);
-
+	if(CEntityManager::instance().getById(c->id())==0)
+	{
+		nlwarning("netCallbacksHandler(%d) cannot do cb since client does not exist",msgin.type());
+		return;
+	}
+	
 	switch(msgin.type())
 	{
 	SWITCH_CASE(Chat);
