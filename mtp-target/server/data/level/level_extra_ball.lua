@@ -1,7 +1,7 @@
 Name = "Extra ball"
 Author = "Skeet"
 ServerLua = "level_extra_ball_server.lua"
-ReleaseLevel = 3
+ReleaseLevel = 2
 
 skyShapeFileName = "sky.shape";
 sunAmbientColor = CRGBA(82, 100, 133, 255);
