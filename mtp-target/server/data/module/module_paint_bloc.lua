@@ -13,8 +13,8 @@ end
 CModulePaintBloc_mt.__index = CModulePaintBloc
 
 function CModulePaintBloc:preUdate()
-  self.touchEntityId = -1;
-  self.touchCount=0;
+  --self.touchEntityId = -1;
+  --self.touchCount=0;
 end
 
 function CModulePaintBloc:postUdate()
@@ -31,9 +31,11 @@ function CModulePaintBloc:postUdate()
 end
 
 function CModulePaintBloc:onCollide( entity )
-  if(self.touchEntityId~=entity:getEid()) then
+--  if(self.touchEntityId~=entity:getEid()) then
+  if(self.touchEntityId==-1) then
     self.touchEntityId=entity:getEid();
-    self.touchCount = self.touchCount + 1;
+    --self.touchCount = self.touchCount + 1;
+    self.touchCount = 1;
   end
 end
 
