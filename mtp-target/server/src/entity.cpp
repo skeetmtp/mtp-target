@@ -217,6 +217,7 @@ void CEntity::reset()
 	collideModules.clear();
 	collideEntity.clear();
 	collideWater = false;
+	MaxLinearVelocity = 0;
 }
 
 void CEntity::update() 
