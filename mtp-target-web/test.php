@@ -33,4 +33,14 @@ echo "C'est fini. Votre base est en place sur cet hébergement.";
 
 	//fclose($html_fp);	  
 	//include($cacheFileName);	
+	
+	$requete = "SELECT COUNT(*) FROM game_user WHERE UNIX_TIMESTAMP(NOW())-UNIX_TIMESTAMP(LastLoginDate)<$webUserIdleTime;";
+	$result=exec_requete($requete);
+	if($line = mysql_fetch_array($result))
+	{
+		printf("There is <b>%d</b> registered users on the site\n",$line[0]);
+		printf("<br>");
+	}
+	
+	
 ?>

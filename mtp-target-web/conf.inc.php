@@ -9,6 +9,12 @@
 	 $userTexturePath = "http://mtp-target.dyndns.org/user_texture/";
 	 $userTextureStartName = "ping_ball_";
 
+//durations
+
+	$defaultCacheFileDuration = 30*60;//30 minutes
+	$defaultScoresCacheFileDuration = 5*60;
+	$webUserIdleTime = 1*60;
+
 //color
      //switch header color when header change
      /*

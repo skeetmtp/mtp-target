@@ -111,10 +111,19 @@ global $user_id;
 		*/
 		
 		$res = crypt($password, $user_crypted) == $user_crypted;
+		
+		if($res)
+		{
+			$requete = sprintf("UPDATE game_user set LastLoginDate=NOW() WHERE UId='%s';",$user_id,$login,$user_crypted);
+			$resultat = exec_requete($requete);
+		}
+		
 		$user_found = true;
 	}
 	if($res)
+	{
 		return true;
+	}
 	
 	$requete = "SELECT * FROM user WHERE Login='".$login."';";
 	$resultat = exec_game_db_requete($requete);
@@ -141,7 +150,8 @@ global $user_id;
 			if(!$user_found)
 				$requete = sprintf("INSERT INTO game_user (UId,Login,Password) VALUES ('%s','%s','%s');",$user_id,$login,$user_crypted);
 			else
-				$requete = sprintf("UPDATE game_user set UId='%s', Login='%s', Password='%s';",$user_id,$login,$user_crypted);
+				//$requete = sprintf("UPDATE game_user set UId='%s', Login='%s', Password='%s';",$user_id,$login,$user_crypted);
+				$requete = sprintf("UPDATE game_user set UId='%s', Login='%s', Password='%s', LastLoginDate=NOW();",$user_id,$login,$user_crypted);
 			$resultat = exec_requete($requete);
 			return true;	
 		}

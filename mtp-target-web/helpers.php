@@ -26,12 +26,15 @@ function boxEndFp($html_fp)
 	fprintf($html_fp,"</table>");
 }
 
-function boxBegin()
+function boxBegin($expand)
 {
-	printf("<table border=\"0\" cellpadding=\"0\" cellspacing=\"1\" bgcolor=\"#666666\">");
+	if($expand)
+		printf("<table width=\"100%%\" border=\"0\" cellpadding=\"0\" cellspacing=\"1\" bgcolor=\"#666666\">");
+	else
+		printf("<table border=\"0\" cellpadding=\"0\" cellspacing=\"1\" bgcolor=\"#666666\">");
 	printf("<tr>");
 	printf("<td align=\"left\">");
-	printf("<table border=\"0\" cellpadding=\"0\" cellspacing=\"5\" bgcolor=\"#FFFAEA\">");
+	printf("<table width=\"100%%\" border=\"0\" cellpadding=\"0\" cellspacing=\"5\" bgcolor=\"#FFFAEA\">");
 	printf("<tr>");
 	printf("<td>");
 }
