@@ -286,7 +286,9 @@ bool pauseAllThread()
 	}
 	
 
-	while(true)
+	uint i = 0;
+	uint maxLoopCount = 100; //wait one seconde max
+	for(i=0;i<maxLoopCount;i++)
 	{
 		int threadPausedCount = 0;
 		if(isServicePaused())
@@ -298,6 +300,11 @@ bool pauseAllThread()
 		if(threadPausedCount==2)
 			break;
 		nlSleep(10);
+	}
+	if(i>=maxLoopCount)
+	{
+		nlwarning("pauseAllThread() failed after %d tries during 1 second",maxLoopCount);
+		return false;
 	}
 	
 	return true;
