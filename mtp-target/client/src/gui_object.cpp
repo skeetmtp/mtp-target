@@ -68,6 +68,7 @@ NLMISC::CVector CVectorMax(const NLMISC::CVector &a, const NLMISC::CVector &b)
 
 void CGuiObjectManager::init()
 {
+	CGuiListViewManager::instance().init();
 	CGuiButtonManager::instance().init();
 	CGuiSpacerManager::instance().init();
 	CGuiBitmapManager::instance().init();
@@ -330,6 +331,8 @@ void CGuiObject::render(const CVector &pos,CVector &maxSize)
 	_preRender(pos,maxSize);
 	_render(pos,maxSize);
 	_postRender(pos,maxSize);
+	_renderedSize = maxSize;
+	_renderedPos= pos;
 #if MTPT_GUI_DEBUG_DISPLAY
 	CGuiStretchedQuad quad;
 	quad.material(CGuiBoxManager::instance().material());
@@ -389,7 +392,7 @@ void CGuiObject::minSize(const CVector &minSize)
 
 float CGuiObject::width()
 {
-	float w = _width();
+	float w = _width()+position().x;
 	float mw = minWidth();
 	return max(w,mw);
 }
@@ -456,3 +459,12 @@ void CGuiObject::init(CGuiXml *xml,xmlNodePtr node)
 	
 }
 
+NLMISC::CVector CGuiObject::renderedSize()
+{
+	return _renderedSize;
+}
+
+NLMISC::CVector CGuiObject::renderedPos()
+{
+	return _renderedPos;
+}

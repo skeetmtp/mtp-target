@@ -442,7 +442,7 @@ float CGuiText::_width()
 	if(isEntry())
 		return w + 4;
 	else
-		return w;
+		return w + 4;
 }
 
 float CGuiText::_height()

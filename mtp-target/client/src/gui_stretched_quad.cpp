@@ -155,8 +155,8 @@ void CGuiStretchedQuad::render()
 	float width = _size.x;
 	float height = _size.y;
 
-	bool stretchX = (width>(textureWidth/2));
-	bool stretchY = (height>(textureHeight/2));
+	bool stretchX = (width>(textureWidth));
+	bool stretchY = (height>(textureHeight));
 
 	float x0 = x;
 	float xa = x0 + textureWidth/2;

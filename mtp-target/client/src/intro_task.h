@@ -69,6 +69,8 @@ private:
 	TState State;
 
 	uint32 ServerId;
+
+	guiSPG<CGuiFrame> testFrame;
 	
 	guiSPG<CGuiFrame> menuFrame;
 	guiSPG<CGuiButton> howToPlay;

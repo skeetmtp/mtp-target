@@ -25,7 +25,6 @@
 #ifndef MTPT_GUI_LISTVIEW_H
 #define MTPT_GUI_LISTVIEW_H
 
-#if 0
 
 //
 // Includes
@@ -42,12 +41,22 @@
 // Classes
 //
 
-class CGuiList : public CGuiContainer
+class CGuiListViewEventBehaviour : public CGuiEventBehaviour
+{
+public:
+	CGuiListViewEventBehaviour();
+	virtual ~CGuiListViewEventBehaviour();
+	
+	virtual void onPressed(uint rowId);
+};
+
+
+class CGuiListView : public CGuiContainer
 {
 public:
 	
-	CGuiList();
-	virtual ~CGuiList();
+	CGuiListView();
+	virtual ~CGuiListView();
 
 	virtual CGuiObject::TGuiAlignment alignment();
 	virtual void alignment(int alignment);
@@ -55,15 +64,25 @@ public:
 	float spacing();
 	void spacing(float spacing);
 	
+	virtual void _render(const NLMISC::CVector &pos, NLMISC::CVector &maxSize);	
+	
+	virtual float _width();
+	virtual float _height();
+	
+	static void XmlRegister();
+	static CGuiObject *Create();
 	virtual void init(CGuiXml *xml,xmlNodePtr node);
+	
 
-	std::deque<guiSPG<CGuiObject> > elements;		
+	std::deque<guiSPG<CGuiHBox> > rows;		
+	guiSPG<CGuiListViewEventBehaviour> eventBehaviour;
 private:	
 	float _spacing;
 	CGuiStretchedQuad quad;
+	uint _selectedRow;
 };
 
-class CGuiListManager : public CSingleton<CGuiListManager>
+class CGuiListViewManager : public CSingleton<CGuiListViewManager>
 {
 public:
 	virtual void init();
@@ -71,13 +90,20 @@ public:
 	virtual void render();
 	virtual void release();
 	
-	NL3D::UTextureFile	*texture();
-	NL3D::UMaterial material();
-
+	NL3D::UTextureFile	*headerTexture();
+	NL3D::UMaterial headerMaterial();
+	NL3D::UTextureFile	*rowTexture();
+	NL3D::UMaterial rowMaterial();
+	NL3D::UTextureFile	*selectedRowTexture();
+	NL3D::UMaterial selectedRowMaterial();
+	
 private:
-	NL3D::UTextureFile	*_texture;
-	NL3D::UMaterial _material;
+	NL3D::UTextureFile	*_headerTexture;
+	NL3D::UMaterial _headerMaterial;
+	NL3D::UTextureFile	*_rowTexture;
+	NL3D::UMaterial _rowMaterial;
+	NL3D::UTextureFile	*_selectedRowTexture;
+	NL3D::UMaterial _selectedRowMaterial;
 };
 
-#endif
 #endif

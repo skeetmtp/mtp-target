@@ -36,6 +36,7 @@
 #include <nel/misc/plane.h>
 
 #include "3d_task.h"
+#include "time_task.h"
 #include "mtp_target.h"
 #include "gui_object.h"
 #include "gui_mouse_listener.h"
@@ -67,6 +68,8 @@ CGuiMouseListener::CGuiMouseListener()
 	ButtonDown = false;
 	RightButtonDown = false;
 	Clicked = false;
+	LastClickedTime = CTimeTask::instance().time();
+	DoubleClicked = false;
 	LastButtonDown = false;   
 	_captureCursor = false;
 	_cursorCaptured = _captureCursor;
@@ -84,6 +87,11 @@ void CGuiMouseListener::update()
 {
 	Pressed = ButtonDown && !LastButtonDown;
 	Clicked = !ButtonDown && LastButtonDown;
+	double dtime = CTimeTask::instance().time()-LastClickedTime ;
+	DoubleClicked = Clicked && dtime<0.3f;
+	if(Clicked)
+		LastClickedTime = CTimeTask::instance().time();
+	
 	LastButtonDown = ButtonDown;
 	
 	bool shouldCaptureCursor = CGuiObjectManager::instance().objects.size()==0 && _captureCursor;

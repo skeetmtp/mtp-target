@@ -92,6 +92,19 @@ public:
 private:
 };
 
+class CGuiLaunchServerEventBehaviour : public CGuiListViewEventBehaviour
+{
+public:
+	CGuiLaunchServerEventBehaviour() {}
+	virtual ~CGuiLaunchServerEventBehaviour() {}
+	virtual void onPressed(uint rowId)
+	{
+		//CIntroTask::instance().doConnectionOnLine(rowId);
+		nlinfo("user launch server : %d",rowId);
+	}
+private:
+};
+
 //
 // Functions
 //
@@ -126,6 +139,46 @@ void CIntroTask::updateInit()
 {
 	if(State!=eInit) return;
 
+#if 0
+	testFrame = new CGuiFrame();
+	/*
+	testFrame->minWidth(100);
+	testFrame->minHeight(100);
+	*/
+
+	guiSPG<CGuiListView> listView = new CGuiListView;
+	testFrame->element(listView);
+	listView->eventBehaviour = new CGuiLaunchServerEventBehaviour;
+
+	guiSPG<CGuiHBox> header = new CGuiHBox;
+	header->elements.push_back(new CGuiText(string("Server")));
+	header->elements.push_back(new CGuiText(string("Players")));
+	header->elements.push_back(new CGuiText(string("Ping")));
+	listView->rows.push_back(header);
+	
+	guiSPG<CGuiHBox> row1 = new CGuiHBox;
+	row1->elements.push_back(new CGuiText(string("Easy")));
+	row1->elements.push_back(new CGuiText(string("12")));
+	row1->elements.push_back(new CGuiText(string("34")));
+	listView->rows.push_back(row1);
+	
+	guiSPG<CGuiHBox> row2 = new CGuiHBox;
+	row2->elements.push_back(new CGuiText(string("Expert")));
+	row2->elements.push_back(new CGuiText(string("56")));
+	row2->elements.push_back(new CGuiText(string("78")));
+	listView->rows.push_back(row2);
+	
+	guiSPG<CGuiHBox> row3 = new CGuiHBox;
+	row3->elements.push_back(new CGuiText(string("Testing")));
+	row3->elements.push_back(new CGuiText(string("01")));
+	row3->elements.push_back(new CGuiText(string("120")));
+	listView->rows.push_back(row3);
+	
+	
+	CGuiObjectManager::instance().objects.push_back(testFrame);
+	State = eNone;
+	
+#else
 	guiSPG<CGuiXml> xml = 0;
 	xml = CGuiXmlManager::instance().Load("menu.xml");
 	menuFrame = (CGuiFrame *)xml->get("menuFrame");
@@ -162,11 +215,13 @@ void CIntroTask::updateInit()
 	
 	CGuiObjectManager::instance().objects.push_back(menuFrame);
 	State = eMenu;
-	
+
 	if(_autoLogin==1)
 		State = eLoginOnline;
 	else if(_autoLogin==2)
 		State = eLoginOnlan;
+#endif
+	
 	
 }
 

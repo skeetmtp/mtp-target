@@ -79,6 +79,8 @@ public:
 	bool	RightButtonDown;
 	bool	Pressed;
 	bool	Clicked;
+	double  LastClickedTime;
+	bool	DoubleClicked;
 	float	MouseX, MouseY;
 	float	PressedX, PressedY;
 	sint	MouseWheel;

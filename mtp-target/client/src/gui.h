@@ -29,16 +29,17 @@
 //
 // Includes
 //
-#include "gui_object.h"
-#include "gui_button.h"
+#include "gui_box.h"
 #include "gui_text.h"
+#include "gui_scale.h"
 #include "gui_frame.h"
 #include "gui_bitmap.h"
-#include "gui_progress_bar.h"
-#include "gui_scrollbar.h"
-#include "gui_scale.h"
-#include "gui_box.h"
+#include "gui_object.h"
+#include "gui_button.h"
 #include "gui_spacer.h"
+#include "gui_listview.h"
+#include "gui_scrollbar.h"
+#include "gui_progress_bar.h"
 #include "gui_xml.h"
 
 

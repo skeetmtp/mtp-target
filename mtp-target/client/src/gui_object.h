@@ -74,6 +74,8 @@ public:
 	virtual NLMISC::CVector globalPosition(const NLMISC::CVector &pos, const NLMISC::CVector &maxSize);
 	virtual NLMISC::CVector expandSize(const NLMISC::CVector &maxSize);
 	virtual NLMISC::CVector size();
+	virtual NLMISC::CVector renderedSize();
+	virtual NLMISC::CVector renderedPos();
 	virtual void  position(const NLMISC::CVector &position);
 	
 	virtual TGuiAlignment alignment();
@@ -113,6 +115,8 @@ private:
 	TGuiAlignment _alignment;
 	NLMISC::CVector _position;	
 	NLMISC::CVector _minSize;	
+	NLMISC::CVector _renderedSize;	
+	NLMISC::CVector _renderedPos;	
 };
 
 typedef CGuiObject * (*CreateObjectCB) ();

@@ -22,11 +22,10 @@
 
 #include "stdpch.h"
 
-#if 0
 #include "3d_task.h"
 #include "time_task.h"
 #include "resource_manager.h"
-#include "gui_box.h"
+#include "gui_listview.h"
 #include <nel/3d/u_material.h>
 #include "gui_xml.h"
 
@@ -50,46 +49,92 @@ using namespace NLMISC;
 //
 	
 
-void CGuiBoxManager::init()
+void CGuiListViewManager::init()
 {
 	
 	string res;
-	res = CResourceManager::instance().get("box_debug.tga");
-	_texture = C3DTask::instance().driver().createTextureFile(res);
-	nlassert(_texture);
-	
-	//_texture->setWrapS(UTexture::Clamp);
-	//_textureFrame->setWrapT(UTexture::Clamp);
-	
-	
-	_material = C3DTask::instance().createMaterial();
-	_material.setTexture(_texture);
-	_material.setBlend(true);
-	_material.setZFunc(UMaterial::always);
-	_material.setDoubleSided();
 
+	res = CResourceManager::instance().get("row_listview.tga");
+	_rowTexture = C3DTask::instance().driver().createTextureFile(res);
+	nlassert(_rowTexture);
+	
+	_rowTexture->setWrapS(UTexture::Clamp);
+	
+	
+	_rowMaterial = C3DTask::instance().createMaterial();
+	_rowMaterial.setTexture(_rowTexture);
+	_rowMaterial.setBlend(true);
+	_rowMaterial.setZFunc(UMaterial::always);
+	_rowMaterial.setDoubleSided();
+	
+	res = CResourceManager::instance().get("selected_row_listview.tga");
+	_selectedRowTexture = C3DTask::instance().driver().createTextureFile(res);
+	nlassert(_selectedRowTexture);
+	
+	_selectedRowTexture->setWrapS(UTexture::Clamp);
+	
+	
+	_selectedRowMaterial = C3DTask::instance().createMaterial();
+	_selectedRowMaterial.setTexture(_selectedRowTexture);
+	_selectedRowMaterial.setBlend(true);
+	_selectedRowMaterial.setZFunc(UMaterial::always);
+	_selectedRowMaterial.setDoubleSided();
+	
+	res = CResourceManager::instance().get("header_listview.tga");
+	_headerTexture = C3DTask::instance().driver().createTextureFile(res);
+	nlassert(_headerTexture);
+	
+	_headerTexture->setWrapS(UTexture::Clamp);
+	
+	
+	_headerMaterial = C3DTask::instance().createMaterial();
+	_headerMaterial.setTexture(_headerTexture);
+	_headerMaterial.setBlend(true);
+	_headerMaterial.setZFunc(UMaterial::always);
+	_headerMaterial.setDoubleSided();
+	
 	CGuiHBox::XmlRegister();
 	CGuiVBox::XmlRegister();
 	
 }
 	
-void CGuiBoxManager::render()
+void CGuiListViewManager::render()
 {
 }
 
-void CGuiBoxManager::release()
+void CGuiListViewManager::release()
 {
 	
 }
 
-NL3D::UTextureFile	*CGuiBoxManager::texture()
+NL3D::UTextureFile	*CGuiListViewManager::rowTexture()
 {
-	return _texture;
+	return _rowTexture;
 }
 
-NL3D::UMaterial CGuiBoxManager::material()
+NL3D::UMaterial CGuiListViewManager::rowMaterial()
 {
-	return _material;
+	return _rowMaterial;
+}
+
+NL3D::UTextureFile	*CGuiListViewManager::selectedRowTexture()
+{
+	return _selectedRowTexture;
+}
+
+NL3D::UMaterial CGuiListViewManager::selectedRowMaterial()
+{
+	return _selectedRowMaterial;
+}
+
+NL3D::UTextureFile	*CGuiListViewManager::headerTexture()
+{
+	return _headerTexture;
+}
+
+NL3D::UMaterial CGuiListViewManager::headerMaterial()
+{
+	return _headerMaterial;
 }
 
 
@@ -97,32 +142,34 @@ NL3D::UMaterial CGuiBoxManager::material()
 //
 //
 //
-CGuiBox::CGuiBox()
+CGuiListView::CGuiListView()
 {
-	_spacing = 2;
-	quad.material(CGuiBoxManager::instance().material());
+	_spacing = 0;
+	_selectedRow = 1;
+	eventBehaviour = 0;
+	quad.material(CGuiListViewManager::instance().rowMaterial());
 }
 
-CGuiBox::~CGuiBox()
+CGuiListView::~CGuiListView()
 {
-	elements.clear();
+	rows.clear();
 }
 
-float CGuiBox::spacing()
+float CGuiListView::spacing()
 {
 	return _spacing;
 }
 
-void CGuiBox::spacing(float spacing)
+void CGuiListView::spacing(float spacing)
 {
 	_spacing = spacing;
 }
 
-CGuiObject::TGuiAlignment CGuiBox::alignment()
+CGuiObject::TGuiAlignment CGuiListView::alignment()
 {
 	CGuiObject::TGuiAlignment res = CGuiObject::alignment();
-	deque<guiSPG<CGuiObject> >::iterator it;
-	for(it=elements.begin();it!=elements.end();it++)
+	deque<guiSPG<CGuiHBox> >::iterator it;
+	for(it=rows.begin();it!=rows.end();it++)
 	{
 		CGuiObject *obj = *it;
 		if(obj->alignment()&CGuiObject::eAlignExpandHorizontal)
@@ -134,15 +181,16 @@ CGuiObject::TGuiAlignment CGuiBox::alignment()
 	return res;
 }
 
-void CGuiBox::alignment(int alignment)
+void CGuiListView::alignment(int alignment)
 {
 	CGuiObject::alignment(alignment);
 }
 
 
-void CGuiBox::init(CGuiXml *xml,xmlNodePtr node)
+void CGuiListView::init(CGuiXml *xml,xmlNodePtr node)
 {
 	CGuiContainer::init(xml,node);
+	/*
 	node = xml->doc.getFirstChildNode(node,"element");
 	if(node)
 		for( node = xml->doc.getFirstChildNode(node,"object");node;node = xml->doc.getNextChildNode(node,"object") )
@@ -151,33 +199,76 @@ void CGuiBox::init(CGuiXml *xml,xmlNodePtr node)
 			elements.push_back(object);
 			xml->objects.push_back(object);
 		}
+	*/
 }
 
 
-
-//
-//
-//
-CGuiVBox::CGuiVBox()
+void CGuiListView::_render(const CVector &pos,CVector &maxSize)
 {
-}
+	uint rowCount = 0;
+	bool _pressed = false;
+	deque<guiSPG<CGuiHBox> >::iterator it;
+	if(rows.empty()) return;
 
-CGuiVBox::~CGuiVBox()
-{
-	
-}
 
-void CGuiVBox::_render(const CVector &pos,CVector &maxSize)
-{
-	if(elements.empty()) return;
 	CVector globalPos = globalPosition(pos,maxSize);
 	maxSize = expandSize(maxSize);
+	
+	deque<float> minWidths;
+	for(it=rows.begin();it!=rows.end();it++)
+	{
+		CGuiHBox *row = *it;
+		deque<guiSPG<CGuiObject> >::iterator it2;
+		uint rcount = 0;
+		float mHeight = 0;
+		for(it2=row->elements.begin();it2!=row->elements.end();it2++)
+		{
+			CGuiObject *obj = *it2;
+			obj->position(CVector(5,0,0));
 
-	deque<guiSPG<CGuiObject> >::iterator it;
+			if(obj->height()>mHeight)
+				mHeight = obj->height();
+			uint s = minWidths.size();
+			if(minWidths.size()<=rcount)
+				minWidths.push_back(0);
+
+			if(minWidths[rcount]<obj->width())
+				minWidths[rcount]=obj->width();
+			rcount++;
+		}
+		row->minHeight(mHeight+10);
+	}		
+	
+	float mWidth = 0;
+	for(it=rows.begin();it!=rows.end();it++)
+	{
+		CGuiHBox *row = *it;
+		row->spacing(10);
+		float rw = row->width();
+		if(rw>mWidth)
+			mWidth = rw;
+	}	
+	//rows[0]->width();
+	
+	for(it=rows.begin();it!=rows.end();it++)
+	{
+		CGuiHBox *row = *it;
+		//row->minWidth(mWidth);
+		deque<guiSPG<CGuiObject> >::iterator it2;
+		uint rcount = 0;
+		for(it2=row->elements.begin();it2!=row->elements.end();it2++)
+		{
+			CGuiObject *obj = *it2;
+			obj->alignment(CGuiObject::eAlignLeft|CGuiObject::eAlignCenterVertical);
+			obj->minWidth(minWidths[rcount]);
+			rcount++;
+		}
+	}	
+	
 	float expandableHeight = maxSize.y;
 	bool expandableObjectPresent = false;
 	float centerCount = 0;
-	for(it=elements.begin();it!=elements.end();it++)
+	for(it=rows.begin();it!=rows.end();it++)
 	{
 		CGuiObject *obj = *it;
 		expandableHeight -= obj->height() + spacing();
@@ -190,197 +281,158 @@ void CGuiVBox::_render(const CVector &pos,CVector &maxSize)
 	float centerSpacing = 0;
 	if(!expandableObjectPresent && centerCount>0)
 		centerSpacing = expandableHeight / centerCount;
-
-	for(it=elements.begin();it!=elements.end();it++)
+	
+	for(it=rows.begin();it!=rows.end();it++)
 	{
-		CGuiObject *obj = *it;
-		float objHeight = obj->height();
+		CGuiHBox *row = *it;
+		float objHeight = row->height();
 		CVector newMaxSize(maxSize.x,0,0);
 		if(expandableObjectPresent)
 		{
-			if(obj->alignment()&CGuiObject::eAlignExpandVertical)
+			if(row->alignment()&CGuiObject::eAlignExpandVertical)
 				newMaxSize.y = expandableHeight + objHeight;
 			else
 				newMaxSize.y = objHeight;
 		}
 		else
 		{
-			if(obj->alignment()&CGuiObject::eAlignCenterVertical)
+			if(row->alignment()&CGuiObject::eAlignCenterVertical)
 				newMaxSize.y = objHeight + centerSpacing;
 			else
 				newMaxSize.y = objHeight;
-			if(obj->alignment()&CGuiObject::eAlignBottom)
+			if(row->alignment()&CGuiObject::eAlignBottom)
 				globalPos.y += expandableHeight;
 		}
-		obj->render(globalPos,newMaxSize);
-		if(obj->alignment()&CGuiObject::eAlignCenterVertical)
+		
+		CVector oldMaxSize = newMaxSize;
+		
+		row->render(globalPos,newMaxSize);
+
+		uint s = minWidths.size();
+		float lx = 0;
+		deque<guiSPG<CGuiObject> >::iterator it2;
+		uint rcount = 0;
+		for(it2=row->elements.begin();it2!=row->elements.end();it2++)
+		{
+			CGuiObject *obj = *it2;
+			CGuiStretchedQuad quad;
+			if(rowCount==0)
+				quad.material(CGuiListViewManager::instance().headerMaterial());
+			else
+			{
+				if(rowCount==_selectedRow)
+					quad.material(CGuiListViewManager::instance().selectedRowMaterial());
+				else
+					quad.material(CGuiListViewManager::instance().rowMaterial());
+			}
+			//		quad.size(CVector(obj->width(),obj->height()-0,0));
+			CVector qSize= obj->renderedSize();
+			if(rcount<row->elements.size()-1)
+				qSize += CVector(row->spacing(),0,0);
+			//qSize += CVector(0,0,0);
+			qSize.y = row->height();
+			quad.size(qSize);
+			quad.position(obj->renderedPos());
+			quad.render();
+			rcount++;
+		}
+
+		CVector mousePos = CGuiObjectManager::instance().mouseListener().position();
+		
+		if(row->isIn(mousePos,row->renderedPos(),row->renderedSize()))
+		{
+			CVector mousePressedPos = CGuiObjectManager::instance().mouseListener().pressedPosition();
+			
+			if(CGuiObjectManager::instance().mouseListener().ButtonDown)
+			{
+				if(row->isIn(mousePressedPos,row->renderedPos(),row->renderedSize()))
+					_selectedRow = rowCount;
+				else
+					_selectedRow = 0;
+			}
+			if(CGuiObjectManager::instance().mouseListener().DoubleClicked)
+			{
+				if(eventBehaviour)
+					eventBehaviour->onPressed(_selectedRow-1);
+				//nlinfo("CGuiListView double click : %d",_selectedRow-1);				
+			}
+		}
+		
+		
+		
+		if(row->alignment()&CGuiObject::eAlignCenterVertical)
 			newMaxSize.y = objHeight + centerSpacing;
 		globalPos.y += newMaxSize.y + spacing();
 		expandableHeight -= newMaxSize.y - objHeight; 
 		if(expandableHeight<0)
 			nlwarning("expandableHeight(%f)<0",expandableHeight);
+		rowCount++;
 	}
 }
 
-float CGuiVBox::_width()
+float CGuiListView::_width()
 {
-	deque<guiSPG<CGuiObject> >::iterator it;
+	deque<guiSPG<CGuiHBox> >::iterator it;
 	float res = 0;
-	for(it=elements.begin();it!=elements.end();it++)
+	for(it=rows.begin();it!=rows.end();it++)
 	{
-		CGuiObject *obj = *it;
-		if(res<obj->width())
-			res = obj->width();
+		CGuiHBox *row = *it;
+		float rowWidth = row->width();
+		uint rowElementCount = row->elements.size();
+		/*
+		if(rowElementCount>0)
+			rowWidth += (rowElementCount) * 5;
+			*/
+		if(res<rowWidth)
+			res = rowWidth;
 	}	
 	return res;
 }
 
-float CGuiVBox::_height()
+float CGuiListView::_height()
 {
-	deque<guiSPG<CGuiObject> >::iterator it;
+	deque<guiSPG<CGuiHBox> >::iterator it;
 	float res = 0;
-	for(it=elements.begin();it!=elements.end();it++)
+	for(it=rows.begin();it!=rows.end();it++)
 	{
 		CGuiObject *obj = *it;
 		res += obj->height();
 	}	
-	if(elements.size()>1)
-		return res + (elements.size()-1) * spacing();	
+	if(rows.size()>1)
+		return res + (rows.size()-1) * spacing();	
 	else
 		return res;
 }
 
-void CGuiVBox::XmlRegister()
+void CGuiListView::XmlRegister()
 {
 	CGuiObjectManager::instance().registerClass("CGuiVBox",CGuiVBox::Create);
 }
 
-CGuiObject *CGuiVBox::Create()
+CGuiObject *CGuiListView::Create()
 {
-	CGuiObject *res = new CGuiVBox;
+	CGuiObject *res = new CGuiListView;
 	
 	return res;	
 }
 
-void CGuiVBox::init(CGuiXml *xml,xmlNodePtr node)
-{
-	CGuiBox::init(xml,node);
-}
-
-
-
 //
 //
 //
-CGuiHBox::CGuiHBox()
-{
-}
 
-CGuiHBox::~CGuiHBox()
+
+CGuiListViewEventBehaviour::CGuiListViewEventBehaviour()
 {
 	
 }
 
-void CGuiHBox::_render(const CVector &pos,CVector &maxSize)
+CGuiListViewEventBehaviour::~CGuiListViewEventBehaviour()
 {
-	if(elements.empty()) return;
-	CVector globalPos = globalPosition(pos,maxSize);
-	maxSize = expandSize(maxSize);
 	
+}
+
+void CGuiListViewEventBehaviour::onPressed(uint rowId)
+{
 	
-	deque<guiSPG<CGuiObject> >::iterator it;
-	float expandableWidth= maxSize.x;
-	bool expandableObjectPresent = false;
-	float centerCount = 0;
-	for(it=elements.begin();it!=elements.end();it++)
-	{
-		CGuiObject *obj = *it;
-		expandableWidth -= obj->width() + spacing();
-		if(obj->alignment()&CGuiObject::eAlignExpandHorizontal)
-			expandableObjectPresent = true;
-		if(obj->alignment()&CGuiObject::eAlignCenterHorizontal)
-			centerCount++;
-	}
-	expandableWidth += spacing();
-	float centerSpacing = 0;
-	if(!expandableObjectPresent && centerCount>0)
-		centerSpacing = expandableWidth / centerCount;
-	
-	for(it=elements.begin();it!=elements.end();it++)
-	{
-		CGuiObject *obj = *it;
-		float objWidth = obj->width();
-		CVector newMaxSize(0,maxSize.y,0);
-		if(expandableObjectPresent)
-		{
-			if(obj->alignment()&CGuiObject::eAlignExpandHorizontal)
-				newMaxSize.x = expandableWidth + objWidth;
-			else
-				newMaxSize.x = objWidth;
-		}
-		else
-		{
-			if(obj->alignment()&CGuiObject::eAlignCenterHorizontal)
-				newMaxSize.x = objWidth + centerSpacing;
-			else
-				newMaxSize.x = objWidth;
-			if(obj->alignment()&CGuiObject::eAlignRight)
-				globalPos.x += expandableWidth;
-		}
-		obj->render(globalPos,newMaxSize);
-		if(obj->alignment()&CGuiObject::eAlignCenterHorizontal)
-			newMaxSize.x = objWidth + centerSpacing;
-		globalPos.x += newMaxSize.x + spacing();
-		expandableWidth -= newMaxSize.x - objWidth;
-		if(expandableWidth<0)
-			nlwarning("expandableWidth(%f)<0",expandableWidth);
-	}	
 }
 
-float CGuiHBox::_width()
-{
-	deque<guiSPG<CGuiObject> >::iterator it;
-	float res = 0;
-	for(it=elements.begin();it!=elements.end();it++)
-	{
-		CGuiObject *obj = *it;
-		res += obj->width();
-	}	
-	if(elements.size()>1)
-		return res + (elements.size()-1) * spacing();	
-	else
-		return res;
-}
-
-float CGuiHBox::_height()
-{
-	deque<guiSPG<CGuiObject> >::iterator it;
-	float res = 0;
-	for(it=elements.begin();it!=elements.end();it++)
-	{
-		CGuiObject *obj = *it;
-		if(res<obj->height())
-			res = obj->height();
-	}	
-	return res;
-}
-
-void CGuiHBox::XmlRegister()
-{
-	CGuiObjectManager::instance().registerClass("CGuiHBox",CGuiHBox::Create);
-}
-
-CGuiObject *CGuiHBox::Create()
-{
-	CGuiObject *res = new CGuiHBox;
-	
-	return res;	
-}
-
-
-void CGuiHBox::init(CGuiXml *xml,xmlNodePtr node)
-{
-	CGuiBox::init(xml,node);
-}
-
-#endif
