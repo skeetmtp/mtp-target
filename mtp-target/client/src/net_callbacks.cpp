@@ -154,6 +154,7 @@ static void cbOpenClose(CNetMessage &msgin)
 
 static void cbUpdate(CNetMessage &msgin)
 {
+	//nlinfo("cbUpdate %f",CTimeTask::instance().time());
 	float rsxTime;
 	uint8 eid;
 	CVector pos;
@@ -229,6 +230,7 @@ static void cbUpdate(CNetMessage &msgin)
 
 			if(CEntityManager::instance().exist(eid))
 			{
+				//TODO remove rsxTime param
 				CEntityManager::instance()[eid].interpolator().addKey(CEntityInterpolatorKey(CEntityState(pos,false),rsxTime));
 				//CEntityManager::instance()[eid].ping(ping);
 			}
@@ -243,6 +245,7 @@ static void cbUpdate(CNetMessage &msgin)
 
 static void cbUpdateOne(CNetMessage &msgin)
 {
+	//nlinfo("cbUpdateOne %f",CTimeTask::instance().time());
 	float rsxTime;
 	uint8 eid;
 	CVector pos;
@@ -323,6 +326,7 @@ static void cbUpdateOne(CNetMessage &msgin)
 
 static void cbFullUpdate(CNetMessage &msgin)
 {
+	//nlinfo("cbFullUpdate %f",CTimeTask::instance().time());
 	float rsxTime;
 	uint8 eid;
 	CVector pos;

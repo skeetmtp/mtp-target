@@ -165,6 +165,7 @@ void CResourceManager::loadChildren(const std::string &filename)
 			}
 		}
 	}
+	//TODO else if(ext == "ps")
 }
 
 
