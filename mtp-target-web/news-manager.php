@@ -50,7 +50,7 @@ function confirmLink(theLink)
 <?php
 
 
-$requete = sprintf("SELECT * FROM news ORDER BY date DESC;",$order,$desc);
+$requete = sprintf("SELECT * FROM news ORDER BY date DESC;");
 $resultat = exec_requete($requete);
 $count = 0;
 while ($ligne = mysql_fetch_array($resultat))

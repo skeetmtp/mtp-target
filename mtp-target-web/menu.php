@@ -4,10 +4,10 @@
   include_once("mysql-func.php");
   include_once("ingame_stats.php");
 
-  if(!validPage($page)) unset($page);
-  if(!validInput($login)) unset($login);
-  if(!validInput($password)) unset($password);
-  if(!validInput($lang)) unset($lang);
+  if(isset($page) && !validPage($page)) unset($page);
+  if(isset($login) && !validInput($login)) unset($login);
+  if(isset($password) && !validInput($password)) unset($password);
+  if(isset($lang) && !validInput($lang)) unset($lang);
 
   if(isset($lang))
   {
@@ -19,8 +19,14 @@
   }
   else
   {
-    $login = $HTTP_COOKIE_VARS["mtp_target_admin_login"];
-    $password = $HTTP_COOKIE_VARS["mtp_target_admin_password"];
+  	if(isset($_COOKIE['mtp_target_admin_login']))
+    	$login = $_COOKIE['mtp_target_admin_login'];
+    else
+    	$login = "";	
+  	if(isset($_COOKIE['mtp_target_admin_password']))
+	    $password = $_COOKIE['mtp_target_admin_password'];
+	  else
+    	$password = "";	
   }
   
   $requete = "SELECT * FROM user WHERE login='".$login."' AND password='".$password."';";
@@ -38,9 +44,10 @@
     unset($password);
   }
     
-  $logged=isset($login) || $login!="";
+  $logged=isset($login) && $login!="";
 
-  $default_page = $HTTP_COOKIE_VARS["mtp_target_default_page"];
+  if(isset($_COOKIE['mtp_target_default_page']))
+  	$default_page = $HTTP_COOKIE_VARS['mtp_target_default_page'];
   if(isset($default_page))
   {
       $default_page = $default_later;
