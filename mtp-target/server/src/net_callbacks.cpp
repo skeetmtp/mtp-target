@@ -263,9 +263,14 @@ static void cbRequestCRCKey(CClient *c, CNetMessage &msgin)
 	{
 		serverHashKey = getSHA1(path);
 		if(serverHashKey==hashKey)
+		{
 			serverfn = "";
+		}
 		else
+		{
+			nlinfo("cbRequestCRCKey : key difeerent");
 			serverfn = CFile::getFilename(path);
+		}
 	}
 
 	msgout.serial(serverfn);

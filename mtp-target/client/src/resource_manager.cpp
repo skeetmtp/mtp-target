@@ -93,6 +93,7 @@ void CResourceManager::receivedCRC(string &fn)
 	CRCUpToDate = fn.empty();
 	if(!CRCUpToDate)
 	{
+		nlinfo("CResourceManager::receivedCRC %s: key different",fn.c_str());
 		filename2LastCRCCheckTime::iterator it = CRCCheckTimes.find(CFile::getFilename(fn));
 		if(it!=CRCCheckTimes.end())
 			CRCCheckTimes.erase(it);		
@@ -322,6 +323,10 @@ string CResourceManager::get(const string &filename, bool &ok)
 			// we already have the file on local
 			ok = true;
 			return path;
+		}
+		else
+		{
+			nlinfo("CResourceManager::get %s : key diferent",fn.c_str());			
 		}
 	}
 

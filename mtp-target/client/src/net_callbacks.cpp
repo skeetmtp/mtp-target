@@ -494,8 +494,26 @@ static void cbDisplayText(CNetMessage &msgin)
 	msgin.serial(col);
 	msgin.serial(duration);
 
-	CHudMessage m = CHudMessage(x,y,s,message,col,duration);
-	CHudTask::instance().messages.push_back(m);
+	CHudMessage newm = CHudMessage(x,y,s,message,col,duration);
+
+	list<CHudMessage>::iterator it;
+	list<CHudMessage>::iterator it2delete;
+	for(it=CHudTask::instance().messages.begin();it!=CHudTask::instance().messages.end();)
+	{
+		CHudMessage m = *it;
+		if(m.x == newm.x && m.y==newm.y)
+		{
+			it2delete = it;
+			it++;
+			CHudTask::instance().messages.erase(it2delete);
+		}
+		else
+		{
+			it++;
+		}
+	}
+	
+	CHudTask::instance().messages.push_back(newm);
 	nlinfo("display text(during %f sec) : %s",duration,message.c_str());
 	
 }
