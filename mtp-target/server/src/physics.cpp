@@ -447,7 +447,7 @@ class PhysicsThread : public IRunnable
 			deltaTime = (float)(newTime - lastTime)/1000.0f;
 			int   nbLoop = int(deltaTime / worldStep);
 			float missedTime = deltaTime - nbLoop * worldStep;
-			nlinfo("physic nbloop = %d = %f / %f (missed %f)",nbLoop,deltaTime,worldStep,missedTime);
+			//nlinfo("physic nbloop = %d = %f / %f (missed %f)",nbLoop,deltaTime,worldStep,missedTime);
 			lastTime = newTime-(TTime)missedTime;
 			{
 				SyncPhyTime::CAccessor acces(&syncPhyTime);
