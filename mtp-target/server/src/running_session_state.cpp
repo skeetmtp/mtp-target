@@ -147,16 +147,27 @@ void CRunningSessionState::update()
 			}
 
 			nlinfo("send CNetMessage::EndSession to clients");
-			//			CMessage msgout("END_SESSION");
 			CNetMessage msgout(CNetMessage::EndSession);
-//			uint8 nb = CEntityManager::instance().entities().size();
-//			msgout.serial(nb);
+
+			// prepare a message for login service to update the score on database
+			CMessage msgout2("SU");
+
+			string levelname = CLevelManager::instance().levelFilename();
+			uint32 nbplayers = 0;
+			// count players
+			for(it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
+				if((*it)->type() == CEntity::Client)
+					nbplayers++;
+
+			float sessionduration = (float)(currentTime - CSessionManager::instance().startTime())/1000.0f;
+
+			msgout2.serial(levelname, nbplayers, sessionduration);
+
 			for(it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
 			{
 				if((*it)->type() == CEntity::Client)
 				{
 					bool breakTime = false; // ace set to false
-//					string res;//ace = mtLevelManager::updateStats((*it)->name(), (*it)->CurrentScore, (*it)->Time, breakTime, true);
 					string res = CLevelManager::instance().updateStats((*it)->name(), (*it)->CurrentScore, (*it)->ArrivalTime, breakTime);
 					if(!res.empty())
 					{
@@ -169,6 +180,11 @@ void CRunningSessionState::update()
 				}
 
 				(*it)->Score +=(*it)->CurrentScore;
+
+				CClient *cl = dynamic_cast<CClient*>(*it);
+				sint32 uid = cl->uid(), score = cl->CurrentScore;
+				float duration = cl->ArrivalTime;
+				msgout2.serial(uid, score, duration);
 
 				CConfigFile::CVar &accounts = IService::getInstance()->ConfigFile.getVar("Accounts");
 				for(sint i = 0; i < accounts.size(); i+=3)
@@ -194,12 +210,8 @@ void CRunningSessionState::update()
 			
 			// send the message to all entities
 			CNetwork::instance().send(msgout);
-			/*for(it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
-			{
-				if((*it)->From != 0)
-					Server->send(msgout, (*it)->From);
-			}*/
 
+			CUnifiedNetwork::getInstance()->send("LS", msgout2);
 
 			CEntityManager::instance().saveAllValidReplay();
 			nlinfo("replay saved");

@@ -48,7 +48,8 @@ public:
 
 	void nextLevel();
 	
-	std::string levelName();
+	std::string levelName() const;
+	std::string levelFilename() const;
 
 	// return true if a current level exists
 	bool haveCurrentLevel() const { return CurrentLevel != 0; }

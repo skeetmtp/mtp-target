@@ -252,14 +252,21 @@ void CLevelManager::display(CLog *log) const
 		log->displayNL("There's not current level");
 }
 
-string CLevelManager::levelName()
+string CLevelManager::levelName() const
 {
 	if(CurrentLevel)
-		return CurrentLevel->name();
+		return CFile::getFilename(CurrentLevel->name());
 	else
 		return "NoLevel";
 }
 
+string CLevelManager::levelFilename() const
+{
+	if(CurrentLevel)
+		return CurrentLevel->fileName();
+	else
+		return "noname.lua";
+}
 
 uint32  CLevelManager::levelSessionCount()
 {

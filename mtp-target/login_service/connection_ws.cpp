@@ -337,11 +337,51 @@ static void cbWSShardChooseShard(CMessage &msgin, const std::string &serviceName
 	sendToClient(msgout, (TSockId)lc.getUserAddr());
 }
 
+static void cbScoreUpdate(CMessage &msgin, const std::string &serviceName, uint16 sid)
+{
+	string reason;
+	MYSQL_RES *result;
+	MYSQL_ROW row;
+	sint32 nbrow;
+
+	// find if the shard is valid
+	reason = sqlQuery("select * from shard where InternalId="+toString(sid), nbrow, row, result);
+	if(!reason.empty()) return;
+	if(nbrow != 1)
+	{
+		nlwarning("nbrow is %d", nbrow);
+		return;
+	}
+
+	string levelname;
+	sint32 nbplayers;
+	float sessionduration;
+	msgin.serial(levelname, nbplayers, sessionduration);
+	
+	uint32 date = CTime::getSecondsSince1970();
+
+	sqlQuery("insert into session (LevelName, NbPlayers, Duration) values ("+levelname+", "+toString(nbplayers)+", "+toString(sessionduration)+")", nbrow, row, result);
+	uint32 sessionId = (uint32)mysql_insert_id(DatabaseConnection);
+
+	for(sint32 i = 0; i < nbplayers; i++)
+	{
+		sint32 uid, score;
+		float duration;
+		msgin.serial(uid, score, duration);
+
+		// update total score
+		sqlQuery("update user set Score=Score+"+toString(score)+" where UId="+toString(uid), nbrow, row, result);
+
+		sqlQuery("insert into user_session (UId, SessionId, Score, Duration) values ("+toString(uid)+", "+toString(sessionId)+", "+toString(score)+", "+toString(duration)+")", nbrow, row, result);
+	}
+}
+
 static const TUnifiedCallbackItem WSCallbackArray[] =
 {
 	{ "CC", cbWSClientConnected },
 	{ "WS_IDENT", cbWSIdentification },
 	{ "SCS", cbWSShardChooseShard },
+	{ "SU", cbScoreUpdate },
 };
 
 

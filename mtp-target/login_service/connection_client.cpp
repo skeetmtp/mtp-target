@@ -251,27 +251,10 @@ static void cbClientVerifyLoginPassword(CMessage &msgin, TSockId from, CCallback
 		while(row != 0)
 		{
 			// serial the name of the shard
-			string shardname;
-			shardname = row[3];
-			
-			if (atoi(row[2]) == 0)
-			{
-				shardname += " (no players)";
-			}
-			else
-			{
-				shardname += " (";
-				shardname += row[2];
-				if(atoi(row[2]) == 1)
-					shardname += " player)";
-				else
-					shardname += " players)";
-			}
-			msgout.serial (shardname);
-			
-			// serial the address of the WS service
+			string shardname = row[3];
+			uint8 nbplayers = atoi(row[2]);
 			uint32 sid = atoi(row[0]);
-			msgout.serial (sid);
+			msgout.serial (shardname, nbplayers, sid);
 			row = mysql_fetch_row(result);
 		}
 		netbase.send (msgout, from);

@@ -53,11 +53,12 @@ public:
 
 	struct CShardEntry
 	{
-		CShardEntry() { }
-		CShardEntry(const std::string &name, uint32 sid) : ShardName(name), ShardId(sid)
+		CShardEntry() { ShardNbPlayers = 0; }
+		CShardEntry(const std::string &name, uint8 nbp, uint32 sid) : ShardName(name), ShardNbPlayers(nbp), ShardId(sid)
 		{
 		}
 		std::string ShardName;
+		uint8		ShardNbPlayers;
 		uint32		ShardId;
 	};
 
