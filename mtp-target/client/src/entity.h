@@ -131,6 +131,8 @@ public:
 	
 	NLMISC::CVector		 LastSent2MePos;
 	NLMISC::CVector		 LastSent2OthersPos;
+
+	bool				 addOpenCloseKey;
 private:
 	
 	NLMISC::CRGBA   FadeParticleColor;

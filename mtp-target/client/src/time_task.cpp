@@ -46,18 +46,37 @@ using namespace NLMISC;
 	
 void CTimeTask::init()
 {
-	FirstTime = OldTime = Time = NLMISC::CTime::ticksToSecond(NLMISC::CTime::getPerformanceTime());
+	reset();
+}
+
+void CTimeTask::reset()
+{
+	FirstTime = 1;
+	OldTime = 1;
+	Time = 1;
+	DeltaTime = 0;
+	FirstUpdate = true;
 }
 
 void CTimeTask::update()
 {
 	OldTime = Time;
 
+	
 	double newTime = NLMISC::CTime::ticksToSecond(NLMISC::CTime::getPerformanceTime());
 
+	if(FirstUpdate)
+		FirstTime = newTime - 1; //-1 for replay 
+	
 	Time = newTime - FirstTime;
 
-	DeltaTime = Time - OldTime;
-
+	if(FirstUpdate)
+	{
+		DeltaTime = 0;
+		FirstUpdate = false;
+	}
+	else
+		DeltaTime = Time - OldTime;
+	
 	DeltaTimeSmooth.addValue(DeltaTime);
 }

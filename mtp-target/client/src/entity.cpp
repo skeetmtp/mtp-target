@@ -83,6 +83,7 @@ CEntity::CEntity()
 	luaProxy = 0;
 	showCollideWhenFly = false;
 	showCollideWhenFlyPos = CVector(0,0,0);
+	addOpenCloseKey = false;
 }
 
 void CEntity::swapOpenClose()
@@ -116,8 +117,6 @@ void CEntity::swapOpenClose()
 		ObjMatrix.rotateY(1.0f);
 	}
 
-	if(isLocal())
-		CMtpTarget::instance().controler().swapOpenClose();
 }
 
 CExtendedInterpolator &CEntity::interpolator() const
@@ -140,6 +139,10 @@ void CEntity::close()
 void CEntity::update()
 {
 	interpolator().update();
+
+	if(interpolator().openCloseEvent())
+		swapOpenClose();
+	
 
 //	nlinfo("set matrix for %hu", (uint16)id());
 				
@@ -333,7 +336,6 @@ void CEntity::init(TEntity type, const std::string &name, sint32 totalScore, CRG
 
 	Type = type;
 	Name = name;
-	TotalScore = totalScore;
 	Color = color;
 	Texture = texture;
 	MeshName = meshname;
@@ -341,7 +343,8 @@ void CEntity::init(TEntity type, const std::string &name, sint32 totalScore, CRG
 	Ready = false;
 	interpolator().reset();
 	setIsLocal(isLocal);
-
+	this->totalScore(totalScore);
+	
 	CSoundManager::instance().registerEntity(SoundsDescriptor);
 }
 

@@ -43,27 +43,29 @@ CEntityState::CEntityState()
 {
 	this->position = CVector::Null;
 	this->onWater = false;
+	this->openCloseEvent = false;
 }
 
-CEntityState::CEntityState(const CVector &position,bool onWater)
+CEntityState::CEntityState(const CVector &position,bool onWater,bool openCloseEvent)
 {
 	this->position = position;
 	this->onWater = onWater;
+	this->openCloseEvent = openCloseEvent;
 }
 
 CEntityState CEntityState::operator+( const CEntityState &other ) const
 {
-	return CEntityState( position + other.position , onWater || other.onWater );
+	return CEntityState( position + other.position , onWater || other.onWater, openCloseEvent || other.openCloseEvent);
 }
 
 CEntityState operator *( double coef, CEntityState &value )
 {
-	return CEntityState( (float)coef * value.position , value.onWater );
+	return CEntityState( (float)coef * value.position , value.onWater , value.openCloseEvent);
 }
 
 CEntityState operator*( CEntityState &value, double coef )
 {
-	return CEntityState( (float)coef * value.position , value.onWater );	
+	return CEntityState( (float)coef * value.position , value.onWater, value.openCloseEvent);	
 }
 
 
@@ -86,6 +88,7 @@ CInterpolator::CInterpolator(double dt)
 	_currentDirection       = CVector::Null;
 	_currentSmoothDirection = CVector::Null;
 	_currentOnWater         = false;
+	_currentOpenCloseEvent  = false;
 	
 	_entity = 0;
 	_dt = dt;
@@ -137,7 +140,7 @@ void CInterpolator::addKey(CEntityInterpolatorKey key)
 		_addKeyTime += _dt; //time the key should arrived
 	}
 	double localTime = time - _startTime;
-	if(_addKeyTime>localTime)
+	if(_addKeyTime>localTime && ReplayFile.empty())
 	{
 		_startTime -=  _addKeyTime - localTime;
 		localTime = time - _startTime;
@@ -200,6 +203,10 @@ void CInterpolator::update()
 	_currentSpeed           = _speed(_serverTime);
 	_currentDirection       = _direction(_serverTime);
 	_currentSmoothDirection = _currentDirection;
+
+	 bool ocEvent = _openCloseEvent(_serverTime);
+	 _currentOpenCloseEvent = ocEvent && (_lastOpenClose!=ocEvent);
+	 _lastOpenClose=ocEvent;
 }
 
 
@@ -208,7 +215,15 @@ bool CInterpolator::outOfKey()
 	return _keys.size()<2 || _outOfKeyCount>10;
 }
 
-
+bool CInterpolator::openCloseEvent() 
+{
+	if(_currentOpenCloseEvent)
+	{
+		_currentOpenCloseEvent = false;
+		return true;
+	}
+	return false;
+}
 
 CVector CInterpolator::position() const
 {
@@ -236,6 +251,12 @@ bool CInterpolator::onWater() const
 }
 
 
+
+bool CInterpolator::_openCloseEvent(double time) 
+{
+	CEntityInterpolatorKey key = _keys.back();
+	return key.value().openCloseEvent;
+}
 
 CVector CInterpolator::_position(double time)
 {
@@ -289,6 +310,30 @@ CLinearInterpolator::~CLinearInterpolator()
 	
 }
 
+
+bool CLinearInterpolator::_openCloseEvent(double time) 
+{
+	double remainder = fmod(time,_dt);
+	double lerpPos = remainder / _dt;
+	deque<CEntityInterpolatorKey>::reverse_iterator it;
+	CEntityInterpolatorKey nextKey = _keys.back();
+	bool nextKeySet = false;
+	for(it=_keys.rbegin();it!=_keys.rend();it++)
+	{
+		CEntityInterpolatorKey key = *it;
+		if(key.serverTime()<time)
+		{
+			if(!nextKeySet)
+				break;
+			
+			return key.value().openCloseEvent;
+		}
+		nextKey = key;
+		nextKeySet = true;
+	}
+	_outOfKeyCount++;
+	return CInterpolator::_openCloseEvent(time);
+}
 
 
 CVector CLinearInterpolator::_position(double time)
@@ -414,7 +459,7 @@ void CExtendedInterpolator::update()
 	nlassert(_entity!=0);
 	if(_entity->openClose())
 	{
-		if(_entity->isLocal())
+		if(_entity->isLocal() && ReplayFile.empty() )
 		{
 			_currentMatrix.identity();
 			_currentMatrix.rotateZ((float)_currentFacing);

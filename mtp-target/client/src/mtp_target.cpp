@@ -117,10 +117,95 @@ void CMtpTarget::init()
 	
 	Controler = new CControler;
 
-	// start with intro task
-	CTaskManager::instance().add(CIntroTask::instance(), 60);
-
-	reset();
+	if (!ReplayFile.empty() && 1)
+	{
+		string levelName = "";
+		FILE *fp = fopen (ReplayFile.c_str(), "rt");
+		if (fp != 0)
+		{
+			uint nbplayer, eid, self, currentScore, totalScore;
+			char name[100];
+			char texture[100];
+			
+			fscanf (fp, "%d", &nbplayer);
+			fscanf (fp, "%s", &name);
+			levelName = name;
+			
+			// add players
+			for(uint i = 0; i < nbplayer; i++)
+			{
+				strcpy(texture,"");
+				fscanf (fp, "%d %s %d %d %d %s", &eid, &name, &self, &currentScore, &totalScore, &texture);
+				
+				CRGBA col(255,255,255);
+				string textureName = texture;
+				textureName = textureName.substr(1,textureName.size()-2);
+				CEntityManager::instance().add(eid, name, totalScore, col, textureName, false,self!=0);
+				
+				//CEntity *entity = new CEntity(CRGBA(255,255,255));
+				//entity->setId(eid);
+				//mtpTarget::instance().World.add(entity);
+				//entity->name = name;
+				//CEntityManager::instance()[eid].setScore(0, score);
+				
+				/*
+				if (self)
+				{
+					CEntityManager::instance()[eid].setIsLocal(true);
+				}
+				*/
+			}
+			//we can call this function safely since there no other thread in replay mode
+			CEntityManager::instance().flushAddRemoveList();
+			
+			char cmd[10];
+			float t =0;
+			float x, y, z;
+			while (!feof (fp))
+			{
+				fscanf (fp, "%d %s", &eid, &cmd);
+				if (string(cmd) == "PO")
+				{
+					fscanf (fp, "%f %f %f", &x, &y, &z);
+					
+					if (eid != 255)
+					{
+						CVector v(x, y, z);
+						//CEntityManager::instance()[eid].interpolator().addKey(CEntityInterpolatorKey(CEntityState(v,false),t));//.position(v,t, false); //put the entity in the good position
+						bool oc = false;
+						if(CEntityManager::instance()[eid].addOpenCloseKey)
+						{
+							CEntityManager::instance()[eid].addOpenCloseKey = false;
+							oc = true;
+						}
+						CEntityManager::instance()[eid].interpolator().addKey(CEntityInterpolatorKey(CEntityState(v,false,oc),t));//.position(v,t, false); //put the entity in the good position
+					}
+					else
+						nlwarning ("%d introuvable", eid);
+				}
+				else if (string(cmd) == "OC")
+				{
+					CEntityManager::instance()[eid].addOpenCloseKey = true;
+				}
+				else
+				{
+					nlwarning ("Unknown command %s for user %d", cmd, eid);
+				}
+			}
+			
+			fclose (fp);
+		}
+		
+		//CMtpTarget::instance().State = CMtpTarget::eReady;
+		CTaskManager::instance().add(CGameTask::instance(), 60);
+		CMtpTarget::instance().startSession(1, 60, levelName);
+	}
+	else
+	{
+		// start with intro task
+		CTaskManager::instance().add(CIntroTask::instance(), 60);
+		reset();
+	}
 }
 
 void CMtpTarget::error(string reason)
@@ -187,7 +272,8 @@ void CMtpTarget::update()
 		{
 			TimeBeforeSessionStart = 0;
 			CMtpTarget::instance().State = CMtpTarget::eGame;
-			CEntityManager::instance().sessionReset();			
+			if(ReplayFile.empty())
+				CEntityManager::instance().sessionReset();			
 		}
 	}
 	if(CMtpTarget::instance().State == CMtpTarget::eGame)
@@ -284,7 +370,10 @@ void CMtpTarget::loadNewSession()
 	}
 	
 	if (SessionFile)
+	{
 		fprintf(SessionFile, "%hu\n", (uint16)CEntityManager::instance().size());
+		fprintf(SessionFile, "%s\n",NewLevelName.c_str() );
+	}
 	
 	int self;
 	
@@ -294,11 +383,15 @@ void CMtpTarget::loadNewSession()
 		do
 		{
 			self = (eid == CMtpTarget::instance().controler().getControledEntity())?1:0;
-			fprintf(SessionFile, "%hu %s %d %d\n", (uint16)eid, CEntityManager::instance()[eid].name().c_str(), self, CEntityManager::instance()[eid].currentScore());
+			fprintf(SessionFile, "%hu %s %d %d %d '%s'\n", (uint16)eid, CEntityManager::instance()[eid].name().c_str(), self, CEntityManager::instance()[eid].currentScore(), CEntityManager::instance()[eid].totalScore(),CEntityManager::instance()[eid].texture().c_str());
 			eid = CEntityManager::instance().findNextEId(eid);
 		}
 		while(eid != CEntityManager::instance().findFirstEId());
 	}
+
+	if(!ReplayFile.empty())
+		mtpTarget::instance().everybodyReady();
+		
 }
 
 void CMtpTarget::startSession(float timeBeforeSessionStart, float timeBeforeTimeout, const string &levelName)
@@ -448,68 +541,6 @@ void mtpTarget::init()
 	}
 
 	FirstResetCamera = true;
-
-	if (!ReplayFile.empty())
-	{
-		FILE *fp = fopen (ReplayFile.c_str(), "rt");
-		if (fp != 0)
-		{
-			uint nbplayer, eid, self, totalScore;
-			char name[100];
-			
-			fscanf (fp, "%d", &nbplayer);
-
-			// add players
-			for(uint i = 0; i < nbplayer; i++)
-			{
-				fscanf (fp, "%d %s %d %d", &eid, &name, &self, &totalScore);
-
-				CRGBA col(255,255,255);
-				CEntityManager::instance().add(eid, name, totalScore, col, "", false,false);
-			
-				//CEntity *entity = new CEntity(CRGBA(255,255,255));
-				//entity->setId(eid);
-				//mtpTarget::instance().World.add(entity);
-				//entity->name = name;
-				//CEntityManager::instance()[eid].setScore(0, score);
-
-				if (self)
-				{
-					CEntityManager::instance()[eid].setIsLocal(true);
-				}
-			}
-
-			char cmd[10];
-			float t, x, y, z;
-			while (!feof (fp))
-			{
-				fscanf (fp, "%d %s", &eid, &cmd);
-				if (string(cmd) == "PO")
-				{
-					fscanf (fp, "%f %f %f %f", &t, &x, &y, &z);
-
-					if (eid != 255)
-					  {
-					    CVector v(x, y, z);
-						CEntityManager::instance()[eid].interpolator().addKey(CEntityInterpolatorKey(CEntityState(v,false),t));//.position(v,t, false); //put the entity in the good position
-					  }
-					else
-						nlwarning ("%d introuvable", eid);
-				}
-				else if (string(cmd) == "OC")
-				{
-				}
-				else
-				{
-					nlwarning ("Unknown command %s for user %d", cmd, eid);
-				}
-			}
-
-			fclose (fp);
-		}
-
-		CMtpTarget::instance().State = CMtpTarget::eReady;
-	}
 
 	//
 

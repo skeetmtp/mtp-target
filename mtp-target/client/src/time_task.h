@@ -46,6 +46,8 @@ public:
 	virtual void render() { }
 	virtual void release() { }
 
+	virtual void reset();
+
 	virtual std::string name() { return "CTimeTask"; }
 	
 	// Current time in second
@@ -66,6 +68,7 @@ private:
 
 	double Time, DeltaTime, OldTime;
 	double FirstTime;
+	bool   FirstUpdate;
 };
 
 #endif

@@ -168,7 +168,7 @@ static void cbOpenClose(CNetMessage &msgin)
 	// check if the player exists
 	if(!CEntityManager::instance().exist(eid)) { nlwarning("The eid doesn't exist"); return; }
 	
-	CEntityManager::instance()[eid].swapOpenClose();
+	CEntityManager::instance()[eid].addOpenCloseKey = true;
 
 	if(SessionFile) fprintf(SessionFile, "%hu OC\n", (uint16)eid);
 }
@@ -251,8 +251,16 @@ static void cbUpdate(CNetMessage &msgin)
 				CEntityManager::instance()[eid].LastSent2MePos = pos;
 				if(DisplayDebug)
 					nlinfo("TCP update client %hu a %g %g %g ping %hu", (uint16)eid, pos.x, pos.y, pos.z);
+				if(SessionFile) 
+					fprintf(SessionFile, "%hu PO %f %f %f\n", (uint16)eid, pos.x, pos.y, pos.z);
 				//TODO remove rsxTime param
-				CEntityManager::instance()[eid].interpolator().addKey(CEntityInterpolatorKey(CEntityState(pos,false),rsxTime));
+				bool oc = false;
+				if(CEntityManager::instance()[eid].addOpenCloseKey)
+				{
+					CEntityManager::instance()[eid].addOpenCloseKey = false;
+					oc = true;
+				}
+				CEntityManager::instance()[eid].interpolator().addKey(CEntityInterpolatorKey(CEntityState(pos,false,oc),rsxTime));
 				//CEntityManager::instance()[eid].ping(ping);
 			}
 			else
@@ -331,7 +339,16 @@ static void cbUpdateOne(CNetMessage &msgin)
 			CEntityManager::instance()[eid].LastSent2MePos = pos;
 			if(DisplayDebug)
 				nlinfo("TCP updateOne client %hu a %g %g %g ping %hu", (uint16)eid, pos.x, pos.y, pos.z);
-			CEntityManager::instance()[eid].interpolator().addKey(CEntityInterpolatorKey(CEntityState(pos,false),rsxTime));
+			if(SessionFile) 
+				fprintf(SessionFile, "%hu PO %f %f %f\n", (uint16)eid, pos.x, pos.y, pos.z);
+			
+			bool oc = false;
+			if(CEntityManager::instance()[eid].addOpenCloseKey)
+			{
+				CEntityManager::instance()[eid].addOpenCloseKey = false;
+				oc = true;
+			}
+			CEntityManager::instance()[eid].interpolator().addKey(CEntityInterpolatorKey(CEntityState(pos,false,oc),rsxTime));
 			//CEntityManager::instance()[eid].ping(ping);
 		}
 		/*
@@ -376,7 +393,16 @@ static void cbFullUpdate(CNetMessage &msgin)
 			if(DisplayDebug)
 				nlinfo("TCP updateFull client %hu a %g %g %g ping %hu", (uint16)eid, pos.x, pos.y, pos.z, ping);
 
-			CEntityManager::instance()[eid].interpolator().addKey(CEntityInterpolatorKey(CEntityState(pos,false),rsxTime));
+			if(SessionFile) 
+				fprintf(SessionFile, "%hu PO %f %f %f\n", (uint16)eid, pos.x, pos.y, pos.z);
+
+			bool oc = false;
+			if(CEntityManager::instance()[eid].addOpenCloseKey)
+			{
+				CEntityManager::instance()[eid].addOpenCloseKey = false;
+				oc = true;
+			}
+			CEntityManager::instance()[eid].interpolator().addKey(CEntityInterpolatorKey(CEntityState(pos,false,oc),rsxTime));
 			CEntityManager::instance()[eid].ping(ping);
 		}
 		/*

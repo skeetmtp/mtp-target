@@ -283,6 +283,10 @@ void CControler::update()
 			//mtNetSendCommand("reset");
 		}
 		
+		if (C3DTask::instance().kbPressed(KeyPAUSE) && !ReplayFile.empty())
+		{
+			CTimeTask::instance().reset();
+		}
 		if (C3DTask::instance().kbPressed(KeyF7))
 		{
 			FollowEntity = !FollowEntity;
@@ -341,6 +345,8 @@ void CControler::update()
 		if (C3DTask::instance().kbPressed(KeyLCONTROL) || C3DTask::instance().kbPressed(KeyRCONTROL) || C3DTask::instance().kbPressed(KeyCONTROL))
 		{
 			CNetworkTask::instance().openClose();
+			//if(isLocal())
+				CMtpTarget::instance().controler().swapOpenClose();
 		}
 	}
 

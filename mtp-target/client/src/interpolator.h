@@ -53,9 +53,10 @@ class CEntityState
 {
 public:
 	CEntityState();
-	CEntityState(const CVector &position, bool onWater);
+	CEntityState(const CVector &position, bool onWater, bool openClose);
 	CVector position;
 	bool    onWater;
+	bool    openCloseEvent;
 	CEntityState operator+( const CEntityState &other ) const;
 	friend CEntityState operator*( double coef, CEntityState &value );
 	friend CEntityState operator*( CEntityState &value, double coef );
@@ -104,6 +105,7 @@ public:
 	virtual ~CInterpolator();
 	virtual void update();
 
+	bool    openCloseEvent();
 	CVector	position() const;
 	CVector	speed() const;
 	CVector direction() const;
@@ -124,6 +126,7 @@ public:
 	void entity(CEntity *entity);
 	
 protected:
+	virtual bool _openCloseEvent(double time);
 	virtual CVector _position(double time);
 	virtual CVector _speed(double time);
 	virtual CVector _direction(double time);
@@ -153,6 +156,9 @@ protected:
 	static const double _minLct;
 	static const double _maxLct;
 
+	bool _lastOpenClose;
+	bool _currentOpenCloseEvent;
+	
 	CEntity *_entity;
 private:
 };
@@ -164,6 +170,7 @@ public:
 	CLinearInterpolator(double dt);
 	virtual ~CLinearInterpolator();
 protected:
+	virtual bool _openCloseEvent(double time);
 	virtual CVector _position(double time);
 	virtual CVector _speed(double time);
 	virtual CVector _direction(double time);
