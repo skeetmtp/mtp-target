@@ -426,6 +426,7 @@ static void nearCallback(void *data, dGeomID o1, dGeomID o2)
 				entity->collideEntity.insert(entity2);
 				entity->ColState += " CC";
 			}
+			dJointDestroy(c);
 		}
 	}
 }
@@ -715,6 +716,8 @@ void releasePhysics()
 		dWorldDestroy(World);
 		World = 0;
 	}
+
+	 dCloseODE();
 }
 
 
