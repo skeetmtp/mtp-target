@@ -99,7 +99,7 @@ void CChatTask::update()
 		if (ChatInput.size() >= CHAT_COLUMNS - 10)
 			continue;
 		
-		if (isprint(*src))
+		//if (isprint(*src))
 		{
 			ChatInput += *src;
 		}
