@@ -263,15 +263,15 @@ static void cbWSClientConnected (CMessage &msgin, const std::string &serviceName
 	}
 
 	// row[4] = State
-	if(con == 1 && string(row[4]) != string("Offline"))
+	if(con == 1 && string(row[4]) != string("Waiting"))
 	{
-		nlwarning ("Id %d is not offline", Id);
-		Output->displayNL ("###: %3d User isn't offline, his state is '%s'", Id, row[4]);
+		nlwarning ("Id %d is not waiting but is %s", Id, row[4]);
+		Output->displayNL ("###: %3d User isn't waiting, his state is '%s'", Id, row[4]);
 		return;
 	}
 	else if(con == 0 && string(row[4]) != string ("Online"))
 	{
-		nlwarning ("Id %d wasn't connected on a shard", Id);
+		nlwarning ("Id %d wasn't connected on a shard but is %s", Id, row[4]);
 		Output->displayNL ("###: %3d User wasn't connected on a shard, his state is '%s'", Id, row[4]);
 		return;
 	}
