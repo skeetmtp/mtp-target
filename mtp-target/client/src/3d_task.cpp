@@ -32,6 +32,12 @@
 	extern HINSTANCE ghInstance;
 #endif
 
+#include <3d/mesh.h>
+#include <3d/shape.h>
+#include <3d/material.h>
+#include <3d/register_3d.h>
+	
+
 #include "task_manager.h"
 #include "3d_task.h"
 #include "editor_task.h"
