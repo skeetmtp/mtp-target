@@ -86,7 +86,7 @@
 
 	$serverUptime = mktime() - $lastRestartTime;
 
-	printf("server uptime : ");
+	printf("Server uptime : ");
 	if(date("z",$serverUptime)!="0")
 		printf("%s day(s) %s<br>\n",date("z",$serverUptime),date("H:i:s",$serverUptime));
 	else
