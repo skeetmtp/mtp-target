@@ -24,6 +24,7 @@ LDFLAGS        = -L$(HOME)/install/$(DIR_DBG_$(DBG))/lib \
 		$(FMOD_LDFLAGS) \
 		-L$(ODE_LIB) \
 		-L$(OPCODE_LIB) \
+		-L$(NEL_LIB) \
 		-lnelnet \
 		-lfreetype \
 		-lnel3d \
@@ -41,7 +42,8 @@ LDFLAGS        = -L$(HOME)/install/$(DIR_DBG_$(DBG))/lib \
 		-lpthread \
 		-lcrypt \
 		-ljpeg \
-		-llualib50
+		-llualib50 \
+		-lrt
 
 #############################################################################
 

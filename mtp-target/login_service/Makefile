@@ -4,6 +4,9 @@
 # in CXXFLAGS and LDFLAGS
 #
 
+# Global variables
+include ../Variables.mk
+
 # The names of the executables
 CXX            = g++
 RM             = rm -f
@@ -28,6 +31,7 @@ CXXFLAGS       = $(FLAGS_DBG_$(DBG)) \
 # The flags for the linker
 LDFLAGS      = 	-L$(HOME)/install/$(DIR_DBG_$(DBG))/lib \
 		-L/usr/lib \
+		-L$(NEL_LIB) \
 		-lnelnet \
 		-lnelmisc \
 		-lc \
@@ -37,6 +41,7 @@ LDFLAGS      = 	-L$(HOME)/install/$(DIR_DBG_$(DBG))/lib \
 		-lstlport \
 		-lpthread \
 		-lcrypt \
+		-lrt \
 		-lmysqlclient
 
 #############################################################################

@@ -23,6 +23,7 @@ CXXFLAGS       = $(FLAGS_CMN) $(FLAGS_DBG_$(DBG)) \
 LDFLAGS        = -L$(HOME)/install/$(DIR_DBG_$(DBG))/lib \
 		-L$(ODE_LIB) \
 		-L$(OPCODE_LIB) \
+		-L$(NEL_LIB) \
 		-lnelnet \
 		-lfreetype \
 		-lnel3d \
@@ -40,7 +41,8 @@ LDFLAGS        = -L$(HOME)/install/$(DIR_DBG_$(DBG))/lib \
 		-lcrypt \
 		-ljpeg \
 		-llualib50 \
-		-lode 
+		-lode \
+		-lrt
 		
 #############################################################################
 
