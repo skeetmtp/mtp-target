@@ -270,6 +270,10 @@ void C3DTask::clear()
 	Driver->clearBuffers (ClearColor);
 }
 
+void C3DTask::clearColor(CRGBA color)
+{
+	ClearColor = color;
+}
 void C3DTask::captureCursor(bool b)
 {
 	CGuiObjectManager::instance().mouseListener().captureCursor(b);
@@ -289,3 +293,4 @@ void C3DTask::captureCursor(bool b)
 	}
 	*/
 }
+

@@ -215,6 +215,21 @@ CLevel::CLevel(const string &filename)
 	luaGetGlobalVariable(LuaState, sunDirection);
 	C3DTask::instance().scene().setSunDirection(sunDirection);
 	
+	CLuaRGBA clearColor;
+	CConfigFile::CVar v;
+	v = CConfigFileTask::instance().configFile().getVar("ClearColor");
+	nlassert(v.size()==4);
+	clearColor.set(v.asInt(0),v.asInt(1),v.asInt(2),v.asInt(3));	
+	luaGetGlobalVariable(LuaState, clearColor);
+	C3DTask::instance().clearColor(clearColor);
+	
+	double fogDistMin = CConfigFileTask::instance().configFile().getVar("FogDistMin").asFloat();
+	luaGetGlobalVariable(LuaState, fogDistMin);
+	double fogDistMax = CConfigFileTask::instance().configFile().getVar("FogDistMax").asFloat();
+	luaGetGlobalVariable(LuaState, fogDistMax);
+	CLuaRGBA fogColor = clearColor;
+	luaGetGlobalVariable(LuaState, fogColor);
+	C3DTask::instance().driver().setupFog(fogDistMin,fogDistMax,fogColor);
 	
 	string skyShapeFileName;
 	luaGetGlobalVariable(LuaState, skyShapeFileName);

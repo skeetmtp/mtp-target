@@ -160,7 +160,7 @@ void CWaterTask::init()
 		WaterShape->setHeightMap(0, heightMap);
 		WaterShape->setHeightMap(1, heightMap2);
 
-		WaterShape->setColorMap(colorMap);
+		//WaterShape->setColorMap(colorMap);
 
 		WaterShape->setWaterPoolID(0);
 
