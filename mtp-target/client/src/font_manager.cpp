@@ -109,6 +109,8 @@ void CFontManager::release()
 
 void CFontManager::littlePrintf(const CRGBA &col, float x, float y, const char *format ...)
 {
+	H_AUTO(littlePrintf2);
+
 	char *str;
 	NLMISC_CONVERT_VARGS (str, format, 256);
 
@@ -122,6 +124,8 @@ void CFontManager::littlePrintf(const CRGBA &col, float x, float y, const char *
 
 void CFontManager::littlePrintf(float x, float y, const char *format ...)
 {
+	H_AUTO(littlePrintf);
+
 	char *str;
 	NLMISC_CONVERT_VARGS (str, format, 256);
 
@@ -136,6 +140,8 @@ void CFontManager::littlePrintf(float x, float y, const char *format ...)
 
 void CFontManager::printf(const NLMISC::CRGBA &col, float x, float y, float scale, const char *format, ...)
 {
+	H_AUTO(printf);
+
 	char *str;
 	NLMISC_CONVERT_VARGS (str, format, 256);
 	
@@ -198,6 +204,8 @@ void CFontManager::printf(const NLMISC::CRGBA &col, float x, float y, float scal
 
 void CFontManager::printf3D(const NLMISC::CRGBA &col, const NLMISC::CVector &pos, float scale, const char *format, ...)
 {
+	H_AUTO(printf3D);
+	
 	char *str;
 	NLMISC_CONVERT_VARGS (str, format, 256);
 
