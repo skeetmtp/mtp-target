@@ -234,6 +234,7 @@ void CEntity::id(uint8 nid)
 
 void CEntity::reset()
 {
+	//nlinfo(">> 0x%p::CEntity::reset()",this);
 	interpolator().entity(this);
 	
 	if(!TraceParticle.empty())
@@ -243,13 +244,14 @@ void CEntity::reset()
 	}
 	if(!CloseMesh.empty())
 	{
+		//nlinfo(">>   C3DTask::instance().scene().deleteInstance(CloseMesh);");
 		C3DTask::instance().scene().deleteInstance(CloseMesh);
-		CloseMesh.detach();
+		//CloseMesh.detach();
 	}
 	if(!OpenMesh.empty())
 	{
 		C3DTask::instance().scene().deleteInstance(OpenMesh);
-		OpenMesh.detach();
+		//OpenMesh.detach();
 	}
 
 	CSoundManager::instance().unregisterEntity(SoundsDescriptor);
@@ -289,6 +291,7 @@ void CEntity::init(TEntity type, const std::string &name, sint32 totalScore, CRG
 
 void CEntity::load3d()
 {
+	//nlinfo(">> 0x%p::CEntity::load3d()",this);
 	string TextureFilename;
 	bool ok;
 	if(!Texture.empty())
