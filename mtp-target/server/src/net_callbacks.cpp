@@ -61,6 +61,7 @@ static void cbChat(CClient *c, CNetMessage &msgin)
 
 static void cbCommand(CClient *c, CNetMessage &msgin)
 {
+	nlinfo("cbCommand");
 	string cmd;
 	msgin.serial(cmd);
 
@@ -94,26 +95,29 @@ static void cbLogin(CClient *c, CNetMessage &msgin)
 	string error;
 	
 	nlinfo("New client login");
-
+	
 	// first, check the password
 
 	msgin.serial(networkVersion); 
 
 	if(networkVersion != CNetwork::instance().version())
 	{
-		string reason = toString("'%s' login failed: bad client version(%d)! Get latest one on Mtp Target web site", login.c_str(), networkVersion);
+		nlinfo("bad version %d",networkVersion);
+		string reason = toString("login failed: bad client version(%d)! Get latest one on Mtp Target web site", networkVersion);
 		CNetMessage msgout(CNetMessage::Error);
 		msgout.serial(reason);
 		CNetwork::instance().send(c->id(), msgout);
 		return;
 	}
 
+	nlinfo("Version ok");
 	// now we know the version is compatible, get them
 
 	msgin.serial(cookie, login, password, color, texture);
 
 	login = strlwr(login);
 
+	nlinfo("cookie:%s login:%s pwd:%s texture:%s color:%d %d %d %d",cookie.c_str(),login.c_str(),password.c_str(),texture.c_str(),color.R,color.G,color.B,color.A);
 	if(error.empty())
 	{
 		if(cookie.empty())
@@ -182,6 +186,7 @@ static void cbLogin(CClient *c, CNetMessage &msgin)
 
 static void cbOpenClose(CClient *c, CNetMessage &msgin)
 {
+	nlinfo("cbOpenClose");
 	TTime currentTime = CTime::getLocalTime();
 	
 	if(CSessionManager::instance().endTime() != 0 || CSessionManager::instance().startTime() == 0 || currentTime < CSessionManager::instance().startTime())
@@ -202,6 +207,7 @@ static void cbOpenClose(CClient *c, CNetMessage &msgin)
 
 static void cbEditMode(CClient *c, CNetMessage &msgin)
 {
+	nlinfo("cbEditMode");
 	uint8 editMode;
 	msgin.serial(editMode);
 	if(c->isAdmin())
@@ -210,6 +216,7 @@ static void cbEditMode(CClient *c, CNetMessage &msgin)
 
 static void cbUpdateElement(CClient *c, CNetMessage &msgin)
 {
+	nlinfo("cbUpdateElement");
 	uint8 elementType;
 	msgin.serial(elementType);
 	uint8 elementId;
