@@ -9,10 +9,10 @@
 
 <p>Cela fait maintenant plusieurs années que le projet Mtp Target existe et de
 nouveaux joueurs arrivent tous les jours. Ce jeu a toujours été gratuit et cela
-ne permet plus aujourd'hui d'avoir une qualité de jeu suffisante. Jusqu'à lors,
-Nous avions toujours réussi à trouver des serveurs gratuits pour stoquer nos
+ne permet plus aujourd'hui d'avoir une qualité de jeu suffisante. Jusqu'alors,
+nous avions toujours réussi à trouver des serveurs gratuits pour stoquer nos
 bases de données, les serveurs de jeux, les serveurs pour les pages web mais
-cela entraine de nombreux desagrement. Par exemple, dû à un serveur qui
+cela entraine de nombreux désagrements. Par exemple, en raison d'un serveur qui
 nous à été repris, nous avons perdu une partie des scores. Le serveur de jeu est
 actuellement hébergé chez un particulier avec une ligne ADSL qui est partagé
 avec d'autres activités et qui rend le jeu très instable (quand il n'est pas
@@ -112,11 +112,11 @@ Lecroart Vianney</td></tr>
 
 <p>Mtp Target already exists for a few years and there are new players everydays.
 This game has always been free (as free beer and as freedom) and now it's not
-possible to continue this way due to the bad game quality. We always found free
+possible to continue this way since it implies a bad service quality. We always found free
 servers to host our database, game servers, web pages but we had lot of trouble.
 For example, we lost one of our free server and also lost the player's scores.
-Currently, the game server is hosted by a guy with his ADSL connection. It's
-really unstable because the guy also does other things that generate some lag and
+Currently, the game server is hosted on someone's home ADSL connection. It's
+really unstable because this person also does other things generating some lag and
 also some downtime.</p>
 
 <p>To have a better game quality, we need our own servers and bandwidth and for
@@ -127,8 +127,8 @@ decided to keep the game completely free and ask you to help us.</p>
 money will be used to host servers and increase the game quality. If we don't
 have enough money, this game will never be better and perhaps will close :(</p>
 
-<p>You are free to choose what you want to give, we setuped some limits that if
-you to go throw will enable you to be recognize as an official Mtp Target supporter.
+<p>You are free to choose what you want to give, we setuped some step, going throw 
+will enable you to be recognize as an official Mtp Target supporter.
 If you give 15 euros or more, your name will be displayed in the hall of supporters
 (if you want to be anonymous, just tell us). Of course we also accept if you give
 less than 15 euros.</p>
