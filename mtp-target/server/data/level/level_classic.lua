@@ -8,6 +8,12 @@ sunDiffuseColor = CRGBA(255, 255, 255, 255);
 sunSpecularColor = CRGBA(255, 255, 255, 255);
 sunDirection = CVector(-1,0,-1);
 
+clearColor = CRGBA(30, 45, 90, 0);
+
+fogDistMin = 0;
+fogDistMax = 150;
+fogColor = clearColor;
+
 Cameras =
 {
 	CVector(0, 3, 10),
