@@ -34,6 +34,7 @@
 #include <nel/net/service.h>
 #include <nel/net/udp_sock.h>
 
+#include "time.h"
 #include "main.h"
 #include "level.h"
 #include "physics.h"
