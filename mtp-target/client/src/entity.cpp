@@ -244,11 +244,13 @@ void CEntity::reset()
 	if(!CloseMesh.empty())
 	{
 		nlinfo(">>   C3DTask::instance().scene().deleteInstance(CloseMesh);");
+		CloseMesh.hide();
 		//C3DTask::instance().scene().deleteInstance(CloseMesh);
 	}
 	
 	if(!OpenMesh.empty())
 	{
+		OpenMesh.hide();
 		//C3DTask::instance().scene().deleteInstance(OpenMesh);
 	}
 
