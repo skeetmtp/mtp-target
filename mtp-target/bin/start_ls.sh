@@ -1,3 +1,5 @@
 #!/bin/sh -
 
-nohup ../login_service/login_service
+cd ../login_service
+nohup ./login_service
+
