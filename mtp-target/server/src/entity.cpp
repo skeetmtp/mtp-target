@@ -210,7 +210,7 @@ void CEntity::startPointId(uint8 id)
 	dBodySetPosition(Body, startPos.x, startPos.y, startPos.z);
 	dGeomSetPosition(Geom, startPos.x, startPos.y, startPos.z);
 	if(type()==CEntity::Client)
-		if(MTPT_NETWORK_VERSION>=2)
+		if(CNetwork::instance().version()>=2)
 		{
 			string code = "";
 			code += "getEntityById(";
@@ -260,7 +260,7 @@ void CEntity::update()
 	if(SendCollideWhenFly)
 	{
 		SendCollideWhenFly = false;
-		if(MTPT_NETWORK_VERSION>=2)
+		if(CNetwork::instance().version()>=2)
 		{
 			CNetMessage msgout(CNetMessage::CollideWhenFly);
 			uint8 eid = id();

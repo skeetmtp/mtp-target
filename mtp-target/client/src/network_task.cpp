@@ -197,7 +197,8 @@ string CNetworkTask::connect(CInetAddress *ip)
 		string password = CConfigFileTask::instance().configFile().getVar("Password").asString();
 		CRGBA color(CConfigFileTask::instance().configFile().getVar("EntityColor").asInt(0), CConfigFileTask::instance().configFile().getVar("EntityColor").asInt(1), CConfigFileTask::instance().configFile().getVar("EntityColor").asInt(2));
 		string texture = CConfigFileTask::instance().configFile().getVar("EntityTexture").asString();
-		uint32 networkVersion = MTPT_NETWORK_VERSION;
+		uint32 networkVersion = CConfigFileTask::instance().configFile().getVar("NetworkVersion").asInt();
+		//uint32 networkVersion = MTPT_NETWORK_VERSION;
 		msgout.serial(networkVersion, Cookie, Login, password, color, texture);
 		CNetworkTask::instance().send(msgout);
 	}

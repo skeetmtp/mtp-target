@@ -25,7 +25,6 @@
 #ifndef MT_NETWORK_TASK_H
 #define MT_NETWORK_TASK_H
 
-
 //
 // Includes
 //

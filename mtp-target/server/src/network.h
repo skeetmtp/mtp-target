@@ -79,6 +79,8 @@ public:
 
 	CNetworkTask &networkTask() {return *NetworkTask;};
 
+	uint32 version() {return Version;}
+
 private:
 
 	CNetworkTask		*NetworkTask;
@@ -90,6 +92,7 @@ private:
 
 	uint32 updateCount;
 	float MinDeltaToSendFullUpdate;
+	uint32 Version;
 };
 
 

@@ -443,7 +443,7 @@ int CLuaEngine::execLuaOnAllClient(lua_State *L)
 	unsigned int len;
 	const char *text = luaL_checklstring(L, 1, &len);
 	string code(text);
-	if(MTPT_NETWORK_VERSION>=2)
+	if(CNetwork::instance().version()>=2)
 	{
 		//nlwarning("lua : execLuaOnAllClient : %s",code.c_str());
 		CNetMessage msgout(CNetMessage::ExecLua);
@@ -464,7 +464,7 @@ int CLuaEngine::execLuaOnOneClient(lua_State *L)
 	if(!e || e->type() != CEntity::Client)
 		return 0;
 
-	if(MTPT_NETWORK_VERSION>=2)
+	if(CNetwork::instance().version()>=2)
 	{
 		//nlwarning("lua : execLuaOnAllClient : %s",code.c_str());
 		CNetMessage msgout(CNetMessage::ExecLua);
@@ -481,7 +481,7 @@ int CLuaEngine::execLuaOnAllButOneClient(lua_State *L)
 	unsigned int len;
 	const char *text = luaL_checklstring(L, 2, &len);
 	string code(text);
-	if(MTPT_NETWORK_VERSION>=2)
+	if(CNetwork::instance().version()>=2)
 	{
 		//nlwarning("lua : execLuaOnAllClient : %s",code.c_str());
 		CNetMessage msgout(CNetMessage::ExecLua);

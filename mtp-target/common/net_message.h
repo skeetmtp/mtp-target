@@ -35,7 +35,6 @@
 
 #include <nel/net/tcp_sock.h>
 
-#define MTPT_NETWORK_VERSION 2
 
 //
 // Classes

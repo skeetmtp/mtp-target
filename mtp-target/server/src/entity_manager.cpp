@@ -426,7 +426,7 @@ void CEntityManager::login(CEntity *e)
 		msgout.serial(s);
 		string CurrentLevel="";
 		/* currently client crash when startsession on login, btw startsession on login is a bad idea
-		if(CLevelManager::instance().haveCurrentLevel())// && MTPT_NETWORK_VERSION>=2)
+		if(CLevelManager::instance().haveCurrentLevel())// && CNetwork::instance().version()>=2)
 			CurrentLevel = CLevelManager::instance().currentLevel().fileName();
 		*/
 		msgout.serial(CurrentLevel);

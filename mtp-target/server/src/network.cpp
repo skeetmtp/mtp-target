@@ -187,6 +187,7 @@ void CNetworkTask::run()
 
 CNetwork::CNetwork() : NetworkTask(0), NetworkThread(0)
 {
+	Version = 0;
 }
 
 void CNetwork::init()
@@ -204,6 +205,7 @@ void CNetwork::init()
 	updateCount = 0;
 
 	MinDeltaToSendFullUpdate = NLNET::IService::getInstance()->ConfigFile.getVar("MinDeltaToSendFullUpdate").asFloat();
+	Version = NLNET::IService::getInstance()->ConfigFile.getVar("NetworkVersion").asInt();
 }
 
 void CNetwork::reset()
