@@ -394,7 +394,7 @@ void CHudTask::setDisplayViewedName(const string &name)
 	_viewedName = name;
 }
 
-void CHudTask::addMessage(CHudMessage &newm)
+void CHudTask::addMessage(const CHudMessage &newm)
 {
 	list<CHudMessage>::iterator it;
 	list<CHudMessage>::iterator it2delete;

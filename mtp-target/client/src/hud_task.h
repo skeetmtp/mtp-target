@@ -77,7 +77,7 @@ public:
 	virtual std::string name() { return "CHudTask"; }
 
 	void setDisplayViewedName(const std::string &name);
-	void CHudTask::addMessage(CHudMessage &message);
+	void CHudTask::addMessage(const CHudMessage &message);
 
 	std::list<CHudMessage> messages;
 private:
