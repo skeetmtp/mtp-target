@@ -5,10 +5,16 @@
      $image_dir = "http://mtptarget.free.fr";	
 
 //color
+     //switch header color when header change
+     /*
      $table_newsheader_bgcolor_color = "#666666";
      $table_newsheader_head_color = "#FFCC00";
      $table_newsheader_row_color = "#ffffcc";
-
+     */
+     $table_newsheader_bgcolor_color = "#666666";
+     $table_newsheader_head_color = "#007BFF";
+     $table_newsheader_row_color = "#CCDAFF";
+     
      $table_news_bgcolor_color = "#666666";
      $table_news_head_color = "#FFEEDD";
      $table_news_row_color = "#FFFAEA";
