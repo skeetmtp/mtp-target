@@ -73,6 +73,7 @@ CModuleCommon::CModuleCommon() : CEditableElementCommon()
 { 
 	_type = Module;
 	Bounce = false;
+	Collide = true;
 	Score = 0;
 	Accel = 0;
 	Friction = 0;
@@ -103,6 +104,11 @@ void CModuleCommon::display(CLog *log) const
 void CModuleCommon::bounce(bool b) 
 {
 	Bounce = b; 
+}
+
+void CModuleCommon::collide(bool c) 
+{
+	Collide = c; 
 }
 
 void CModuleCommon::enabled(bool e) 

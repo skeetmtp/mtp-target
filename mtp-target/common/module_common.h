@@ -54,6 +54,9 @@ public:
 	// accessors
 	bool			bounce() const { return Bounce; }
 	void			bounce(bool b);
+
+	bool			collide() const { return Collide; }
+	void			collide(bool c);
 	
 	virtual bool	enabled() const { return Enabled; }
 	virtual void	enabled(bool b);
@@ -77,6 +80,7 @@ public:
 protected:
 	//virtual void init();
 
+	bool				Collide;
 	bool				Bounce;
 	sint32				Score;
 	float				Accel;
