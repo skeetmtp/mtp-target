@@ -167,8 +167,8 @@ void CNetworkTask::run()
 			}
 		}
 
-		//SKEET disable : let only main thread loop do the flush job ?
-		//CEntityManager::instance().flushAddRemoveList();
+		//TODO SKEET : check why we cannot let only main thread loop do the flush job ?
+		CEntityManager::instance().flushAddRemoveList();
 		
 	}
 }
