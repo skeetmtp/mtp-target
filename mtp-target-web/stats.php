@@ -1,11 +1,18 @@
 <?php
 ?>
-<h3>Stats</h3>
+<h3>Official easy server statistics</h3>
 <ul>
-<li><a href="http://mtp-target.dyndns.org/mtp-target/stats.php">Official server login stats</a></li>
-<li><a href="http://mtp-target.dyndns.org/mtp-target/highscore.php">Score stats</a></li>
-<li><a href="http://cia.navi.cx/stats/project/mtp-target">CVS Stats</a></li>
-<li><a href="http://stats.mtp-target.org/">Web site stats</a></li>
+<li><a href="http://mtp-target.dyndns.org/mtp-target/stats.php?server=easy">Login</a></li>
+<li><a href="http://mtp-target.dyndns.org/mtp-target/highscore.php?server=easy">Highscores</a></li>
 </ul>
-
-
+<h3>Official advanced server statistics</h3>
+<ul>
+<li><a href="http://mtp-target.dyndns.org/mtp-target/stats.php?server=adv">Login</a></li>
+<li><a href="http://mtp-target.dyndns.org/mtp-target/highscore.php?server=adv">Highscores</a></li>
+</ul>
+<h3>Other statistics</h3>
+<ul>
+<li><a href="http://cia.navi.cx/stats/project/mtp-target">CVS</a></li>
+<li><a href="http://stats.mtp-target.org/">Web site</a></li>
+<li><a href="http://mtp-target.dyndns.org/mtp-target/view_custom.php">User textures</a></li>
+</ul>

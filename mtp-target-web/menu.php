@@ -60,7 +60,7 @@
     "screenshot"  => array ("url"=>"?page=screenshot.php", "name"=>$menuLinkText_Screenshot),
     "documents"  => array ("url"=>"?page=howto.php", "name"=>$menuLinkText_Documents),
     "forum"  => array ("url"=>"/forum", "name"=>$menuLinkText_Forum),
-    "compatibility"  => array ("url"=>"?page=compatibility-list.php", "name"=>$menuLinkText_Compatibility),
+//    "compatibility"  => array ("url"=>"?page=compatibility-list.php", "name"=>$menuLinkText_Compatibility),
     "todo"  => array ("url"=>"?page=todo-manager.php", "name"=>$menuLinkText_Todo),
     "stats"  => array ("url"=>"?page=stats.php", "name"=>$menuLinkText_Stats),
     "contact"  => array ("url"=>"?page=contact.php", "name"=>$menuLinkText_Contact),
