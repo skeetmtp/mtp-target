@@ -8,12 +8,12 @@ CFG=Server - Win32 DebugFast
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE 
-!MESSAGE NMAKE /f "server.mak".
+!MESSAGE NMAKE /f "mtp_target_service.mak".
 !MESSAGE 
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "server.mak" CFG="Server - Win32 DebugFast"
+!MESSAGE NMAKE /f "mtp_target_service.mak" CFG="Server - Win32 DebugFast"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
@@ -55,7 +55,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /machine:I386
-# ADD LINK32 opcode.lib ode.lib nlmisc_r.lib nlnet_r.lib zlib.lib freetype.lib lua.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /machine:I386 /nodefaultlib:"libc.lib" /out:"Release/mtp_target_service.exe"
+# ADD LINK32 opcode.lib ode.lib nlmisc_r.lib nlnet_r.lib zlib.lib freetype.lib lua.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /machine:I386 /nodefaultlib:"libc.lib"
 
 !ELSEIF  "$(CFG)" == "Server - Win32 Debug"
 
@@ -81,7 +81,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 ode.lib opcode.lib nlmisc_d.lib nlnet_d.lib zlib.lib freetype.lib lua.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /debug /machine:I386 /nodefaultlib:"libc.lib" /out:"Debug/mtp_target_service.exe" /pdbtype:sept
+# ADD LINK32 ode.lib opcode.lib nlmisc_d.lib nlnet_d.lib zlib.lib freetype.lib lua.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /debug /machine:I386 /nodefaultlib:"libc.lib" /pdbtype:sept
 
 !ELSEIF  "$(CFG)" == "Server - Win32 ReleaseDebug"
 
@@ -109,7 +109,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 nlmisc_r.lib nlnet_r.lib ode.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /machine:I386 /nodefaultlib:"libc.lib"
-# ADD LINK32 ode.lib opcode.lib nlmisc_rd.lib nlnet_rd.lib zlib.lib freetype.lib lua.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /debug /machine:I386 /nodefaultlib:"libc.lib" /out:"ReleaseDebug/mtp_target_service.exe" /pdbtype:sept
+# ADD LINK32 ode.lib opcode.lib nlmisc_rd.lib nlnet_rd.lib zlib.lib freetype.lib lua.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /debug /machine:I386 /nodefaultlib:"libc.lib" /pdbtype:sept
 
 !ELSEIF  "$(CFG)" == "Server - Win32 DebugFast"
 
@@ -136,7 +136,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 dTriList_rd.lib nlmisc_d.lib nlnet_d.lib ode.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /debug /machine:I386 /nodefaultlib:"libc.lib" /pdbtype:sept
-# ADD LINK32 nlmisc_df.lib nlnet_df.lib ode.lib opcode.lib zlib.lib freetype.lib lua.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /debug /machine:I386 /nodefaultlib:"libc.lib" /out:"DebugFast/mtp_target_service.exe" /pdbtype:sept
+# ADD LINK32 nlmisc_df.lib nlnet_df.lib ode.lib opcode.lib zlib.lib freetype.lib lua.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /debug /machine:I386 /nodefaultlib:"libc.lib" /pdbtype:sept
 
 !ENDIF 
 
@@ -224,6 +224,14 @@ SOURCE=.\Src\network.cpp
 # Begin Source File
 
 SOURCE=.\Src\network.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Src\welcome.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Src\welcome.h
 # End Source File
 # End Group
 # Begin Group "level"
@@ -494,14 +502,6 @@ SOURCE=.\Src\variables.cpp
 # Begin Source File
 
 SOURCE=.\Src\variables.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\Src\welcome.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\Src\welcome.h
 # End Source File
 # End Target
 # End Project

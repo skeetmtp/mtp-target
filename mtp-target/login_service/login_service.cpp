@@ -48,7 +48,6 @@
 
 #include "login_service.h"
 #include "connection_ws.h"
-#include "connection_web.h"
 #include "connection_client.h"
 
 
@@ -65,7 +64,7 @@ using namespace NLNET;
 // Variables
 //
 
-// store specific user information
+// store specific user informations
 NLMISC::CFileDisplayer Fd ("login_service.stat");
 NLMISC::CStdDisplayer Sd;
 NLMISC::CLog *Output = 0;
@@ -82,7 +81,7 @@ MYSQL *DatabaseConnection = 0;
 string sqlQuery(const string &query, sint32 &nbRow, MYSQL_ROW &firstRow, MYSQL_RES *&result)
 {
 	nlassert(DatabaseConnection);
-	nldebug("sqlQuery: '%s'", query.c_str());
+	nlinfo("sqlQuery: '%s'", query.c_str());
 	sint ret = mysql_query(DatabaseConnection, query.c_str());
 	if(ret != 0)
 	{

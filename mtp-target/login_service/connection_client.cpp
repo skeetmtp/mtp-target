@@ -406,8 +406,9 @@ static void cbClientDisconnection (TSockId from, void *arg)
 		lc.setFromString(row[6]);
 		if(lc.getUserAddr() == (uint32)from)
 		{
-			// got it
-			sqlQuery("update user set State='Offline', ShardId=-1, Cookie='' where UId="+string(row[0]), nbrow, row, result);
+			// got it, if he is not in waiting state, it s not normal, remove all
+			if(row[4] != "Waiting")
+				sqlQuery("update user set State='Offline', ShardId=-1, Cookie='' where UId="+string(row[0]), nbrow, row, result);
 			return;
 		}
 		row = mysql_fetch_row(result);
