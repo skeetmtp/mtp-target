@@ -369,6 +369,7 @@ bool CEntity::openClose()
 	OpenClose = !OpenClose;
 	NbOpenClose++;
 
+	pausePhysics();
 	if(NbOpenClose >= MaxOpenClose)
 	{
 		// no more openclose, reset movement accel and vel
@@ -389,7 +390,8 @@ bool CEntity::openClose()
 		dRSetIdentity(R);
 		dBodySetRotation(Body, R);
 	}
-
+	resumePhysics();
+	
 	callOpenCloseLua = true;
 	
 	return true;
