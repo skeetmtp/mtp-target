@@ -51,7 +51,6 @@
     "todo"  => array ("url"=>"?page=todo-manager.php", "name"=>$menuLinkText_Todo),
     "stats"  => array ("url"=>"?page=stats.php", "name"=>$menuLinkText_Stats),
     "contact"  => array ("url"=>"?page=contact.php", "name"=>$menuLinkText_Contact),
-    "donate"  => array ("url"=>"?page=donate.php", "name"=>$menuLinkText_Donate),
   );
 ?>
 

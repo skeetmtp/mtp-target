@@ -1,5 +1,7 @@
 <?php
 
+	die();
+
      switch($lang)
      {
          case "fr":
