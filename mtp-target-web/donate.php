@@ -50,7 +50,7 @@ juste besoin d'une carte Visa ou Mastercard ou un compte PayPal (si vous
 n'en avez pas, vous pouvez quand même payer sans devoir vous inscrire).</p>
 
 <p>Attention, si vous utilisez ce système, une commission est prise par PayPal
-(0.XXEuro + X.XX%) sur le montant que vous mettez.</p>
+(0.35 Euro + 3.4%) sur le montant que vous mettez.</p>
 
 <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
 <input type="hidden" name="cmd" value="_xclick">
@@ -101,7 +101,7 @@ Lecroart Vianney</td></tr>
 
 <h3>Hall des supporters</h3>
 <table>
-<tr><td>Nom</td><td>Dons</td></tr>
+<tr><td><b>Soyez le premier dans ce tableau en donnant maintenant!</b></td></tr>
 
 <?php
          break;
@@ -127,7 +127,7 @@ decided to keep the game completely free and ask you to help us.</p>
 money will be used to host servers and increase the game quality. If we don't
 have enough money, this game will never be better and perhaps will close :(</p>
 
-<p>You are free to choose what you want to give, we setuped some step, going throw 
+<p>You are free to choose what you want to give, we setuped some step, going throw
 will enable you to be recognize as an official Mtp Target supporter.
 If you give 15 euros or more, your name will be displayed in the hall of supporters
 (if you want to be anonymous, just tell us). Of course we also accept if you give
@@ -148,7 +148,7 @@ More</td><td>some specific titles will be atributed
 a Mastercard or an account on Paypal.</p>
 
 <p>Warning, with this method, a subpart of the value you give will be kept by Paypal
-(0.XXEuro + X.XX%).</p>
+(0.35 Euro + 3.4%).</p>
 
 <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
 <input type="hidden" name="cmd" value="_xclick">
@@ -201,7 +201,7 @@ Lecroart Vianney</td></tr>
 
 <h3>Hall of supporters</h3>
 <table>
-<tr><td>Name</td><td>Dons</td></tr>
+<tr><td><b>Be the first on this hall, by donate now!</b></td></tr>
 
 <?php
          break;
