@@ -99,7 +99,7 @@ public:
 		}
 #endif
 
-		CPath::addSearchPath("user_texture", false, true);
+		CPath::addSearchPath(ConfigFile.getVar("UserTexture").asString(), false, true);
 		CPath::remapExtension("dds", "tga", true);
 
 		initVariables();
