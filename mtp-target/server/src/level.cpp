@@ -97,7 +97,7 @@ void CLevel::_luaInit()
 	float ReleaseLevel = 1;
 	luaGetGlobalVariable(_luaSession, ReleaseLevel);
 
-	if(ReleaseLevel<IService::getInstance()->ConfigFile.getVar("MinReleaseLevel").asFloat())
+	if(ReleaseLevel!=IService::getInstance()->ConfigFile.getVar("ReleaseLevel").asFloat())
 	{
 		Valid = false;
 		return;

@@ -124,6 +124,7 @@ int CEntityProxy::setOpenCloseMax(lua_State *luaSession)
 {
 	uint32 moc = (uint32)luaL_checknumber(luaSession,1);
 	_entity->MaxOpenClose = moc;
+	nlinfo("set max open close : %d",moc);
 	return 0;
 }
 
