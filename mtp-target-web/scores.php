@@ -45,7 +45,7 @@ include_once("lang.php");
 	printf("</td>");
 	printf("<td>");
 	printf("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
-	printf("&nbsp");
+	printf("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
 	printf("</td>");
 	printf("<td valign=\"right\">");
 	printf("<a href=\"%s&limit_base=%d\">next&gt;&gt;</a>",$thisPage,$limit_base+$limit_range);
