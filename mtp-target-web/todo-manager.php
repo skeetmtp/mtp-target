@@ -104,12 +104,13 @@ function confirmLink(theLink)
                   }
                   if($kind=="release")
                            $color =$table_todo_release_color;
+				  echo "<a name='id".$ligne[0]."'></a>";
                   printf("<td bgcolor=\"%s\">&nbsp;%d&nbsp;</td>",$color,$priority);
                   $date = substr($ligne[5],0,4+2+2+2);//"0000-00-00";
                   printf("<td bgcolor=\"%s\">&nbsp;%s&nbsp;</td>",$color,$date);
                   printf("<td bgcolor=\"%s\">&nbsp;%s&nbsp;</td>",$color,$status);
                   printf("<td bgcolor=\"%s\">&nbsp;%s&nbsp;</td>",$color,$ligne[7]);
-                  printf("<td bgcolor=\"%s\">&nbsp;<a href=\"%s&id=%s&order=%s\">%s</a>&nbsp;</td>",$color,$thisPage,$ligne[0],$order,$ligne[8]);
+                  printf("<td bgcolor=\"%s\">&nbsp;<a href=\"%s&id=%s&order=%s#id%s\">%s</a>&nbsp;</td>",$color,$thisPage,$ligne[0],$order,$ligne[0],$ligne[8]);
                   printf("<td bgcolor=\"%s\">&nbsp;%s&nbsp;</td>",$color,$ligne[3]);
                   printf("<td bgcolor=\"%s\">&nbsp;%s&nbsp;</td>",$color,$ligne[4]);
                   if($logged)
