@@ -145,13 +145,18 @@ bool CLevelManager::newLevel()
 	}
 	for(i = 0; i < levels.size(); i++)
 	{
-		CLevel *newLevel = new CLevel(levels[(NextLevelId+i)%levels.size()]);
+		CLevel *newLevel = new CLevel(levels[(NextLevelId)%levels.size()]);
 		if(newLevel->valid())
 		{
 			CurrentLevel = newLevel;
 			nlinfo("'%s' level loaded",newLevel->name().c_str());
 			resumePhysics();	
 			return true;
+		}
+		else
+		{
+			nlinfo("level not valid : don't use it");
+			NextLevelId++;
 		}
 	}
 

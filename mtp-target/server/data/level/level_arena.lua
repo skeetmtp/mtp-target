@@ -1,6 +1,7 @@
 Name = "Arena"
 Author = "Skeet"
 ServerLua = "level_arena_server.lua"
+ReleaseLevel = 0
 
 skyShapeFileName = "sky.shape"
 
