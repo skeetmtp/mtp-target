@@ -1,7 +1,6 @@
 Name = "Give me the donuts"
 Author = "erendis"
 ServerLua = "level_donuts_server.lua"
-ReleaseLevel = 2
 
 skyShapeFileName = "sky.shape";
 sunAmbientColor = CRGBA(82, 100, 133, 255);
@@ -63,12 +62,15 @@ Modules ={
 
 	{ Position = CVector(1.5,-6,6), Scale = CVector(200.0, 100.000000, 20.000000), Rotation = CAngleAxis(10.000000,0.000000,0.000000,1.570000), Lua="snow_neutral", Shape="snow_torus" },
 	{ Position = CVector(1.5,-6,6), Scale = CVector(400.0, 200.000000, 20.000000), Rotation = CAngleAxis(10.000000,0.000000,0.000000,1.570000), Lua="snow_neutral", Shape="snow_torus" },
+	{ Position = CVector(1.5,-6,6), Scale = CVector(800.0, 400.000000, 20.000000), Rotation = CAngleAxis(10.000000,0.000000,0.000000,1.570000), Lua="snow_neutral", Shape="snow_torus" },
 	{ Position = CVector(-0.1,-8,5), Scale = CVector(200.0, 100.000000, 20.000000), Rotation = CAngleAxis(10.000000,0.000000,0.000000,1.570000), Lua="snow_neutral", Shape="snow_torus" },
 	{ Position = CVector(-0.1,-8,5), Scale = CVector(400.0, 200.000000, 20.000000), Rotation = CAngleAxis(10.000000,0.000000,0.000000,1.570000), Lua="snow_neutral", Shape="snow_torus" },
 	{ Position = CVector(-0.5,-10,4.5), Scale = CVector(30.0, 15.000000, 20.000000), Rotation = CAngleAxis(10.000000,0.000000,0.000000,1.570000), Lua="snow_neutral", Shape="snow_torus" },
 	{ Position = CVector(-0.5,-10,4.5), Scale = CVector(125.0, 70.000000, 20.000000), Rotation = CAngleAxis(10.000000,0.000000,0.000000,1.570000), Lua="snow_neutral", Shape="snow_torus" },
 	{ Position = CVector(-0.5,-10,4.5), Scale = CVector(250.0, 150.000000, 20.000000), Rotation = CAngleAxis(10.000000,0.000000,0.000000,1.570000), Lua="snow_neutral", Shape="snow_torus" },	
-{ Position = CVector(-0.5,-12,3.9), Scale = CVector(250.0, 100.000000, 20.000000), Rotation = CAngleAxis(10.000000,0.000000,0.000000,1.570000), Lua="snow_neutral", Shape="snow_torus" },
+	{ Position = CVector(-0.5,-12,3.9), Scale = CVector(250.0, 100.000000, 20.000000), Rotation = CAngleAxis(10.000000,0.000000,0.000000,1.570000), Lua="snow_neutral", Shape="snow_torus" },
+	{ Position = CVector(-0.5,-12,3.9), Scale = CVector(500.0, 200.000000, 20.000000), Rotation = CAngleAxis(10.000000,0.000000,0.000000,1.570000), Lua="snow_neutral", Shape="snow_torus" },
+	{ Position = CVector(-0.5,-12,3.9), Scale = CVector(1000.0, 400.000000, 20.000000), Rotation = CAngleAxis(10.000000,0.000000,0.000000,1.570000), Lua="snow_neutral", Shape="snow_torus" },
 	{ Position = CVector(0.5,-11,4.5), Scale = CVector(100.0, 800.000000, 20.000000), Rotation = CAngleAxis(10.000000,0.000000,0.000000,1.570000), Lua="snow_neutral", Shape="snow_torus" },	
 	{ Position = CVector(0.5,-11,4.5), Scale = CVector(200.0, 1600.000000, 20.000000), Rotation = CAngleAxis(10.000000,0.000000,0.000000,1.570000), Lua="snow_neutral", Shape="snow_torus" },	
 	{ Position = CVector(-0.1,-16.5,1.2), Scale = CVector(0.900000, 0.900000, 0.100000), Rotation = CAngleAxis(1.000000,0.000000,0.000000,0.000000), Lua="snow_target_100", Shape="snow_bowl" },
@@ -83,9 +85,4 @@ Modules ={
 
 Particles =
 {
-}
-
-ExternalCameras =
-{
-	{ Position = CVector(-0.103420, -16.928104, 1.253695), Rotation = CAngleAxis(0.000000, 0.000000, 0.000000, 1.000000) },
 }
