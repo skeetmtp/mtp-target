@@ -2,8 +2,8 @@
 ParseMethod=3
 PHPPath=C:\code\FoxServ\php\php.exe
 WebServerRoot=http://localhost/
-DocRoot=C:\code\FoxServ\www\
+DocRoot=C:\code\mtp-target-web
 IncPath=
 [Files]
-0=*||C:\code\FoxServ\www\mtp-target
+0=*||C:\code\mtp-target-web
 Count=1

@@ -48,6 +48,7 @@
 
 
 //contact
+  $contact_by_forum = "Vous pouvez poser vos question sur le ";
   $contact_by_email = "Vous pouvez nous contacter nous par ";
   $contact_by_irc   = "Si vous voulez parler de NeL ou Mtp Target, <a href=\"http://www.irchelp.org/irchelp/misc/frnew2irc.html\">par IRC</a>, venez sur le channel #nel sur le server irc.freenode.net";
 
@@ -63,6 +64,7 @@
   $menuLinkText_Compatibility = "Compatibilitée";
   $menuLinkText_Stats = "Stats";
   $menuLinkText_Todo = "Todo";
+  $menuLinkText_Forum = "Forum";
   $menuLinkText_Contact = "Contacts";
   $menuLinkText_Admin = "Admin";
   $menuLinkText_Lang = "Lang";

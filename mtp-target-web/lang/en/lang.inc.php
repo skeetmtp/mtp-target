@@ -47,6 +47,7 @@ Please verify that the solution to your bug/problem is not in the ";
   $sshot_img09 = "Landing";
 
 //contact
+  $contact_by_forum = "Ask your questions on ";
   $contact_by_email = "Contact us by ";
   $contact_by_irc   = "If you want to talk about NeL or Mtp Target, <a href=\"http://www.irchelp.org/\">using IRC</a>, come to #nel channel on irc.freenode.net";
 
@@ -61,6 +62,7 @@ Please verify that the solution to your bug/problem is not in the ";
   $menuLinkText_Compatibility = "Compatibility";
   $menuLinkText_Stats = "Stats";
   $menuLinkText_Todo = "Todo";
+  $menuLinkText_Forum = "Forum";
   $menuLinkText_Contact = "Contact";
   $menuLinkText_Admin = "Admin";
   $menuLinkText_Lang = "Lang";

@@ -1,4 +1,5 @@
 <?php
+include_once("config.php");
 include_once("mysql-func.php");
 
 function newsAddEntryEN($user,$title,$news)
