@@ -5,20 +5,28 @@
   include_once("mysql-func.php");
   include_once("ingame_stats.php");
   include_once("cache_2_html.php");
-  
+
+	// you can't directly access to GET value
+	$page = $_GET["page"];
+	$login = $_GET["login"];
+	$password = $_GET["password"];
+	$lang = $_GET["lang"];
+
   if(isset($page) && !validPage($page)) unset($page);
   if(isset($login) && !validInput($login)) unset($login);
   if(isset($password) && !validInput($password)) unset($password);
   if(isset($lang) && !validInput($lang)) unset($lang);
-
   if(isset($lang))
   {
       setcookie("mtp_target_lang",$lang,time()+3600*24*30);
   }
   include_once("lang.php");
+
   include_once("check_admin_login.php");
+
   if(isset($_COOKIE['mtp_target_default_page']))
   	$default_page = $HTTP_COOKIE_VARS['mtp_target_default_page'];
+
   if(isset($default_page))
   {
       $default_page = $default_later;
@@ -28,9 +36,8 @@
       $default_page = $default_first_time;
       setcookie("mtp_target_default_page",$default_later,time()+3600*24*30);
   }
-  if (!isset($page)) 
+  if (!isset($page))
   	$page = $default_page;
-
 
   $menu_array = array (
     "news"  => array ("url"=>"?page=news-manager.php", "name"=>$menuLinkText_News),
@@ -44,9 +51,10 @@
     "todo"  => array ("url"=>"?page=todo-manager.php", "name"=>$menuLinkText_Todo),
     "stats"  => array ("url"=>"?page=stats.php", "name"=>$menuLinkText_Stats),
     "contact"  => array ("url"=>"?page=contact.php", "name"=>$menuLinkText_Contact),
+    "donate"  => array ("url"=>"?page=donate.php", "name"=>$menuLinkText_Donate),
   );
 ?>
- 
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html lang="<?php echo $lang ?>">
@@ -59,18 +67,18 @@
 <table border="0"  cellpadding="0" cellspacing="2" width="100%">
 <tr align="center">
     <td colspan="<?php echo count($menu_array);?>">
-        <a href="index.php"><img src="<?php echo $image_dir; ?>/logo.png" ALT="Logo"></a>
+        <a href="index.php"><img src="<?php echo $image_dir; ?>/logo.png" alt="Mtp Target"></a>
         <?php
         //echo "##$REQUEST_URI##";
         if($page == $default_page)
         {
         	echo "<a href=\"?lang=en\"><img src=\"$image_dir/en.png\" ALT=\"English\"></a>\n";
-        	echo "<a href=\"?lang=fr\"><img src=\"$image_dir/fr.png\" ALT=\"French\"></a>\n";
+        	echo "<a href=\"?lang=fr\"><img src=\"$image_dir/fr.png\" ALT=\"Français\"></a>\n";
         }
         else
         {
-        	echo "<a href=\"$REQUEST_URI&lang=en\"><img src=\"$image_dir/en.png\" ALT=\"English\"></a>\n";
-        	echo "<a href=\"$REQUEST_URI&lang=fr\"><img src=\"$image_dir/fr.png\" ALT=\"French\"></a>\n";
+        	echo "<a href=\"".$_SERVER['REQUEST_URI']."&lang=en\"><img src=\"$image_dir/en.png\" ALT=\"English\"></a>\n";
+        	echo "<a href=\"".$_SERVER['REQUEST_URI']."&lang=fr\"><img src=\"$image_dir/fr.png\" ALT=\"Français\"></a>\n";
         }
         ?>
     </td>
@@ -85,20 +93,20 @@
 <tr >
         <td align="center"><div id="menu">
         <?php
-        
+
 		if($enableSql && $html_fp = cache2Html($cache_dir."/ingame_stats_menu_".$lang.".html",$defaultScoresCacheFileDuration))
 		{
 			getStats($nbop, $nbrp, $nbs);
 			fprintf($html_fp,$menuStat, $nbrp, $nbop, $nbs);
 			flushCache2Html($html_fp);
 		}
-		
-        	
+
+
         ?>
         </div></td>
 </tr>
 <tr>
-        <td align="center"><div id="menu">
+		<td align="center"><div id="menu">
         <?php
                 printf("| ");
                 foreach($menu_array as $key => $value)
@@ -106,7 +114,7 @@
                       printf("<a href=\"%s\">%s</a> | ",$value["url"],$value["name"]);
                 }
         ?>
-        
+
         </div></td>
 </tr>
 </table>

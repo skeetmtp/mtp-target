@@ -8,7 +8,7 @@ If you want to receive the newsletter by email, to know when a new version of Mt
 what's new in the next version, just register to the forum and setup your email here.
 It's a low trafic newsletter (less than one email per week).
 If you want to register to the forum and don't receive the newsletter,
-just leave the email empty on your forum profile. 
+just leave the email empty on your forum profile.
 </td></tr>
 </table>
 

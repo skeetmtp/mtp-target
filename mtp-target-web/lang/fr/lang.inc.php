@@ -1,11 +1,11 @@
 <?php
 //compatibility
-  $compSummary_Hardware = "Voici la liste des different materiel testés avec Mtp Target.";
+  $compSummary_Hardware = "Voici la liste des differents materiel testés avec Mtp Target.";
 
-  $compSummary_Software = "Voici la liste des logiciel testés avec Mtp Target";
+  $compSummary_Software = "Voici la liste des logiciels testés avec Mtp Target";
 
   $compHeadText_Hardware    = "Materiel";
-  $compHeadText_Problem     = "Problem";
+  $compHeadText_Problem     = "Problème";
   $compHeadText_Status      = "Status";
   $compHeadText_Workaround  = "Réglage / Solution";
   $compHeadText_Context     = "Contexte";
@@ -15,27 +15,27 @@
   $compHeadText_Date        = "Date";
   $compHeadText_Email       = "Votre email";
 
-  $compInfo_Context = "Mettez ici toute information, qui vous semble lié a votre probleme ( example : carte card, system d'exploitation...)";
+  $compInfo_Context = "Mettez ici toutes les informations qui vous semble lié à votre probleme (exemple : carte card, system d'exploitation...)";
   $compInfo_Problem = "";
   $compInfo_Solution = "Mettez ici votre solution si vous en avez trouvé une";
 
   $compButtonText_SendProblem = "Envoyer";
 
 //bug
-  $bugSummary_Beware = "Vos information seront ajouté apres modération<br>
+  $bugSummary_Beware = "Vos informations seront ajoutées apres modération<br>
   Verifiez que la solution a votre bug/problem n'est pas dans la ";
   $bugLinkText_CompatibilityList = "liste de compatibilitée";
 
 
 //news
   $news_ChangeLog = "Voir Change Log";
-  
+
 //doc
   $doc_math_faq = "http://mathforum.org/dr.math/";
 
 //sshot
-  $sshot_click = "Clickez sur les images pour les voir en taille reeles";
-  $sshot_over = "Laissez la souris au-dessus d'une image pour en avoir la description";
+  $sshot_click = "Clickez sur les images pour les voir en taille réelle";
+  $sshot_over = "Laissez la souris au-dessus d'une image pour voir la description";
   $sshot_img00 = "Ecran de login";
   $sshot_img01 = "Debut du niveau";
   $sshot_img02 = "Rampe d'acceleration";
@@ -53,12 +53,12 @@
 
 
 //contact
-  $contact_by_forum = "Vous pouvez poser vos question sur le ";
-  $contact_by_email = "Vous pouvez nous contacter nous par ";
-  $contact_by_irc   = "Si vous voulez parler de NeL ou Mtp Target, <a href=\"http://www.irchelp.org/irchelp/misc/frnew2irc.html\">par IRC</a>, venez sur le channel #nel sur le server irc.freenode.net";
+  $contact_by_forum = "Vous pouvez poser vos questions sur le ";
+  $contact_by_email = "Vous pouvez nous contacter par ";
+  $contact_by_irc   = "Si vous voullez discuter de NeL ou Mtp Target, <a href=\"http://www.irchelp.org/irchelp/misc/frnew2irc.html\">par IRC</a>, venez sur le channel #nel sur le server irc.freenode.net";
 
 //menu stat
-  $menuStat = "<b>%d joueurs inscrits</b> | <b>%d joueurs en ligne</b> | <b>%d parties jouées</b>";
+  $menuStat = "<a href=\"?page=stat_ranking.php\"><b>%d joueurs inscrits</b></a> | <a href=\"?page=logged.php\"><b>%d joueurs en ligne</b></a> | <a href=\"?page=stat_global.php\"><b>%d parties jouées</b></a>";
 
 //welcome frame
   $welcomeUser = "Bienvenue <b>%s</b>... (<a href=\"user_logout.php\">se deconnecter</a>)<br>";
@@ -75,11 +75,11 @@
   $potdUserOnWebCount = "Il y a <b>%d</b> utilisateur(s) enregistré(s) sur le site\n";
 
 //user settings
-  $settingsChangeTexture = "<a href=\"?page=user_texture_selection.php\">Changer sa texture...</a><br>"; 
+  $settingsChangeTexture = "<a href=\"?page=user_texture_selection.php\">Changer sa texture...</a><br>";
   $settingsUploadTexture = "<a href=\"?page=user_upload_texture.php\">Ajouter sa propre texture...</a><br>";
   $settingsMerge = "<a href=\"?page=user_merge.php\">Fusionner ce compte avec un autre</a><br>";
   $settingsRename = "<a href=\"?page=user_rename.php\">Renommer ce compte</a><br>";
-  
+
 //upload texture
 
 //menu
@@ -98,4 +98,5 @@
   $menuLinkText_Admin = "Admin";
   $menuLinkText_Lang = "Lang";
   $menuLinkText_Settings = "Réglage";
+  $menuLinkText_Donate = "<font color=\"#FF0000\">Dons!</font>";
 ?>

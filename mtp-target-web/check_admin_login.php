@@ -8,13 +8,13 @@
   	if(isset($_COOKIE['mtp_target_admin_login']))
     	$login = $_COOKIE['mtp_target_admin_login'];
     else
-    	$login = "";	
+    	$login = "";
   	if(isset($_COOKIE['mtp_target_admin_password']))
 	    $password = $_COOKIE['mtp_target_admin_password'];
 	  else
-    	$password = "";	
+    	$password = "";
   }
-  
+
   $requete = "SELECT * FROM user WHERE login='".$login."' AND password='".$password."';";
   $resultat=exec_requete($requete);
 
@@ -29,10 +29,9 @@
     unset($login);
     unset($password);
   }
-    
+
   $logged=isset($login) && $login!="";
 
 
 
 ?>
-

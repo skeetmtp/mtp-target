@@ -26,7 +26,7 @@ if (!function_exists('fprintf')) {
        }
    }
 }
-	
+
 function DisplayCacheFile($filename)
 {
 	$html_fp = fopen($filename, "rt");
@@ -66,9 +66,8 @@ function isCacheFileUpToDate($filename)
 {
 	global $defaultCacheFileDuration;
 	//return false;
-	$res = isCacheFileUpToDateDuration($filename,$defaultCacheFileDuration); //update every 30 minutes 
+	$res = isCacheFileUpToDateDuration($filename,$defaultCacheFileDuration); //update every 30 minutes
 	return $res;
 }
-
 
 ?>
