@@ -157,10 +157,12 @@ void CEditorTask::_mouseSelectModule()
 
 void CEditorTask::update() 
 {
+	/*
 	if(C3DTask::instance().kbPressed(KeyF4))
 	{
 		enable(!enable());
 	}
+	*/
 
 	if(_enable)
 	{
