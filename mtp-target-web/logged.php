@@ -32,7 +32,7 @@ include_once("ingame_stats.php");
 		$sid_array = mysql_fetch_row ($sid_res);
 		printf("<tr>");
 		printf("<td bgcolor=\"$table_news_row_color\">&nbsp;%s&nbsp;</td>",$sid_array[3]);
-		printf("<td bgcolor=\"$table_news_row_color\">&nbsp;%s&nbsp;</td>",$line[1]);
+		printf("<td bgcolor=\"$table_news_row_color\">&nbsp;<b><a href=\"?page=stat_user.php&p_user_id=%d\">%s</a></b>&nbsp;</td>",$line[0],$line[1]);
 		printf("<td bgcolor=\"$table_news_row_color\">&nbsp;%s&nbsp;</td>",$line[6]);
 		/*
 		getUserTotalDuration($line[0],$totalDurationStr);
