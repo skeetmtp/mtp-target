@@ -91,6 +91,7 @@ CLuaEngine::CLuaEngine()
 {
 	_luaSession = 0;
 	_error = true;
+	_warning = 0;
 }
 
 lua_State *CLuaEngine::session()
@@ -103,10 +104,12 @@ lua_State *CLuaEngine::session()
 
 void CLuaEngine::init(const std::string &filename)
 {
+	_warningMaxCount = NLNET::IService::getInstance()->ConfigFile.getVar("LuaWarningMaxCount").asInt();
 	if(_luaSession && !_error)
 		luaClose(_luaSession);
 
 	_error = false;
+	_warning = 0;
 	
 	_luaSession = luaOpen();
 	if(!_luaSession)
@@ -167,6 +170,7 @@ void CLuaEngine::release()
 	if(_luaSession && !_error)
 		luaClose(_luaSession);
 	_luaSession = 0;
+	_warning = 0;	
 }
 
 void CLuaEngine::entityEntityCollideEvent(CEntity *entity1, CEntity *entity2)
@@ -186,7 +190,8 @@ void CLuaEngine::entityEntityCollideEvent(CEntity *entity1, CEntity *entity2)
     if (status) {
 		const char *msg = lua_tostring(session(), -1);
 		if (msg == 0) msg = "(error with no message)";
-		nlwarning("pcall error(entityEntityCollideEvent) : (status = %d)%s", status, msg);
+		if(warning())
+			nlwarning("pcall error(entityEntityCollideEvent) : (status = %d)%s", status, msg);
 		return;
     }
 	/*
@@ -215,7 +220,8 @@ void CLuaEngine::entitySceneCollideEvent(CEntity *entity, CModule *module)
     if (res) {
 		const char *msg = lua_tostring(session(), -1);
 		if (msg == 0) msg = "(error with no message)";
-		nlwarning("pcall error(entitySceneCollideEvent) : (status = %d)%s", res, msg);
+		if(warning())
+			nlwarning("pcall error(entitySceneCollideEvent) : (status = %d)%s", res, msg);
 		return;
     }
 	/*
@@ -241,7 +247,8 @@ void CLuaEngine::entityWaterCollideEvent(CEntity *entity)
     if (res) {
 		const char *msg = lua_tostring(session(), -1);
 		if (msg == 0) msg = "(error with no message)";
-		nlwarning("pcall error(entityWaterCollideEvent) : (status = %d)%s", res, msg);
+		if(warning())
+			nlwarning("pcall error(entityWaterCollideEvent) : (status = %d)%s", res, msg);
 		return;
     }
 	/*
@@ -268,7 +275,8 @@ void CLuaEngine::entityLeaveEvent(CEntity *entity)
     if (res) {
 		const char *msg = lua_tostring(session(), -1);
 		if (msg == 0) msg = "(error with no message)";
-		nlwarning("pcall error(entityLeaveEvent) : (status = %d)%s", res, msg);
+		if(warning())
+			nlwarning("pcall error(entityLeaveEvent) : (status = %d)%s", res, msg);
 		return;
     }
 }
@@ -290,7 +298,8 @@ void CLuaEngine::levelInit()
     if (res) {
 		const char *msg = lua_tostring(session(), -1);
 		if (msg == 0) msg = "(error with no message)";
-		nlwarning("pcall error(levelInit) : (status = %d)%s", res, msg);
+		if(warning())
+			nlwarning("pcall error(levelInit) : (status = %d)%s", res, msg);
 		return;
     }
 	/*
@@ -317,7 +326,8 @@ void CLuaEngine::levelPreUpdate()
     if (res) {
 		const char *msg = lua_tostring(session(), -1);
 		if (msg == 0) msg = "(error with no message)";
-		nlwarning("pcall error(levelPreUpdate) : (status = %d)%s", res, msg);
+		if(warning())
+			nlwarning("pcall error(levelPreUpdate) : (status = %d)%s", res, msg);
 		return;
     }
 	/*
@@ -343,7 +353,8 @@ void CLuaEngine::levelPostUpdate()
     if (res) {
 		const char *msg = lua_tostring(session(), -1);
 		if (msg == 0) msg = "(error with no message)";
-		nlwarning("pcall error(levelPostUpdate) : (status = %d)%s", res, msg);
+		if(warning())
+			nlwarning("pcall error(levelPostUpdate) : (status = %d)%s", res, msg);
 		return;
     }
 	/*
@@ -369,7 +380,8 @@ void CLuaEngine::levelEndSession()
     if (res) {
 		const char *msg = lua_tostring(session(), -1);
 		if (msg == 0) msg = "(error with no message)";
-		nlwarning("pcall error(levelEndSession) : (status = %d)%s", res, msg);
+		if(warning())
+			nlwarning("pcall error(levelEndSession) : (status = %d)%s", res, msg);
 		return;
     }
 	/*

@@ -45,6 +45,7 @@ public:
 	void release();
 	void error();
 	bool hasError() {return _error;}
+	bool warning() {_warning++; return _warning<=_warningMaxCount;}
 	
 
 	void entityEntityCollideEvent(CEntity *client1, CEntity *client2);
@@ -88,6 +89,8 @@ private:
 	lua_State *_luaSession;
 	CLevel *_level;
 	bool _error;
+	uint32 _warning;
+	uint32 _warningMaxCount;
 	
 };
 
