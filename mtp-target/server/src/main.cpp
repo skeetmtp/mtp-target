@@ -306,11 +306,11 @@ bool pauseAllThread()
 		nlwarning("pauseAllThread() failed after %d tries during %d ms",maxLoopCount,maxLoopCount*10);
 		uint tid = getThreadId();
 		if(tid==MainThreadId)
-			nlwarning("pauseAllThread() called in MainThreadId");
+			nlwarning("pauseAllThread() called(%d) in MainThreadId(%d)",tid,MainThreadId);
 		if(tid==NetworkThreadId)
-			nlwarning("pauseAllThread() called in NetworkThreadId");
+			nlwarning("pauseAllThread() called(%d) in NetworkThreadId(%d)",tid,NetworkThreadId);
 		if(tid==PhysicThreadId)
-			nlwarning("pauseAllThread() called in PhysicThreadId");
+			nlwarning("pauseAllThread() called(%d) in PhysicThreadId(%d)",tid,PhysicThreadId);
 		nlwarning("isServicePaused()=%s",isServicePaused()?"true":"false");
 		nlwarning("isPhysicsPaused()=%s",isPhysicsPaused()?"true":"false");
 		nlwarning("isNetworkPaused()=%s",isNetworkPaused()?"true":"false");
