@@ -16,10 +16,12 @@ DIR_DBG_on    = debug
 DIR_DBG_off   = release
 
 # CHANGE THESE PATHS IF NECESSARY
-
-ODE_INCLUDE     = $(HOME)/external/ode-0.039/include
-ODE_LIB         = $(HOME)/external/ode-0.039/lib
-OPCODE_LIB      = $(HOME)/external/ode-0.039/OPCODE
+#warning if you use ode 0.5 remove -lopcode in server Makefile
+#ODE_VERSION     = 0.5 
+ODE_VERSION     = 0.039
+ODE_INCLUDE     = $(HOME)/external/ode-$(ODE_VERSION)/include
+ODE_LIB         = $(HOME)/external/ode-$(ODE_VERSION)/lib
+OPCODE_LIB      = $(HOME)/external/ode-$(ODE_VERSION)/OPCODE
 NEL_INCLUDE     = $(HOME)/install/release/include
 NEL_SOURCE      = $(HOME)/cvs/code/nel/src
 STLPORT_INCLUDE = /usr/include/stlport
