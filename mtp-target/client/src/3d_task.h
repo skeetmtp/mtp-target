@@ -73,6 +73,7 @@ public:
 	NL3D::UInstance     levelParticle()  { return LevelParticle;};
 
 	void				clearColor(NLMISC::CRGBA color);
+	void				takeScreenShot();
 
 	bool EnableExternalCamera;
 

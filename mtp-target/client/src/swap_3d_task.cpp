@@ -54,22 +54,10 @@ void CSwap3DTask::init()
 
 void CSwap3DTask::render()
 {
-	C3DTask::instance().driver().swapBuffers ();
-	
-	if(C3DTask::instance().kbPressed(KeyF2))
-	{
-		CBitmap btm;
-		C3DTask::instance().driver().getBuffer (btm);
-//		btm.flipV();
-		string filename = "";
-		if(CMtpTarget::instance().sessionFileName().size())
-			filename = CFile::findNewFile(CFile::getFilenameWithoutExtension(CMtpTarget::instance().sessionFileName())+"_.jpg");
-		else
-			filename = CFile::findNewFile ("screenshot.jpg");
-		COFile fs (filename);
-		btm.writeJPG(fs);
-		nlinfo("Screenshot '%s' saved", filename.c_str());
-	}
+	C3DTask::instance().driver().swapBuffers();
+
+	if(!C3DTask::instance().kbDown(KeyMENU) && C3DTask::instance().kbPressed(KeyF2))
+		C3DTask::instance().takeScreenShot();
 	
 	if (SleepTime >= 0)
 		nlSleep (SleepTime);

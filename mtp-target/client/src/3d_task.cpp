@@ -40,6 +40,7 @@
 #include "gui.h"
 #include "3d_task.h"
 #include "time_task.h"
+#include "mtp_target.h"
 #include "editor_task.h"
 #include "task_manager.h"
 #include "entity_manager.h"
@@ -238,6 +239,21 @@ void C3DTask::update()
 	}
 }
 
+void C3DTask::takeScreenShot()
+{
+	CBitmap btm;
+	C3DTask::instance().driver().getBuffer (btm);
+	//		btm.flipV();
+	string filename = "";
+	if(CMtpTarget::instance().sessionFileName().size())
+		filename = CFile::findNewFile(CFile::getFilenameWithoutExtension(CMtpTarget::instance().sessionFileName())+"_.jpg");
+	else
+		filename = CFile::findNewFile ("screenshot.jpg");
+	COFile fs (filename);
+	btm.writeJPG(fs);
+	nlinfo("Screenshot '%s' saved", filename.c_str());	
+}
+
 void C3DTask::render()
 {
 	CViewport vp;
@@ -246,6 +262,9 @@ void C3DTask::render()
 	Driver->enableFog(true);
 	Scene->render();
 
+	if(C3DTask::instance().kbDown(KeyMENU) && C3DTask::instance().kbPressed(KeyF2))
+		takeScreenShot();
+	
 	if(EnableExternalCamera && CLevelManager::instance().levelPresent() && CLevelManager::instance().currentLevel().ExternalCameras.size() > 0)
 	{
 		CMatrix oldmat = C3DTask::instance().scene().getCam().getMatrix();
@@ -273,6 +292,7 @@ void C3DTask::render()
 	}
 	
 	C3DTask::instance().driver().enableFog(false);
+	
 	CEntityManager::instance().renderNames();
 }
 
