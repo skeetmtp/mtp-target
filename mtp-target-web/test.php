@@ -34,6 +34,24 @@ echo "C'est fini. Votre base est en place sur cet hébergement.";
 	//fclose($html_fp);	  
 	//include($cacheFileName);	
 	
+	$filename = $cache_dir."/test.html";
+	
+	$fileModificationTime = -1;
+	if(file_exists($filename))
+	{
+		$fileModificationTime = time() - filemtime($filename);
+		//$fileModificationTime -= 1800; //web date and fiel date are not sync ?!?
+		
+		printf("date : %d<br>",time());
+		printf("filemtime : %d<br>",filemtime($filename));
+		printf("fileModificationTime : %d<br>",$fileModificationTime);
+		
+		unlink($filename);
+	}
+	$html_fp = fopen($filename, "wt");
+	fclose($html_fp);	  
+	
+	
 	
 	
 ?>

@@ -48,7 +48,7 @@ function isCacheFileUpToDateDuration($filename,$duration)
 	if(file_exists($filename) && filesize($filename)>0)
 	{
 		$fileModificationTime = time() - filemtime($filename);
-		$fileModificationTime -= 1800; //web date and fiel date are not sync ?!?
+		//$fileModificationTime -= 1800; //web date and fiel date are not sync ?!?
 		/*
 		printf("date : %d<br>",strtotime(date("Y-m-d H:i:s")));
 		printf("filemtime : %d<br>",filemtime($filename));
