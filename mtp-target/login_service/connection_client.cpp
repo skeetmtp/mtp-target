@@ -386,13 +386,17 @@ static void cbClientDisconnection (TSockId from, void *arg)
 	while(row != 0)
 	{
 		CLoginCookie lc;
-		lc.setFromString(row[5]);
-		if(lc.getUserAddr() == (uint32)from)
+		string str = row[5];
+		if(!str.empty())
 		{
-			// got it, if he is not in waiting state, it s not normal, remove all
-			if(row[4] != string("Waiting"))
-				sqlQuery("update user set State='Offline', ShardId=-1, Cookie='' where UId="+string(row[0]), nbrow, row, result);
-			return;
+			lc.setFromString(str);
+			if(lc.getUserAddr() == (uint32)from)
+			{
+				// got it, if he is not in waiting state, it s not normal, remove all
+				if(row[4] != string("Waiting"))
+					sqlQuery("update user set State='Offline', ShardId=-1, Cookie='' where UId="+string(row[0]), nbrow, row, result);
+				return;
+			}
 		}
 		row = mysql_fetch_row(result);
 	}
