@@ -223,7 +223,6 @@ void CInterpolator::update()
 	if(_currentCrashEvent.crash)
 		_currentCrashEvent.pos = crashEvent.pos;
 	_lastCrash=crashEvent;
-	
 }
 
 
@@ -364,7 +363,6 @@ CCrashEvent CLinearInterpolator::_crashEvent(double time)
 		nextKey = key;
 		nextKeySet = true;
 	}
-	_outOfKeyCount++;
 	return CInterpolator::_crashEvent(time);
 }
 
@@ -388,7 +386,6 @@ bool CLinearInterpolator::_openCloseEvent(double time)
 		nextKey = key;
 		nextKeySet = true;
 	}
-	_outOfKeyCount++;
 	return CInterpolator::_openCloseEvent(time);
 }
 
