@@ -17,96 +17,48 @@
  * MA 02111-1307, USA.
  */
 
-
 /* Server.H */
 
-
-
 #ifndef SERVER_H
-
 #define SERVER_H
-
-
 
 #include <time.h>
 
-
-
 #include "user.h"
-
-
 
 /* Constants */
 
-
-
 #define PORT_NUM  4000
 
-
-
 #define NAME_SIZE 64
-
 #define LINE_SIZE 256
-
 #define NO_SOCKET (-1)
-
-
 
 /* Types */
 
-
-
 typedef struct {
-
    int    Size;
-
    char **String;
-
 } history;
-
-
 
 /* Variables */
 
-
-
 extern time_t  RebootTime;
-
 extern int     UserNb;
-
 extern int     UserNbMax;
-
 extern int     RegOnly;
-
 extern history LogHistory[1];
-
 extern history WallHistory[1];
-
-
 
 /* Prototypes */
 
-
-
 extern void Logout      (user *User, const user *Except, const char *Message, ...);
 
-
-
 extern void InitHistory (history *History, int Size);
-
 extern void LoadHistory (const char *FileName, history *History);
-
 extern void AddHistory  (history *History, const char *Message, ...);
-
 extern void SendHistory (user *User, const char *HistoryName, const history *History);
-
 extern void ClearHistory(history *History, int Size);
-
 #endif /* ! defined SERVER_H */
 
-
-
 /* End of Server.H */
-
-
-

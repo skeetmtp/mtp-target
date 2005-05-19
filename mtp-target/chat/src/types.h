@@ -17,44 +17,22 @@
  * MA 02111-1307, USA.
  */
 
-
 /* Types.H */
 
-
-
 #ifndef TYPES_H
-
 #define TYPES_H
-
-
 
 /* Constants */
 
-
-
 #define FALSE       0
-
 #define TRUE        1
-
-
 
 #define STRING_SIZE 1024
 
-
-
 /* Types */
-
-
 
 typedef unsigned char uchar;
 
-
-
 #endif /* ! defined TYPES_H */
 
-
-
 /* End of Types.H */
-
-
-

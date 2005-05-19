@@ -17,94 +17,47 @@
  * MA 02111-1307, USA.
  */
 
-
 /* List.H */
 
-
-
 #ifndef LIST_H
-
 #define LIST_H
-
-
 
 #include "object.h"
 
-
-
 /* Types */
 
-
-
 typedef struct Node {
-
    struct Node *Next;
-
    struct Node *Prev;
-
    object      *Object;
-
 } node;
 
-
-
 typedef struct {
-
    int   Type;
-
    char *Id;
-
    node *Head;
-
    node *Tail;
-
 } list;
-
-
 
 typedef int (*CMP_FCT)(const void *Node1, const void *Node2);
 
-
-
 /* Variables */
-
-
 
 extern list Lists[1];
 
-
-
 /* Prototypes */
 
-
-
 extern void  InitList     (list *List, const char *ListName);
-
 extern void  ClearList    (list *List);
 
-
-
 extern void  AddHead      (list *List, void *Object);
-
 extern void  AddTail      (list *List, void *Object);
-
 extern void  RemObject    (list *List, void *Object);
 
-
-
 extern void *SearchObject (list *List, const char *Name, int Type);
-
 extern void  SortList     (list *List, CMP_FCT NodeCmp);
-
 extern list *SortList2    (list *List, CMP_FCT NodeCmp);
-
-
 
 #endif /* ! defined LIST_H */
 
-
-
 /* End of List.H */
-
-
-

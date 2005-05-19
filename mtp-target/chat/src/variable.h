@@ -17,42 +17,21 @@
  * MA 02111-1307, USA.
  */
 
-
 /* Variable.H */
 
-
-
 #ifndef VARIABLE_H
-
 #define VARIABLE_H
-
-
 
 #include <time.h>
 
-
-
 /* Prototypes */
 
-
-
 extern int   Boolean      (const char *Value);
-
 extern int   StringToDate (char *Value, time_t *Result);
-
 extern char *NewString    (const char *String);
-
 extern int   SetString    (char **Var, const char *Value);
-
 extern int   DeleteString (char **Var);
-
-
 
 #endif /* ! defined VARIABLE_H */
 
-
-
 /* End of Variable.H */
-
-
-

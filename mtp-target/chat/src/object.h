@@ -17,68 +17,34 @@
  * MA 02111-1307, USA.
  */
 
-
 /* Object.H */
 
-
-
 #ifndef OBJECT_H
-
 #define OBJECT_H
-
-
 
 /* Constants */
 
-
-
 #define ID_SIZE 8
 
-
-
 enum {
-
    LIST     = 0x01,
-
    RESERVED = 0x02,
-
    SERVER   = 0x04,
-
    USER     = 0x08,
-
    GROUP    = 0x10,
-
    CHANNEL  = 0x20,
-
    ALIAS    = 0x40
-
 };
-
-
 
 #define OBJECT (LIST|RESERVED|SERVER|USER|GROUP|CHANNEL)
 
-
-
 /* Types */
 
-
-
 typedef struct {
-
    int   Type;
-
    char *Id;
-
 } object;
-
-
 
 #endif /* ! defined OBJECT_H */
 
-
-
 /* End of Object.H */
-
-
-

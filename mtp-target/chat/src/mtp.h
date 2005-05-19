@@ -17,70 +17,35 @@
  * MA 02111-1307, USA.
  */
 
-
 /* MTP.H */
 
-
-
 #ifndef MTP_H
-
 #define MTP_H
-
-
 
 /* Constants */
 
-
-
 #define BANNED_LOG   "banned"
-
 #define COMMAND_LOG  "command"
-
 #define DENIED_LOG   "denied"
-
 #define ERROR_LOG    "error"
-
 #define HOST_LOG     "host"
-
 #define INOUT_LOG    "inout"
-
 #define PASSWORD_LOG "password"
-
 #define SECURITY_LOG "security"
-
 #define SIGNAL_LOG   "signal"
-
 #define SOCKET_LOG   "socket"
-
 #define TELNET_LOG   "telnet"
-
 #define WALL_LOG     "wall"
-
-
 
 /* Prototypes */
 
-
-
 extern void Exit       (void);
 
-
-
 extern void Warning    (const char *Message, ...);
-
 extern void Error      (const char *Message, ...);
-
 extern void FatalError (const char *Message, ...);
-
 extern void Trace      (const char *LogFile, const char *Message, ...);
-
-
 
 #endif /* ! defined MTP_H */
 
-
-
 /* End of MTP.H */
-
-
-

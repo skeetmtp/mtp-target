@@ -17,54 +17,27 @@
  * MA 02111-1307, USA.
  */
 
-
 /* DataBase.H */
 
-
-
 #ifndef DATABASE_H
-
 #define DATABASE_H
-
-
 
 /* Constants */
 
-
-
 #define ENCRYPTED_SIZE 13
-
-
 
 /* Variables */
 
-
-
 extern int DataBaseChanged;
-
-
 
 /* Prototypes */
 
-
-
 extern int   ReadDataBase  (void);
-
 extern int   WriteDataBase (void);
 
-
-
 extern char *CryptPassword (const char *Password);
-
 extern int   CheckPassword (const char *String, const char *Encrypted);
-
-
 
 #endif /* ! defined DATABASE_H */
 
-
-
 /* End of DataBase.H */
-
-
-

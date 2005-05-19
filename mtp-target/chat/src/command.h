@@ -17,34 +17,17 @@
  * MA 02111-1307, USA.
  */
 
-
 /* Command.H */
 
-
-
 #ifndef COMMAND_H
-
 #define COMMAND_H
-
-
 
 #include "user.h"
 
-
-
 /* Prototypes */
-
-
 
 extern void Execute(user *User, char *UserString, int Force);
 
-
-
 #endif /* ! defined COMMAND_H */
 
-
-
 /* End of Command.H */
-
-
-

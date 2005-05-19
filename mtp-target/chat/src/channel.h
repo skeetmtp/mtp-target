@@ -17,102 +17,51 @@
  * MA 02111-1307, USA.
  */
 
-
 /* Channel.H */
 
-
-
 #ifndef CHANNEL_H
-
 #define CHANNEL_H
 
-
-
 #include "object.h"
-
 #include "list.h"
-
 #include "user.h"
-
-
 
 /* Constants */
 
-
-
 #define DEFAULT_CHANNEL "Hall"
-
-
 
 /* Types */
 
-
-
 typedef struct {
-
    int   Type;
-
    char *Id;
-
    char  Owner[ID_SIZE+1];
-
    char  Group[ID_SIZE+1];
-
    char *Topic;
-
    int   Closed;
-
    int   Hidden;
-
    int   Invite;
-
    int   Protected;
-
    int   Resident;
-
    int   UserNb;
-
 } channel;
-
-
 
 /* Variables */
 
-
-
 extern list ChannelList[1];
-
-
 
 /* Prototypes */
 
-
-
 extern channel *NewChannel    (const char *ChannelName);
-
 extern void     DeleteChannel (channel *Channel);
-
 extern channel *SearchChannel (const char *ChannelName);
-
 extern int      ChannelLevel  (const channel *Channel);
 
-
-
 extern int      JoinChannel   (user *User, channel *Channel);
-
 extern int      LeaveChannel  (user *User);
-
 extern void     SendChannel   (user *User, const char *Format, ...);
-
 extern void     SendJoin      (user *User, const char *Format, ...);
-
-
 
 #endif /* ! defined CHANNEL_H */
 
-
-
 /* End of Channel.H */
-
-
-

@@ -17,204 +17,102 @@
  * MA 02111-1307, USA.
  */
 
-
 /* MTP.C */
 
-
-
 #include <stdio.h>
-
 #include <stdlib.h>
-
 #include <stdarg.h>
-
 #include <time.h>
 
-
-
 #include "mtp.h"
-
 #include "types.h"
-
-
 
 /* Constants */
 
-
-
 #define LOG_PATH "log/"
-
-
 
 /* Functions */
 
-
-
 /* Exit() */
-
-
 
 void Exit(void) {
 
-
-
    Trace(INOUT_LOG,"[shutdown]");
-
    exit(EXIT_SUCCESS);
-
 }
-
-
 
 /* Warning() */
 
-
-
 void Warning(const char *Message, ...) {
 
-
-
    va_list Args;
-
    char    String[STRING_SIZE];
 
-
-
    va_start(Args,Message);
-
    vsprintf(String,Message,Args);
-
    va_end(Args);
 
-
-
    fprintf(stderr,"WARNING : %s...\n",String);
-
    Trace(ERROR_LOG,"WARNING %s",String);
-
 }
-
-
 
 /* Error() */
 
-
-
 void Error(const char *Message, ...) {
 
-
-
    va_list Args;
-
    char    String[STRING_SIZE];
 
-
-
    va_start(Args,Message);
-
    vsprintf(String,Message,Args);
-
    va_end(Args);
 
-
-
    fprintf(stderr,"ERROR : %s !\n",String);
-
    Trace(ERROR_LOG,"ERROR   %s",String);
-
 }
-
-
 
 /* FatalError() */
 
-
-
 void FatalError(const char *Message, ...) {
 
-
-
    va_list Args;
-
    char    String[STRING_SIZE];
 
-
-
    va_start(Args,Message);
-
    vsprintf(String,Message,Args);
-
    va_end(Args);
 
-
-
    fprintf(stderr,"FATAL ERROR : %s !!!\n",String);
-
    Trace(ERROR_LOG,"FATAL   %s",String);
 
-
-
    Exit();
-
 }
-
-
 
 /* Trace() */
 
-
-
 void Trace(const char *LogFile, const char *Message, ...) {
 
-
-
    char     FileName[256], TimeString[32];
-
    time_t   Time;
-
    FILE    *Log;
-
    va_list  Args;
 
-
-
    sprintf(FileName,LOG_PATH "%s",LogFile);
-
    Log = fopen(FileName,"a");
-
    if (Log == NULL) return;
 
-
-
    Time = time(NULL);
-
    strftime(TimeString,(size_t)31,"%x %X ",localtime(&Time));
-
-
 
    fprintf(Log,"%s",TimeString);
 
-
-
    va_start(Args,Message);
-
    vfprintf(Log,Message,Args);
-
    va_end(Args);
-
-
 
    fprintf(Log,"\n");
 
-
-
    fclose(Log);
-
 }
 
-
-
 /* End of MTP.C */
-
-
-

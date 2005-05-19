@@ -17,66 +17,33 @@
  * MA 02111-1307, USA.
  */
 
-
 /* Crypt.H */
 
-
-
 #ifndef CRYPT_H
-
 #define CRYPT_H
-
-
 
 /* Constants */
 
-
-
 enum {
-
    LANGUAGE_MIN     = -6,
-
    LANGUAGE_BAILLON = -6,
-
    LANGUAGE_VOWEL   = -5,
-
    LANGUAGE_SHUFFLE = -4,
-
    LANGUAGE_CRAZY   = -3,
-
    LANGUAGE_SLEEP   = -2,
-
    LANGUAGE_NONE    = -1,
-
    CRYPT_NONE       = 0,
-
    CRYPT_FULL       = 100,
-
    LANGUAGE_MAX     = 100 
-
 };
-
-
 
 /* Prototypes */
 
-
-
 extern char       *Crypt        (int Language, const char *String);
-
 extern char       *DragCrypt    (const char *entree);
-
 extern char       *BlueCrypt    (const char *S);
-
 extern const char *LanguageName (int Language);
-
-
 
 #endif /* ! defined CRYPT_H */
 
-
-
 /* End of Crypt.H */
-
-
-
