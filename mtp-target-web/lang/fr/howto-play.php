@@ -1,21 +1,21 @@
-<center><h2>Comment jouer</h2></center>
+ï»¿<center><h2>Comment jouer</h2></center>
 
 <h3>Lancer le jeu</h3>
 <ul>
-<li>récuperez <a href="http://mtptarget.free.fr/download">le programme d'installation</a>.</li>
+<li>rÃ©cuperez <a href="http://mtptarget.free.fr/download">le programme d'installation</a>.</li>
 <li>Installez et lancez mtp-target.</li>
-<li>Entrez un login et un mot de passe, la premiere fois que vous vous logger, ces informations sont enregistrées dans la base de donnée<br>
-<b>Attention</b> : Taille maximum du login <b>20 characteres</b>, uniquement les characteres suivant sont authorisés : <b>a-z A-Z 0-9 [ ] _ -</b>
+<li>Entrez un login et un mot de passe, la premiere fois que vous vous logger, ces informations sont enregistrÃ©es dans la base de donnÃ©e<br/>
+<b>Attention</b> : Taille maximum du login <b>20 characteres</b>, uniquement les characteres suivant sont authorisÃ©s : <b>a-z A-Z 0-9 [ ] _ -</b>
 </li>
 <li>Mantenant choisissez un des serveurs disponible</li>
-<li>Le jeu peut etre automatiquement patché</li>
+<li>Le jeu peut etre automatiquement patchÃ©</li>
 <li>Une fois dans le jeu, vous devez attendre que la session courante s'acheve (60 seconds maxi).</li>
 </ul>
 
 
 <h3>Jouer</h3>
 <ul>
-<li>A la fin du compte-a-rebourd la session débute</li>
+<li>A la fin du compte-a-rebourd la session dÃ©bute</li>
 <li>Sur le sol, utilisez les fleches <b>DROITE</b> et <b>GAUCHE</b> pour tourner, ainsi que les touches <b>HAUT</b> et <b>BAS</b> pour controler votre vitesse.</li>
 <li>Une fois en l'air appuyer sur <b>CONTROL</b> pour passer en mode vole.</li>
 <li>En mode vole : la touche <b>HAUT</b> augmente votre altitude mais diminue votre vitesse.</li>
@@ -27,7 +27,7 @@
 
 <h3>Tips</h3>
 <ul>
-<li>Si vous avez le temps appuyer sur <b>F9</b> et <b>F10</b> pour voire les autres joueurs, <b>F11</b> pour revenir à votre personage.</li>
+<li>Si vous avez le temps appuyer sur <b>F9</b> et <b>F10</b> pour voire les autres joueurs, <b>F11</b> pour revenir Ã  votre personage.</li>
 <li>Regardez votre altitude sur la barre de droite.</li>
 </ul>
 

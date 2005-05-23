@@ -3,7 +3,7 @@
 <h3>Internet server</h3>
 
 <p>
-First you should know that TCP port 51574 and 80 must be open.<br>
+First you should know that TCP port 51574 and 80 must be open.<br/>
 Open the file named <code>mtp_target_service.cfg</code> with your favorite text editor.
 </p>
 

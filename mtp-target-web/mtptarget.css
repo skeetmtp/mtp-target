@@ -1,90 +1,134 @@
 
 body
 {
-	font-family: verdana,helvetica,arial,sans-serif;
-	background-image:url("back.jpg")
+	font-family: verdana;
+	background-image:url("img/back.jpg");
+	font-size: 11px;
 }
 
-pre, tt         {font-size: small}
-th              {font-family: arial, helvetica, geneva, sans-serif; font-size: small; font-weight: bold;}
-td              {font-family: arial, helvetica, geneva, sans-serif; font-size: small}
-form            {font-family: arial, helvetica, geneva, sans-serif; font-size: small}
-input           {font-family: arial, helvetica, geneva, sans-serif; font-size: small}
-input.textfield {font-family: arial, helvetica, geneva, sans-serif; font-size: small; color: #000000; background-color: #FFFFFF}
-select          {font-family: arial, helvetica, geneva, sans-serif; font-size: small; color: #000000; background-color: #FFFFFF}
-textarea        {font-family: arial, helvetica, geneva, sans-serif; font-size: small; color: #000000; background-color: #FFFFFF}
+table {
+	font-size: 10px;
+}
 
-p,ul		{ font-size:100% }
-h2		{ font-size:120% }
-h3		{ font-size:100% }
-
-a		{ text-decoration:none; }
 a:link		{ color:#700B09 }
 a:visited	{ color:#700B09 }
-a:active	{ text-decoration:none; color:#8C7443 }
-a:hover		{ text-decoration:underline; color:#8C7443 }
+a:active	{ color:#8C7443 }
+a:hover		{ color:#8C7443 }
 
 img
 {
    border: 0px solid #666666;
 }
 
-
-div#delete
+.menu a
 {
-   font: bold 1em sans-serif;
-   text-decoration: none; color:#FF0000;
-}
-
-div#menu a
-{
-   font: bold 1em sans-serif;
    text-decoration: none; color:#700B09;
 }
 
-div#menu a:hover
+.menu a:hover
 {
-   font: bold 1em sans-serif;
    text-decoration: none; color: black; background: #F2E2C8;
-}
-
-div#small
-{
-   font-size:80%
 }
 
 div#footer
 {
    text-align: right;
-   font-size:70%
 }
 
 div#main
 {
-	font-size: small;
 	text-align: left;
 }
 
-div#stat_table th
-{	
-	font-size: small;
+.news
+{
+	border: 1px solid #665544;
+	width: 100%;
+	margin-top: 15px;
+}
+
+.newshead1
+{
+	background: #FFEEDD;
+	font-weight: bold;
+	font-size: 20;
+}
+
+.newshead2
+{
+	background: #FFEEDD;
+	font-weight: normal;
+	font-size: 9;
+}
+
+.newsbody
+{
+	border-top: 1px dotted #665544;
+	background: #FFFAEA;
+}
+
+.newsstaticmain
+{
+	vertical-align: top;
+	width: 300px;
+}
+
+.newsstatic
+{
+	border: 1px solid #665544;
+	margin-top: 15px;
+	background: #CCDAFF;
+}
+
+.newsstatichead
+{
+	background: #007BFF;
 	text-align: center;
-	text-decoration: none; 
-	background:#FFEEDD;
+	font-weight: bold;
 }
 
-div#stat_table td
-{	
-	font-size: small;
+.head {
+	width: 100%;
+	text-align: right;
+}
+
+.logo {
 	text-align: center;
-	text-vertical-align: middle;
-	text-decoration: none; 
 }
 
-div#stat_table a
-{	
-   font: bold 1em sans-serif;
-   text-decoration: none; color:#700B09;
+.divlogin {
+	position:absolute;
+	right:5px;
+	top:5px;
+	z-index:1;
 }
 
+.tablelogin {
+	border: 1px solid #665544;
+	background: #FFFAEA;
+	font-size: 9px;
+}
 
+.r { text-align: right; }
+.l { text-align: left; }
+
+.menu {
+	width: 100%;
+	text-align: center;
+	font-size: 10px;
+}
+
+.todo {
+	width: 100%;
+	font-size: 9px;
+}
+
+.stat {
+	border: 1px solid #665544;
+	background: #FFFAEA;
+}
+
+.stat th {
+	background: #FFEEDD;
+	text-align: center;
+}

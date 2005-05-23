@@ -1,45 +1,12 @@
-<?php
-//compatibility
-  $compSummary_Hardware = "Voici la liste des differents materiel testés avec Mtp Target.";
-
-  $compSummary_Software = "Voici la liste des logiciels testés avec Mtp Target";
-
-  $compHeadText_Hardware    = "Materiel";
-  $compHeadText_Problem     = "Problème";
-  $compHeadText_Status      = "Status";
-  $compHeadText_Workaround  = "Réglage / Solution";
-  $compHeadText_Context     = "Contexte";
-  $compHeadText_Solution    = "Solution";
-  $compHeadText_Software    = "Logiciel";
-  $compHeadText_Approved    = "Approuvé";
-  $compHeadText_Date        = "Date";
-  $compHeadText_Email       = "Votre email";
-
-  $compInfo_Context = "Mettez ici toutes les informations qui vous semble lié à votre probleme (exemple : carte card, system d'exploitation...)";
-  $compInfo_Problem = "";
-  $compInfo_Solution = "Mettez ici votre solution si vous en avez trouvé une";
-
-  $compButtonText_SendProblem = "Envoyer";
-
-//bug
-  $bugSummary_Beware = "Vos informations seront ajoutées apres modération<br>
-  Verifiez que la solution a votre bug/problem n'est pas dans la ";
-  $bugLinkText_CompatibilityList = "liste de compatibilitée";
-
-
-//news
-  $news_ChangeLog = "Voir Change Log";
-
-//doc
-  $doc_math_faq = "http://mathforum.org/dr.math/";
+ï»¿<?php
 
 //sshot
-  $sshot_click = "Clickez sur les images pour les voir en taille réelle";
+  $sshot_click = "Clickez sur les images pour les voir en taille rÃ©elle";
   $sshot_over = "Laissez la souris au-dessus d'une image pour voir la description";
   $sshot_img00 = "Ecran de login";
   $sshot_img01 = "Debut du niveau";
   $sshot_img02 = "Rampe d'acceleration";
-  $sshot_img03 = "Décolage";
+  $sshot_img03 = "DÃ©colage";
   $sshot_img04 = "Vole";
   $sshot_img05 = "";
   $sshot_img06 = "";
@@ -49,55 +16,58 @@
   $sshot_img10 = "Personalisation des Avatars";
   $sshot_img11 = "";
   $sshot_img12 = "";
-  $sshot_img13 = "l'eau sans pixel shader";
+  $sshot_img13 = "L'eau sans pixel shader";
+  $sshot_img14 = "L'eau sans pixel shader";
 
-
+  
 //contact
   $contact_by_forum = "Si vous avez des questions d'ordre generales, Vous pouvez poser utiliser le ";
-  $contact_by_email = "Si vous voullez nous contacter (les developpeurs de Mtp Target), utilisez l'";
-  $contact_by_irc   = "Si vous voullez discuter de NeL ou Mtp Target, <a href=\"http://www.irchelp.org/irchelp/misc/frnew2irc.html\">par IRC</a>, venez sur le channel #nel sur le server irc.freenode.net";
+  $contact_by_email = "Si vous voulez nous contacter (les developpeurs de Mtp Target), utilisez l'";
+  $contact_by_irc   = "Si vous voulez discuter de NeL ou Mtp Target, <a href=\"http://www.irchelp.org/irchelp/misc/frnew2irc.html\">par IRC</a>, venez sur le channel #nel sur le server irc.freenode.net";
 
 
 //menu stat
-  $menuStat = "<a href=\"?page=stat_ranking.php\"><b>%d joueurs inscrits</b></a> | <a href=\"?page=logged.php\"><b>%d joueurs en ligne</b></a> | <a href=\"?page=stat_global.php\"><b>%d parties jouées</b></a>";
+  $menuStat = "<a href=\"?page=stat_ranking\">%d joueurs inscrits</a> | <a href=\"?page=logged\">%d joueurs en ligne</a> | <a href=\"?page=stat_global\">%d parties jouÃ©es</a>";
 
 //welcome frame
-  $welcomeUser = "Bienvenue <b>%s</b>... (<a href=\"user_logout.php\">se deconnecter</a>)<br>";
-  $welcomeTodayScore = "Score du jour : %d<br>";
-  $welcomeTotalScore = "Score total : %d<br>";
-  $welcomeSettings = "<a href=\"?page=user_settings.php\">vos réglages</a><br>";
-  $welcomeStat = "<a href=\"?page=stat_user.php&p_user_id=%d\">vos stats</a><br>";
+  $welcomeUser = "<tr><td class=\"r\">Bienvenue <b>%s</b>...</td></tr>";
+  $welcomeTodayScore = "<tr><td class=\"r\">Score du jour : %d</td></tr>";
+  $welcomeTotalScore = "<tr><td class=\"r\">Score total : %d</td></tr>";
+  $welcomeSettings = "<tr><td class=\"r\"><a href=\"?page=user_settings\">Vos rÃ©glages</a></td></tr>";
+  $welcomeStat = "<tr><td class=\"r\"><a href=\"?page=stat_user&p_user_id=%d\">Vos statistiques</a></td></tr>";
 
 //player of the day frame
-  $potdTitle = "Joueur du jour :<br>\n";
-  $potdTop1 = "<b><a href=\"?page=stat_user.php&p_user_id=%d\">%s</a></b> avec %s points aujourd'hui<br>\n";
-  $potdTops = "#%d <a href=\"?page=stat_user.php&p_user_id=%d\">%s</a> %s points<br>\n";
-  $potdNewUser = "Le dernier utilisateur enregistré est <b><a href=\"?page=stat_user.php&p_user_id=%d\">%s</a></b>\n";
-  $potdUserOnWebCount = "Il y a <b>%d</b> utilisateur(s) enregistré(s) sur le site\n";
+  $potdTitle = "Joueurs du jour :<br/>\n";
+  $potdTop1 = "<b><a href=\"?page=stat_user&p_user_id=%d\">%s</a></b> avec %s points aujourd'hui<br/>\n";
+  $potdTops = "#%d <a href=\"?page=stat_user&p_user_id=%d\">%s</a> %s points<br/>\n";
+  $potdNewUser = "Le dernier utilisateur enregistrÃ© est <b><a href=\"?page=stat_user&p_user_id=%d\">%s</a></b>\n";
+  $potdUserOnWebCount = "Il y a <b>%d</b> utilisateur(s) enregistrÃ©(s) sur le site\n";
 
 //user settings
-  $settingsChangeTexture = "<a href=\"?page=user_texture_selection.php\">Changer sa texture...</a><br>";
-  $settingsUploadTexture = "<a href=\"?page=user_upload_texture.php\">Ajouter sa propre texture...</a><br>";
-  $settingsMerge = "<a href=\"?page=user_merge.php\">Fusionner ce compte avec un autre</a><br>";
-  $settingsRename = "<a href=\"?page=user_rename.php\">Renommer ce compte</a><br>";
-
+  $settingsChangeTexture = "<a href=\"?page=user_texture_selection\">Changer sa texture...</a><br/>";
+  $settingsUploadTexture = "<a href=\"?page=user_upload_texture\">Ajouter sa propre texture...</a><br/>";
+  $settingsMerge = "<a href=\"?page=user_merge\">Fusionner ce compte avec un autre</a><br/>";
+  $settingsRename = "<a href=\"?page=user_rename\">Renommer ce compte</a><br/>";
+  
 //upload texture
 
 //menu
   $menuLinkText_News = "News";
   $menuLinkText_Home = "Accueil";
   $menuLinkText_Screenshot = "Screenshots";
-  $menuLinkText_Download = "Téléchargement";
+  $menuLinkText_Download = "TÃ©lÃ©chargement";
   $menuLinkText_Sources = "Sources";
   $menuLinkText_Highscore = "Highscore";
   $menuLinkText_Documents = "Documentation";
-  $menuLinkText_Compatibility = "Compatibilité";
+  $menuLinkText_Compatibility = "CompatibilitÃ©";
   $menuLinkText_Stats = "Stats";
   $menuLinkText_Todo = "Todo";
   $menuLinkText_Forum = "Forum";
   $menuLinkText_Contact = "Contacts";
-  $menuLinkText_Admin = "Admin";
   $menuLinkText_Lang = "Lang";
-  $menuLinkText_Settings = "Réglage";
+  $menuLinkText_Settings = "RÃ©glage";
   $menuLinkText_Donate = "<font color=\"#FF0000\">Dons!</font>";
+
+	$lgLogout = "DÃ©connexion";
+
 ?>

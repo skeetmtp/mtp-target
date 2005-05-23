@@ -1,6 +1,6 @@
 <?php
-include_once("config.php");
-include_once("mysql-func.php");
+require_once("config.php");
+require_once("mysql-func.php");
 
 function todoAddEntry($status,$todo,$openby,$title,$type,$priority)
 {

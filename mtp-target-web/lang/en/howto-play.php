@@ -4,7 +4,7 @@
 <ul>
 <li>Get the <a href="http://mtptarget.free.fr/download">install here</a>.</li>
 <li>Install and run mtp-target</li>
-<li>Enter a login and a password, the first time you login, these informations will be stored into the database<br>
+<li>Enter a login and a password, the first time you login, these informations will be stored into the database<br/>
 <b>Warning</b> : login size is <b>20 characters max</b>, and only thoses chararters are allowed <b>a-z A-Z 0-9 [ ] _ -</b>
 </li>
 <li>Now you have to choose one of the available server</li>

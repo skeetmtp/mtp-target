@@ -1,11 +1,11 @@
 <?php
-     switch($lang)
+     switch(CUser::instance()->language())
      {
          case "fr":
-              include("./lang/fr/howto.php");
+              require_once("./lang/fr/howto.php");
          break;
          default :
-              include("./lang/en/howto.php");
+              require_once("./lang/en/howto.php");
          break;
      }
 ?>

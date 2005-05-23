@@ -1,6 +1,6 @@
 <?php
-include_once("stat_function.php");
-include_once("stat_game.php");
+require_once("stat_function.php");
+require_once("stat_game.php");
 
 	$user_name = "";
 	if(!isset($p_uid))
@@ -20,7 +20,7 @@ include_once("stat_game.php");
 	
 	if(isCacheFileUpToDate($cacheFileName))
 	{
-		include($cacheFileName);
+		require_once($cacheFileName);
 		return;
 	}
 	
@@ -28,8 +28,8 @@ include_once("stat_game.php");
 	fprintf($html_fp,"<script type='text/javascript' src='js/switchcontent.js'></script>");
 	fprintf($html_fp,"<b><a href=\"javascript:toggleElementByName('expandable')\">expand stats</a></b>");
 
-	//$link = "<a href=\"?page=stat_day.php&p_uid=$uid&p_year_to_stat=$yearToStat&p_month_to_stat=$monthToStat&p_day_to_stat=%s\">%s";
-	$link = "<a href=\"?page=stat_day.php&p_uid=$uid&p_year_to_stat=$yearToStat&p_month_to_stat=$monthToStat&p_day_to_stat=%s\">%s";
+	//$link = "<a href=\"?page=stat_day&p_uid=$uid&p_year_to_stat=$yearToStat&p_month_to_stat=$monthToStat&p_day_to_stat=%s\">%s";
+	$link = "<a href=\"?page=stat_day&p_uid=$uid&p_year_to_stat=$yearToStat&p_month_to_stat=$monthToStat&p_day_to_stat=%s\">%s";
 	if($uid==0)	
 		$requete = "SELECT count(*),DAYOFMONTH(session.Date) as d1 ,DAYOFMONTH(session.Date) as d2 FROM session WHERE MONTH(session.Date)=$monthToStat AND YEAR(session.Date)=$yearToStat GROUP BY TO_DAYS(session.Date);";
 	else
@@ -44,5 +44,5 @@ include_once("stat_game.php");
 */
 
 	fclose($html_fp);	  
-	include($cacheFileName);	
+	require_once($cacheFileName);	
 ?>

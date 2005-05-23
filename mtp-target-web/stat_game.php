@@ -1,6 +1,6 @@
 <?php
-include_once("stat_function.php");
-include_once("stat_graph_display.php");
+require_once("stat_function.php");
+require_once("stat_graph_display.php");
 
 
 function drawGames($html_fp,$gameListRequete,$header,$uid)
@@ -8,13 +8,10 @@ function drawGames($html_fp,$gameListRequete,$header,$uid)
 	global $table_news_bgcolor_color;
 	global $table_news_head_color;
 	global $table_news_row_color;
-	global $table_news_row_color_2;
 
 	$maxPlayerCount = 16;
-	fprintf($html_fp,"<table width=\"\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\"  bgcolor=\"%s\">\n",$table_news_bgcolor_color);
-	fprintf($html_fp,"<th bgcolor=\"%s\" align=\"center\" >\n",$table_news_head_color);
-	fprintf($html_fp,"%s\n",$header);
-	fprintf($html_fp,"</th>\n");
+	fprintf($html_fp,"<table class=\"stat\">\n");
+	fprintf($html_fp,"<th>%s</th>\n",$header);
 	fprintf($html_fp,"<tr>\n");
 	fprintf($html_fp,"<td>\n");
 	
@@ -23,14 +20,14 @@ function drawGames($html_fp,$gameListRequete,$header,$uid)
 	$requete = $gameListRequete;//
 	$sessionListResult  = exec_game_db_requete($requete);
 
-	fprintf($html_fp,"<div id=\"stat_table\">");
-	fprintf($html_fp,"<table width=\"100%%\" border=\"0\" cellpadding=\"0\" cellspacing=\"1\" >\n");
+//	fprintf($html_fp,"<div id=\"stat_table\">");
+	fprintf($html_fp,"<table>\n");
 	//fprintf($html_fp,"<th> SId </th>\n");
-	fprintf($html_fp,"<th> level </th>\n");
-	fprintf($html_fp,"<th> server </th>\n");
-	fprintf($html_fp,"<th> date </th>\n");
-	fprintf($html_fp,"<th> duration </th>\n");
-	fprintf($html_fp,"<th> score </th>\n");
+	fprintf($html_fp,"<th>level</th>\n");
+	fprintf($html_fp,"<th>server</th>\n");
+	fprintf($html_fp,"<th>date</th>\n");
+	fprintf($html_fp,"<th>duration</th>\n");
+	fprintf($html_fp,"<th>score</th>\n");
 	fprintf($html_fp,"<th colspan=\"%d\"> players </th>\n",$maxPlayerCount);
 	
 	$line_number = 0;
@@ -43,13 +40,13 @@ function drawGames($html_fp,$gameListRequete,$header,$uid)
 		{			
 			fprintf($html_fp,"<tr height=\"100%%\" >\n");
 			//fprintf($html_fp,"<td bgcolor=\"%s\">%s</td>\n",$table_news_row_color,$sessionListLine[0]);
-			fprintf($html_fp,"<td bgcolor=\"%s\"><a href=\"?page=stat_map.php&p_map_id=%d\">%s</a></td>\n",$table_news_row_color,$sessionLine[7],$sessionLine[3]);
-			fprintf($html_fp,"<td bgcolor=\"%s\"><a href=\"?page=stat_server.php&p_server_id=%d\">%s</a></td>\n",$table_news_row_color,$sessionLine[2],$sessionLine[6]);
-			fprintf($html_fp,"<td bgcolor=\"%s\">%s</td>\n",$table_news_row_color,$sessionLine[1]);
+			fprintf($html_fp,"<td><a href=\"?page=stat_map&p_map_id=%d\">%s</a></td>\n",$sessionLine[7],$sessionLine[3]);
+			fprintf($html_fp,"<td><a href=\"?page=stat_server&p_server_id=%d\">%s</a></td>\n",$sessionLine[2],$sessionLine[6]);
+			fprintf($html_fp,"<td>%s</td>\n",$sessionLine[1]);
 			$duration = $sessionLine[5];
 			if($duration<0)
 				$duration = 0;
-			fprintf($html_fp,"<td bgcolor=\"%s\">%s</td>\n",$table_news_row_color,$duration);
+			fprintf($html_fp,"<td>%s</td>\n",$duration);
 			$requete = "SELECT user.UId,user.Login,user_session.Score FROM user,user_session WHERE user_session.SessionId=$sessionListLine[0] AND user.UId=user_session.UId";
 			//$requete = "SELECT user.UId,user.Login,user_session.Score FROM user LEFT JOIN user_session ON user.UId=user_session.UId WHERE user_session.SessionId=$sessionListLine[0]";
 			$sessionPlayerListResult  = exec_game_db_requete($requete);
@@ -66,7 +63,7 @@ function drawGames($html_fp,$gameListRequete,$header,$uid)
 				$i++;
 			}
 			$userCount = $i;
-			fprintf($html_fp,"<td bgcolor=\"%s\">&nbsp %d &nbsp</td>\n",$table_news_row_color,$totalScore);
+			fprintf($html_fp,"<td>&nbsp %d &nbsp</td>\n",$totalScore);
 
 			fprintf($html_fp,"<td bgcolor=\"%s\">\n",$table_news_row_color);
 			fprintf($html_fp,"<table  width=\"100%%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n");
@@ -75,7 +72,7 @@ function drawGames($html_fp,$gameListRequete,$header,$uid)
 			for($i=0;$i<$userCount;$i++)
 			{
 				if((($i+$line_number)%2)==0)
-					$cellBgColor = $table_news_row_color_2;
+					$cellBgColor = "#FEF5D8";
 				else
 					$cellBgColor = $table_news_row_color;
 				fprintf($html_fp,"<td bgcolor=\"%s\">\n",$cellBgColor);
@@ -91,12 +88,12 @@ function drawGames($html_fp,$gameListRequete,$header,$uid)
 			for($i=0;$i<$userCount;$i++)
 			{
 				if((($i+$line_number)%2)==0)
-					$cellBgColor = $table_news_row_color_2;
+					$cellBgColor = "#FEF5D8";
 				else
 					$cellBgColor = $table_news_row_color;
 				fprintf($html_fp,"<td bgcolor=\"%s\">\n",$cellBgColor);
 				if($uid!=$valPerUser[$i][0])
-					fprintf($html_fp,"&nbsp<a href=\"?page=stat_user.php&p_user_id=%d\">%s</a>\n",$valPerUser[$i][0],$valPerUser[$i][1],$valPerUser[$i][2]);
+					fprintf($html_fp,"&nbsp<a href=\"?page=stat_user&p_user_id=%d\">%s</a>\n",$valPerUser[$i][0],$valPerUser[$i][1],$valPerUser[$i][2]);
 				else	
 					fprintf($html_fp,"&nbsp %s\n",$valPerUser[$i][1]);
 				fprintf($html_fp,"</td>\n");
@@ -113,12 +110,12 @@ function drawGames($html_fp,$gameListRequete,$header,$uid)
 	}
 	
 	fprintf($html_fp,"</table>\n");
-	fprintf($html_fp,"</div>");
+//	fprintf($html_fp,"</div>");
 	
 	fprintf($html_fp,"</td>\n");
 	fprintf($html_fp,"</tr>\n");
 	fprintf($html_fp,"</table>\n");
-	fprintf($html_fp,"<br>\n");
+	fprintf($html_fp,"<br/>\n");
 	
 }
 
@@ -127,7 +124,6 @@ function drawTopPlayedUser($html_fp,$uid)
 	global $table_news_bgcolor_color;
 	global $table_news_head_color;
 	global $table_news_row_color;
-	global $table_news_row_color_2;
 	
 	$header = "Top 10 played players last week";
 
@@ -136,33 +132,33 @@ function drawTopPlayedUser($html_fp,$uid)
 	$result=exec_game_db_requete($requete);
 
 
-	fprintf($html_fp,"<table width=\"\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\"  bgcolor=\"%s\">\n",$table_news_bgcolor_color);
-	fprintf($html_fp,"<th bgcolor=\"%s\" align=\"center\" >\n",$table_news_head_color);
+	fprintf($html_fp,"<table class=\"stat\">\n");
+	fprintf($html_fp,"<th>\n");
 	fprintf($html_fp,"%s\n",$header);
 	fprintf($html_fp,"</th>\n");
 	fprintf($html_fp,"<tr>\n");
 	fprintf($html_fp,"<td>\n");
 	
 	fprintf($html_fp,"<div id=\"stat_table\">");
-	fprintf($html_fp,"<table width=\"100%%\" border=\"0\" cellpadding=\"0\" cellspacing=\"1\" >\n");
+	fprintf($html_fp,"<table>\n");
 	fprintf($html_fp,"<th> user </th>\n");
 	fprintf($html_fp,"<th> games played with him </th>\n");
 	
 	$line_number = 0;
 	while($line = mysql_fetch_array($result))
 	{
-		fprintf($html_fp,"<tr height=\"100%%\" >\n");
-		fprintf($html_fp,"<td bgcolor=\"%s\">\n",$table_news_row_color);
-		fprintf($html_fp,"<a href=\"?page=stat_user.php&p_user_id=%d\">%s</a><br>\n",$line[2],$line[0]);
+		fprintf($html_fp,"<tr>\n");
+		fprintf($html_fp,"<td>\n");
+		fprintf($html_fp,"<a href=\"?page=stat_user&p_user_id=%d\">%s</a><br/>\n",$line[2],$line[0]);
 		fprintf($html_fp,"</td>\n");
-		fprintf($html_fp,"<td bgcolor=\"%s\">%s</td>\n",$table_news_row_color,$line[1]);
+		fprintf($html_fp,"<td>%s</td>\n",$line[1]);
 		fprintf($html_fp,"</tr>\n");
 		$line_number++;
 	}
 	if($line_number==0)
 	{
-		fprintf($html_fp,"<tr height=\"100%%\" >\n");
-		fprintf($html_fp,"<td colspan=\"2\" bgcolor=\"%s\">none</td>\n",$table_news_row_color);
+		fprintf($html_fp,"<tr>\n");
+		fprintf($html_fp,"<td>none</td>\n");
 		fprintf($html_fp,"</tr>\n");
 	}
 	
@@ -172,9 +168,8 @@ function drawTopPlayedUser($html_fp,$uid)
 	fprintf($html_fp,"</td>\n");
 	fprintf($html_fp,"</tr>\n");
 	fprintf($html_fp,"</table>\n");
-	fprintf($html_fp,"<br>\n");
+	fprintf($html_fp,"<br/>\n");
 
 }
-
 
 ?>

@@ -1,7 +1,9 @@
 <?php
-include_once("todo-func.php");
-include_once("login.php");
+require_once("todo-func.php");
 
+if(!CUser::instance()->admin()) die("For admin only");
+
+$id = $_GET['id'];
 
   $requete = "SELECT * FROM todo WHERE 1 and id like ".$id." ORDER BY opendate;";
   $resultat = exec_requete($requete);
@@ -11,7 +13,7 @@ include_once("login.php");
 <form method="post" action="todo-modify.php" name="modifyForm">
 <table width="75%" border="0">
 	<tr>
-		<td bgcolor="#dddddd"><b>&nbsp;Priority&nbsp;</b></td>
+		<td bgcolor="#dddddd"><b>&nbsp;Pri&nbsp;</b></td>
 		<td bgcolor="#dddddd"><b>&nbsp;Status&nbsp;</b></td>
 		<td bgcolor="#dddddd"><b>&nbsp;Type&nbsp;</b></td>
 		<td bgcolor="#dddddd"><b>&nbsp;Title&nbsp;</b></td>

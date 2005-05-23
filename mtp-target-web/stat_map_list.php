@@ -4,7 +4,7 @@
 	
 	if(isCacheFileUpToDate($cacheFileName))
 	{
-		include($cacheFileName);
+		require_once($cacheFileName);
 		return;
 	}
 	
@@ -14,9 +14,9 @@
 	
 	while($ligne = mysql_fetch_array($resultat))
 	{
-		fprintf($html_fp,"<b><a href=\"?page=stat_map.php&p_map_id=%d\">%s</a></b><br>\n",$ligne[0],$ligne[1]);
+		fprintf($html_fp,"<b><a href=\"?page=stat_map&p_map_id=%d\">%s</a></b><br/>\n",$ligne[0],$ligne[1]);
 	}
 	fclose($html_fp);	  
 	
-	include($cacheFileName);	
+	require_once($cacheFileName);	
 ?>

@@ -1,11 +1,11 @@
 <?php
-     switch($lang)
+     switch(CUser::instance()->language())
      {
          case "fr":
-              include("./lang/fr/home.php");
+              require_once("./lang/fr/home.php");
          break;
          default :
-              include("./lang/en/home.php");
+              require_once("./lang/en/home.php");
          break;
      }
 ?>

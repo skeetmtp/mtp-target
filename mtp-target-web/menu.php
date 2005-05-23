@@ -1,130 +1,97 @@
 <?php
-  include_once("conf.inc.php");
-  include_once("config.php");
-  include_once("common.php");
-  include_once("mysql-func.php");
-  include_once("ingame_stats.php");
-  include_once("cache_2_html.php");
 
-	// you can't directly access to GET value
-	$page = $_GET["page"];
-	$login = $_GET["login"];
-	$password = $_GET["password"];
-	$lang = $_GET["lang"];
-
-  if(isset($page) && !validPage($page)) unset($page);
-  if(isset($login) && !validInput($login)) unset($login);
-  if(isset($password) && !validInput($password)) unset($password);
-  if(isset($lang) && !validInput($lang)) unset($lang);
-  if(isset($lang))
-  {
-      setcookie("mtp_target_lang",$lang,time()+3600*24*30);
-  }
-  include_once("lang.php");
-
-  include_once("check_admin_login.php");
-
-  if(isset($_COOKIE['mtp_target_default_page']))
-  	$default_page = $HTTP_COOKIE_VARS['mtp_target_default_page'];
-
-  if(isset($default_page))
-  {
-      $default_page = $default_later;
-  }
-  else
-  {
-      $default_page = $default_first_time;
-      setcookie("mtp_target_default_page",$default_later,time()+3600*24*30);
-  }
-  if (!isset($page))
-  	$page = $default_page;
-
-  $menu_array = array (
-    "news"  => array ("url"=>"?page=news-manager.php", "name"=>$menuLinkText_News),
-    "home"  => array ("url"=>"?page=home.php", "name"=>$menuLinkText_Home),
-    "download"  => array ("url"=>"http://mtptarget.free.fr/download.php", "name"=>$menuLinkText_Download),
-    "sources"  => array ("url"=>"?page=source.php", "name"=>$menuLinkText_Sources),
-    "screenshot"  => array ("url"=>"?page=screenshot.php", "name"=>$menuLinkText_Screenshot),
-    "documents"  => array ("url"=>"?page=howto.php", "name"=>$menuLinkText_Documents),
-    "forum"  => array ("url"=>"/forum", "name"=>$menuLinkText_Forum),
+$menu_array = array (
+"news"  => array ("url"=>"?page=news-manager", "name"=>$menuLinkText_News),
+"home"  => array ("url"=>"?page=home", "name"=>$menuLinkText_Home),
+"download"  => array ("url"=>"http://mtptarget.free.fr/download.php", "name"=>$menuLinkText_Download),
+"sources"  => array ("url"=>"?page=source", "name"=>$menuLinkText_Sources),
+"screenshot"  => array ("url"=>"?page=screenshot", "name"=>$menuLinkText_Screenshot),
+"documents"  => array ("url"=>"?page=howto", "name"=>$menuLinkText_Documents),
+"forum"  => array ("url"=>$forumURL, "name"=>$menuLinkText_Forum),
 //    "compatibility"  => array ("url"=>"?page=compatibility-list.php", "name"=>$menuLinkText_Compatibility),
-    "todo"  => array ("url"=>"?page=todo-manager.php", "name"=>$menuLinkText_Todo),
-    "stats"  => array ("url"=>"?page=stats.php", "name"=>$menuLinkText_Stats),
-    "contact"  => array ("url"=>"?page=contact.php", "name"=>$menuLinkText_Contact),
-  );
+"todo"  => array ("url"=>"?page=todo-manager", "name"=>$menuLinkText_Todo),
+"stats"  => array ("url"=>"?page=stats", "name"=>$menuLinkText_Stats),
+"contact"  => array ("url"=>"?page=contact", "name"=>$menuLinkText_Contact),
+);
+
+?>
+<body>
+
+<table class="head">
+<tr>
+<td class="logo">
+<a href="index.php"><img src="<?php echo $image_dir; ?>/logo.png" alt="Mtp Target" /></a>
+<?php
+
+$url=$_SERVER['REQUEST_URI'];
+if(false === strpos($url,'?')) {
+	$url .= "?lang=";
+} else {
+	$pos = strpos($url,'lang=');
+	if(false === $pos) {
+		$url .= "&lang=";
+	} else {
+		$url=substr($url,0,$pos);
+		$pos2 = strpos($_SERVER['REQUEST_URI'],'&',$pos);
+		if(false !== $pos2) {
+			$url .= substr($_SERVER['REQUEST_URI'],$pos2+1)."&";
+		}
+		$url .= "lang=";
+	}
+}
+
+echo '<a href="'.$url.'en"><img src="'.$image_dir.'/en.png" alt="English" /></a>'."\n";
+echo '<a href="'.$url.'fr"><img src="'.$image_dir.'/fr.png" alt="'.utf8_encode("Français").'" /></a>'."\n";
+?>
+</td>
+</tr>
+</table>
+
+<?php
+echo '<div class="divlogin"><table class="tablelogin">';
+if (CUser::instance()->logged()) {
+	require_once ("user_welcome.php");
+} else {
+	CUser::instance()->displayLoginForm();
+}
+echo '</table></div>';
 ?>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html lang="<?php echo $lang ?>">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>mtp-target</title>
-<link rel="stylesheet" type="text/css" href="mtptarget.css">
-</head>
-<body>
-<table border="0"  cellpadding="0" cellspacing="2" width="100%">
-<tr align="center">
-    <td colspan="<?php echo count($menu_array);?>">
-        <a href="index.php"><img src="<?php echo $image_dir; ?>/logo.png" alt="Mtp Target"></a>
-        <?php
-        //echo "##$REQUEST_URI##";
-        if($page == $default_page)
-        {
-        	echo "<a href=\"?lang=en\"><img src=\"$image_dir/en.png\" ALT=\"English\"></a>\n";
-        	echo "<a href=\"?lang=fr\"><img src=\"$image_dir/fr.png\" ALT=\"Français\"></a>\n";
-        }
-        else
-        {
-        	echo "<a href=\"".$_SERVER['REQUEST_URI']."&lang=en\"><img src=\"$image_dir/en.png\" ALT=\"English\"></a>\n";
-        	echo "<a href=\"".$_SERVER['REQUEST_URI']."&lang=fr\"><img src=\"$image_dir/fr.png\" ALT=\"Français\"></a>\n";
-        }
-        ?>
-    </td>
-</tr>
-<tr>
 
-<table border="0"  cellpadding="0" cellspacing="5" width="100%">
-<tr valign="top">
+<table class="menu">
+<tr>
 <td>
 
-<table border="0"  cellpadding="0" cellspacing="0" width="100%">
-<tr >
-        <td align="center"><div id="menu">
+<table class="menu">
+<tr>
+		<td>
+        <?php
+                echo "| ";
+                foreach($menu_array as $key => $value)
+                {
+                      echo '<a href="'.$value["url"].'">'.$value["name"].'</a> | ';
+                }
+                
+       ?>
+
+        </td>
+</tr>
+<tr>
+        <td>
         <?php
 
-		if($enableSql && $html_fp = cache2Html($cache_dir."/ingame_stats_menu_".$lang.".html",$defaultScoresCacheFileDuration))
+		if($enableSql && $html_fp = cache2Html($cache_dir."/ingame_stats_menu_".CUser::instance()->language().".html",$defaultScoresCacheFileDuration))
 		{
 			getStats($nbop, $nbrp, $nbs);
 			fprintf($html_fp,$menuStat, $nbrp, $nbop, $nbs);
 			flushCache2Html($html_fp);
 		}
-
-
         ?>
-        </div></td>
-</tr>
-<tr>
-		<td align="center"><div id="menu">
-        <?php
-                printf("| ");
-                foreach($menu_array as $key => $value)
-                {
-                      printf("<a href=\"%s\">%s</a> | ",$value["url"],$value["name"]);
-                }
-        ?>
-
-        </div></td>
+        </td>
 </tr>
 </table>
 
 </td>
-<td>
- 		  <?php include("user_check.php"); ?>
-</td>
+
 </tr>
 </table>
-
-<tr>
-<td colspan="<?php echo count($menu_array);?>" valign="top" align="left">
-<div id="main">

@@ -7,12 +7,12 @@ if(!$user_logged)
 }
 
 	/*
-	printf("delete login = %s<br>",$user_login);
-	printf("delete pass  = %s<br>",$user_password);
+	printf("delete login = %s<br/>",$user_login);
+	printf("delete pass  = %s<br/>",$user_password);
 	*/
-	$delete_uid = userName2Uid($user_login);
+	$delete_uid = CUser::instance()->uid(); //userName2Uid($user_login);
 	
-	//printf("delete uid   = %s<br>",$delete_uid);
+	//printf("delete uid   = %s<br/>",$delete_uid);
 	
 	$requete = sprintf("DELETE FROM user_session WHERE UId=%d;",$delete_uid);
 	$result=exec_game_db_requete($requete);

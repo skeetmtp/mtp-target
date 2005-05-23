@@ -1,7 +1,7 @@
 <?php
-include_once("stat_function.php");
-include_once("stat_game.php");
-include_once("stat_map_graph_display.php");
+require_once("stat_function.php");
+require_once("stat_game.php");
+require_once("stat_map_graph_display.php");
 
 	if(!isset($p_uid) || $p_uid==0)
 	{
@@ -25,7 +25,7 @@ include_once("stat_map_graph_display.php");
 
 	if(isCacheFileUpToDate($cacheFileName))
 	{
-		include($cacheFileName);
+		require_once($cacheFileName);
 		return;
 	}
 	
@@ -44,12 +44,12 @@ include_once("stat_map_graph_display.php");
 	$result=exec_game_db_requete($requete);
 	if($uid==0)
 	{	
-		$link = "<a href=\"?page=stat_hour.php&p_uid=$uid&p_year_to_stat=$yearToStat&p_month_to_stat=$monthToStat&p_day_to_stat=$dayToStat&p_hour_to_stat=%s\">%s";
+		$link = "<a href=\"?page=stat_hour&p_uid=$uid&p_year_to_stat=$yearToStat&p_month_to_stat=$monthToStat&p_day_to_stat=$dayToStat&p_hour_to_stat=%s\">%s";
 		drawGraphLink($html_fp,$result,true,0,24,sprintf("%s : games by hour",date("M-d-Y", mktime(0, 0, 0, $monthToStat, $dayToStat, $yearToStat))),"","Hour",$link);
 	}
 	else
 	{
-		$link = "<a href=\"?page=stat_hour.php&p_year_to_stat=$yearToStat&p_month_to_stat=$monthToStat&p_day_to_stat=$dayToStat&p_hour_to_stat=%s\">%s";
+		$link = "<a href=\"?page=stat_hour&p_year_to_stat=$yearToStat&p_month_to_stat=$monthToStat&p_day_to_stat=$dayToStat&p_hour_to_stat=%s\">%s";
 		drawGraphLink($html_fp,$result,true,0,24,sprintf("%s : $user_name games by hour",date("M-d-Y", mktime(0, 0, 0, $monthToStat, $dayToStat, $yearToStat))),"","Hour",$link);
 	}
 
@@ -65,9 +65,8 @@ include_once("stat_map_graph_display.php");
 	else
 		$requete = "SELECT count(*),map.Id,map.LevelName FROM user_session,session,map WHERE map.LevelName=session.LevelName AND TO_DAYS('$dayString')=TO_DAYS(session.Date) AND session.Id=user_session.SessionId AND user_session.UId=$uid GROUP BY session.LevelName;";
 	$result=exec_game_db_requete($requete);
-	drawMapUsage($html_fp,$result,1,30,"Level usage",array("", "Level"),"<a href=\"?page=stat_map.php&p_map_id=%d\">%s</a>");
-	
+	drawMapUsage($html_fp,$result,1,30,"Level usage",array("", "Level"),"<a href=\"?page=stat_map&p_map_id=%d\">%s</a>");
 
 	fclose($html_fp);	  
-	include($cacheFileName);	
+	require_once($cacheFileName);	
 ?>

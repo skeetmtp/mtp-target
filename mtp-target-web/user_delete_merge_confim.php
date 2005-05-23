@@ -1,7 +1,7 @@
 <?php  
 /*
-printf("login = %s<br>",$user_merge_login);
-printf("pass  = %s<br>",$user_merge_password);
+printf("login = %s<br/>",$user_merge_login);
+printf("pass  = %s<br/>",$user_merge_password);
 */
 
 if(!$user_logged)
@@ -22,17 +22,17 @@ if(!checkLoginPassword($user_merge_login,$user_merge_password))
 	exit();
 }
 
-	$delete_uid = userName2Uid($user_login);
+	$delete_uid = CUser::instance()->uid();//userName2Uid($user_login);
 	$merge_uid = userName2Uid($user_merge_login);
 
 
 	/*
-	printf("merge login  = %s<br>",$user_merge_login);
-	printf("merge pass   = %s<br>",$user_merge_password);
-	printf("delete login = %s<br>",$user_login);
-	printf("delete pass  = %s<br>",$user_password);
-	printf("delete uid   = %s<br>",$delete_uid);
-	printf("merge uid    = %s<br>",$merge_uid);
+	printf("merge login  = %s<br/>",$user_merge_login);
+	printf("merge pass   = %s<br/>",$user_merge_password);
+	printf("delete login = %s<br/>",$user_login);
+	printf("delete pass  = %s<br/>",$user_password);
+	printf("delete uid   = %s<br/>",$delete_uid);
+	printf("merge uid    = %s<br/>",$merge_uid);
 	*/
 	
 	
@@ -53,6 +53,6 @@ if(!checkLoginPassword($user_merge_login,$user_merge_password))
 	$requete = sprintf("DELETE FROM user WHERE UId=%d;",$delete_uid);
 	$result=exec_game_db_requete($requete);
 
-	printf("%s merged successfully with %s<br>",$user_login,$user_merge_login);
+	printf("%s merged successfully with %s<br/>",CUser::instance()->login(),$user_merge_login);
 	
 ?>

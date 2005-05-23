@@ -1,12 +1,14 @@
-<center>user settings...<br></center>
+<center>user settings...<br/></center>
 
 <?php
-include_once("stat_function.php");
+require_once("stat_function.php");
 
-	if(!$user_logged)
-		exit();
+if (!CUser::instance()->logged()) {
+	die("Please login before");
+}
 
-	$uid = userName2Uid($user_login);
+$user_login=CUser::instance()->login();
+$uid = CUser::instance()->uid();
 
 	if(isset($user_texture_id))
 	{
@@ -25,25 +27,25 @@ include_once("stat_function.php");
 	printf("<td >\n");
 	$userTextureName = userTexture($uid);
 	$userTextureUrl = $userTexturePath.$userTextureStartName.$userTextureName.".jpg";
-	printf("<img src=\"%s\" ALT=\"user texture : %s\"><br>\n",$userTextureUrl,$userTextureUrl);
+	printf("<img src=\"%s\" ALT=\"user texture : %s\"><br/>\n",$userTextureUrl,$userTextureUrl);
 	printf("</td>\n");
 
 	printf("<td valign=\"bottom\">\n");
 	printf($settingsChangeTexture);
 	printf($settingsUploadTexture);
-	//printf("<a href=\"?page=user_color_selection.php\">Change your color...</a><br>");
-	//printf("<a href=\"?page=user_delete.php\">Delete this account</a><br>");
+	//printf("<a href=\"?page=user_color_selection\">Change your color...</a><br/>");
+	//printf("<a href=\"?page=user_delete\">Delete this account</a><br/>");
 	printf($settingsMerge);
 	printf($settingsRename);
-	//printf("<a href=\"?page=test.php\">test</a><br>");
+	//printf("<a href=\"?page=test\">test</a><br/>");
 	printf("</td>\n");
 
 	printf("</tr>\n");
 	printf("</table>\n");
 	
 	/*
-	printf("TODO: set email<br>\n");
-	printf("TODO: [x] receive news by mail<br>\n");
+	printf("TODO: set email<br/>\n");
+	printf("TODO: [x] receive news by mail<br/>\n");
 	*/
 	
 	

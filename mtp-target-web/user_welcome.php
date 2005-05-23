@@ -1,24 +1,25 @@
 <?php
-	include_once("helpers.php");
+	require_once("helpers.php");
 	
-	$cacheFileName = $cache_dir."/user_welcome_".$lang."_".$user_id.".html";
-	if(isCacheFileUpToDate($cacheFileName))
+	// only cache the scores
+	$cacheFileName = $cache_dir."/user_welcome_".CUser::instance()->language()."_".CUser::instance()->uid().".html";
+	if(!isCacheFileUpToDate($cacheFileName))
 	{
-		include($cacheFileName);
-		return;
+		$html_fp = fopen($cacheFileName, "wt");
+		fprintf($html_fp,$welcomeTodayScore,userTodayScore(CUser::instance()->uid()));
+		fprintf($html_fp,$welcomeTotalScore,userCurrentScore(CUser::instance()->uid()));
+		fclose($html_fp);
 	}
-	$html_fp = fopen($cacheFileName, "wt");
 
-	boxBeginFp($html_fp,false);
-	fprintf($html_fp,$welcomeUser,$user_login);
-	fprintf($html_fp,$welcomeTodayScore,userTodayScore($user_id));
-	fprintf($html_fp,$welcomeTotalScore,userCurrentScore($user_id));
-	fprintf($html_fp,"<b>");
-	fprintf($html_fp,$welcomeSettings);
-	fprintf($html_fp,$welcomeStat,$user_id);
-	fprintf($html_fp,"</b>");
-	boxEndFp($html_fp);
+	printf($welcomeUser,CUser::instance()->login());
+	include($cacheFileName);
+	printf($welcomeSettings);
+	printf($welcomeStat,CUser::instance()->uid());
 
-	fclose($html_fp);	  
-	include($cacheFileName);	
+	// Special stuffs for admin only
+	if(CUser::instance()->admin()) {
+		printf('<tr><td class="r"><a href="?page=news-submit">Add a news</a></td></tr>');
+		printf('<tr><td class="r"><a href="?page=todo-submit">Add a todo</a></td></tr>');
+	}
+	echo '<tr><td class="r"><a href="?logout=1">'.$lgLogout.'</a></td></tr>';
 ?>

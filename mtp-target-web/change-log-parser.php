@@ -1,4 +1,8 @@
 <?php
+
+die("REMOVED BY ACE. OLD CODE ".__FILE__);
+/*
+
   echo "<br>";
   echo "<table border=\"0\" cellpadding=\"1\" cellspacing=\"0\"";// width=\"100%\">";
   echo "<tr>";
@@ -64,6 +68,6 @@
   }
   echo "</tr>";
   echo "<table>";
-
+*/
 ?>
 

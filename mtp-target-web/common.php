@@ -27,7 +27,7 @@ if (!function_exists('fprintf')) {
    }
 }
 
-function DisplayCacheFile($filename)
+function displayCacheFile($filename)
 {
 	$html_fp = fopen($filename, "rt");
 	while (!feof($html_fp)):
@@ -40,6 +40,8 @@ function DisplayCacheFile($filename)
 
 function isCacheFileUpToDateDuration($filename,$duration)
 {
+// ace no cache
+//return false;
 	global $cache_dir;
 	if(!file_exists($cache_dir))
 		mkdir($cache_dir);
@@ -64,10 +66,39 @@ function isCacheFileUpToDateDuration($filename,$duration)
 
 function isCacheFileUpToDate($filename)
 {
+// ace no cache
+//return false;
 	global $defaultCacheFileDuration;
 	//return false;
 	$res = isCacheFileUpToDateDuration($filename,$defaultCacheFileDuration); //update every 30 minutes
 	return $res;
+}
+
+function validPage($page)
+{
+	if (!(eregi("^[a-z\/_\-]+$", $page))) return false;
+  	if(strlen($page)>40) return false;
+    return file_exists($page.".php");
+}
+
+function bench_start()
+{
+	global $bench_time_start;
+	$bench_time_start = microtime_float();
+}
+
+function bench_end()
+{
+	global $bench_time_start;
+	$bench_time_end = microtime_float();
+	$bench_time = $bench_time_end - $bench_time_start;
+	return sprintf("%.2f",$bench_time);
+}
+
+function microtime_float()
+{
+	list($usec, $sec) = explode(" ", microtime());
+	return ((float)$usec + (float)$sec);
 }
 
 ?>

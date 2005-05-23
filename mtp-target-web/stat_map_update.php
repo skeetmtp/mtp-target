@@ -1,12 +1,12 @@
 <?php
-include_once("stat_function.php");
-include_once("stat_game.php");
+require_once("stat_function.php");
+require_once("stat_game.php");
 
 
 function updateMapListDb($silent)
 {
 	if(!$silent)
-		printf("Updating Map List : <br>\n");
+		printf("Updating Map List : <br/>\n");
 	$requete = "SELECT DISTINCT LevelName FROM session;";
 	$resultMapList=exec_game_db_requete($requete);
 	while($mapList = mysql_fetch_array($resultMapList))

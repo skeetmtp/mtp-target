@@ -3,7 +3,7 @@
 <h3>Internet server</h3>
 
 <p>
-First you should know that TCP port 51574 and 80 sould be open.<br>
+First you should know that TCP port 51574 and 80 sould be open.<br/>
 Open the file named <code>mtp_target_service_default.cfg</code> with your favorite text editor,
 the default path of this file is <code>C:\Program Files\mtp-target</code>.
 </p>

@@ -1,5 +1,7 @@
 <?php
 
+die("REMOVED BY ACE. OLD CODE ".__FILE__);
+/*
   if(isset($login) && isset($password))
   {
   }
@@ -32,6 +34,6 @@
 
   $logged=isset($login) && $login!="";
 
-
+*/
 
 ?>

@@ -1,7 +1,7 @@
 <?php  
 /*
-printf("login = %s<br>",$user_merge_login);
-printf("pass  = %s<br>",$user_merge_password);
+printf("login = %s<br/>",$user_merge_login);
+printf("pass  = %s<br/>",$user_merge_password);
 */
 
 if(!(isset($user_merge_login) && validInput($user_merge_login) && isset ($user_merge_password) && validInput($user_merge_password)) )
@@ -19,8 +19,8 @@ if(!checkLoginPassword($user_merge_login,$user_merge_password))
 ?>
 
 <div id="delete">
-<center><h1><blink>WARNING</blink></h1><br>
-Be sure to know what you do, <u><?php echo $user_login; ?></u> account will be deleted, there is NO way to restore it after that
+<center><h1><blink>WARNING</blink></h1><br/>
+Be sure to know what you do, <u><?php echo CUser::instance()->login(); ?></u> account will be deleted, there is NO way to restore it after that
 </center>
 </div>
 
@@ -28,7 +28,7 @@ Be sure to know what you do, <u><?php echo $user_login; ?></u> account will be d
  <tr>
  <td align="right">
  <table border="0" cellpadding="0" cellspacing="5" bgcolor="#FFFAEA">
- <?php  echo '<form method="post" action="?page=user_delete_merge_confim.php" name="loginForm">'; ?>
+ <?php  echo '<form method="post" action="?page=user_delete_merge_confim" name="loginForm">'; ?>
  <!-- <form method="post" action="user_login.php" name="loginForm"> -->  
  <tr>
  <td align="right">
@@ -43,7 +43,7 @@ Be sure to know what you do, <u><?php echo $user_login; ?></u> account will be d
  delete&nbsp;:
  </td>
  <td colspan="2">
-	<?php echo $user_login; ?>
+	<?php echo CUser::instance()->login(); ?>
  </td>
  </tr>
  <tr>
@@ -63,7 +63,7 @@ Be sure to know what you do, <u><?php echo $user_login; ?></u> account will be d
  </td>
  <td  align="right">
 <?php
- printf("<input type=\"hidden\" name=\"user_login\" value=\"%s\"/>\n",$user_login);
+ printf("<input type=\"hidden\" name=\"user_login\" value=\"%s\"/>\n",CUser::instance()->login());
  printf("<input type=\"hidden\" name=\"user_merge_login\" value=\"%s\"/>\n",$user_merge_login);
  printf("<input type=\"hidden\" name=\"user_merge_password\" value=\"%s\"/>\n",$user_merge_password);
 ?>

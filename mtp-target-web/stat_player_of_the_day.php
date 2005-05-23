@@ -1,14 +1,14 @@
 <?php
-include_once("stat_function.php");
-include_once("stat_game.php");
-include_once("helpers.php");
+require_once("stat_function.php");
+require_once("stat_game.php");
+require_once("helpers.php");
 
-	$cacheFileName = $cache_dir."/stat_player_of_the_day_".$lang.".html";
+	$cacheFileName = $cache_dir."/stat_player_of_the_day_".CUser::instance()->language().".html";
 	boxBegin(true);
 
 	if(isCacheFileUpToDateDuration($cacheFileName,$defaultScoresCacheFileDuration))
 	{
-		include($cacheFileName);
+		require_once($cacheFileName);
 	}
 	else if($enableSql)
 	{
@@ -25,7 +25,7 @@ include_once("helpers.php");
 			fprintf($html_fp,$potdTitle);
 			fprintf($html_fp,$potdTop1,$line[2],$line[0],$line[1]);
 			fprintf($html_fp,"</center>");
-			fprintf($html_fp,"<br>");
+			fprintf($html_fp,"<br/>");
 		}
 	
 		fprintf($html_fp,"<div id=\"small\">");
@@ -42,12 +42,12 @@ include_once("helpers.php");
 		if($line = mysql_fetch_array($result))
 		{
 			fprintf($html_fp,$potdNewUser,$line[0],$line[1]);
-			fprintf($html_fp,"<br>");
+			fprintf($html_fp,"<br/>");
 		}
 	
 		fprintf($html_fp,"</div>");
 		fclose($html_fp);	  
-		include($cacheFileName);
+		require_once($cacheFileName);
 	}
 	
 	/*
@@ -56,7 +56,7 @@ include_once("helpers.php");
 	if($line = mysql_fetch_array($result))
 	{
 		printf($potdUserOnWebCount,$line[0]);
-		printf("<br>");
+		printf("<br/>");
 	}
 	*/
 

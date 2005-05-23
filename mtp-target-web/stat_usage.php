@@ -1,15 +1,16 @@
 <?php
-include_once("stat_function.php");
-include_once("stat_game.php");
+require_once("stat_function.php");
+require_once("stat_game.php");
 
-	$uid = userName2Uid($user_login);
+	//$uid = userName2Uid($user_login);
 	//$uid = 5453;
+	$uid = CUser::instance()->uid();
 	$cacheFileName = $cache_dir."/stat_usage.html";
 	
 	/*
 	if(isCacheFileUpToDate($cacheFileName))
 	{
-		include($cacheFileName);
+		require_once($cacheFileName);
 		return;
 	}
 	*/
@@ -29,11 +30,11 @@ include_once("stat_game.php");
 	$ucount = 0;
 	while($line = mysql_fetch_array($result))
 	{
-		printf("%s %s<br>\n",timeInSeconds2HumanDuration($line[0]),$line[1]);
+		printf("%s %s<br/>\n",timeInSeconds2HumanDuration($line[0]),$line[1]);
 		$ucount++;
 	}
 	//$totalUCount = totalRegisteredPlayer();
-	printf("totoal = %s users of %s total user(%.0f%%)<br>\n",$ucount,$totalUCount,100*$ucount/$totalUCount);
+	printf("totoal = %s users of %s total user(%.0f%%)<br/>\n",$ucount,$totalUCount,100*$ucount/$totalUCount);
 
 
 
@@ -43,5 +44,5 @@ include_once("stat_game.php");
 
 
 	fclose($html_fp);	  
-	include($cacheFileName);	
+	require_once($cacheFileName);	
 ?>

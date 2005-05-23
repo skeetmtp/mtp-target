@@ -28,7 +28,7 @@ function drawGraph($html_fp,$mysqlArray,$isHour,$CriterionBase,$valCount,$header
 	$CriterionArray[0] = $CriterionName;
 	drawGraphInner($html_fp,$valPerCriterion,$isHour,$CriterionBase,$valCount,$header,$ValueName,$CriterionArray,false);
 	
-	fprintf($html_fp,"<br>\n");
+	fprintf($html_fp,"<br/>\n");
 	
 }
 
@@ -60,7 +60,7 @@ function drawGraphLink($html_fp,$mysqlArray,$isHour,$CriterionBase,$valCount,$he
 	$CriterionArray[0] = $CriterionName;
 	drawGraphInner($html_fp,$valPerCriterion,$isHour,$CriterionBase,$valCount,$header,$ValueName,$CriterionArray,false);
 	
-	fprintf($html_fp,"<br>\n");
+	fprintf($html_fp,"<br/>\n");
 	
 }
 
@@ -92,7 +92,7 @@ function drawGraphH($html_fp,$mysqlArray,$isHour,$CriterionBase,$valCount,$heade
 	$CriterionArray[0] = $CriterionName;
 	drawGraphInnerHorizontal($html_fp,$valPerCriterion,$isHour,$CriterionBase,$valCount,$header,$ValueName,$CriterionArray,false);
 	
-	fprintf($html_fp,"<br>\n");
+	fprintf($html_fp,"<br/>\n");
 	
 }
 
@@ -122,7 +122,7 @@ function drawGraphMultiple($html_fp,$mysqlArray,$isHour,$CriterionBase,$valCount
 	
 	drawGraphInner($html_fp,$valPerCriterion,$isHour,$CriterionBase,$valCount,$header,$ValueName,$CriterionArray,$CriterionNotNull);
 	
-	fprintf($html_fp,"<br>\n");
+	fprintf($html_fp,"<br/>\n");
 	
 }
 
@@ -178,7 +178,7 @@ function drawGraphMultipleLinkCount($html_fp,$mysqlArray,$isHour,$CriterionBase,
 	
 	drawGraphInner($html_fp,$valPerCriterion,$isHour,$CriterionBase,$valCount,$header,$ValueName,$CriterionArray,$CriterionNotNull);
 	
-	fprintf($html_fp,"<br>\n");
+	fprintf($html_fp,"<br/>\n");
 	
 }
 
@@ -209,7 +209,7 @@ function drawGraphMultipleH($html_fp,$mysqlArray,$isHour,$CriterionBase,$valCoun
 	
 	drawGraphInnerHorizontal($html_fp,$valPerCriterion,$isHour,$CriterionBase,$valCount,$header,$ValueName,$CriterionArray,$CriterionNotNull);
 	
-	fprintf($html_fp,"<br>\n");
+	fprintf($html_fp,"<br/>\n");
 	
 }
 
@@ -226,15 +226,14 @@ function drawGraphInner($html_fp,$valPerCriterion,$isHour,$CriterionBase,$valCou
 	global $table_news_head_color;
 	global $table_news_row_color;
 	
-
-	fprintf($html_fp,"<table width=\"\" border=\"0\" cellpadding=\"0\" cellspacing=\"1\"  bgcolor=\"%s\">\n",$table_news_bgcolor_color);
-	fprintf($html_fp,"<th bgcolor=\"%s\" align=\"center\" >\n",$table_news_head_color);
+	fprintf($html_fp,"<table class=\"stat\">\n");
+	fprintf($html_fp,"<th>\n",$table_news_head_color);
 	fprintf($html_fp,"%s\n",$header);
 	fprintf($html_fp,"</th>\n");
 	fprintf($html_fp,"<tr>\n");
 	fprintf($html_fp,"<td>\n");
 	
-	fprintf($html_fp,"<table width=\"100%%\" border=\"0\" cellpadding=\"0\" cellspacing=\"3\" bgcolor=\"%s\">\n",$table_news_row_color);
+	fprintf($html_fp,"<table>\n");
 	fprintf($html_fp,"<tr valign=\"bottom\">\n");
 
 	

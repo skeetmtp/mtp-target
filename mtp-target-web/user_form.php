@@ -22,7 +22,7 @@
  </tr>
  <tr>
  <td align="left">
-   <a href="?page=user_registration.php">register</a>
+   <a href="?page=user_registration">register</a>
  </td>
  <td>
  &nbsp;

@@ -1,9 +1,6 @@
 <?php
-include_once("stat_function.php");
+require_once("stat_function.php");
 
-include_once("lang.php");
-
-     $table_news_bgcolor_color = "#666666";
      $table_news_head_color = "#FFEEDD";
      $table_news_row_color = "#FFFAEA";
 
@@ -15,30 +12,26 @@ include_once("lang.php");
 	$cacheFileName = $cache_dir."/stat_ranking_".$limit_base.".html";
 	if(isCacheFileUpToDate($cacheFileName))
 	{
-		include($cacheFileName);
+		require_once($cacheFileName);
 		return;
 	}
 	$html_fp = fopen($cacheFileName, "wt");
 
-
-
-	$thisPage = sprintf("?page=stat_ranking.php");
+	$thisPage = sprintf("?page=stat_ranking");
 	
 	//$result = exec_game_db_requete("select * from user ORDER BY Score LIMIT 0 , 30 where 1");
-	fprintf($html_fp,"<table border=\"0\" bgcolor=\"$table_news_bgcolor_color\">");
+	fprintf($html_fp,"<table class=\"stat\">");
 	$result = exec_game_db_requete(sprintf("select * from user ORDER BY Score DESC LIMIT %d , %d ",$limit_base,$limit_range));
-	fprintf($html_fp,"<tr>");
-	fprintf($html_fp,"<td bgcolor=\"$table_news_head_color\">&nbsp;Rank&nbsp;</td>");
-	fprintf($html_fp,"<td bgcolor=\"$table_news_head_color\">&nbsp;Login&nbsp;</td>");
-	fprintf($html_fp,"<td bgcolor=\"$table_news_head_color\">&nbsp;Score&nbsp;</td>");
-	fprintf($html_fp,"</tr>");
+	fprintf($html_fp,"<th>Rank</th>");
+	fprintf($html_fp,"<th>Login</th>");
+	fprintf($html_fp,"<th>Score</th>");
 	$line_count = 1;
 	while ($line = mysql_fetch_array($result))
 	{
 		fprintf($html_fp,"<tr>");
-		fprintf($html_fp,"<td bgcolor=\"$table_news_row_color\">&nbsp;%s&nbsp;</td>",$limit_base+$line_count);
-		fprintf($html_fp,"<td bgcolor=\"$table_news_row_color\">&nbsp;<b><a href=\"?page=stat_user.php&p_user_id=%d\">%s</a></b>&nbsp;</td>",$line[0],$line[1]);
-		fprintf($html_fp,"<td bgcolor=\"$table_news_row_color\">&nbsp;%s&nbsp;</td>",$line[6]);
+		fprintf($html_fp,"<td>%s</td>",$limit_base+$line_count);
+		fprintf($html_fp,"<td><a href=\"?page=stat_user&p_user_id=%d\">%s</a></td>",$line[0],$line[1]);
+		fprintf($html_fp,"<td>%s</td>",$line[6]);
 		fprintf($html_fp,"</tr>");
 		$line_count++;
 	}	
@@ -62,10 +55,7 @@ include_once("lang.php");
 	fprintf($html_fp,"</tr>");
 	fprintf($html_fp,"</table>");
 	
-	
 	fclose($html_fp);	  
-	include($cacheFileName);	
+	require_once($cacheFileName);	
 
-
-	
 ?>

@@ -9,13 +9,13 @@
 <p>
 The most simple way to make new level is tu reuse existing modules, and to place theme where you want.
 </p>
-<br>
-<br>
+<br/>
+<br/>
 
 <h3>Level</h3>
 
-<p>A level is a text file using the <code>.level</code> extension, it is editable with any text editor like notepade.<br>
-this kind of file is made of blocs, each bloc is delimited by <b>[</b> and <b>]</b><br>
+<p>A level is a text file using the <code>.level</code> extension, it is editable with any text editor like notepade.<br/>
+this kind of file is made of blocs, each bloc is delimited by <b>[</b> and <b>]</b><br/>
 
 <p>look at this simple example</p>
 <pre>
@@ -43,8 +43,8 @@ There is 4 kind of blocs :
 <li><b>General</b>: add global parameter like gravity...</li>
 </ul>
 </p>
-<br>
-<br>
+<br/>
+<br/>
 
 <h3>Module</h3>
 
@@ -67,8 +67,8 @@ rot = 0 1 0 0
 scale = 1 1 1
 name = snow_score50
 </pre>
-<br>
-<br>
+<br/>
+<br/>
 
 <h3>Bloc StartPoint</h3>
 

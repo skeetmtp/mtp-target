@@ -1,10 +1,10 @@
-
+ï»¿
 <h3>Introduction</h3>
 
 <p><img src="<?php echo $image_dir; ?>/scheme.jpg" alt="" width="256" height="192" align="right"> 
-Mtp Target est un clone du jeu <i>Monkey Target</i> (un des six mini jeu de <i>Super Monkey Ball</i>).<br>
-Apres avoir dévalé une gigantesque pente, votre but est de toucher une cible.<br>
-Ce jeu a été entierement concu sous licence <a href="http://www.gnu.org/copyleft/gpl.html">GNU GPL</a>.<br>
+Mtp Target est un clone du jeu <i>Monkey Target</i> (un des six mini jeu de <i>Super Monkey Ball</i>).<br/>
+Apres avoir dÃ©valÃ© une gigantesque pente, votre but est de toucher une cible.<br/>
+Ce jeu a Ã©tÃ© entierement concu sous licence <a href="http://www.gnu.org/copyleft/gpl.html">GNU GPL</a>.<br/>
 Le client et le serveur tournent sous Windows(tm) et GNU/Linux
 </p>
 
@@ -19,7 +19,7 @@ Le client et le serveur tournent sous Windows(tm) et GNU/Linux
 <li>Beta testeur officiel : Lithrel ;-).</li>
 </ul>
 
-<h3>Liste des biblioteques utilisée</h3>
+<h3>Liste des biblioteques utilisÃ©e</h3>
 <ul>
 <li><a href="http://www.nevrax.org">NeL</a> comme moteur 3d et framework</li>
 <li><a href="http://opende.sourceforge.net">ODE</a> comme moteur physique (avec OPCODE et dTriList)</li>

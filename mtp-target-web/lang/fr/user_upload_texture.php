@@ -1,21 +1,21 @@
-<?php
-	include_once("stat_function.php");
+﻿<?php
+	require_once("stat_function.php");
 	
-	if(!$user_logged)
+	if(!CUser::instance()->logged())
 	{
+		printf("<br/><br/>\n");
 		printf("<br>\n");
-		printf("<br>\n");
-		printf("<center><h2>Vous devez etre logg� pour ajouter une texture !<center></h2>\n");
-		printf("<br>\n");
-		printf("<br>\n");
-		printf("<br>\n");
-		printf("<br>\n");
+		printf("<center><h2>Vous devez etre loggé pour ajouter une texture !<center></h2>\n");
+		printf("<br/>\n");
+		printf("<br/>\n");
+		printf("<br/>\n");
+		printf("<br/>\n");
 		return;
 	}
 
 ?>
 
-<p>Cette page vous permet d'ajouter votre <a href="?page=stat_user_texture.php">propre texture</a> a votre pingoo!</p>
+<p>Cette page vous permet d'ajouter votre <a href="?page=stat_user_texture">propre texture</a> a votre pingoo!</p>
 
 <p>SVP, lisez bien les regles suivants, sinon ca ne marchera pas :</p>
 
@@ -27,9 +27,7 @@
 
 <form enctype="multipart/form-data" action="http://mtp-target.dyndns.org/mtp-target/send.php" method="post">
  <input type="hidden" name="MAX_FILE_SIZE" value="300000" />
- <input type="hidden" name="user_login" value="<?php echo $user_login ?>" />
+ <input type="hidden" name="user_login" value="<?php echo CUser::instance()->login(); ?>" />
  - Ajouter la texture : <input name="userfile" type="file" />
  <input type="submit" value="Envoyer" />
 </form>
-
-

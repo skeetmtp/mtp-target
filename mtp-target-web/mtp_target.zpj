@@ -11,9 +11,7 @@
 	</project_entity>
 	<project_entity ID="bookmarks"/>
 	<project_entity ID="editor_component" selectedEditor="0">
-		<openEditors>
-			<editor fileName="C:\wamp\www\mtp-target-web\admin.php" caretPosition="129" clone="false" encoding="default"/>
-		</openEditors>
+		<openEditors/>
 	</project_entity>
 	<project_entity ID="CVS">
 		<lastArguments>

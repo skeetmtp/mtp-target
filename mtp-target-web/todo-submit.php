@@ -1,7 +1,6 @@
 <?php
-include_once("lang.php");
-include_once("todo-func.php");
-include_once("login.php");
+require_once("todo-func.php");
+if(!CUser::instance()->admin()) die("For admin only");
 ?>
 
 <table width="75%" border="0">
@@ -38,9 +37,9 @@ include_once("login.php");
       <td bgcolor="#eeeeee"><textarea name="todo" rows="7" cols="50" wrap="virtual" tabindex="1"></textarea></td>
       <td bgcolor="#eeeeee">
         <select name="user" dir="ltr">
-          <option value="Ace" <?php if(strcmp($login,"Ace")==0) echo "selected"; ?>>Ace</option>
-          <option value="Muf" <?php if(strcmp($login,"Muf")==0) echo "selected"; ?>>Muf</option>
-          <option value="Skeet" <?php if(strcmp($login,"Skeet")==0) echo "selected"; ?>>Skeet</option>
+          <option value="Ace">Ace</option>
+          <option value="Muf">Muf</option>
+          <option value="Skeet">Skeet</option>
         </select>
       </td>
 	</tr>

@@ -1,9 +1,9 @@
 <center>user texture selection</center>
-<br>
+<br/>
 
 <?php
-	include_once("stat_function.php");
-	$uid = userName2Uid($user_login);
+	require_once("stat_function.php");
+	$uid = CUser::instance()->uid(); //userName2Uid($user_login);
 	$base = 0;
 	$searchName = "";
 	$uploadByName = "";
@@ -20,12 +20,12 @@
 	if($prevBase<0)
 		$prevBase=0;
 
-	printf("<a href=\"?page=user_texture_selection.php&p_upload_by_name=%s\">Display only texture you have uploaded</a>\n",$user_login);
-	printf("<br>");
-	printf("<br>");
+	printf("<a href=\"?page=user_texture_selection&p_upload_by_name=%s\">Display only texture you have uploaded</a>\n",CUser::instance()->login());
+	printf("<br/>");
+	printf("<br/>");
 
-	printf("Search a texture : <br>");
-	printf("<form method=\"post\" action=\"?page=user_texture_selection.php\" name=\"textureSearchForm\">");
+	printf("Search a texture : <br/>");
+	printf("<form method=\"post\" action=\"?page=user_texture_selection\" name=\"textureSearchForm\">");
 	printf("<input type=\"text\" name=\"p_search_name\" size=\"16\"/>");
 	printf("<input type=\"hidden\" name=\"p_base\" value=\"%s\"/>",$base);
 	printf("<input type=\"submit\" value=\"search\" tabindex=\"14\" />");
@@ -34,12 +34,12 @@
 	if($searchName!="")
 	{
 		$requete = sprintf("SELECT * FROM texture WHERE Name LIKE '%%%s%%'",$searchName);
-		printf("%s search result : <br>\n",$searchName);
+		printf("%s search result : <br/>\n",$searchName);
 	}
 	else if($uploadByName!="")
 	{
 		$requete = sprintf("SELECT * FROM texture WHERE UploadBy='%s'",$uploadByName);
-		printf("%s search result : <br>\n",$uploadByName);
+		printf("%s search result : <br/>\n",$uploadByName);
 	}
 	else
 		$requete = sprintf("SELECT * FROM texture LIMIT $base,$textureDisplayedCount");
@@ -50,22 +50,22 @@
 	{
 		printf("<tr>\n");
 		printf("<td align=\"left\">\n");
-		printf("<a href=\"?page=user_texture_selection.php&p_base=%d\">&lt&lt prev %d</a>\n",$prevBase,$textureDisplayedCount);
+		printf("<a href=\"?page=user_texture_selection&p_base=%d\">&lt&lt prev %d</a>\n",$prevBase,$textureDisplayedCount);
 		printf("</td>\n");
 		printf("<td>\n");
 		printf("&nbsp");
 		printf("</td>\n");
 		printf("<td align=\"right\">\n");
-		printf("<a href=\"?page=user_texture_selection.php&p_base=%d\">next %d &gt&gt</a>\n",$nextBase,$textureDisplayedCount);
+		printf("<a href=\"?page=user_texture_selection&p_base=%d\">next %d &gt&gt</a>\n",$nextBase,$textureDisplayedCount);
 		printf("</td>\n");
 		printf("</tr>\n");
 	}
 
 	printf("<tr>\n");
 	printf("<td colspan=\"3\">\n");
-//	printf("<br>");
+//	printf("<br/>");
 	
-	//include("http://mtp-target.dyndns.org/mtp-target/texture_selection.php");
+	//require_once("http://mtp-target.dyndns.org/mtp-target/texture_selection.php");
 	$userTexturePath = "http://mtp-target.dyndns.org/user_texture/";
 
 	$resultat=exec_game_db_requete($requete);
@@ -73,7 +73,7 @@
 	{
 		$userTextureName = $ligne[1];
 		$userTextureUrl = $userTexturePath."ping_ball_".$userTextureName.".jpg";
-		printf("<a href=\"?page=user_settings.php&user_texture_id=%s\"><img src=\"%s\" ALT=\"%s\" title=\"%s\"></a>\n",$ligne[0],$userTextureUrl,$userTextureName,$userTextureName);
+		printf("<a href=\"?page=user_settings&user_texture_id=%s\"><img src=\"%s\" ALT=\"%s\" title=\"%s\"></a>\n",$ligne[0],$userTextureUrl,$userTextureName,$userTextureName);
 	}
 	printf("</td>\n");
 	printf("</tr>\n");
@@ -82,13 +82,13 @@
 	{
 		printf("<tr>\n");
 		printf("<td align=\"left\">\n");
-		printf("<a href=\"?page=user_texture_selection.php&p_base=%d\">&lt&lt prev %d</a>\n",$prevBase,$textureDisplayedCount);
+		printf("<a href=\"?page=user_texture_selection&p_base=%d\">&lt&lt prev %d</a>\n",$prevBase,$textureDisplayedCount);
 		printf("</td>\n");
 		printf("<td>\n");
 		printf("&nbsp");
 		printf("</td>\n");
 		printf("<td align=\"right\">\n");
-		printf("<a href=\"?page=user_texture_selection.php&p_base=%d\">next %d &gt&gt</a>\n",$nextBase,$textureDisplayedCount);
+		printf("<a href=\"?page=user_texture_selection&p_base=%d\">next %d &gt&gt</a>\n",$nextBase,$textureDisplayedCount);
 		printf("</td>\n");
 		printf("</tr>\n");
 }

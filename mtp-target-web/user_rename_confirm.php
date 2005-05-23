@@ -1,5 +1,5 @@
 <?php  
-include_once("stat_function.php");
+require_once("stat_function.php");
 
 if(!$user_logged)
 {
@@ -21,7 +21,7 @@ if(userNameExist($user_newname_login))
 }
 else
 {
-	$uid = userName2Uid($user_login);
+	$uid = CUser::instance()->uid();//userName2Uid($user_login);
 	$requete = sprintf("UPDATE user SET Login='%s' WHERE UId=%d;",$user_newname_login,$uid);
 	$result=exec_game_db_requete($requete);
 
@@ -31,7 +31,7 @@ else
 	@unlink($cache_dir."/user_welcome_en_".$uid.".html");
 	@unlink($cache_dir."/user_welcome_fr_".$uid.".html");
 
-	printf("%s successfully rennamed to %s<br>",$user_login,$user_newname_login);
+	printf("%s successfully rennamed to %s<br/>",CUser::instance()->login(),$user_newname_login);
 	
 }
 	

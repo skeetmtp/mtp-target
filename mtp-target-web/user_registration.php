@@ -1,6 +1,6 @@
 <!--
 <div id="delete">
-<center><h1><blink><font color=\"#FF0000\">WARNING</font></blink></h1><br>
+<center><h1><blink><font color=\"#FF0000\">WARNING</font></blink></h1><br/>
 
 </center>
 </div>
@@ -12,7 +12,7 @@ Please enter a valid username and choose a password :
  <tr>
  <td align="right">
  <table border="0" cellpadding="0" cellspacing="5" bgcolor="#FFFAEA">
- <?php  echo '<form method="post" action="?page=user_registration_confirm.php" name="loginForm">'; ?>
+ <?php  echo '<form method="post" action="?page=user_registration_confirm" name="loginForm">'; ?>
  <!-- <form method="post" action="user_login.php" name="loginForm"> -->  
  <tr>
  <td align="right">
@@ -24,7 +24,7 @@ Please enter a valid username and choose a password :
  </tr>
  <tr>
  <td  align="right">
- pass&nbsp;:
+ password&nbsp;:
  </td>
  <td colspan="2">
  <input type="password" name="user_register_password" size="16"/>
@@ -47,10 +47,6 @@ Please enter a valid username and choose a password :
  </tr>
  </table>
 
-
 <?php
 
-
-
 ?>
-

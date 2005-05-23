@@ -24,9 +24,9 @@
 				echo $table; // don't forget this one :)
 			?>
 		</table>
-		<br>
-		<input type="hidden" name="page" value="user_settings.php"><br>
-		You are picking color: <input type="text" name="p_color" size="7"><br>
+		<br/>
+		<input type="hidden" name="page" value="user_settings.php"><br/>
+		You are picking color: <input type="text" name="p_color" size="7"><br/>
 		<input type="submit" value="Select">
 	</div>
 </form>

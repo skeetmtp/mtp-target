@@ -1,5 +1,5 @@
 <?php
-include_once("stat_graph_display.php");
+require_once("stat_graph_display.php");
 
 function thisYear()
 {
@@ -88,6 +88,8 @@ function userName2Uid($user_name)
 
 function userId2Name($user_id)
 {
+	if($user_id == CUser::instance()->uid())
+		return CUser::instance()->login();
 	  $requete = "SELECT Login FROM user WHERE UId=".$user_id.";";
 	  $resultat=exec_game_db_requete($requete);
 	

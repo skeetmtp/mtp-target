@@ -2,7 +2,7 @@
  <tr>
  <td align="right">
  <table border="0" cellpadding="0" cellspacing="5" bgcolor="#FFFAEA">
- <?php  echo '<form method="post" action="?page=user_rename_confirm.php" name="loginForm">'; ?>
+ <?php  echo '<form method="post" action="?page=user_rename_confirm" name="loginForm">'; ?>
  <!-- <form method="post" action="user_login.php" name="loginForm"> -->  
  <tr>
  <td align="right">

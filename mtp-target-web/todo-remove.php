@@ -1,12 +1,12 @@
 <?php
-include_once("todo-func.php");
-include_once("login.php");
+session_start();
 
-todoRemoveEntry($id);
-include("todo-manager.php");
+require_once("todo-func.php");
+require_once("user.php");
 
+if(!CUser::instance()->admin()) die("For admin only");
+
+todoRemoveEntry($_GET['id']);
+header("Location: index.php?page=todo-manager");
 
 ?>
-
-
-

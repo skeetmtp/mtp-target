@@ -1,16 +1,12 @@
 <?php
 
-
-include_once("lang.php");
-
-     $table_news_bgcolor_color = "#666666";
      $table_news_head_color = "#FFEEDD";
      $table_news_row_color = "#FFFAEA";
 
 
-	$thisPage = sprintf("?page=scores.php");
+	$thisPage = sprintf("?page=scores");
 //	$thisPage = sprintf("scores.php?toto=0");
-	//echo ":$toto:$limit_base<br>";
+	//echo ":$toto:$limit_base<br/>";
 	if(!isset($limit_base)) $limit_base=0;
 	if(!isset($limit_range)) $limit_range=30;
 	

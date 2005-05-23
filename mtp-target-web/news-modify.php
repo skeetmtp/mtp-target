@@ -1,16 +1,9 @@
 <?php
-include("news-func.php");
+require_once("news-func.php");
 
-  $requete = "SELECT * FROM news WHERE 1 and id like ".$id.";";
-  $resultat = exec_requete($requete);
-  $ligne = mysql_fetch_array($resultat);
+$id = $_POST['id'];
 
-newsModifyEntry($id,$user,$en_title,$en_news,$fr_title,$fr_news,$date);
-header("Location: index.php?page=news-manager.php");
+newsModifyEntry($id,$_POST['user'],$_POST['en_title'],$_POST['en_news'],$_POST['fr_title'],$_POST['fr_news']);
+header("Location: index.php?page=news-manager");
 
 ?>
-
-
-
-
-

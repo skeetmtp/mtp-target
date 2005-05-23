@@ -1,6 +1,6 @@
 <?php
-include_once("stat_function.php");
-include_once("stat_game.php");
+require_once("stat_function.php");
+require_once("stat_game.php");
 
 	if(!isset($p_uid))
 		$uid = 0;
@@ -22,7 +22,7 @@ include_once("stat_game.php");
 
 	if(isCacheFileUpToDate($cacheFileName))
 	{
-		include($cacheFileName);
+		require_once($cacheFileName);
 		return;
 	}
 	
@@ -49,7 +49,7 @@ include_once("stat_game.php");
 	{
 		$count += $line[0];
 	}
-	fprintf($html_fp,"max players logged this hour : %s<br>\n",$count);
+	fprintf($html_fp,"max players logged this hour : %s<br/>\n",$count);
 
 	$sessionCount = 10;
 	$requete = sprintf("SELECT Id FROM session WHERE TO_DAYS('%s')=TO_DAYS(session.Date) AND HOUR(Date)=%d ORDER BY Id DESC;",date("Y-m-d", mktime(0, 0, 0, $monthToStat, $dayToStat, $yearToStat)),$hourToStat);
@@ -59,5 +59,5 @@ include_once("stat_game.php");
 
 
 	fclose($html_fp);	  
-	include($cacheFileName);	
+	require_once($cacheFileName);	
 ?>

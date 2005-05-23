@@ -1,4 +1,7 @@
 <?php
+
+die("REMOVED BY ACE. OLD CODE ".__FILE__);
+/*
 if(!isset($lang))
 {
 	$lang = "en";
@@ -12,6 +15,7 @@ if(!isset($lang))
 	else
 		$lang = $HTTP_COOKIE_VARS["mtp_target_lang"];
 }
-include(sprintf("./lang/%s/lang.inc.php",$lang));
+require_once(sprintf("./lang/%s/lang.inc.php",$lang));
+*/
 
 ?>

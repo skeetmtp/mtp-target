@@ -1,6 +1,9 @@
 <?php
-include_once("config.php");
-include_once("mysql-func.php");
+require_once("config.php");
+require_once("mysql-func.php");
+
+if(isset($_GET['id']))
+	$id=$_GET['id'];
 
 function newsAddEntryEN($user,$title,$news)
 {
@@ -16,8 +19,6 @@ function newsAddEntry($user,$en_title,$en_news,$fr_title,$fr_news)
   return $resultat;
 }
 
-
-
 function newsRemoveEntry($id)
 {
   $requete = "DELETE FROM news WHERE id=".$id.";";
@@ -25,12 +26,11 @@ function newsRemoveEntry($id)
   return $resultat;
 }
 
-function newsModifyEntry($id,$user,$en_title,$en_news,$fr_title,$fr_news,$date)
+function newsModifyEntry($id,$user,$en_title,$en_news,$fr_title,$fr_news)
 {
-  $requete = sprintf("UPDATE news SET user='%s' , en_title='%s' , en_news='%s' ,fr_title='%s' , fr_news='%s' , date='%s' where id=%s;",$user,$en_title,$en_news,$fr_title,$fr_news,$date,$id);
+  $requete = sprintf("UPDATE news SET user='%s' , en_title='%s' , en_news='%s' ,fr_title='%s' , fr_news='%s' where id=%s;",$user,$en_title,$en_news,$fr_title,$fr_news,$id);
   $resultat=exec_requete($requete);
   return $resultat;
 }
-
 
 ?>

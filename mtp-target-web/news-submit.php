@@ -1,7 +1,7 @@
 <?php
-include_once("lang.php");
-include_once("news-func.php");
-include_once("login.php");
+require_once("news-func.php");
+
+if(!CUser::instance()->admin()) die("For admin only");
 
 ?>
 
@@ -11,9 +11,9 @@ include_once("login.php");
 	<tr>
       <td bgcolor="#eeeeee">
         <select name="user" dir="ltr">
-          <option value="Ace" <?php if(strcmp($login,"Ace")==0) echo "selected"; ?>>Ace</option>
-          <option value="Muf" <?php if(strcmp($login,"Muf")==0) echo "selected"; ?>>Muf</option>
-          <option value="Skeet" <?php if(strcmp($login,"Skeet")==0) echo "selected"; ?>>Skeet</option>
+          <option value="Ace">Ace</option>
+          <option value="Muf">Muf</option>
+          <option value="Skeet">Skeet</option>
         </select>
       </td>
   </tr>
@@ -28,4 +28,3 @@ include_once("login.php");
 </table>
 <input type="submit" value="Submit" tabindex="14" />
 </form>
-

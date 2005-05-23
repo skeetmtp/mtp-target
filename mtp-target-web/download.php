@@ -1,6 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html lang="<?php echo $lang ?>">
+<html lang="<?php echo CUser::instance()->language() ?>">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>mtp-target</title>
@@ -18,7 +18,6 @@
 <table border="0">
 <tr><td>
 <?php
-include_once("lang.php");
 echo "<h3>$menuLinkText_Download</h3>";
 ?>
 </tr></td>
@@ -36,9 +35,9 @@ echo "<h3>$menuLinkText_Download</h3>";
 		while (false !== ($entry = $d->read())) 
 		{
 			if(($count%2)==0)
-				$color = $table_row_even_color;
+				$color = "#cccccc";
 			else
-				$color = $table_row_odd_color;
+				$color = "#dddddd";
 			
 			$f = $dirname . $entry ;
 			$t = filetype($f);
@@ -70,9 +69,9 @@ echo "<h3>$menuLinkText_Download</h3>";
 		while (false !== ($entry = $d->read())) 
 		{
 			if(($count%2)==0)
-				$color = $table_row_even_color;
+				$color = "#cccccc";
 			else
-				$color = $table_row_odd_color;
+				$color = "#dddddd";
 			
 			$f = $dirname . $entry ;
 			$t = filetype($f);
@@ -105,9 +104,9 @@ echo "<h3>$menuLinkText_Download</h3>";
 		while (false !== ($entry = $d->read())) 
 		{
 			if(($count%2)==0)
-				$color = $table_row_even_color;
+				$color = "#cccccc";
 			else
-				$color = $table_row_odd_color;
+				$color = "#dddddd";
 			
 			$f = $dirname . $entry ;
 			$t = filetype($f);
@@ -140,9 +139,9 @@ echo "<h3>$menuLinkText_Download</h3>";
 		while (false !== ($entry = $d->read())) 
 		{
 			if(($count%2)==0)
-				$color = $table_row_even_color;
+				$color = "#cccccc";
 			else
-				$color = $table_row_odd_color;
+				$color = "#dddddd";
 			
 			$f = $dirname . $entry ;
 			$t = filetype($f);
@@ -175,9 +174,9 @@ echo "<h3>$menuLinkText_Download</h3>";
 		while (false !== ($entry = $d->read())) 
 		{
 			if(($count%2)==0)
-				$color = $table_row_even_color;
+				$color = "#cccccc";
 			else
-				$color = $table_row_odd_color;
+				$color = "#dddddd";
 			
 			$f = $dirname . $entry ;
 			$t = filetype($f);
@@ -202,10 +201,6 @@ echo "<h3>$menuLinkText_Download</h3>";
 	?>
 	<tr><td><b>&nbsp;&nbsp;</b></td></tr>
 </table>
-
-
-
-
 
 </body>
 </html>

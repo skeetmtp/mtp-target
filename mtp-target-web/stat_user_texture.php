@@ -1,7 +1,5 @@
 <?php
-include_once("stat_function.php");
-
-include_once("lang.php");
+require_once("stat_function.php");
 
 	//if(!isset($limit_range)) 
 		$limit_range=10;
@@ -11,14 +9,14 @@ include_once("lang.php");
 	$cacheFileName = $cache_dir."/stat_user_texture_".$limit_base.".html";
 	if(isCacheFileUpToDate($cacheFileName))
 	{
-		include($cacheFileName);
+		require_once($cacheFileName);
 		return;
 	}
 	$html_fp = fopen($cacheFileName, "wt");
 
 
 
-	$thisPage = sprintf("?page=stat_user_texture.php");
+	$thisPage = sprintf("?page=stat_user_texture");
 	
 	
 	$requete = "SELECT count(*) as c,user.Texture FROM user WHERE user.Texture!='blue' GROUP BY user.Texture ORDER by c DESC LIMIT $limit_base,$limit_range;";
@@ -27,8 +25,8 @@ include_once("lang.php");
 	while ($line = mysql_fetch_array($result))
 	{
 		$userTextureUrl = userTextureBame2Url($line[1]);
-		fprintf($html_fp,"%s used %d times <br>",$line[1],$line[0]);
-		fprintf($html_fp,"<img src=\"%s\" ALT=\"user texture : %s\"><br><br>\n",$userTextureUrl,$userTextureUrl);
+		fprintf($html_fp,"%s used %d times <br/><br/><br/>",$line[1],$line[0]);
+		fprintf($html_fp,"<img src=\"%s\" ALT=\"user texture : %s\"><br/><br/>\n",$userTextureUrl,$userTextureUrl);
 	}	
 	
 	$previous_base = $limit_base-$limit_range;
@@ -40,7 +38,7 @@ include_once("lang.php");
 	
 
 	fclose($html_fp);	  
-	include($cacheFileName);	
+	require_once($cacheFileName);	
 
 
 	

@@ -1,5 +1,5 @@
 <?php
-include_once("stat_function.php");
+require_once("stat_function.php");
 include_once("stat_game.php");
 
 	//$uid = userName2Uid($user_login);
@@ -9,7 +9,7 @@ include_once("stat_game.php");
 	/*
 	if(isCacheFileUpToDate($cacheFileName))
 	{
-		include($cacheFileName);
+		require_once($cacheFileName);
 		return;
 	}
 	*/
@@ -32,7 +32,7 @@ echo "C'est fini. Votre base est en place sur cet hébergement.";
 */
 
 	//fclose($html_fp);	  
-	//include($cacheFileName);	
+	//require_once($cacheFileName);	
 	
 	$filename = $cache_dir."/test.html";
 	

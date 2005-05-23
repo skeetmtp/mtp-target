@@ -1,21 +1,21 @@
 <?php
-	include_once("stat_function.php");
+	require_once("stat_function.php");
 	
-	if(!$user_logged)
+	if(!CUser::instance()->logged())
 	{
-		printf("<br>\n");
-		printf("<br>\n");
-		printf("<center><h2>You must be logged to upload texture !<center></h2>\n");
-		printf("<br>\n");
-		printf("<br>\n");
-		printf("<br>\n");
-		printf("<br>\n");
+		printf("<br/>\n");
+		printf("<br/>\n");
+		printf("<center><h2>You must be logged to upload a texture !<center></h2>\n");
+		printf("<br/>\n");
+		printf("<br/>\n");
+		printf("<br/>\n");
+		printf("<br/>\n");
 		return;
 	}
 
 ?>
 
-<p>This page allow you to upload a <a href="?page=stat_user_texture.php">user texture</a> for your pingoo!</p>
+<p>This page allow you to upload a <a href="?page=stat_user_texture">user texture</a> for your pingoo!</p>
 
 <p>Please, read well the rules or it'll not work correctly:</p>
 
@@ -27,9 +27,7 @@
 
 <form enctype="multipart/form-data" action="http://mtp-target.dyndns.org/mtp-target/send.php" method="post">
  <input type="hidden" name="MAX_FILE_SIZE" value="300000" />
- <input type="hidden" name="user_login" value="<?php echo $user_login ?>" />
+ <input type="hidden" name="user_login" value="<?php echo CUser::instance()->login(); ?>" />
  - Select and upload the texture: <input name="userfile" type="file" />
  <input type="submit" value="Send File" />
 </form>
-
-

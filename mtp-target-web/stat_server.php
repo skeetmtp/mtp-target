@@ -1,19 +1,20 @@
 <?php
-include_once("stat_function.php");
-include_once("stat_game.php");
-include_once("stat_graph_display.php");
+require_once("stat_function.php");
+require_once("stat_game.php");
+require_once("stat_graph_display.php");
 
 	//$uid = userName2Uid($user_login);
+	$p_server_id = $_GET["p_server_id"];
 	assertValidNumber($p_server_id);
 	$server_id = $p_server_id;
 	$serverName = Id2ServerName($server_id);
 	$cacheFileName = $cache_dir."/stat_server_".$server_id.".html";
-	printf("<center><b>%s</b> stats : </center><br><br>",$serverName);
+	printf("<center><b>%s</b> stats : </center><br/<br/>>",$serverName);
 	
 	
 	if(isCacheFileUpToDate($cacheFileName))
 	{
-		include($cacheFileName);
+		require_once($cacheFileName);
 		return;
 	}
 	
@@ -34,5 +35,5 @@ include_once("stat_graph_display.php");
 
 
 	fclose($html_fp);	  
-	include($cacheFileName);	
+	require_once($cacheFileName);	
 ?>

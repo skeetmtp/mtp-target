@@ -2,7 +2,7 @@
 
 	die();
 
-     switch($lang)
+     switch(CUser::instance()->language())
      {
          case "fr":
 ?>
@@ -63,7 +63,7 @@ n'en avez pas, vous pouvez quand même payer sans devoir vous inscrire).</p>
 <input type="hidden" name="currency_code" value="EUR">
 <input type="hidden" name="tax" value="0">
 <input type="hidden" name="lc" value="FR">
-Valeur du don:<br>
+Valeur du don:<br/>
 <input type="text" name="amount" size="2" value="15"> Euros<br/>
 <input type="image" src="https://www.paypal.com/fr_FR/i/btn/x-click-but04.gif" border="0" name="submit" alt="Faire un don via PayPal">
 </form>
@@ -162,7 +162,7 @@ a Mastercard or an account on Paypal.</p>
 <input type="hidden" name="currency_code" value="EUR">
 <input type="hidden" name="tax" value="0">
 <input type="hidden" name="lc" value="US">
-Amount of money:<br>
+Amount of money:<br/>
 <input type="text" name="amount" size="2" value="15.00"> Euros<br/>
 <input type="image" src="https://www.paypal.com/en_US/i/btn/x-click-but04.gif" border="0" name="submit" alt="Donate with PayPal">
 </form>

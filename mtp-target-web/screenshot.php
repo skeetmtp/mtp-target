@@ -1,8 +1,8 @@
 <center>
-<br>
-<?php echo $sshot_click?><br>
-<?php echo $sshot_over?><br>
-<br>
+<br/>
+<?php echo $sshot_click?><br/>
+<?php echo $sshot_over?><br/>
+<br/>
 <?php 
 	echo "<a href=\"$sshot_dir/screenshot_00.jpg\"><img src=\"$sshot_dir/screenshot_00.jpg\" width=\"200\" alt=\"$sshot_img00\" title=\"$sshot_img00\"></a>\n";
 	echo "<a href=\"$sshot_dir/screenshot_01.jpg\"><img src=\"$sshot_dir/screenshot_01.jpg\" width=\"200\" alt=\"$sshot_img01\" title=\"$sshot_img01\"></a>\n";
@@ -17,9 +17,7 @@
 	echo "<a href=\"$sshot_dir/screenshot_10.jpg\"><img src=\"$sshot_dir/screenshot_10.jpg\" width=\"200\" alt=\"$sshot_img10\" title=\"$sshot_img10\"></a>\n";
 	echo "<a href=\"$sshot_dir/screenshot_11.jpg\"><img src=\"$sshot_dir/screenshot_11.jpg\" width=\"200\" alt=\"$sshot_img11\" title=\"$sshot_img11\"></a>\n";
 	echo "<a href=\"$sshot_dir/screenshot_12.jpg\"><img src=\"$sshot_dir/screenshot_12.jpg\" width=\"200\" alt=\"$sshot_img12\" title=\"$sshot_img12\"></a>\n";
-	echo "<a href=\"$sshot_dir/screenshot_12.jpg\"><img src=\"$sshot_dir/screenshot_13.jpg\" width=\"200\" alt=\"$sshot_img13\" title=\"$sshot_img13\"></a>\n";
-	echo "<a href=\"$sshot_dir/screenshot_12.jpg\"><img src=\"$sshot_dir/screenshot_14.jpg\" width=\"200\" alt=\"$sshot_img13\" title=\"$sshot_img13\"></a>\n";
+	echo "<a href=\"$sshot_dir/screenshot_13.jpg\"><img src=\"$sshot_dir/screenshot_13.jpg\" width=\"200\" alt=\"$sshot_img13\" title=\"$sshot_img13\"></a>\n";
+	echo "<a href=\"$sshot_dir/screenshot_14.jpg\"><img src=\"$sshot_dir/screenshot_14.jpg\" width=\"200\" alt=\"$sshot_img14\" title=\"$sshot_img14\"></a>\n";
 ?>
 </center>
-
-

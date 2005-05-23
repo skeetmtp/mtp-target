@@ -10,16 +10,16 @@
 The most simple way to make new level is tu reuse existing modules, and to place theme where you want.
 </p>
 <hr>
-<br>
-<br>
+<br/>
+<br/>
 
 <center><h2>Level</h2></center>
 
-<p>A level is a text file with the <code>.level</code> extension, it is editable with any text editor like notepad.<br>
-This kind of file is made of blocs, each bloc is delimited by <b>[</b> and <b>]</b><br>
+<p>A level is a text file with the <code>.level</code> extension, it is editable with any text editor like notepad.<br/>
+This kind of file is made of blocs, each bloc is delimited by <b>[</b> and <b>]</b><br/>
 
 <p>example : </p>
-<table bgcolor=<?php echo $code_bgcolor?>><tr><td>
+<table><tr><td>
 <pre>
 [General]
 LevelName = Where are you
@@ -45,8 +45,8 @@ There is 4 kind of blocs :
 <li><b>General</b>: add global parameter like gravity...</li>
 </ul>
 </p>
-<br>
-<br>
+<br/>
+<br/>
 
 <h3>Module</h3>
 
@@ -62,7 +62,7 @@ There is 4 kind of blocs :
 <p>Here an example, to add the module <code>snow_score50</code> to the level, at position (x=0,y=0,z=0) without any rotation and unit size
 </p>
 
-<table bgcolor=<?php echo $code_bgcolor?>><tr><td>
+<table><tr><td>
 <pre>
 [Module]
 pos = 0 0 0
@@ -71,8 +71,8 @@ scale = 1 1 1
 name = snow_score50
 </pre>
 </td></tr></table>
-<br>
-<br>
+<br/>
+<br/>
 
 <h3>StartPoint</h3>
 
@@ -84,7 +84,7 @@ name = snow_score50
 
 <p>The following example, set a StartPoint so one player will start at position (0.09 1.5 9.6) :</p>
 
-<table bgcolor=<?php echo $code_bgcolor?>><tr><td>
+<table><tr><td>
 <pre>
 [StartPoint]
 pos = 0.09 1.5 9.6
@@ -102,7 +102,7 @@ If you set only one Camera, all starting camera of all players will be this one,
 Otherwise the first camera will be used for the first player and so on...
 The following example, set a Camera to position (0.09 1.5 9.6) :</p>
 
-<table bgcolor=<?php echo $code_bgcolor?>><tr><td>
+<table><tr><td>
 <pre>
 [Camera]
 pos = 0.09 1.5 9.6
@@ -142,17 +142,17 @@ For example, in 16 players level, you should add 16 StartPoint (one for each pla
 
 <table border="0" CELLPADDING=4 CELLSPACING=2>
 <tr>
-    <th bgcolor="<?php echo $table_head_color;?>"><center>&nbsp;Name&nbsp;</center></th>
-    <th bgcolor="<?php echo $table_head_color;?>"><center>&nbsp;Description&nbsp;</center></th>
+    <th bgcolor="#ffffff"><center>&nbsp;Name&nbsp;</center></th>
+    <th bgcolor="#ffffff"><center>&nbsp;Description&nbsp;</center></th>
 </tr>
 <?php
                 $count = 0;
                 foreach($level_array as $key => $value)
                 {
                       if(($count%2)==0)
-                        $color =  $table_row_even_color;
+                        $color =  "#cccccc";
                       else
-                        $color =  $table_row_odd_color;
+                        $color =  "#dddddd";
                       printf("<td bgcolor=%s>",$color);
                       printf("%s",$value["name"]);
                       printf("</td><td bgcolor=%s>",$color);
@@ -165,8 +165,8 @@ For example, in 16 players level, you should add 16 StartPoint (one for each pla
 
 <p>Each of this values a optional.</p>
 <hr>
-<br>
-<br>
+<br/>
+<br/>
 
 <center><h2>Module</h2></center>
 <p>
@@ -176,12 +176,12 @@ The easy way to make a new module is to start from an existing module keeping th
 The hard way but the most interesting is to make a new designed module in 3ds Max(tm), and export it with NeL.
 </p>
 <p>
-A module is a text file with the <code>.module</code> extension, it is editable with any text editor like notepad.<br>
-As Level file, each bloc is delimited by <b>[</b> and <b>]</b><br>
+A module is a text file with the <code>.module</code> extension, it is editable with any text editor like notepad.<br/>
+As Level file, each bloc is delimited by <b>[</b> and <b>]</b><br/>
 </p>
 
 <p>example : </p>
-<table bgcolor=<?php echo $code_bgcolor?>><tr><td>
+<table><tr><td>
 <pre>
 [TriColl]
 nbVertex = 3
@@ -206,7 +206,7 @@ friction = 100
 </pre>
 </td></tr></table>
 
-<br>
+<br/>
 There is 2 kind of blocs :
 <ul>
 <li><b>TriColl</b> describe a triangle only collision module.</li>
@@ -227,17 +227,17 @@ There is 2 kind of blocs :
 
 <table border="0" CELLPADDING=4 CELLSPACING=2>
 <tr>
-    <th bgcolor="<?php echo $table_head_color;?>"><center>&nbsp;Name&nbsp;</center></th>
-    <th bgcolor="<?php echo $table_head_color;?>"><center>&nbsp;Description&nbsp;</center></th>
+    <th bgcolor="#ffffff"><center>&nbsp;Name&nbsp;</center></th>
+    <th bgcolor="#ffffff"><center>&nbsp;Description&nbsp;</center></th>
 </tr>
 <?php
                 $count = 0;
                 foreach($module_array as $key => $value)
                 {
                       if(($count%2)==0)
-                        $color =  $table_row_even_color;
+                        $color =  "#cccccc";
                       else
-                        $color =  $table_row_odd_color;
+                        $color =  "#dddddd";
                       printf("<td bgcolor=%s>",$color);
                       printf("%s",$value["name"]);
                       printf("</td><td bgcolor=%s>",$color);
@@ -249,8 +249,8 @@ There is 2 kind of blocs :
 </table>
 
 <hr>
-<br>
-<br>
+<br/>
+<br/>
 
 <center><h2>Glossary</h2></center>
 
@@ -267,5 +267,5 @@ For example this Axis Angle : <code>0 0 1 1.57</code> do a 90 degree(Pi/2 ~ 1.57
 </p>
 
 <h3>More info</h3>
-For mor information about math check out :  <a href="<?php echo $doc_math_faq ?>">this page.</a>
+For mor information about math check out :  <a href="http://mathforum.org/dr.math/">this page.</a>
 

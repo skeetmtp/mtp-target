@@ -1,28 +1,16 @@
 <?php
-ob_start ("ob_gzhandler");
-include_once("mysql-func.php");
-bench_start();
-include_once("menu.php");
+require_once('header.php');
 
-if ($page=="todo.txt") echo "<pre>";
-if($page=="news.txt")
-  include ("newsparser.php");
-else
-  include($page);
+require_once('menu.php');
 
-if ($page=="todo.txt") echo "</pre>";
+// Uncomment this to have debug information
+//echo '<hr/>'.CUser::instance()->dbg.'<hr/>';
 
+$page = isset($_GET["page"]) ? $_GET["page"] : $default_page;
+
+if(!validPage($page)) die("good try '".$page."'");
+
+require_once($page.".php");
+
+require_once('footer.php');
 ?>
-
-</div>
-</td></tr>
-</table>
-<div id="footer">
-<?php
-	include_once("footer.php");
-	$page_generation_duration = bench_end();
-	printf("page generated in %s secondes",$page_generation_duration);
-?>
-</div>
-</body>
-</html>

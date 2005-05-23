@@ -5,7 +5,6 @@ function drawMapUsage($html_fp,$mysqlArray,$CriterionBase,$valCount,$header,$Cri
 	global $table_news_bgcolor_color;
 	global $table_news_head_color;
 	global $table_news_row_color;
-	global $table_news_row_color_2;
 
 /*
 	$mysqlArray = $result; 
@@ -33,14 +32,14 @@ function drawMapUsage($html_fp,$mysqlArray,$CriterionBase,$valCount,$header,$Cri
 			$maxTotal = $valPerCriterion[$i][0];
 	}
 
-	fprintf($html_fp,"<table width=\"\" border=\"0\" cellpadding=\"0\" cellspacing=\"1\"  bgcolor=\"%s\">\n",$table_news_bgcolor_color);
-	fprintf($html_fp,"<th bgcolor=\"%s\" align=\"center\" >\n",$table_news_head_color);
+	fprintf($html_fp,"<table class=\"stat\">\n");
+	fprintf($html_fp,"<th>\n");
 	fprintf($html_fp,"%s\n",$header);
 	fprintf($html_fp,"</th>\n");
 	fprintf($html_fp,"<tr>\n");
 	fprintf($html_fp,"<td>\n");
 	
-	fprintf($html_fp,"<table width=\"100%%\" border=\"0\" cellpadding=\"0\" cellspacing=\"3\" bgcolor=\"%s\">\n",$table_news_row_color);
+	fprintf($html_fp,"<table>\n");
 	for($i=$CriterionBase;$i<$valCount;$i++)
 	{
 		$v = $valPerCriterion[$i][0];
@@ -53,7 +52,7 @@ function drawMapUsage($html_fp,$mysqlArray,$CriterionBase,$valCount,$header,$Cri
 			if($mapName=="")
 				$mapName = mapId2Name($i); 
 			$mapLink = sprintf($link,$mapId,$mapName);
-			fprintf($html_fp,"<b>%s</b>\n",$mapLink);
+			fprintf($html_fp,"%s\n",$mapLink);
 			fprintf($html_fp,"</td>\n");
 	
 			fprintf($html_fp,"<td align=\"right\">\n");
@@ -63,18 +62,17 @@ function drawMapUsage($html_fp,$mysqlArray,$CriterionBase,$valCount,$header,$Cri
 			fprintf($html_fp,"<td>\n");
 			fprintf($html_fp,"<img align=\"bottom\" src=\"./img/vp.png\" height=\"6\" width=\"%d\" alt='value : %d' title='value : %d' />\n",100*$v/$maxTotal,$v,$v);
 			fprintf($html_fp,"</td>\n");
-	
-	
+
 			fprintf($html_fp,"</tr>\n");
 		}
 	}	
-	
+
 	fprintf($html_fp,"</table>\n");
-	
+
 	fprintf($html_fp,"</td>\n");
 	fprintf($html_fp,"</tr>\n");
 	fprintf($html_fp,"</table>\n");
-	fprintf($html_fp,"<br>\n");
+	fprintf($html_fp,"<br/>\n");
 }
 
 ?>

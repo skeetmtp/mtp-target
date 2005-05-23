@@ -1,5 +1,6 @@
 <?php
-
+die("REMOVED BY ACE. OLD CODE ".__FILE__);
+/*
 if (!$logged)
 {
  echo '<table border="0">';
@@ -9,7 +10,7 @@ if (!$logged)
  echo 'Admin login :';
  echo '</td>';
  echo '<td>';
- echo '<input type="text" name="login" /><br>';
+ echo '<input type="text" name="login" /><br/>';
  echo '</td>';
  echo '</tr>';
  echo '<tr>';
@@ -17,7 +18,7 @@ if (!$logged)
  echo 'password :';
  echo '</td>';
  echo '<td>';
- echo '<input type="password" name="password" /><br>';
+ echo '<input type="password" name="password" /><br/>';
  echo '</td>';
  echo '</tr>';
  echo '</table>';
@@ -25,5 +26,5 @@ if (!$logged)
  echo '</form>';
  exit;
 }
+*/
 ?>
-

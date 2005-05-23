@@ -1,6 +1,6 @@
 <?php
-include_once("stat_function.php");
-include_once("stat_game.php");
+require_once("stat_function.php");
+require_once("stat_game.php");
 
 
 function boxBeginFp($html_fp,$expand)

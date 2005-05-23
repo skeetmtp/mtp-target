@@ -1,7 +1,7 @@
 <?php
-include_once("news-func.php");
-include_once("login.php");
+require_once("news-func.php");
 
+if(!CUser::instance()->admin()) die("For admin only");
 
   $requete = "SELECT * FROM news WHERE 1 and id like ".$id.";";
   $resultat = exec_requete($requete);
@@ -33,7 +33,3 @@ include_once("login.php");
 </table>
 <input type="submit" value="Modify" tabindex="14" />
 </form>
-
-
-
-

@@ -1,9 +1,10 @@
 <?php
-include_once("news-func.php");
-include_once("login.php");
+require_once("news-func.php");
+
+if(!CUser::instance()->admin()) die("For admin only");
 
 newsRemoveEntry($id);
-include("news-manager.php");
+require_once("news-manager.php");
 
 
 ?>
