@@ -1,11 +1,10 @@
 <?php
-require_once("stat_function.php");
+	require_once("stat_function.php");
 
-     $table_news_head_color = "#FFEEDD";
-     $table_news_row_color = "#FFFAEA";
+	if(isset($_GET['limit_base']))
+		$limit_base = $_GET['limit_base'];	
 
-	//if(!isset($limit_range)) 
-		$limit_range=10;
+	$limit_range=10;
 	if(!isset($limit_base) || !validNumber($limit_base)) 
 		$limit_base=0;
 		
@@ -17,33 +16,28 @@ require_once("stat_function.php");
 	}
 	$html_fp = fopen($cacheFileName, "wt");
 
-
-
 	$thisPage = sprintf("?page=stat_ranking_per_score_of_the_day");
 	
-	
 	//$result = exec_game_db_requete("select * from user ORDER BY Score LIMIT 0 , 30 where 1");
-	fprintf($html_fp,"<table border=\"0\" bgcolor=\"$table_news_bgcolor_color\">");
+	fprintf($html_fp,"<table class=\"stat\">");
 	//$requete = "SELECT user.UId,user.Login,SUM(user_session.Score) as s,session.Date FROM session,user_session,user WHERE session.Id=user_session.SessionId AND user_session.UId=user.UId AND TO_DAYS(NOW())-TO_DAYS(session.Date)=0 GROUP BY user_session.UId,TO_DAYS(session.Date) ORDER BY s DESC LIMIT $limit_base,$limit_range;";
 	$requete = "SELECT user.UId,user.Login,SUM(user_session.Score) as s,session.Date FROM session,user_session,user WHERE session.Id=user_session.SessionId AND user_session.UId=user.UId GROUP BY user_session.UId,TO_DAYS(session.Date) ORDER BY s DESC LIMIT $limit_base,$limit_range;";
 	$result = exec_game_db_requete($requete);
-	printf("<tr>");
-	fprintf($html_fp,"<td bgcolor=\"$table_news_head_color\">&nbsp;Rank&nbsp;</td>");
-	fprintf($html_fp,"<td bgcolor=\"$table_news_head_color\">&nbsp;Login&nbsp;</td>");
-	fprintf($html_fp,"<td bgcolor=\"$table_news_head_color\">&nbsp;Score of the day&nbsp;</td>");
-	fprintf($html_fp,"<td bgcolor=\"$table_news_head_color\">&nbsp;Day&nbsp;</td>");
-	fprintf($html_fp,"</tr>");
+	fprintf($html_fp,"<th>".lg('Rank')."</th>");
+	fprintf($html_fp,"<th>".lg('Login')."</th>");
+	fprintf($html_fp,"<th>".lg('ScoreOfTheDay')."</th>");
+	fprintf($html_fp,"<th>".lg('Day')."</td>");
 	$line_count = 1;
 	while ($line = mysql_fetch_array($result))
 	{
 		if($line[2]>0)
 		{
 			fprintf($html_fp,"<tr>");
-			fprintf($html_fp,"<td bgcolor=\"$table_news_row_color\">&nbsp;%s&nbsp;</td>",$limit_base+$line_count);
-			fprintf($html_fp,"<td bgcolor=\"$table_news_row_color\">&nbsp;<b><a href=\"?page=stat_user&p_user_id=%d\">%s</a></b>&nbsp;</td>",$line[0],$line[1]);
-			fprintf($html_fp,"<td bgcolor=\"$table_news_row_color\">&nbsp;%s&nbsp;</td>",$line[2]);
+			fprintf($html_fp,"<td>%s</td>",$limit_base+$line_count);
+			fprintf($html_fp,"<td><a href=\"?page=stat_user&p_user_id=%d\">%s</a></td>",$line[0],$line[1]);
+			fprintf($html_fp,"<td>%s</td>",$line[2]);
 			$date = strtotime($line[3]);
-			fprintf($html_fp,"<td bgcolor=\"$table_news_row_color\">&nbsp;<b><a href=\"?page=stat_day&p_uid=%d&p_year_to_stat=%s&p_month_to_stat=%s&p_day_to_stat=%s\">%s</a></b>&nbsp;</td>",$line[0],date("Y",$date),date("m",$date),date("d",$date),date("M d Y",$date));
+			fprintf($html_fp,"<td><a href=\"?page=stat_day&p_uid=%d&p_year_to_stat=%s&p_month_to_stat=%s&p_day_to_stat=%s\">%s</a></td>",$line[0],date("Y",$date),date("m",$date),date("d",$date),date("M d Y",$date));
 			fprintf($html_fp,"</tr>");
 			$line_count++;
 		}
@@ -56,7 +50,7 @@ require_once("stat_function.php");
 		$previous_base=0;
 	fprintf($html_fp,"<tr>");
 	fprintf($html_fp,"<td>");
-	fprintf($html_fp,"<a href=\"%s&limit_base=%d\">&lt;&lt;prev</a>",$thisPage,$previous_base);
+	if($limit_base>0) fprintf($html_fp,"<a href=\"%s&limit_base=%d\">&lt;&lt;prev</a>",$thisPage,$previous_base);
 	fprintf($html_fp,"</td>");
 	fprintf($html_fp,"<td>");
 	fprintf($html_fp,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
@@ -67,12 +61,8 @@ require_once("stat_function.php");
 	fprintf($html_fp,"</td>");
 	fprintf($html_fp,"</tr>");
 	fprintf($html_fp,"</table>");
-	
-	
 
 	fclose($html_fp);	  
 	require_once($cacheFileName);	
 
-
-	
 ?>

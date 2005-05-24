@@ -23,16 +23,16 @@ while ($ligne = mysql_fetch_array($resultat))
 	include("lang/".CUser::instance()->language()."/news-get.php");
 	echo '<table class="news">';
 	echo '<tr><td><div class="newshead1">'.$title.'</div>';
-	echo '<div class="newshead2">'.$by.' '.$ligne[1].' the '.$ligne[2]; 
+	echo '<div class="newshead2">'.lg('By').' '.$ligne[1].' '.lg('The').' '.$ligne[2]; 
 	if(CUser::instance()->admin())
-		echo ' <a href="?page=news-admin&id='.$ligne[0].'">modify</a> <a href="?page=news-remove&id='.$ligne[0].'" onclick="return confirmLink(this)">delete</a>';
+		echo ' <a href="?page=news-admin&id='.$ligne[0].'">'.lg('Modify').'</a> <a href="?page=news-remove&id='.$ligne[0].'" onclick="return confirmLink(this)">'.lg('Delete').'</a>';
 	echo '</div></td></tr>';
 	echo '<tr><td class="newsbody"><p>'.str_replace("\n","<br />",$news).'</p></td></tr>';
 	echo '</table>';
 }
 
-if ($start != 0) echo '<a href="?newsstart='.$newer.'">Newer news</a> ';
-echo '<a href="?newsstart='.$end.'">Older news</a>';
+if ($start != 0) echo '<a href="?newsstart='.$newer.'">'.lg('NewerNews').'</a> | ';
+echo '<a href="?newsstart='.$end.'">'.lg('OlderNews').'</a>';
 
 echo '</td><td class="newsstaticmain">';
 require_once("stat_player_of_the_day.php");

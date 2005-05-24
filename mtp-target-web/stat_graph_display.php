@@ -2,10 +2,6 @@
 
 function drawGraph($html_fp,$mysqlArray,$isHour,$CriterionBase,$valCount,$header,$ValueName,$CriterionName)
 {
-	global $table_news_bgcolor_color;
-	global $table_news_head_color;
-	global $table_news_row_color;
-
 	if($isHour)
 	{
 		$CriterionBase = 0;
@@ -34,10 +30,6 @@ function drawGraph($html_fp,$mysqlArray,$isHour,$CriterionBase,$valCount,$header
 
 function drawGraphLink($html_fp,$mysqlArray,$isHour,$CriterionBase,$valCount,$header,$ValueName,$CriterionName,$CriterionLink)
 {
-	global $table_news_bgcolor_color;
-	global $table_news_head_color;
-	global $table_news_row_color;
-
 	if($isHour)
 	{
 		$CriterionBase = 0;
@@ -66,10 +58,6 @@ function drawGraphLink($html_fp,$mysqlArray,$isHour,$CriterionBase,$valCount,$he
 
 function drawGraphH($html_fp,$mysqlArray,$isHour,$CriterionBase,$valCount,$header,$ValueName,$CriterionName)
 {
-	global $table_news_bgcolor_color;
-	global $table_news_head_color;
-	global $table_news_row_color;
-
 	if($isHour)
 	{
 		$CriterionBase = 0;
@@ -98,10 +86,6 @@ function drawGraphH($html_fp,$mysqlArray,$isHour,$CriterionBase,$valCount,$heade
 
 function drawGraphMultiple($html_fp,$mysqlArray,$isHour,$CriterionBase,$valCount,$header,$ValueName,$CriterionArray,$CriterionNotNull)
 {
-	global $table_news_bgcolor_color;
-	global $table_news_head_color;
-	global $table_news_row_color;
-
 	if($isHour)
 	{
 		$CriterionBase = 0;
@@ -133,10 +117,6 @@ function drawGraphMultipleLink($html_fp,$mysqlArray,$isHour,$CriterionBase,$valC
 
 function drawGraphMultipleLinkCount($html_fp,$mysqlArray,$isHour,$CriterionBase,$valCount,$header,$ValueName,$CriterionArray,$CriterionNotNull,$CriterionLink,$linkParamCount)
 {
-	global $table_news_bgcolor_color;
-	global $table_news_head_color;
-	global $table_news_row_color;
-
 	if($isHour)
 	{
 		$CriterionBase = 0;
@@ -185,10 +165,6 @@ function drawGraphMultipleLinkCount($html_fp,$mysqlArray,$isHour,$CriterionBase,
 
 function drawGraphMultipleH($html_fp,$mysqlArray,$isHour,$CriterionBase,$valCount,$header,$ValueName,$CriterionArray,$CriterionNotNull)
 {
-	global $table_news_bgcolor_color;
-	global $table_news_head_color;
-	global $table_news_row_color;
-
 	if($isHour)
 	{
 		$CriterionBase = 0;
@@ -222,12 +198,8 @@ function drawGraphInner($html_fp,$valPerCriterion,$isHour,$CriterionBase,$valCou
 			$maxTotal = $valPerCriterion[$i][0];
 	}
 
-	global $table_news_bgcolor_color;
-	global $table_news_head_color;
-	global $table_news_row_color;
-	
 	fprintf($html_fp,"<table class=\"stat\">\n");
-	fprintf($html_fp,"<th>\n",$table_news_head_color);
+	fprintf($html_fp,"<th>\n");
 	fprintf($html_fp,"%s\n",$header);
 	fprintf($html_fp,"</th>\n");
 	fprintf($html_fp,"<tr>\n");
@@ -307,19 +279,14 @@ function drawGraphInnerHorizontal($html_fp,$valPerCriterion,$isHour,$CriterionBa
 			$maxTotal = $valPerCriterion[$i][0];
 	}
 
-	global $table_news_bgcolor_color;
-	global $table_news_head_color;
-	global $table_news_row_color;
-	
-
-	fprintf($html_fp,"<table width=\"\" border=\"0\" cellpadding=\"0\" cellspacing=\"1\"  bgcolor=\"%s\">\n",$table_news_bgcolor_color);
-	fprintf($html_fp,"<th bgcolor=\"%s\" align=\"center\" >\n",$table_news_head_color);
+	fprintf($html_fp,"<table class=\"stat\">\n");
+	fprintf($html_fp,"<th>\n");
 	fprintf($html_fp,"%s\n",$header);
 	fprintf($html_fp,"</th>\n");
 	fprintf($html_fp,"<tr>\n");
 	fprintf($html_fp,"<td>\n");
 	
-	fprintf($html_fp,"<table width=\"100%%\" border=\"0\" cellpadding=\"0\" cellspacing=\"3\" bgcolor=\"%s\">\n",$table_news_row_color);
+	fprintf($html_fp,"<table class=\"stat\">\n");
 	for($i=$CriterionBase;$i<$valCount;$i++)
 	{
 		fprintf($html_fp,"<tr>\n");

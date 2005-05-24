@@ -1,17 +1,16 @@
 <?php
 
 $menu_array = array (
-"news"  => array ("url"=>"?page=news-manager", "name"=>$menuLinkText_News),
-"home"  => array ("url"=>"?page=home", "name"=>$menuLinkText_Home),
-"download"  => array ("url"=>"http://mtptarget.free.fr/download.php", "name"=>$menuLinkText_Download),
-"sources"  => array ("url"=>"?page=source", "name"=>$menuLinkText_Sources),
-"screenshot"  => array ("url"=>"?page=screenshot", "name"=>$menuLinkText_Screenshot),
-"documents"  => array ("url"=>"?page=howto", "name"=>$menuLinkText_Documents),
-"forum"  => array ("url"=>$forumURL, "name"=>$menuLinkText_Forum),
-//    "compatibility"  => array ("url"=>"?page=compatibility-list.php", "name"=>$menuLinkText_Compatibility),
-"todo"  => array ("url"=>"?page=todo-manager", "name"=>$menuLinkText_Todo),
-"stats"  => array ("url"=>"?page=stats", "name"=>$menuLinkText_Stats),
-"contact"  => array ("url"=>"?page=contact", "name"=>$menuLinkText_Contact),
+	"MenuNews"  => "?page=news-manager",
+	"MenuHome"  => "?page=home",
+	"MenuDownload" => "http://mtptarget.free.fr/download.php",
+	"MenuSources"  => "?page=source",
+	"MenuScreenshots"  => "?page=screenshot",
+	"MenuDocuments"  => "?page=howto",
+	"MenuForum"  => $forumURL,
+	"MenuTodo"  => "?page=todo-manager",
+	"MenuStats"  => "?page=stats",
+	"MenuContact"  => "?page=contact",
 );
 
 ?>
@@ -66,12 +65,13 @@ echo '</table></div>';
 <tr>
 		<td>
         <?php
-                echo "| ";
-                foreach($menu_array as $key => $value)
-                {
-                      echo '<a href="'.$value["url"].'">'.$value["name"].'</a> | ';
-                }
-                
+        $first = true;
+        foreach($menu_array as $key => $value) {
+        	if($first) $first = false;
+        	else echo " | ";
+        	echo '<a href="'.$value.'">'.lg($key).'</a>';
+        }
+
        ?>
 
         </td>
@@ -80,12 +80,14 @@ echo '</table></div>';
         <td>
         <?php
 
-		if($enableSql && $html_fp = cache2Html($cache_dir."/ingame_stats_menu_".CUser::instance()->language().".html",$defaultScoresCacheFileDuration))
-		{
-			getStats($nbop, $nbrp, $nbs);
-			fprintf($html_fp,$menuStat, $nbrp, $nbop, $nbs);
-			flushCache2Html($html_fp);
-		}
+        if($enableSql && $html_fp = cache2Html($cache_dir."/ingame_stats_menu_".CUser::instance()->language().".html",$defaultScoresCacheFileDuration))
+        {
+        	getStats($nbop, $nbrp, $nbs);
+        	fprintf($html_fp, "<a href=\"?page=stat_ranking\">%d %s</a>", $nbrp, lg('RegisteredPlayers'));
+        	fprintf($html_fp, " | <a href=\"?page=logged\">%d %s</a>", $nbop, lg('OnlinePlayers'));
+        	fprintf($html_fp, " | <a href=\"?page=stat_global\">%d %s</a>", $nbs, lg('PLayedGames'));
+        	flushCache2Html($html_fp);
+        }
         ?>
         </td>
 </tr>

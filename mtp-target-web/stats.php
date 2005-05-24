@@ -19,16 +19,15 @@
 </ul>
 
 */
-?>
-<h3>Games statistics</h3>
-<ul>
-<li><a href="?page=stat_global">Mtp Target games stats</a></li>
-<li><a href="?page=stat_ranking">Total score ranking</a></li>
-<li><a href="?page=stat_ranking_of_the_day">Today score ranking</a></li>
-<li><a href="?page=stat_ranking_per_score_of_the_day">Score of the day ranking</a></li>
-<li><a href="?page=stat_user_search">Search a user by name</a></li>
-<li><a href="?page=stat_user_texture">Most used texture</a></li>
-<li><a href="?page=logged">Players online</a></li>
-<li><a href="?page=stat_server_up_list">Servers online</a></li>
-</ul>
+echo '<h3>'.lg('GamesStat').'</h3><ul>';
+echo '<li><a href="?page=stat_global">'.lg('GlobalStat').'</a></li>';
+echo '<li><a href="?page=stat_ranking">'.lg('TotalScoreRanking').'</a></li>';
+echo '<li><a href="?page=stat_ranking_of_the_day">'.lg('TodayScoreRanking').'</a></li>';
+echo '<li><a href="?page=stat_ranking_per_score_of_the_day">'.lg('ScorePerDayRanking').'</a></li>';
+echo '<li><a href="?page=stat_user_search">'.lg('SearchByLogin').'</a></li>';
+echo '<li><a href="?page=stat_user_texture">'.lg('MostUsedTexture').'</a></li>';
+echo '<li><a href="?page=logged">'.lg('OnlinePlayers').'</a></li>';
+echo '<li><a href="?page=stat_server_up_list">'.lg('OnlineServers').'</a></li>';
+echo '</ul>';
 
+?>

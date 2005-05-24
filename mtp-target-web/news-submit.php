@@ -6,10 +6,10 @@ if(!CUser::instance()->admin()) die("For admin only");
 ?>
 
 <form method="post" action="news-add.php" name="insertForm"></tr>
-<table border="0">
-	<tr><td bgcolor="#dddddd"><b>&nbsp;User&nbsp;</b></td></tr>
+<table>
+	<tr><td>User</td></tr>
 	<tr>
-      <td bgcolor="#eeeeee">
+      <td>
         <select name="user" dir="ltr">
           <option value="Ace">Ace</option>
           <option value="Muf">Muf</option>
@@ -17,14 +17,14 @@ if(!CUser::instance()->admin()) die("For admin only");
         </select>
       </td>
   </tr>
-  <tr><td bgcolor="#dddddd"><b>&nbsp;En Title&nbsp;</b></td></tr>
-  <tr><td bgcolor="#eeeeee"><textarea name="en_title" rows="1" cols="120" wrap="virtual" tabindex="1"></textarea></td></tr>
-  <tr><td bgcolor="#dddddd"><b>&nbsp;En Content&nbsp;</b></td></tr>
-  <tr><td bgcolor="#eeeeee"><textarea name="en_news" rows="7" cols="120" wrap="virtual" tabindex="1"></textarea></td></tr>
-  <tr><td bgcolor="#dddddd"><b>&nbsp;Titre Fr&nbsp;</b></td></tr>
-  <tr><td bgcolor="#eeeeee"><textarea name="fr_title" rows="1" cols="120" wrap="virtual" tabindex="1"></textarea></td></tr>
-  <tr><td bgcolor="#dddddd"><b>&nbsp;Contenu Fr&nbsp;</b></td></tr>
-  <tr><td bgcolor="#eeeeee"><textarea name="fr_news" rows="7" cols="120" wrap="virtual" tabindex="1"></textarea></td></tr>
+  <tr><td>EN Title</td></tr>
+  <tr><td><textarea name="en_title" rows="1" cols="120" wrap="virtual" tabindex="1"></textarea></td></tr>
+  <tr><td>EN Content</td></tr>
+  <tr><td><textarea name="en_news" rows="7" cols="120" wrap="virtual" tabindex="1"></textarea></td></tr>
+  <tr><td>FR Title</td></tr>
+  <tr><td><textarea name="fr_title" rows="1" cols="120" wrap="virtual" tabindex="1"></textarea></td></tr>
+  <tr><td>FR Content</td></tr>
+  <tr><td><textarea name="fr_news" rows="7" cols="120" wrap="virtual" tabindex="1"></textarea></td></tr>
 </table>
 <input type="submit" value="Submit" tabindex="14" />
 </form>

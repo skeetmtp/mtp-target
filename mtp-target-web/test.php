@@ -27,7 +27,7 @@ include_once("stat_game.php");
 
 /*
 echo "Votre base est en cours de restauration......\n<br>";
-system("cat __DB_phpbb__.sql | mysql --host=sql7 --user=mtptarge --password=mvyhgmzf mtptarge");
+system("cat __DB_phpbb__.sql | mysql --host=<put the sqlserver> --user=<put the login> --password=<put the password> mtptarge");
 echo "C'est fini. Votre base est en place sur cet hébergement.";
 */
 

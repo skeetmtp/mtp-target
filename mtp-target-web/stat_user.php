@@ -11,7 +11,7 @@ require_once("stat_map_graph_display.php");
 	$user_name = userId2Name($uid);
 	$user_team = getUserTeam($user_name);
 	$cacheFileName = $cache_dir."/stat_user_".$uid.".html";
-	printf("<center><b>%s</b> stats : </center><br/<br/>>",$user_name);
+	printf("<center><b>%s</b> stats : </center><br/<br/>",$user_name);
 
 	if(isCacheFileUpToDate($cacheFileName))
 	{
@@ -25,12 +25,12 @@ require_once("stat_map_graph_display.php");
 	$sessionPlayedCount = 1;
 	$sessionPlayedDuration = 1;
 	$sessionWithScoreCount = 1;
-	
+
 	userOverallStat($uid,$totalScore,$currentScore,$sessionPlayedCount,$sessionPlayedDuration);
 	if($sessionPlayedCount<=0)
 	{
 		fprintf($html_fp,"%s have never played<br/>\n",$user_name);
-		fclose($html_fp);	  
+		fclose($html_fp);
 		require_once($cacheFileName);
 		return;
 	}

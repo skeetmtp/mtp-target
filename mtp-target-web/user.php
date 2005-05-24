@@ -61,11 +61,11 @@ class CUser {
 	public function displayLoginForm() {
 		echo '<form method="post" action="">';
 		if($this->Error != "") echo '<tr><td></td><td align="center">'.$this->Error.'</td></tr>';
-		echo '<tr><td class="r">Login:</td><td class="l"><input type="text" name="LoginLogin" size="16"/></td></tr>';
-		echo '<tr><td class="r">Password:</td><td class="l"><input type="password" name="LoginPassword" size="16"/></td></tr>';
-		echo '<tr><td class="r"><input type="checkbox" name="LoginRemember" value="yes"/></td><td class="l">Remember my password</td></tr>';
-		echo '<tr><td class="r"><a href="?page=user_registration">Register</a></td><td class="r">';
-		echo '<input type="submit" value="Sign in" /></td></tr></form>';
+		echo '<tr><td class="r">'.lg('Login').':</td><td class="l"><input type="text" name="LoginLogin" size="16"/></td></tr>';
+		echo '<tr><td class="r">'.lg('Password').':</td><td class="l"><input type="password" name="LoginPassword" size="16"/></td></tr>';
+		echo '<tr><td class="r"><input type="checkbox" name="LoginRemember" value="yes"/></td><td class="l">'.lg('RememberPassword').'</td></tr>';
+		echo '<tr><td class="r"><a href="?page=user_registration">'.lg('Register').'</a></td><td class="r">';
+		echo '<input type="submit" value="'.lg('SignIn').'" /></td></tr></form>';
 	}
 
 	public function logged() { return $_SESSION['Logged']; }
@@ -112,11 +112,11 @@ class CUser {
 				return true;
 			} else {
 				$this->dbg .= " bad pass *";
-				$this->Error = "Bad password";
+				$this->Error = lg('BadPassword');
 			}
 		} else {
 			$this->dbg .= " login not found in db *";
-			$this->Error = "Bad login";
+			$this->Error = lg('BadLogin');
 		}
 		$this->dbg .= " pass failed *";
 		$this->_sessionDefaults();

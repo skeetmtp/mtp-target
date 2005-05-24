@@ -1,11 +1,10 @@
 <?php
-require_once("stat_function.php");
+	require_once("stat_function.php");
 
-     $table_news_head_color = "#FFEEDD";
-     $table_news_row_color = "#FFFAEA";
+	if(isset($_GET['limit_base']))
+		$limit_base = $_GET['limit_base'];	
 
-	//if(!isset($limit_range)) 
-		$limit_range=20;
+	$limit_range=20;
 	if(!isset($limit_base) || !validNumber($limit_base)) 
 		$limit_base=0;
 
@@ -22,9 +21,9 @@ require_once("stat_function.php");
 	//$result = exec_game_db_requete("select * from user ORDER BY Score LIMIT 0 , 30 where 1");
 	fprintf($html_fp,"<table class=\"stat\">");
 	$result = exec_game_db_requete(sprintf("select * from user ORDER BY Score DESC LIMIT %d , %d ",$limit_base,$limit_range));
-	fprintf($html_fp,"<th>Rank</th>");
-	fprintf($html_fp,"<th>Login</th>");
-	fprintf($html_fp,"<th>Score</th>");
+	fprintf($html_fp,"<th>".lg('Rank')."</th>");
+	fprintf($html_fp,"<th>".lg('Login')."</th>");
+	fprintf($html_fp,"<th>".lg('Score')."</th>");
 	$line_count = 1;
 	while ($line = mysql_fetch_array($result))
 	{
@@ -43,7 +42,7 @@ require_once("stat_function.php");
 		$previous_base=0;
 	fprintf($html_fp,"<tr>");
 	fprintf($html_fp,"<td>");
-	fprintf($html_fp,"<a href=\"%s&limit_base=%d\">&lt;&lt;prev</a>",$thisPage,$previous_base);
+	if($limit_base>0) fprintf($html_fp,"<a href=\"%s&limit_base=%d\">&lt;&lt;prev</a>",$thisPage,$previous_base);
 	fprintf($html_fp,"</td>");
 	fprintf($html_fp,"<td>");
 	fprintf($html_fp,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");

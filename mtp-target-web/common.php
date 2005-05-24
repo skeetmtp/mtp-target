@@ -40,9 +40,10 @@ function displayCacheFile($filename)
 
 function isCacheFileUpToDateDuration($filename,$duration)
 {
-// ace no cache
-//return false;
 	global $cache_dir;
+	global $UseCache;
+	if(!$UseCache) return false;
+	
 	if(!file_exists($cache_dir))
 		mkdir($cache_dir);
 	//chmod($cache_dir, 0777)
@@ -66,8 +67,9 @@ function isCacheFileUpToDateDuration($filename,$duration)
 
 function isCacheFileUpToDate($filename)
 {
-// ace no cache
-//return false;
+	global $UseCache;
+	if(!$UseCache) return false;
+
 	global $defaultCacheFileDuration;
 	//return false;
 	$res = isCacheFileUpToDateDuration($filename,$defaultCacheFileDuration); //update every 30 minutes
@@ -99,6 +101,40 @@ function microtime_float()
 {
 	list($usec, $sec) = explode(" ", microtime());
 	return ((float)$usec + (float)$sec);
+}
+
+// This function returns $text in the user language (french, english...)
+// If the $text is not translated, it adds it in the php file and returns the default value ($text)
+function lg($text)
+{
+	global $LanguageArray;
+
+	if(CUser::instance()->language() == "") {
+		die("call of lg('".$text."') to early, the user language is still unknown");
+	}
+
+	$path = "lang/language_array_".CUser::instance()->language().".php";
+
+	if(!isset($LanguageArray)) {
+		// try to load the language file
+		if (file_exists($path)) {
+			include_once($path);
+		} else {
+			// first time we use this language, create the file
+			$LanguageArray = array();
+		}
+	}
+
+	if(!isset($LanguageArray[$text])) {
+		$LanguageArray[$text] = "**TBT_".$text."**";
+		$fp = fopen($path, "w");
+		fwrite($fp, "﻿<?php\r\n");
+		fwrite($fp, '$LanguageArray = ');
+		fwrite($fp, str_replace("\n", "\r\n", var_export($LanguageArray, true)));
+		fwrite($fp, "\r\n?>\r\n");
+		fclose($fp);
+	}
+	return $LanguageArray[$text];
 }
 
 ?>

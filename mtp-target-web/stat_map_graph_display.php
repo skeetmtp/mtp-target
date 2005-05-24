@@ -2,10 +2,6 @@
 
 function drawMapUsage($html_fp,$mysqlArray,$CriterionBase,$valCount,$header,$CriterionArray,$link)
 {
-	global $table_news_bgcolor_color;
-	global $table_news_head_color;
-	global $table_news_row_color;
-
 /*
 	$mysqlArray = $result; 
 	$CriterionBase = 1;
@@ -55,7 +51,7 @@ function drawMapUsage($html_fp,$mysqlArray,$CriterionBase,$valCount,$header,$Cri
 			fprintf($html_fp,"%s\n",$mapLink);
 			fprintf($html_fp,"</td>\n");
 	
-			fprintf($html_fp,"<td align=\"right\">\n");
+			fprintf($html_fp,"<td>\n");
 			fprintf($html_fp,"%d\n",$valPerCriterion[$i][0]);
 			fprintf($html_fp,"</td>\n");
 			

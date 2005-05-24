@@ -1,7 +1,6 @@
 <?php
 require_once("stat_function.php");
 
-	//if(!isset($limit_range)) 
 		$limit_range=10;
 	if(!isset($limit_base) || !validNumber($limit_base)) 
 		$limit_base=0;

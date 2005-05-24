@@ -18,8 +18,6 @@ bench_start();
 // Load and init the user
 CUser::instance();
 
-require_once("lang/".CUser::instance()->language()."/lang.inc.php");
-
 //ace include_once("check_admin_login.php");
 
 if(isset($_COOKIE['mtp_target_default_page']))

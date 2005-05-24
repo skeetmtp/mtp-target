@@ -1,6 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html lang="<?php echo CUser::instance()->language() ?>">
+<html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>mtp-target</title>
@@ -18,11 +18,11 @@
 <table border="0">
 <tr><td>
 <?php
-echo "<h3>$menuLinkText_Download</h3>";
+echo "<h3>Download</h3>";
 ?>
 </tr></td>
 
-	<tr><td bgcolor="<?php echo $table_news_head_color;?>"><b>&nbsp;Windows Full version&nbsp;</b></td></tr>
+	<tr><td><b>Windows Full version</b></td></tr>
 	<?php
 		function returnFileSize($fn,$precision=2) {
 			$sizeInBytes = filesize($fn);
@@ -34,11 +34,6 @@ echo "<h3>$menuLinkText_Download</h3>";
 		$count = 0;
 		while (false !== ($entry = $d->read())) 
 		{
-			if(($count%2)==0)
-				$color = "#cccccc";
-			else
-				$color = "#dddddd";
-			
 			$f = $dirname . $entry ;
 			$t = filetype($f);
 			if($t == "file")
@@ -46,7 +41,7 @@ echo "<h3>$menuLinkText_Download</h3>";
 				if(strstr($entry,"update")=="" && strstr($entry,"mtp-target")!="" && strstr($entry,".exe")!="" )
 				{
 					printf("<tr>");
-					printf("<td bgcolor=\"%s\">&nbsp;<a href=\"$f\"><img src=\"download.png\" ALT=\"file\"> $entry</a> (".returnFileSize($f).")&nbsp;</td>",$table_news_row_color);
+					printf("<td><a href=\"$f\"><img src=\"download.png\" ALT=\"file\"> $entry</a> (".returnFileSize($f).")</td>");
 					printf("</tr>");
 					$count++;
 				}
@@ -56,11 +51,11 @@ echo "<h3>$menuLinkText_Download</h3>";
 		if($count==0)
 		{
 			printf("<tr>");
-			printf("<td bgcolor=\"%s\">No file available</td>",$table_news_row_color);
+			printf("<td>No file available</td>");
 			printf("</tr>");
 		}
 	?>
-	<tr><td bgcolor="<?php echo $table_news_head_color;?>"><b>&nbsp;GNU/Linux Full version&nbsp;</b></td></tr>
+	<tr><td><b>&nbsp;GNU/Linux Full version&nbsp;</b></td></tr>
 	<?php
 
 		$dirname = "./download/";
@@ -68,11 +63,6 @@ echo "<h3>$menuLinkText_Download</h3>";
 		$count = 0;
 		while (false !== ($entry = $d->read())) 
 		{
-			if(($count%2)==0)
-				$color = "#cccccc";
-			else
-				$color = "#dddddd";
-			
 			$f = $dirname . $entry ;
 			$t = filetype($f);
 			if($t == "file")
@@ -80,7 +70,7 @@ echo "<h3>$menuLinkText_Download</h3>";
 				if(strstr($entry,"update")=="" && strstr($entry,"mtp-target")!="" && strstr($entry,".tar.bz2")!="" )
 				{
 					printf("<tr>");
-					printf("<td bgcolor=\"%s\">&nbsp;<a href=\"$f\"><img src=\"download.png\" ALT=\"file\"> $entry</a> (".returnFileSize($f).")&nbsp;</td>",$table_news_row_color);
+					printf("<td><a href=\"$f\"><img src=\"download.png\" ALT=\"file\"> $entry</a> (".returnFileSize($f).")</td>");
 					printf("</tr>");
 					$count++;
 				}
@@ -90,12 +80,12 @@ echo "<h3>$menuLinkText_Download</h3>";
 		if($count==0)
 		{
 			printf("<tr>");
-			printf("<td bgcolor=\"%s\">No file available</td>",$table_news_row_color);
+			printf("<td>No file available</td>");
 			printf("</tr>");
 		}
 	?>
 	<tr><td><b>&nbsp;&nbsp;</b></td></tr>
-	<tr><td bgcolor="<?php echo $table_news_head_color;?>"><b>&nbsp;Windows Update&nbsp;</b></td></tr>
+	<tr><td><b>&nbsp;Windows Update&nbsp;</b></td></tr>
 	<?php
 
 		$dirname = "./download/";
@@ -103,11 +93,6 @@ echo "<h3>$menuLinkText_Download</h3>";
 		$count = 0;
 		while (false !== ($entry = $d->read())) 
 		{
-			if(($count%2)==0)
-				$color = "#cccccc";
-			else
-				$color = "#dddddd";
-			
 			$f = $dirname . $entry ;
 			$t = filetype($f);
 			if($t == "file")
@@ -115,7 +100,7 @@ echo "<h3>$menuLinkText_Download</h3>";
 				if(strstr($entry,"update")!="")
 				{
 					printf("<tr>");
-					printf("<td bgcolor=\"%s\">&nbsp;<a href=\"$f\"><img src=\"download.png\" ALT=\"file\"> $entry</a> (".returnFileSize($f).")&nbsp;</td>",$table_news_row_color);
+					printf("<td><a href=\"$f\"><img src=\"download.png\" ALT=\"file\"> $entry</a> (".returnFileSize($f).")</td>");
 					printf("</tr>");
 					$count++;
 				}
@@ -125,12 +110,12 @@ echo "<h3>$menuLinkText_Download</h3>";
 		if($count==0)
 		{
 			printf("<tr>");
-			printf("<td bgcolor=\"%s\">No file available</td>",$table_news_row_color);
+			printf("<td>No file available</td>");
 			printf("</tr>");
 		}
 	?>
 	<tr><td><b>&nbsp;&nbsp;</b></td></tr>
-	<tr><td bgcolor="<?php echo $table_news_head_color;?>"><b>&nbsp;Utils&nbsp;</b></td></tr>
+	<tr><td><b>&nbsp;Utils&nbsp;</b></td></tr>
 	<?php
 
 		$dirname = "./utils/";
@@ -138,11 +123,6 @@ echo "<h3>$menuLinkText_Download</h3>";
 		$count = 0;
 		while (false !== ($entry = $d->read())) 
 		{
-			if(($count%2)==0)
-				$color = "#cccccc";
-			else
-				$color = "#dddddd";
-			
 			$f = $dirname . $entry ;
 			$t = filetype($f);
 			if($t == "file")
@@ -150,7 +130,7 @@ echo "<h3>$menuLinkText_Download</h3>";
 				//if(strstr($entry,"update")=="" && strstr($entry,"mtp-target")==""  && strstr($entry,"index")=="" )
 				{
 					printf("<tr>");
-					printf("<td bgcolor=\"%s\">&nbsp;<a href=\"$f\"><img src=\"download.png\" ALT=\"file\"> $entry</a> (".returnFileSize($f).")&nbsp;</td>",$table_news_row_color);
+					printf("<td><a href=\"$f\"><img src=\"download.png\" ALT=\"file\"> $entry</a> (".returnFileSize($f)."</td>");
 					printf("</tr>");
 					$count++;
 				}
@@ -160,12 +140,12 @@ echo "<h3>$menuLinkText_Download</h3>";
 		if($count==0)
 		{
 			printf("<tr>");
-			printf("<td bgcolor=\"%s\">No file available</td>",$table_news_row_color);
+			printf("<td>No file available</td>");
 			printf("</tr>");
 		}
 	?>
 	<tr><td><b>&nbsp;&nbsp;</b></td></tr>
-	<tr><td bgcolor="<?php echo $table_news_head_color;?>"><b>&nbsp;Videos&nbsp;</b></td></tr>
+	<tr><td><b>&nbsp;Videos&nbsp;</b></td></tr>
 	<?php
 
 		$dirname = "./download/";
@@ -173,11 +153,6 @@ echo "<h3>$menuLinkText_Download</h3>";
 		$count = 0;
 		while (false !== ($entry = $d->read())) 
 		{
-			if(($count%2)==0)
-				$color = "#cccccc";
-			else
-				$color = "#dddddd";
-			
 			$f = $dirname . $entry ;
 			$t = filetype($f);
 			if($t == "file")
@@ -185,7 +160,7 @@ echo "<h3>$menuLinkText_Download</h3>";
 				if(strstr($entry,".avi")!="")
 				{
 					printf("<tr>");
-					printf("<td bgcolor=\"%s\">&nbsp;<a href=\"$f\"><img src=\"download.png\" ALT=\"file\"> $entry</a> (".returnFileSize($f).")&nbsp;</td>",$table_news_row_color);
+					printf("<td><a href=\"$f\"><img src=\"download.png\" ALT=\"file\"> $entry</a> (".returnFileSize($f).")</td>");
 					printf("</tr>");
 					$count++;
 				}
@@ -195,7 +170,7 @@ echo "<h3>$menuLinkText_Download</h3>";
 		if($count==0)
 		{
 			printf("<tr>");
-			printf("<td bgcolor=\"%s\">No file available</td>",$table_news_row_color);
+			printf("<td>No file available</td>");
 			printf("</tr>");
 		}
 	?>

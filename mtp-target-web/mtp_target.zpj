@@ -11,7 +11,10 @@
 	</project_entity>
 	<project_entity ID="bookmarks"/>
 	<project_entity ID="editor_component" selectedEditor="0">
-		<openEditors/>
+		<openEditors>
+			<editor fileName="C:\wamp\www\mtp-target-web\user_registration.php" caretPosition="437" clone="false" encoding="default"/>
+			<editor fileName="C:\wamp\www\mtp-target-web\user_registration_confirm.php" caretPosition="0" clone="false" encoding="default"/>
+		</openEditors>
 	</project_entity>
 	<project_entity ID="CVS">
 		<lastArguments>

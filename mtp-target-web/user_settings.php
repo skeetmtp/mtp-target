@@ -31,12 +31,12 @@ $uid = CUser::instance()->uid();
 	printf("</td>\n");
 
 	printf("<td valign=\"bottom\">\n");
-	printf($settingsChangeTexture);
-	printf($settingsUploadTexture);
+	printf("<a href=\"?page=user_texture_selection\">%s...</a><br/>", lg('ChangeTexture'));
+	printf("<a href=\"?page=user_upload_texture\">%s...</a><br/>", lg('UploadTexture'));
 	//printf("<a href=\"?page=user_color_selection\">Change your color...</a><br/>");
 	//printf("<a href=\"?page=user_delete\">Delete this account</a><br/>");
-	printf($settingsMerge);
-	printf($settingsRename);
+	printf("<a href=\"?page=user_merge\">%s</a><br/>", lg('MergeAccount'));
+	printf("<a href=\"?page=user_rename\">%s</a><br/>", lg('RenameAccount'));
 	//printf("<a href=\"?page=test\">test</a><br/>");
 	printf("</td>\n");
 
@@ -47,8 +47,5 @@ $uid = CUser::instance()->uid();
 	printf("TODO: set email<br/>\n");
 	printf("TODO: [x] receive news by mail<br/>\n");
 	*/
-	
-	
-	
 	
 ?>
