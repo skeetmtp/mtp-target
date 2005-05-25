@@ -73,6 +73,8 @@ public:
 		return BufServer->hostAddress(hostid);
 	}
 
+	void sendToPublicChat(const std::string msg);
+	void forwardToPublicChat(const std::string msg);
 
 private:
 
@@ -87,6 +89,8 @@ private:
 	uint32 Version;
 
 	NLMISC::TTime NextUpdateTime;
+
+	NLNET::CTcpSock	ChatSock;
 };
 
 #endif
