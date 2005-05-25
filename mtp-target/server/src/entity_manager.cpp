@@ -847,8 +847,7 @@ string CEntityManager::check(const string &login, const string &password, bool d
 				{
 					return toString("Your score (%d) is now too high for this server (limited to %d). Try a more difficult server", score, maxScore);
 				}
-
-				CNetwork::instance().forwardToPublicChat(login+" comes in!");
+				CNetwork::instance().forwardToPublicChat(login+" comes in! ("+toString(humanClientCount())+" players)");
 				return "";
 			}
 			else
@@ -871,7 +870,7 @@ string CEntityManager::check(const string &login, const string &password, bool d
 	accounts.setAsString("0", accounts.size());
 	IService::getInstance()->ConfigFile.save();
 
-	CNetwork::instance().forwardToPublicChat(login+" comes in!");
+	CNetwork::instance().forwardToPublicChat(login+" comes in! ("+toString(humanClientCount())+" players)");
 	return "";
 }
 
@@ -962,7 +961,9 @@ MTPT_COMMAND(kick, "kick a user from the server", "[<eid>|<name>]")
 		const CInetAddress inetAddr = CNetwork::instance().hostAddress(c->sock());
 		string ip = inetAddr.ipAddress();
 		string userName = c->name();
-		string kickerName = entity->name();
+		string kickerName = "server";
+		if(entity)
+			kickerName = entity->name();
 		string info = "";
 		for(uint i=1;i<args.size();i++)
 			info += " "+args[i];
@@ -1014,7 +1015,9 @@ MTPT_COMMAND(ban, "ban a user from the server", "[<eid>|<name>] [duration]")
 		const CInetAddress inetAddr = CNetwork::instance().hostAddress(c->sock());
 		string ip = inetAddr.ipAddress();
 		string userName = c->name();
-		string kickerName = entity->name();
+		string kickerName = "server";
+		if(entity)
+			kickerName = entity->name();
 		
 		uint32 duration = 10;
 		if(args.size() >= 2)
@@ -1062,7 +1065,9 @@ MTPT_COMMAND(report, "report a problematic user", "[<eid>|<name>] [comment]")
 	const CInetAddress inetAddr = CNetwork::instance().hostAddress(c->sock());
 	string ip = inetAddr.ipAddress();
 	string userName = c->name();
-	string reporterName = entity->name();
+	string reporterName = "server";
+	if(entity)
+		reporterName = entity->name();
 	string info = "";
 	for(uint i=1;i<args.size();i++)
 		info += " "+args[i];

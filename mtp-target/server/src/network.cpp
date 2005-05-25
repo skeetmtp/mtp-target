@@ -142,10 +142,12 @@ void CNetwork::update()
 		nlinfo("recv : '%s'",ch);
 		string rcv = (char *)ch;
 		string publicChatBotLogin = IService::getInstance()->ConfigFile.getVar("publicChatBotIdentity").asString(0);
+		//login
 		if(rcv.find(string("\n<Mtp> Login:"))!=string::npos)
 		{
 			sendToPublicChat(publicChatBotLogin);
 		}
+		//password
 		else if(rcv.find(string("<Mtp> Password:"))!=string::npos && ch[0]==255 && ch[1]==251)//TODO hmmhmm :)
 		{
 			string publicChatBotPassword = IService::getInstance()->ConfigFile.getVar("publicChatBotIdentity").asString(1);
@@ -153,10 +155,64 @@ void CNetwork::update()
 			sendToPublicChat(publicChatBotPassword);
 			sendToPublicChat("join "+publicChatBotChannel);
 		}
+		//channel
 		else if(ch[0]=='<' && rcv.find(string("<Mtp>"))!=0 && rcv.find("<"+publicChatBotLogin+">")!=0 )
 		{
-			sendChat(rcv,false);
-			tellToPublicChat(rcv);
+			bool command = false;
+			for(sint i = 0; i < IService::getInstance()->ConfigFile.getVar("publicChatForwardTo").size(); i++)
+			{
+				string nickName = IService::getInstance()->ConfigFile.getVar("publicChatForwardTo").asString(i);
+				string cmdHeader = "<"+nickName+"> .";
+				uint32 pos = rcv.find(cmdHeader);
+				if(pos==0)
+				{
+					string cmd = rcv.substr(cmdHeader.size());
+					if(cmd.size())
+					{
+						cmd = cmd.substr(0,cmd.size()-1);//remove last \n
+						CNetwork::instance().sendChat(nickName+" executed: /"+cmd);
+						ICommand::execute(cmd, *InfoLog);
+					}
+					command = true;
+					break;
+				}
+			}
+			if(!command)
+			{
+				sendChat(rcv,false);
+				tellToPublicChat(rcv);
+			}
+		}
+		//tell
+		else if(ch[0]=='<' && rcv.find(string("<Mtp>"))==0)
+		{
+			for(sint i = 0; i < IService::getInstance()->ConfigFile.getVar("publicChatForwardTo").size(); i++)
+			{
+				string nickName = IService::getInstance()->ConfigFile.getVar("publicChatForwardTo").asString(i);
+				string tellStr = "<Mtp> "+nickName+" tells you: ";
+				uint32 pos = rcv.find(tellStr);
+				if(pos==0)
+				{
+					string rawMsgStr = rcv.substr(tellStr.size());
+					string tellMsgStr = "<"+nickName+"> "+rawMsgStr;
+					string cmdHeader = "<"+nickName+"> .";
+					pos = tellMsgStr.find(cmdHeader);
+					if(pos==0)
+					{
+						string cmd = tellMsgStr.substr(cmdHeader.size());
+						if(cmd.size())//remove last \n
+						{
+							cmd = cmd.substr(0,cmd.size()-1);//remove last \n
+							CNetwork::instance().sendChat(nickName+" executed: /"+cmd);
+							ICommand::execute(cmd, *InfoLog);
+						}
+					}
+					else
+						forwardToPublicChat(tellMsgStr);
+					break;
+				}
+			}
+			
 		}
 	}
 

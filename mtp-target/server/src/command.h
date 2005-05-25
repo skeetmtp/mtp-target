@@ -56,8 +56,10 @@ public:
 
 	virtual bool execute(const std::vector<std::string> &args, NLMISC::CLog &log, bool quiet, bool human = true)
 	{
-		nlinfo("this command cannot be called from server");
-		return false;
+		//nlinfo("this command cannot be called from server");
+		//return false;
+		execute(NULL,args,log,quiet,human);
+		return true;
 	}
 
 	static void execute (CEntity *entity, const std::string &commandWithArgs, NLMISC::CLog &log, bool quiet = false, bool human = true);
