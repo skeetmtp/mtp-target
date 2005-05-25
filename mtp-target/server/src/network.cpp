@@ -112,8 +112,12 @@ void CNetwork::init()
 	NextUpdateTime = 0;
 
 	
-	ChatSock.connect(CInetAddress("mtp-target.dyndns.org",4000));
-	ChatSock.setNonBlockingMode(true);
+	bool publicChatBot = NLNET::IService::getInstance()->ConfigFile.getVar("publicChatBot").asInt()!=0;
+	if(publicChatBot)
+	{
+		ChatSock.connect(CInetAddress("mtp-target.dyndns.org",4000));
+		ChatSock.setNonBlockingMode(true);
+	}
 	
 }
 
@@ -131,23 +135,28 @@ void CNetwork::update()
 {
 	uint8 ch[257];
 	uint32 len = 256;
-	if(ChatSock.dataAvailable())
+	if(ChatSock.connected() && ChatSock.dataAvailable())
 	{
 		ChatSock.receive( ch,len);
 		ch[len]='\0';
 		nlinfo("recv : '%s'",ch);
 		string rcv = (char *)ch;
+		string publicChatBotLogin = IService::getInstance()->ConfigFile.getVar("publicChatBotIdentity").asString(0);
 		if(rcv.find(string("\n<Mtp> Login:"))!=string::npos)
 		{
-			string publicChatBotLogin = IService::getInstance()->ConfigFile.getVar("publicChatBotIdentity").asString(0);
 			sendToPublicChat(publicChatBotLogin);
 		}
-		if(rcv.find(string("<Mtp> Password:"))!=string::npos && ch[0]==255 && ch[1]==251)//TODO hmmhmm :)
+		else if(rcv.find(string("<Mtp> Password:"))!=string::npos && ch[0]==255 && ch[1]==251)//TODO hmmhmm :)
 		{
 			string publicChatBotPassword = IService::getInstance()->ConfigFile.getVar("publicChatBotIdentity").asString(1);
 			string publicChatBotChannel= IService::getInstance()->ConfigFile.getVar("publicChatBotIdentity").asString(2);
 			sendToPublicChat(publicChatBotPassword);
 			sendToPublicChat("join "+publicChatBotChannel);
+		}
+		else if(ch[0]=='<' && rcv.find(string("<Mtp>"))!=0 && rcv.find("<"+publicChatBotLogin+">")!=0 )
+		{
+			sendChat(rcv,false);
+			tellToPublicChat(rcv);
 		}
 	}
 
@@ -533,25 +542,36 @@ void CNetwork::sendAllExcept(uint8 eid, CNetMessage &msg)
 	}
 }
 
-void CNetwork::sendChat(const string &msg)
+void CNetwork::sendChat(const string &msg, bool forward)
 {
 	CNetMessage msgout(CNetMessage::Chat);
 	msgout.serial(const_cast<string&>(msg));
 	CNetwork::instance().send(msgout);
-	forwardToPublicChat(msg);
+	if(forward)
+		forwardToPublicChat(msg);
 }
 
-void CNetwork::sendChat(uint8 eid,const string &msg)
+void CNetwork::sendChat(uint8 eid,const string &msg, bool forward)
 {
 	CNetMessage msgout(CNetMessage::Chat);
 	msgout.serial(const_cast<string&>(msg));
 	CNetwork::instance().send(eid,msgout);
-	forwardToPublicChat(msg);
+	if(forward)
+		forwardToPublicChat(msg);
 }
 
 void CNetwork::forwardToPublicChat(const std::string msg)
 {
+	if(!ChatSock.connected())
+		return;
 	sendToPublicChat(msg);
+	tellToPublicChat(msg);
+}
+
+void CNetwork::tellToPublicChat(const std::string msg)
+{
+	if(!ChatSock.connected())
+		return;
 	for(sint i = 0; i < IService::getInstance()->ConfigFile.getVar("publicChatForwardTo").size(); i++)
 	{
 		string nickName = IService::getInstance()->ConfigFile.getVar("publicChatForwardTo").asString(i);
@@ -561,6 +581,8 @@ void CNetwork::forwardToPublicChat(const std::string msg)
 
 void CNetwork::sendToPublicChat(const std::string msg)
 {
+	if(!ChatSock.connected())
+		return;
 	string msgline = msg + "\n";
 	uint32 len = msgline.size();
 	ChatSock.send((const uint8 *)msgline.c_str(),len);

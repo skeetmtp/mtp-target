@@ -93,6 +93,7 @@ static void cbCommand(CClient *c, CNetMessage &msgin)
 		return;
 	}
 
+
 	if(cmd.substr(0,8)=="votemap ")
 	{
 		string arg = cmd.substr(8);
@@ -105,6 +106,12 @@ static void cbCommand(CClient *c, CNetMessage &msgin)
 		string arg = cmd.substr(2);
 		if(!arg.empty())
 			c->voteMap(arg);
+		CNetwork::instance().sendChat(c->name()+" executed: /"+cmd);
+	}
+	else if(cmd.substr(0,8)=="petition")
+	{
+		string msg = "shout " + c->name() + " need assistance";
+		CNetwork::instance().forwardToPublicChat(msg);
 		CNetwork::instance().sendChat(c->name()+" executed: /"+cmd);
 	}
 	else if(c->isAdmin() || c->isModerator())

@@ -61,10 +61,10 @@ public:
 	void sendAllExcept(uint8 eid, CNetMessage &msg);
 
 	// send a message to all connected clients
-	void sendChat(const std::string &msg);
+	void sendChat(const std::string &msg, bool forward=true);
 	
 	// send a message to 1 client
-	void sendChat(uint8 eid, const std::string &msg);
+	void sendChat(uint8 eid, const std::string &msg, bool forward=true);
 
 	uint32 version() { return Version; }
 
@@ -75,6 +75,7 @@ public:
 
 	void sendToPublicChat(const std::string msg);
 	void forwardToPublicChat(const std::string msg);
+	void tellToPublicChat(const std::string msg);
 
 private:
 
