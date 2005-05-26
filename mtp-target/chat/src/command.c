@@ -211,13 +211,13 @@ static command CommandList[] = {
 
    { "Register", "NoGroup",  FALSE, TRUE,  "$Word",         Register, "<Password>"                    },
 
-   { "Reply",    "Tell",     TRUE,  FALSE, "$String",       Reply,    "<Message>"                     },
+   { "Reply",    "NoGroup",     TRUE,  FALSE, "$String",       Reply,    "<Message>"                     },
 
    { "Set",      "NoGroup",  FALSE, TRUE,  "$String",       Set,      "[<User>|<Channel>|<Group>] <Variable> <Value>" },
    { "Set",      "NoGroup",  FALSE, FALSE, "",              Set,      "[<User>|<Channel>|<Group>] <Variable> <Value>" },
 /*  dans un premier temps, on laisse set se demerder.... on verra + tard.....  */
 
-   { "SendData",  "Tell",    TRUE,  FALSE, "$User $String", SendData,  "<User> <Message>"             },
+   { "SendData",  "NoGroup",    TRUE,  FALSE, "$User $String", SendData,  "<User> <Message>"             },
 
    { "SendMsg",  "Tell",     FALSE, FALSE, "$User $String", SendMsg,  "<User> <Message>"              },
 
@@ -230,7 +230,7 @@ static command CommandList[] = {
 
    { "Switch",   "NoGroup",  FALSE, TRUE,  "$Word",         Switch,   "[<User>|<Channel>] <Variable>" },
 
-   { "Tell",     "Tell",     TRUE,  FALSE, "$User $String", Tell,     "<User> <Message>"              },
+   { "Tell",     "NoGroup",     TRUE,  FALSE, "$User $String", Tell,     "<User> <Message>"              },
 
    { "UnAlias",  "Register", FALSE, FALSE, "$Word",         UnAlias,  "<Alias>"                       },
 
