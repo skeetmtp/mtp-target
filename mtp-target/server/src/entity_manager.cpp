@@ -914,6 +914,8 @@ NLMISC_COMMAND(displayentities, "display info about all entities", "")
 
 MTPT_COMMAND(playerlist, "switch user chat on/off", "[<eid>|<name>]")
 {
+	if(!entity)
+		return true;
 	string res = "";
 	for(CEntityManager::EntityConstIt it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
 	{
@@ -992,7 +994,8 @@ MTPT_COMMAND(mute, "switch user chat on/off", "[<eid>|<name>]")
 		return true;
 
 	e->canSpeak(!e->canSpeak());
-	CNetwork::instance().sendChat(entity->id(),toString("%s chat is now %s",e->name().c_str(),e->canSpeak()?"on":"off"));
+	if(entity)
+		CNetwork::instance().sendChat(entity->id(),toString("%s chat is now %s",e->name().c_str(),e->canSpeak()?"on":"off"));
 	
 	return true;
 }
