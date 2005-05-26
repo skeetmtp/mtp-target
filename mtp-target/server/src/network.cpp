@@ -190,10 +190,25 @@ void CNetwork::update()
 			{
 				string nickName = IService::getInstance()->ConfigFile.getVar("publicChatForwardTo").asString(i);
 				string tellStr = "<Mtp> "+nickName+" tells you: ";
-				uint32 pos = rcv.find(tellStr);
+				string askStr = "<Mtp> "+nickName+" asks you: ";
+				uint32 tellPos = rcv.find(tellStr);
+				uint32 askPos = rcv.find(askStr);
+				uint32 pos = 1;
+				string msgStr;
+				if(tellPos==0)
+				{
+					msgStr = tellStr;
+					pos = 0;
+				}
+				if(askPos==0)
+				{
+					msgStr = askStr;
+					pos = 0;
+				}
+
 				if(pos==0)
 				{
-					string rawMsgStr = rcv.substr(tellStr.size());
+					string rawMsgStr = rcv.substr(msgStr.size());
 					string tellMsgStr = "<"+nickName+"> "+rawMsgStr;
 					string cmdHeader = "<"+nickName+"> .";
 					pos = tellMsgStr.find(cmdHeader);

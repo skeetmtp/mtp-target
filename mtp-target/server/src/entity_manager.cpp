@@ -848,6 +848,7 @@ string CEntityManager::check(const string &login, const string &password, bool d
 					return toString("Your score (%d) is now too high for this server (limited to %d). Try a more difficult server", score, maxScore);
 				}
 				CNetwork::instance().forwardToPublicChat(login+" comes in! ("+toString(humanClientCount())+" players)");
+				//CNetwork::instance().sendToPublicChat("set topic " + toString(humanClientCount()) + " players");
 				return "";
 			}
 			else
@@ -871,6 +872,7 @@ string CEntityManager::check(const string &login, const string &password, bool d
 	IService::getInstance()->ConfigFile.save();
 
 	CNetwork::instance().forwardToPublicChat(login+" comes in! ("+toString(humanClientCount())+" players)");
+	//CNetwork::instance().sendToPublicChat("set topic " + toString(humanClientCount()) + " players");
 	return "";
 }
 
