@@ -996,6 +996,8 @@ MTPT_COMMAND(mute, "switch user chat on/off", "[<eid>|<name>]")
 	e->canSpeak(!e->canSpeak());
 	if(entity)
 		CNetwork::instance().sendChat(entity->id(),toString("%s chat is now %s",e->name().c_str(),e->canSpeak()?"on":"off"));
+	else
+		CNetwork::instance().tellToPublicChat(toString("%s chat is now %s",e->name().c_str(),e->canSpeak()?"on":"off"));
 	
 	return true;
 }

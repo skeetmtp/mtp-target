@@ -62,7 +62,7 @@ static void cbChat(CClient *c, CNetMessage &msgin)
 	if(c->canSpeak())
 		CNetwork::instance().sendChat("<"+c->name()+"> "+msg);
 	else
-		CNetwork::instance().sendChat(c->id(),"<"+c->name()+"> "+msg);
+		CNetwork::instance().sendChat(c->id(),"<"+c->name()+"> "+msg,false);
 }
 
 static void cbCommand(CClient *c, CNetMessage &msgin)
@@ -70,6 +70,10 @@ static void cbCommand(CClient *c, CNetMessage &msgin)
 	nlinfo("cbCommand");
 	string icmd;
 	msgin.serial(icmd);
+
+	if(!c->canSpeak())
+		return;
+	
 	//string cmd = toLower(icmd);
 	string cmd = icmd;//toLower(icmd);
 
