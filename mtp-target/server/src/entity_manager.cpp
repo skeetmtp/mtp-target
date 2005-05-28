@@ -554,7 +554,7 @@ CEntity *CEntityManager::getByName(const std::string &name)
 	CEntity *res = 0;
 	for(EntityConstIt it = entities().begin(); it != entities().end(); it++)
 	{
-		if((*it)->name() == name)
+		if(toLower((*it)->name()).find(toLower(name)) != string::npos )
 		{
 			res = *it;
 			break;
