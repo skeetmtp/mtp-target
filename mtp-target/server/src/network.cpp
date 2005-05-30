@@ -223,7 +223,11 @@ void CNetwork::update()
 						}
 					}
 					else
-						forwardToPublicChat(tellMsgStr);
+					{
+						sendChat(rcv,false);
+						tellToPublicChat(rcv);
+						//forwardToPublicChat(tellMsgStr);
+					}
 					break;
 				}
 			}
