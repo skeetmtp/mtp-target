@@ -103,6 +103,26 @@ function microtime_float()
 	return ((float)$usec + (float)$sec);
 }
 
+// similar with var_export() but using "" instead of '' to avoid issues with \n and so on
+function encode($var) {
+	if (is_array($var)) {
+		$code = "array(\r\n";
+		foreach ($var as $key => $value) {
+			$code .= "\t'$key' => ".encode($value).",\r\n";
+		}
+		$code .= ")";
+		return $code;
+	} else {
+		if (is_string($var)) {
+			return "\"".addcslashes($var, "\n\r\"\t")."\"";
+		} elseif (is_bool($code)) {
+			return ($code ? 'true' : 'false');
+		} else {
+			return 'null';
+		}
+	}
+}
+
 // This function returns $text in the user language (french, english...)
 // If the $text is not translated, it adds it in the php file and returns the default value ($text)
 function lg($text)
@@ -130,7 +150,7 @@ function lg($text)
 		$fp = fopen($path, "w");
 		fwrite($fp, "﻿<?php\r\n");
 		fwrite($fp, '$LanguageArray = ');
-		fwrite($fp, str_replace("\n", "\r\n", var_export($LanguageArray, true)));
+		fwrite($fp, encode($LanguageArray));
 		fwrite($fp, "\r\n?>\r\n");
 		fclose($fp);
 	}

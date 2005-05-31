@@ -47,8 +47,12 @@ function assertValidNumber($input)
 
 function validNumber($input)
 {
-	$res = (ereg("^[0-9]+$",$input));
-	return $res;
+	return ereg("^[0-9]+$",$input);
+}
+
+function validEmail($input)
+{
+    return eregi("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$", $input);
 }
 
 function validInput($input)
@@ -95,7 +99,7 @@ function exec_requete($requete)
 {
 	global $var_bench;
 	global $MySqlLinkIdentifier1;
-	global $ip1, $login1, $password1;
+	global $ip1, $login1, $password1, $db1;
 	
 	$total = m_bench_start();
 
@@ -107,7 +111,7 @@ function exec_requete($requete)
 		$var_bench .= " cnx:".m_bench_end($t1);
 
 		$t1 = m_bench_start();
-		mysql_select_db("nel", $MySqlLinkIdentifier1) or die(mysql_error());
+		mysql_select_db($db1, $MySqlLinkIdentifier1) or die(mysql_error());
 		$var_bench .= " sel:".m_bench_end($t1);
 	}
 
@@ -132,7 +136,7 @@ function exec_game_db_requete($requete)
 {
 	global $var_bench;
 	global $MySqlLinkIdentifier2;
-	global $ip2, $login2, $password2;
+	global $ip2, $login2, $password2, $db2;
 
 	$total = m_bench_start();
 
@@ -144,7 +148,7 @@ function exec_game_db_requete($requete)
 		$var_bench .= "'".$requete."' cnx:".m_bench_end($t1);
 
 		$t1 = m_bench_start();
-		mysql_select_db ("nel", $MySqlLinkIdentifier2) or die(mysql_error());
+		mysql_select_db ($db2, $MySqlLinkIdentifier2) or die(mysql_error());
 		$var_bench .= " sel:".m_bench_end($t1);
 	}
 			

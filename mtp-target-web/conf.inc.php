@@ -23,5 +23,5 @@ $default_later = "news-manager";
 //email
 $contact_email = "mailto:contact@mtp-target.org?subject=mtp-target";
 
-$UseCache =true;
+$UseCache = false;
 ?>

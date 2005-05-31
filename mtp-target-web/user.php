@@ -3,6 +3,9 @@
 require_once('mysql-func.php');
 require_once('config.php');
 
+// This class is a singleton.
+// It contains information about the user that is browser the page and only him.
+
 class CUser {
 
 	static private $Instance = false;
@@ -12,8 +15,8 @@ class CUser {
 			CUser::$Instance = new CUser(); 
 		} 
 		return CUser::$Instance; 
-	} 
-   
+	}
+
 	private function __construct() {
 
 		$this->cleanDeprecatedCookieVariables();
@@ -72,27 +75,55 @@ class CUser {
 	public function login() { return $_SESSION['Login']; }
 	public function uid() { return $_SESSION['UId']; }
 	public function admin() { return $_SESSION['Admin']; }
+	public function nbInvitations() { return $_SESSION['NbInvitations']; }
+
+	public function decreaseNbInvitations() {
+		if($_SESSION['NbInvitations'] > 0) {
+			$_SESSION['NbInvitations'] = $_SESSION['NbInvitations'] - 1;
+		}
+		exec_requete("UPDATE user SET NbInvitations=".$_SESSION['NbInvitations']." WHERE UId=".$_SESSION['UId']);
+	}
 
 	public function language() { return $this->Language; }
+
+	public function firstName() { if(!isset($this->FirstName)) $this->prefetchData(); return $this->FirstName; }
+	public function lastName() { if(!isset($this->LastName)) $this->prefetchData(); return $this->LastName; }
+	public function email() { if(!isset($this->Email)) $this->prefetchData(); return $this->Email; }
 
 	public $dbg = "";
 	private $Language= "en";
 	private $Error= "";
-	
+	private $FirstName;
+	private $LastName;
+	private $Email;
+
+	private function prefetchData() {
+		$Result = exec_requete("SELECT * FROM user WHERE UId = ".$this->uid());
+		if ($Line = mysql_fetch_array($Result)) {
+			$this->FirstName = $Line['FirstName'];
+			$this->LastName = $Line['LastName'];
+			$this->Email = $Line['Email'];
+		}
+	}
+
 	private function _sessionDefaults() {
 		$this->dbg .= " set default session values *";
 		$_SESSION['Logged'] = false;
 		$_SESSION['UId'] = 0;
 		$_SESSION['Login'] = '';
 		$_SESSION['Admin'] = false;
+		$_SESSION['NbInvitations'] = 0;
 	}
-	
-	private function setSession($UId,$Login)
+
+	private function setSession($UId,$Login, $NbInvitations)
 	{
 		$_SESSION['UId'] = $UId;
 		$_SESSION['Login'] = $Login;
 		$_SESSION['Logged'] = true;
+		$_SESSION['NbInvitations'] = $NbInvitations;
+		$_SESSION['Admin'] = false;
 		if(strcasecmp($Login , "ace") == 0) $_SESSION['Admin'] = true;
+		if(strcasecmp($Login , "skeet") == 0) $_SESSION['Admin'] = true;
 	}
 	
 	private function _checkLogin($Login, $Password, $Remember) {
@@ -100,7 +131,7 @@ class CUser {
 
 		if ($Line = mysql_fetch_array($Result)) {
 			if(crypt($Password, $Line['Password']) == $Line['Password']) {
-				$this->setSession($Line['UId'], $Line['Login']);
+				$this->setSession($Line['UId'], $Line['Login'], $Line['NbInvitations']);
 
 				if ($Remember) {
 					$Cookie = md5(uniqid(mt_rand(), true));

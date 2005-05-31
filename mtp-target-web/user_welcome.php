@@ -21,5 +21,10 @@
 		printf('<tr><td class="r"><a href="?page=news-submit">'.lg('AddNews').'</a></td></tr>');
 		printf('<tr><td class="r"><a href="?page=todo-submit">'.lg('AddTodo').'</a></td></tr>');
 	}
+	
+	if(CUser::instance()->nbInvitations() > 0) {
+		printf('<tr><td class="r"><a href="?page=invit_send">'.lg('InviteAFriend').'</a></td></tr>');
+	}
+
 	echo '<tr><td class="r"><a href="?logout=1">'.lg('Logout').'</a></td></tr>';
 ?>

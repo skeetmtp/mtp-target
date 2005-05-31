@@ -16,8 +16,3 @@ todoModifyEntry($_POST['id'],$_POST['status'],$_POST['todo'],$_POST['openby'],$_
 header("Location: index.php?page=todo-manager");
 
 ?>
-
-
-
-
-

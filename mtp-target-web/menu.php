@@ -39,8 +39,8 @@ if(false === strpos($url,'?')) {
 	}
 }
 
-echo '<a href="'.$url.'en"><img src="'.$image_dir.'/en.png" alt="English" /></a>'."\n";
-echo '<a href="'.$url.'fr"><img src="'.$image_dir.'/fr.png" alt="'.utf8_encode("Français").'" /></a>'."\n";
+echo '<a href="'.$url.'en"><img src="'.$image_dir.'/en.png" alt="'.lg('English').'" /></a>'."\n";
+echo '<a href="'.$url.'fr"><img src="'.$image_dir.'/fr.png" alt="'.lg('French').'" /></a>'."\n";
 ?>
 </td>
 </tr>

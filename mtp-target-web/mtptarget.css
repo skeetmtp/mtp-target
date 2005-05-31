@@ -132,3 +132,9 @@ div#main
 	background: #FFEEDD;
 	text-align: center;
 }
+
+.err {
+	color: red;
+	font-weight: bold;
+	text-align: center;
+}
