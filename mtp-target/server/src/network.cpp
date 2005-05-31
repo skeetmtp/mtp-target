@@ -224,8 +224,8 @@ void CNetwork::update()
 					}
 					else
 					{
-						sendChat(rcv,false);
-						tellToPublicChat(rcv);
+						sendChat(tellMsgStr,false);
+						tellToPublicChat(tellMsgStr);
 						//forwardToPublicChat(tellMsgStr);
 					}
 					break;
