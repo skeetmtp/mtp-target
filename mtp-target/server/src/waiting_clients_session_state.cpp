@@ -170,7 +170,7 @@ void CWaitingClientsSessionState::update()
 	{
 		if(_restart)
 		{
-			CNetwork::instance().sendToPublicChat("leave restart required");
+			CNetwork::instance().sendToPublicChat("quit restart required");
 			nlinfo("server restart required");
 			throw "server restart required";
 		}
