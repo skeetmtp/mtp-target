@@ -39,6 +39,7 @@ public:
 	virtual void update();
 	virtual std::string name() const { return "Waiting ready"; }
 	virtual std::string shortName() const { return "WR"; }
+
 };
 
 #endif

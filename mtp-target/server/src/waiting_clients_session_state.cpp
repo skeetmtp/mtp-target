@@ -166,9 +166,23 @@ void CWaitingClientsSessionState::update()
 		nlinfo("set gravity : off");
 		CSessionManager::instance().forceEnding(false);
 	}
-	else if(firstUpdate)
+	else
 	{
-		CLevelManager::instance().release();
+		if(_restart)
+		{
+			nlinfo("server restart required");
+			throw "server restart required";
+		}
+		if(firstUpdate)
+		{
+			CLevelManager::instance().release();
+		}
 	}
 	firstUpdate = false;
+}
+
+NLMISC_COMMAND(restart, "restart server when human player count = 0", "")
+{
+	CWaitingClientsSessionState::instance().restart();
+	return true;
 }

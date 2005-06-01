@@ -40,7 +40,12 @@ public:
 	virtual void update();
 	virtual std::string name() const { return "Waiting clients"; }
 	virtual std::string shortName() const { return "WC"; }
+	void restart() { _restart = true; }
+
 private:
+	CWaitingClientsSessionState() { _restart = false; }
+	friend class CSingleton<CWaitingClientsSessionState>;
+	bool _restart;
 	bool firstUpdate;
 };
 

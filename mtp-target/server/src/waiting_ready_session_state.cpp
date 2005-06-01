@@ -101,3 +101,4 @@ void CWaitingReadySessionState::update()
 		CNetwork::instance().send(msgout);
 	}
 }
+
