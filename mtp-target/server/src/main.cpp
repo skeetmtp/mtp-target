@@ -179,7 +179,7 @@ NLNET_SERVICE_MAIN(CMtpTargetService, "MTS", "mtp_target_service", 0, EmptyCallb
 uint myGetThreadId()
 {
 #ifdef NL_OS_UNIX
-	return pthread_self();
+	return (int)pthread_self();
 #else
 	return getThreadId();
 #endif

@@ -24,26 +24,25 @@ LDFLAGS        = -L$(HOME)/install/$(DIR_DBG_$(DBG))/lib \
 		-L$(ODE_LIB) \
 		-L$(OPCODE_LIB) \
 		-L$(NEL_LIB) \
-		-lnelnet \
-		-lfreetype \
+		-L$(LUA_LIB) \
+		-L$(LIBXML2_LIB) \
 		-lnel3d \
+		-lnelnet \
 		-lnelmisc \
 		-L/usr/lib \
 		-L/usr/X11R6/lib \
-		-llualib50 \
+		-llua \
+		-llualib \
 		-lc \
 		-lxml2 \
 		-lz \
 		-lm \
-		-ldl \
-		-lstlport \
+		-lstlport_gcc \
 		-lpthread \
 		-lcrypt \
 		-ljpeg \
-		-llualib50 \
-		-lode \
-		-lrt
-		
+		-lode
+
 #############################################################################
 
 TARGET		= mtp_target_service

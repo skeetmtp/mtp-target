@@ -34,6 +34,7 @@
 #include "command.h"
 #include "network.h"
 #include "welcome.h"
+#include "physics.h"
 #include "variables.h"
 #include "lua_engine.h"
 #include "level_manager.h"
@@ -99,6 +100,7 @@ void CEntityManager::add(CEntity *entity)
 
 void CEntityManager::remove(uint8 eid)
 {
+    pausePhysics();
 	nlinfo("CEntityManager::remove(%d)",eid);
 	CEntity *c = 0;
 	
@@ -163,6 +165,7 @@ void CEntityManager::remove(uint8 eid)
 
 		delete c;
 	}
+	resumePhysics();
 }
 
 void CEntityManager::reset()
