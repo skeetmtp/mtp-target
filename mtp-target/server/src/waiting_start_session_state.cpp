@@ -54,14 +54,14 @@ void CWaitingStartSessionState::update()
 {
 	TTime currentTime = CTime::getLocalTime();
 	
-	if(CSessionManager::instance().forceEnding() || currentTime > CSessionManager::instance().startTime())
+	if(CSessionManager::getInstance().forceEnding() || currentTime > CSessionManager::getInstance().startTime())
 	{
 		CEntityManager::EntityConstIt it;
-		for(it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
+		for(it = CEntityManager::getInstance().entities().begin(); it != CEntityManager::getInstance().entities().end(); it++)
 		{
 			(*it)->InGame = true;
 		}
-		changeState(CRunningSessionState::instance());
+		changeState(CRunningSessionState::getInstance());
 		// set gravity if the game started
 		dWorldSetGravity(World, 0.0f, 0.0f, Gravity);
 		nlinfo("set gravity : on at %d",currentTime);

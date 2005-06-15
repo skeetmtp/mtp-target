@@ -36,7 +36,7 @@
 // Classes
 //
 
-class CBackgroundTask : public CSingleton<CBackgroundTask>, public ITask
+class CBackgroundTask : public NLMISC::CSingleton<CBackgroundTask>, public ITask
 {
 public:
 

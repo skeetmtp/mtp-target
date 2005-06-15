@@ -69,7 +69,7 @@ using namespace NLMISC;
 
 static void cbDisconnection(TSockId from, void *arg)
 {
-	for(CEntityManager::EntityConstIt it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
+	for(CEntityManager::EntityConstIt it = CEntityManager::getInstance().entities().begin(); it != CEntityManager::getInstance().entities().end(); it++)
 	{
 		nlassert(*it);
 		if((*it)->type() != CEntity::Client)
@@ -79,7 +79,7 @@ static void cbDisconnection(TSockId from, void *arg)
 			
 		if(c->sock() != from)
 			continue;
-		CEntityManager::instance().remove(c->id());
+		CEntityManager::getInstance().remove(c->id());
 		break;
 	}
 }
@@ -87,7 +87,7 @@ static void cbDisconnection(TSockId from, void *arg)
 static void cbConnection(TSockId from, void *arg)
 {
 	// new player comes in
-	CEntityManager::instance().addClient(from);
+	CEntityManager::getInstance().addClient(from);
 }
 
 CNetwork::CNetwork() : BufServer(0)
@@ -170,7 +170,7 @@ void CNetwork::update()
 					if(cmd.size())
 					{
 						cmd = cmd.substr(0,cmd.size()-1);//remove last \n
-						CNetwork::instance().sendChat(nickName+" executed: /"+cmd);
+						CNetwork::getInstance().sendChat(nickName+" executed: /"+cmd);
 						ICommand::execute(cmd, *InfoLog);
 					}
 					command = true;
@@ -218,7 +218,7 @@ void CNetwork::update()
 						if(cmd.size())//remove last \n
 						{
 							cmd = cmd.substr(0,cmd.size()-1);//remove last \n
-							CNetwork::instance().sendChat(nickName+" executed: /"+cmd);
+							CNetwork::getInstance().sendChat(nickName+" executed: /"+cmd);
 							ICommand::execute(cmd, *InfoLog);
 						}
 					}
@@ -252,7 +252,7 @@ void CNetwork::update()
 			TTime currentTime = CTime::getLocalTime();
 			unsigned int i;
 			CEntityManager::EntityConstIt it;
-			for(i=0,it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++,i++)
+			for(i=0,it = CEntityManager::getInstance().entities().begin(); it != CEntityManager::getInstance().entities().end(); it++,i++)
 			{
 				const dReal *pos = dBodyGetPosition((*it)->Body);
 				CVector npos;
@@ -284,7 +284,7 @@ void CNetwork::update()
 
 				TTime currentTime = CTime::getLocalTime();
 				
-				for(CEntityManager::EntityConstIt it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
+				for(CEntityManager::EntityConstIt it = CEntityManager::getInstance().entities().begin(); it != CEntityManager::getInstance().entities().end(); it++)
 				{
 					const dReal *pos = dBodyGetPosition((*it)->Body);
 					
@@ -310,7 +310,7 @@ void CNetwork::update()
 			
 			UpdatePacketSize = msgout.length();
 			
-			CNetwork::instance().send(msgout);
+			CNetwork::getInstance().send(msgout);
 			pingnb++;
 		}
 		else if((updateCount%MT_NETWORK_MY_UPDATE_FREQUENCE_RATIO)==0)
@@ -322,10 +322,10 @@ void CNetwork::update()
 				
 				TTime currentTime = CTime::getLocalTime();
 				
-				for(list<uint8>::iterator it1=CEntityManager::instance().IdUpdateList.begin();it1!=CEntityManager::instance().IdUpdateList.end();it1++)
+				for(list<uint8>::iterator it1=CEntityManager::getInstance().IdUpdateList.begin();it1!=CEntityManager::getInstance().IdUpdateList.end();it1++)
 				{
 					uint8 eid = *it1;
-					for(CEntityManager::EntityConstIt it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
+					for(CEntityManager::EntityConstIt it = CEntityManager::getInstance().entities().begin(); it != CEntityManager::getInstance().entities().end(); it++)
 					{
 						if((*it)->id()==eid)
 						{
@@ -385,7 +385,7 @@ void CNetwork::update()
 				}
 			}
 			
-			CNetwork::instance().send(msgout);
+			CNetwork::getInstance().send(msgout);
 			UpdatePacketSize = msgout.length();
 			pingnb++;
 		}
@@ -394,7 +394,7 @@ void CNetwork::update()
 			
 			TTime currentTime = CTime::getLocalTime();
 			
-			for(CEntityManager::EntityConstIt it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
+			for(CEntityManager::EntityConstIt it = CEntityManager::getInstance().entities().begin(); it != CEntityManager::getInstance().entities().end(); it++)
 			{
 				if((*it)->type() != CEntity::Bot)
 				{
@@ -430,7 +430,7 @@ void CNetwork::update()
 					
 					CVector newPos = (*it)->LastSent2MePos + sendDPos; 
 					
-					CNetwork::instance().send((*it)->id(),msgout,true);
+					CNetwork::getInstance().send((*it)->id(),msgout,true);
 					
 					(*it)->LastSent2MePos = newPos;
 				}
@@ -489,7 +489,7 @@ void CNetwork::sleep(TTime timeout)
 				msg.type((CNetMessage::TType)t);
 				
 				{
-					for(CEntityManager::EntityConstIt it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
+					for(CEntityManager::EntityConstIt it = CEntityManager::getInstance().entities().begin(); it != CEntityManager::getInstance().entities().end(); it++)
 					{
 						nlassert(*it);
 						CClient *c = (CClient *)(*it);
@@ -506,18 +506,18 @@ void CNetwork::sleep(TTime timeout)
 						itNext++;
 						uint8 eid = c->id();
 						netCallbacksHandler(c, msg);
-						bool currentEntityPresent = CEntityManager::instance().getById(eid)!=NULL;
+						bool currentEntityPresent = CEntityManager::getInstance().getById(eid)!=NULL;
 						if(!currentEntityPresent)
 						{
 							it = itNext;
-							if(it==CEntityManager::instance().entities().end())
+							if(it==CEntityManager::getInstance().entities().end())
 								break;
 						}	
 					}
 				}
 				
 				//TODO SKEET : check why we cannot let only main thread loop do the flush job ?
-				//CEntityManager::instance().flushAddRemoveList();
+				//CEntityManager::getInstance().flushAddRemoveList();
 			}
 			catch(Exception &e)
 			{
@@ -559,13 +559,12 @@ void CNetwork::release()
 		delete BufServer;
 		BufServer = 0;
 	}
-	CNetwork::uninstance();
 }
 
 
 void CNetwork::send(uint8 eid, CNetMessage &msg, bool checkReady)
 {
-	for(CEntityManager::EntityConstIt it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
+	for(CEntityManager::EntityConstIt it = CEntityManager::getInstance().entities().begin(); it != CEntityManager::getInstance().entities().end(); it++)
 	{
 		if((*it)->id() == eid)
 		{
@@ -577,7 +576,7 @@ void CNetwork::send(uint8 eid, CNetMessage &msg, bool checkReady)
 			{
 				bool sok = msg.send(BufServer, c->sock());
 				if(!sok)
-					CEntityManager::instance().remove(c->id());
+					CEntityManager::getInstance().remove(c->id());
 			}
 		}
 	}
@@ -585,7 +584,7 @@ void CNetwork::send(uint8 eid, CNetMessage &msg, bool checkReady)
 
 void CNetwork::send(CNetMessage &msg)
 {
-	for(CEntityManager::EntityConstIt it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
+	for(CEntityManager::EntityConstIt it = CEntityManager::getInstance().entities().begin(); it != CEntityManager::getInstance().entities().end(); it++)
 	{
 		if((*it)->type() == CEntity::Client)
 		{
@@ -594,7 +593,7 @@ void CNetwork::send(CNetMessage &msg)
 			{
 				bool sok = msg.send(BufServer, c->sock());
 				if(!sok)
-					CEntityManager::instance().remove(c->id());
+					CEntityManager::getInstance().remove(c->id());
 			}
 		}
 	}
@@ -602,7 +601,7 @@ void CNetwork::send(CNetMessage &msg)
 
 void CNetwork::sendAllExcept(uint8 eid, CNetMessage &msg)
 {
-	for(CEntityManager::EntityConstIt it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
+	for(CEntityManager::EntityConstIt it = CEntityManager::getInstance().entities().begin(); it != CEntityManager::getInstance().entities().end(); it++)
 	{
 		if((*it)->id() != eid && (*it)->type() == CEntity::Client)
 		{
@@ -611,7 +610,7 @@ void CNetwork::sendAllExcept(uint8 eid, CNetMessage &msg)
 			{
 				bool sok = msg.send(BufServer, c->sock());
 				if(!sok)
-					CEntityManager::instance().remove(c->id());
+					CEntityManager::getInstance().remove(c->id());
 			}
 		}
 	}
@@ -621,7 +620,7 @@ void CNetwork::sendChat(const string &msg, bool forward)
 {
 	CNetMessage msgout(CNetMessage::Chat);
 	msgout.serial(const_cast<string&>(msg));
-	CNetwork::instance().send(msgout);
+	CNetwork::getInstance().send(msgout);
 	if(forward)
 		forwardToPublicChat(msg);
 }
@@ -630,7 +629,7 @@ void CNetwork::sendChat(uint8 eid,const string &msg, bool forward)
 {
 	CNetMessage msgout(CNetMessage::Chat);
 	msgout.serial(const_cast<string&>(msg));
-	CNetwork::instance().send(eid,msgout);
+	CNetwork::getInstance().send(eid,msgout);
 	if(forward)
 		forwardToPublicChat(msg);
 }

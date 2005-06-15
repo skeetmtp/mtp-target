@@ -62,7 +62,7 @@ using namespace NLNET;
 // Functions
 //
 
-CLevelManager::CLevelManager() : CSingleton<CLevelManager>()
+CLevelManager::CLevelManager() : NLMISC::CSingleton<CLevelManager>()
 {
 	CurrentLevel = 0;
 }
@@ -92,8 +92,8 @@ void CLevelManager::loadLevel(const std::string &fileName)
 		CurrentLevel = 0;
 	}
 
-	string res = CResourceManager::instance().get(fileName);
-	if(CMtpTarget::instance().error()) return;
+	string res = CResourceManager::getInstance().get(fileName);
+	if(CMtpTarget::getInstance().error()) return;
 	nlassert(!res.empty());
 	
 	CurrentLevel = new CLevel(res);
@@ -105,8 +105,8 @@ void CLevelManager::loadLevel(const std::string &fileName)
 
 	//nlassert(CurrentLevel->valid());
 	
-	if(CConfigFileTask::instance().configFile().getVar("ForceCRCCheck").asInt())
-		CResourceManagerLan::instance().clearCrcCheckTimes();
+	if(CConfigFileTask::getInstance().configFile().getVar("ForceCRCCheck").asInt())
+		CResourceManagerLan::getInstance().clearCrcCheckTimes();
 }
 
 void CLevelManager::display(CLog *log) const
@@ -125,6 +125,6 @@ void CLevelManager::display(CLog *log) const
 NLMISC_COMMAND(displayLevel, "display the current level", "")
 {
 	if(args.size() != 0) return false;
-	CLevelManager::instance().display(&log);
+	CLevelManager::getInstance().display(&log);
 	return true;
 }

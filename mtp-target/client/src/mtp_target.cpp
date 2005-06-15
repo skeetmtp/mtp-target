@@ -77,9 +77,7 @@ using namespace NLMISC;
 // Variables
 //
 
-//NLMISC::CConfigFile CConfigFileTask::instance().configFile();
-
-mtpTarget *mtpTarget::Instance = 0;
+//NLMISC::CConfigFile CConfigFileTask::getInstance().configFile();
 
 extern FILE *SessionFile;
 
@@ -104,28 +102,28 @@ void CMtpTarget::init()
 	DoError = false;
 	// setup default task
 	nlinfo("setting up default tasks");
-	CTaskManager::instance().add(CConfigFileTask::instance(), 10);
-	CTaskManager::instance().add(CTimeTask::instance(), 20);
-	CTaskManager::instance().add(CEntityManager::instance(), 24);
-	CTaskManager::instance().add(CNetworkTask::instance(), 25);
-	CTaskManager::instance().add(CResourceManager::instance(), 30);
-	CTaskManager::instance().add(CResourceManagerLan::instance(), 30);
-	CTaskManager::instance().add(C3DTask::instance(), 110);
-	CTaskManager::instance().add(CGuiTask::instance(), 1050);
-	CTaskManager::instance().add(CEditorTask::instance(), 120);
-	CTaskManager::instance().add(CSwap3DTask::instance(), 10000);
-	CTaskManager::instance().add(CFontManager::instance(), 40);
+	CTaskManager::getInstance().add(CConfigFileTask::getInstance(), 10);
+	CTaskManager::getInstance().add(CTimeTask::getInstance(), 20);
+	CTaskManager::getInstance().add(CEntityManager::getInstance(), 24);
+	CTaskManager::getInstance().add(CNetworkTask::getInstance(), 25);
+	CTaskManager::getInstance().add(CResourceManager::getInstance(), 30);
+	CTaskManager::getInstance().add(CResourceManagerLan::getInstance(), 30);
+	CTaskManager::getInstance().add(C3DTask::getInstance(), 110);
+	CTaskManager::getInstance().add(CGuiTask::getInstance(), 1050);
+	CTaskManager::getInstance().add(CEditorTask::getInstance(), 120);
+	CTaskManager::getInstance().add(CSwap3DTask::getInstance(), 10000);
+	CTaskManager::getInstance().add(CFontManager::getInstance(), 40);
 
-	CConfigFile::CVar &var = CConfigFileTask::instance().configFile().getVar("NegFiltersDebug");
+	CConfigFile::CVar &var = CConfigFileTask::getInstance().configFile().getVar("NegFiltersDebug");
 	for(sint i = 0; i < var.size(); i++)
 		DebugLog->addNegativeFilter(var.asString(i).c_str());
 
-	CConfigFile::CVar &var2 = CConfigFileTask::instance().configFile().getVar("NegFiltersInfo");
+	CConfigFile::CVar &var2 = CConfigFileTask::getInstance().configFile().getVar("NegFiltersInfo");
 	for(sint i = 0; i < var2.size(); i++)
 		InfoLog->addNegativeFilter(var2.asString(i).c_str());
 
-	if(CConfigFileTask::instance().configFile().getVar("Sound").asInt() == 1)
-		CTaskManager::instance().add(CSoundManager::instance(), 50);
+	if(CConfigFileTask::getInstance().configFile().getVar("Sound").asInt() == 1)
+		CTaskManager::getInstance().add(CSoundManager::getInstance(), 50);
 	nlinfo("default tasks set");
 	
 	Controler = new CControler;
@@ -157,18 +155,18 @@ void CMtpTarget::init()
 				string traceName = "trace";
 				string meshName = "pingoo";
 				textureName = textureName.substr(1,textureName.size()-2);
-				CEntityManager::instance().add(eid, name, totalScore, col, textureName, false,self!=0, traceName, meshName);
+				CEntityManager::getInstance().add(eid, name, totalScore, col, textureName, false,self!=0, traceName, meshName);
 				
 				//CEntity *entity = new CEntity(CRGBA(255,255,255));
 				//entity->setId(eid);
-				//mtpTarget::instance().World.add(entity);
+				//mtpTarget::getInstance().World.add(entity);
 				//entity->name = name;
-				//CEntityManager::instance()[eid].setScore(0, score);
+				//CEntityManager::getInstance()[eid].setScore(0, score);
 				
 				/*
 				if (self)
 				{
-					CEntityManager::instance()[eid].setIsLocal(true);
+					CEntityManager::getInstance()[eid].setIsLocal(true);
 				}
 				*/
 			}
@@ -183,39 +181,39 @@ void CMtpTarget::init()
 				{
 					fscanf (fp, "%f %f %f", &x, &y, &z);
 					
-					if (eid != 255 && CEntityManager::instance().exist(eid))
+					if (eid != 255 && CEntityManager::getInstance().exist(eid))
 					{
 						CVector v(x, y, z);
-						//CEntityManager::instance()[eid].interpolator().addKey(CEntityInterpolatorKey(CEntityState(v,false),t));//.position(v,t, false); //put the entity in the good position
+						//CEntityManager::getInstance()[eid].interpolator().addKey(CEntityInterpolatorKey(CEntityState(v,false),t));//.position(v,t, false); //put the entity in the good position
 						bool oc = false;
-						if(CEntityManager::instance()[eid].addOpenCloseKey)
+						if(CEntityManager::getInstance()[eid].addOpenCloseKey)
 						{
-							CEntityManager::instance()[eid].addOpenCloseKey = false;
+							CEntityManager::getInstance()[eid].addOpenCloseKey = false;
 							oc = true;
 						}
 						CCrashEvent ce(false,CVector::Null);
-						if(CEntityManager::instance()[eid].addCrashEventKey.Crash)
+						if(CEntityManager::getInstance()[eid].addCrashEventKey.Crash)
 						{
-							ce = CEntityManager::instance()[eid].addCrashEventKey;
-							CEntityManager::instance()[eid].addCrashEventKey.Crash = false;
+							ce = CEntityManager::getInstance()[eid].addCrashEventKey;
+							CEntityManager::getInstance()[eid].addCrashEventKey.Crash = false;
 						}
-						CEntityManager::instance()[eid].interpolator().addKey(CEntityInterpolatorKey(CEntityState(v,false,oc,ce,CEntityManager::instance()[eid].addChatLine),t));//.position(v,t, false); //put the entity in the good position
-						CEntityManager::instance()[eid].addChatLine = "";
+						CEntityManager::getInstance()[eid].interpolator().addKey(CEntityInterpolatorKey(CEntityState(v,false,oc,ce,CEntityManager::getInstance()[eid].addChatLine),t));//.position(v,t, false); //put the entity in the good position
+						CEntityManager::getInstance()[eid].addChatLine = "";
 					}
 					else
 						nlwarning ("%d not found", eid);
 				}
 				else if (string(cmd) == "OC")
 				{
-					if(CEntityManager::instance().exist(eid))
-						CEntityManager::instance()[eid].addOpenCloseKey = true;
+					if(CEntityManager::getInstance().exist(eid))
+						CEntityManager::getInstance()[eid].addOpenCloseKey = true;
 				}
 				else if (string(cmd) == "CE")
 				{
 					fscanf (fp, "%f %f %f", &x, &y, &z);
 					CVector v(x, y, z);
-					if(CEntityManager::instance().exist(eid))
-						CEntityManager::instance()[eid].addCrashEventKey = CCrashEvent(true,v);
+					if(CEntityManager::getInstance().exist(eid))
+						CEntityManager::getInstance()[eid].addCrashEventKey = CCrashEvent(true,v);
 				}
 				else if (string(cmd) == "CH")
 				{
@@ -225,11 +223,11 @@ void CMtpTarget::init()
 					if(l>0 && chatLine[l-1]=='\n')
 						chatLine[l-1] = '\0';
 					//fscanf (fp, "%s\n",&chatLine);
-					uint8 eid = CEntityManager::instance().findFirstEId();
+					uint8 eid = CEntityManager::getInstance().findFirstEId();
 					if(eid!=255)
 					{
-						if(CEntityManager::instance().exist(eid))
-							CEntityManager::instance()[eid].addChatLine = chatLine;
+						if(CEntityManager::getInstance().exist(eid))
+							CEntityManager::getInstance()[eid].addChatLine = chatLine;
 					}
 					nlinfo("replay chat line : %s",chatLine);
 				}
@@ -244,14 +242,14 @@ void CMtpTarget::init()
 		else
 			nlwarning("connot open replay file");
 		
-		//CMtpTarget::instance().State = CMtpTarget::eReady;
-		CTaskManager::instance().add(CGameTask::instance(), 60);
-		CMtpTarget::instance().startSession(1, 60, levelName, "", "");
+		//CMtpTarget::getInstance().State = CMtpTarget::eReady;
+		CTaskManager::getInstance().add(CGameTask::getInstance(), 60);
+		CMtpTarget::getInstance().startSession(1, 60, levelName, "", "");
 	}
 	else
 	{
 		// start with intro task
-		CTaskManager::instance().add(CIntroTask::instance(), 60);
+		CTaskManager::getInstance().add(CIntroTask::getInstance(), 60);
 		reset();
 	}
 }
@@ -261,13 +259,13 @@ void CMtpTarget::error(string reason)
 	DoError = true;
 	ErrorReason = reason;
 	Error = true;
-	CNetworkTask::instance().stop();
+	CNetworkTask::getInstance().stop();
 }
 
 void CMtpTarget::reset()
 {
 	nlinfo("CMtpTarget::reset()");
-	CEntityManager::instance().sessionReset();
+	CEntityManager::getInstance().sessionReset();
 	controler().reset();
 	NewSession = false;
 	TimeBeforeSessionStart = 0.0f;
@@ -286,14 +284,14 @@ void CMtpTarget::_error()
 {
 	nlinfo("error occured : stop all and reset");
 	reset();
-	CGameTask::instance().stop();
-	CEditorTask::instance().stop();
-	CEditorTask::instance().enable(false);
-	CBackgroundTask::instance().restart();
-	//CIntroTask::instance().reset();
-	CIntroTask::instance().error(ErrorReason);
-	CIntroTask::instance().restart();
-	CLevelManager::instance().release();
+	CGameTask::getInstance().stop();
+	CEditorTask::getInstance().stop();
+	CEditorTask::getInstance().enable(false);
+	CBackgroundTask::getInstance().restart();
+	//CIntroTask::getInstance().reset();
+	CIntroTask::getInstance().error(ErrorReason);
+	CIntroTask::getInstance().restart();
+	CLevelManager::getInstance().release();
 	DoError = false;
 }
 
@@ -310,45 +308,45 @@ void CMtpTarget::update()
 	if(FollowEntity)
 	{
 //		nlinfo("set camera matrix follow");
-		C3DTask::instance().scene().getCam().setMatrix(*CMtpTarget::instance().controler().Camera.getMatrixFollow());
+		C3DTask::getInstance().scene().getCam().setMatrix(*CMtpTarget::getInstance().controler().Camera.getMatrixFollow());
 	}
 
-	if(CMtpTarget::instance().State == CMtpTarget::eReady)
+	if(CMtpTarget::getInstance().State == CMtpTarget::eReady)
 	{
-		TimeBeforeSessionStart -= (float)CTimeTask::instance().deltaTime();
+		TimeBeforeSessionStart -= (float)CTimeTask::getInstance().deltaTime();
 
 		if(TimeBeforeSessionStart > 4.0f)
 		{
-			CMtpTarget::instance().controler().Camera.reset();
-			CMtpTarget::instance().controler().Camera.ForcedSpeed = 0.0f;
+			CMtpTarget::getInstance().controler().Camera.reset();
+			CMtpTarget::getInstance().controler().Camera.ForcedSpeed = 0.0f;
 		}
 		else
-			CMtpTarget::instance().controler().Camera.ForcedSpeed = 1.0f;
+			CMtpTarget::getInstance().controler().Camera.ForcedSpeed = 1.0f;
 		
 		if(TimeBeforeSessionStart <= 0)
 		{
 			TimeBeforeSessionStart = 0;
-			CMtpTarget::instance().State = CMtpTarget::eGame;
-			CEntityManager::instance().sessionReset();			
+			CMtpTarget::getInstance().State = CMtpTarget::eGame;
+			CEntityManager::getInstance().sessionReset();			
 		}
 	}
-	if(CMtpTarget::instance().State == CMtpTarget::eGame)
+	if(CMtpTarget::getInstance().State == CMtpTarget::eGame)
 	{
-		//CMtpTarget::instance().controler().Camera.reset();
-		TimeBeforeSessionStart += (float)CTimeTask::instance().deltaTime();
-		TimeBeforeTimeout -= (float)CTimeTask::instance().deltaTime();
+		//CMtpTarget::getInstance().controler().Camera.reset();
+		TimeBeforeSessionStart += (float)CTimeTask::getInstance().deltaTime();
+		TimeBeforeTimeout -= (float)CTimeTask::getInstance().deltaTime();
 	}
-	if(CMtpTarget::instance().State == CMtpTarget::eBeforeFirstSession)
+	if(CMtpTarget::getInstance().State == CMtpTarget::eBeforeFirstSession)
 	{
-		//CMtpTarget::instance().controler().Camera.reset();
-		TimeBeforeSessionStart += (float)CTimeTask::instance().deltaTime();
-		TimeBeforeTimeout -= (float)CTimeTask::instance().deltaTime();
+		//CMtpTarget::getInstance().controler().Camera.reset();
+		TimeBeforeSessionStart += (float)CTimeTask::getInstance().deltaTime();
+		TimeBeforeTimeout -= (float)CTimeTask::getInstance().deltaTime();
 	}
-	if(CMtpTarget::instance().State == CMtpTarget::eStartSession && IsSpectatorOnly)
+	if(CMtpTarget::getInstance().State == CMtpTarget::eStartSession && IsSpectatorOnly)
 	{
-		//CMtpTarget::instance().controler().Camera.reset();
-		TimeBeforeSessionStart += (float)CTimeTask::instance().deltaTime();
-		TimeBeforeTimeout -= (float)CTimeTask::instance().deltaTime();
+		//CMtpTarget::getInstance().controler().Camera.reset();
+		TimeBeforeSessionStart += (float)CTimeTask::getInstance().deltaTime();
+		TimeBeforeTimeout -= (float)CTimeTask::getInstance().deltaTime();
 	}
 
 }
@@ -374,7 +372,7 @@ void CMtpTarget::loadNewSession()
 	}
 	
 	nlassert(NewSession);
-	CEntityManager::instance().everybodyReady(false);
+	CEntityManager::getInstance().everybodyReady(false);
 	
 	NewSession = false;
 	nlinfo("loadNewSession() '%s'",NewLevelName.c_str());
@@ -390,8 +388,8 @@ void CMtpTarget::loadNewSession()
 	if(TimeBeforeSessionStart != 0.0f)
 	{
 		// i'm in the new session and all other entities, reset spectator
-		CEntityManager::instance().resetSpectator();
-		if(!CEditorTask::instance().enable())
+		CEntityManager::getInstance().resetSpectator();
+		if(!CEditorTask::getInstance().enable())
 			FollowEntity = true;
 	}
 	else
@@ -399,22 +397,22 @@ void CMtpTarget::loadNewSession()
 		FollowEntity = false;		
 	}
 	
-	CEntityManager::instance().load3d();
+	CEntityManager::getInstance().load3d();
 	
-	CLevelManager::instance().loadLevel(NewLevelName);
+	CLevelManager::getInstance().loadLevel(NewLevelName);
 	
-	CEntityManager::instance().startSession();
+	CEntityManager::getInstance().startSession();
 	
-	CMtpTarget::instance().controler().Camera.reset();
+	CMtpTarget::getInstance().controler().Camera.reset();
 	/*
-	if (CMtpTarget::instance().controler().getControledEntity() != 255)
-		CEntityManager::instance()[CMtpTarget::instance().controler().getControledEntity()].interpolator().reset();
+	if (CMtpTarget::getInstance().controler().getControledEntity() != 255)
+		CEntityManager::getInstance()[CMtpTarget::getInstance().controler().getControledEntity()].interpolator().reset();
 	*/
 	resetFollowedEntity();
 	controler().Camera.reset();
 
-	if(CLevelManager::instance().levelPresent())
-		CLevelManager::instance().currentLevel().reset();
+	if(CLevelManager::getInstance().levelPresent())
+		CLevelManager::getInstance().currentLevel().reset();
 	else
 		nlwarning("there is no level");
 
@@ -424,7 +422,7 @@ void CMtpTarget::loadNewSession()
 	
 	// say to server that we are ready if other players wait for us
 	if(sendReady)
-		CNetworkTask::instance().ready();
+		CNetworkTask::getInstance().ready();
 	
 	// now we wait the message that say that everybody is ready
 	
@@ -438,10 +436,10 @@ void CMtpTarget::loadNewSession()
 	if(!NLMISC::CFile::isDirectory("replay"))
 		NLMISC::CFile::createDirectory("replay");
 	
-	if(ReplayFile.empty() && CConfigFileTask::instance().configFile().getVar("GenerateReplay").asInt() == 1)
+	if(ReplayFile.empty() && CConfigFileTask::getInstance().configFile().getVar("GenerateReplay").asInt() == 1)
 	{
-		int currentReplaySavedCount = CConfigFileTask::instance().configFile().getVar("currentReplaySavedCount").asInt();
-		int maxReplaySavedCount = CConfigFileTask::instance().configFile().getVar("maxReplaySavedCount").asInt();
+		int currentReplaySavedCount = CConfigFileTask::getInstance().configFile().getVar("currentReplaySavedCount").asInt();
+		int maxReplaySavedCount = CConfigFileTask::getInstance().configFile().getVar("maxReplaySavedCount").asInt();
 		if(maxReplaySavedCount<1)
 			maxReplaySavedCount=1;
 		if(maxReplaySavedCount>999)
@@ -449,8 +447,8 @@ void CMtpTarget::loadNewSession()
 
 		currentReplaySavedCount++;
 		currentReplaySavedCount = currentReplaySavedCount % maxReplaySavedCount;
-		CConfigFileTask::instance().configFile().getVar("currentReplaySavedCount").setAsInt(currentReplaySavedCount);
-		CConfigFileTask::instance().configFile().save();
+		CConfigFileTask::getInstance().configFile().getVar("currentReplaySavedCount").setAsInt(currentReplaySavedCount);
+		CConfigFileTask::getInstance().configFile().save();
 		
 		SessionFileName = toString("replay/session%03d.mtr",currentReplaySavedCount);
 		//nlinfo(">>%s",SessionFileName.c_str());
@@ -461,26 +459,26 @@ void CMtpTarget::loadNewSession()
 	
 	if (SessionFile)
 	{
-		fprintf(SessionFile, "%hu\n", (uint16)CEntityManager::instance().size());
+		fprintf(SessionFile, "%hu\n", (uint16)CEntityManager::getInstance().size());
 		fprintf(SessionFile, "%s\n",NewLevelName.c_str() );
 	}
 	
 	int self;
 	
-	uint8 eid = CEntityManager::instance().findFirstEId();
+	uint8 eid = CEntityManager::getInstance().findFirstEId();
 	if (eid != 255 && SessionFile)
 	{
 		do
 		{
-			self = (eid == CMtpTarget::instance().controler().getControledEntity())?1:0;
-			fprintf(SessionFile, "%hu %s %d %d %d '%s'\n", (uint16)eid, CEntityManager::instance()[eid].name().c_str(), self, CEntityManager::instance()[eid].currentScore(), CEntityManager::instance()[eid].totalScore(),CEntityManager::instance()[eid].texture().c_str());
-			eid = CEntityManager::instance().findNextEId(eid);
+			self = (eid == CMtpTarget::getInstance().controler().getControledEntity())?1:0;
+			fprintf(SessionFile, "%hu %s %d %d %d '%s'\n", (uint16)eid, CEntityManager::getInstance()[eid].name().c_str(), self, CEntityManager::getInstance()[eid].currentScore(), CEntityManager::getInstance()[eid].totalScore(),CEntityManager::getInstance()[eid].texture().c_str());
+			eid = CEntityManager::getInstance().findNextEId(eid);
 		}
-		while(eid != CEntityManager::instance().findFirstEId());
+		while(eid != CEntityManager::getInstance().findFirstEId());
 	}
 
 	if(!ReplayFile.empty())
-		mtpTarget::instance().everybodyReady();
+		mtpTarget::getInstance().everybodyReady();
 		
 }
 
@@ -488,7 +486,7 @@ void CMtpTarget::startSession(float timeBeforeSessionStart, float timeBeforeTime
 {
 	nlinfo("level '%s' loaded, it timeouts in %g seconds", levelName.c_str(), timeBeforeTimeout);
 	
-	C3DTask::instance().mouseListener().reset();
+	C3DTask::getInstance().mouseListener().reset();
 	IsSpectatorOnly = isSpectatorOnly;
 	NewSession = true;
 	TimeBeforeSessionStart = timeBeforeSessionStart;
@@ -500,14 +498,14 @@ void CMtpTarget::startSession(float timeBeforeSessionStart, float timeBeforeTime
 
 void CMtpTarget::resetFollowedEntity()
 {
-	CMtpTarget::instance().controler().Camera.setFollowedEntity(CMtpTarget::instance().controler().getControledEntity());
-	CMtpTarget::instance().controler().ViewedEId = CMtpTarget::instance().controler().getControledEntity();
+	CMtpTarget::getInstance().controler().Camera.setFollowedEntity(CMtpTarget::getInstance().controler().getControledEntity());
+	CMtpTarget::getInstance().controler().ViewedEId = CMtpTarget::getInstance().controler().getControledEntity();
 	
-	//	for(uint32 entityPos = 0; entityPos < mtpTarget::instance().World.count(); entityPos++)
+	//	for(uint32 entityPos = 0; entityPos < mtpTarget::getInstance().World.count(); entityPos++)
 	//	{
-	//		if(mtpTarget::instance().World.get(entityPos) == CMtpTarget::instance().controler().getControledEntity())
+	//		if(mtpTarget::getInstance().World.get(entityPos) == CMtpTarget::getInstance().controler().getControledEntity())
 	//		{
-	//			CMtpTarget::instance().controler().PlayerViewedPos = entityPos;
+	//			CMtpTarget::getInstance().controler().PlayerViewedPos = entityPos;
 	//			break;
 	//		}
 	//	}
@@ -525,31 +523,6 @@ void CMtpTarget::moveReplay(bool b)
 bool CMtpTarget::moveReplay(void)
 {
 	return MoveReplay;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-mtpTarget &mtpTarget::instance()
-{
-	if (!Instance)
-		Instance = new mtpTarget;
-
-	return *Instance;
 }
 
 //sint32 SleepTime;
@@ -587,7 +560,7 @@ void mtpTarget::init()
 			fprintf(fp,"RootConfigFilename   = \"mtp_target_default.cfg\";\n");
 			fclose(fp);
 		}
-		CConfigFileTask::instance().configFile().load (mtpTargetConfigFilename);
+		CConfigFileTask::getInstance().configFile().load (mtpTargetConfigFilename);
 	}
 	catch (NLMISC::EConfigFile &e)
 	{
@@ -595,9 +568,9 @@ void mtpTarget::init()
 	}
 	
 
-	CResourceManager::instance().init();
+	CResourceManager::getInstance().init();
 
-	CNetworkTask::instance().init();
+	CNetworkTask::getInstance().init();
 	
 //	string err;
 //	if ( !mt3dInit(err) )
@@ -614,24 +587,24 @@ void mtpTarget::init()
 //		nlwarning("Can't init Sound...");
 //	}
 	
-//	SleepTime = CConfigFileTask::instance().configFile().getVar("Sleep").asInt();
+//	SleepTime = CConfigFileTask::getInstance().configFile().getVar("Sleep").asInt();
 
 	setReportEmailFunction ((void*)sendEmail);
 
-	CMtpTarget::instance().State = CMtpTarget::eLoginPassword;
+	CMtpTarget::getInstance().State = CMtpTarget::eLoginPassword;
 	
-	DisplayDebug = (CConfigFileTask::instance().configFile().getVar("DisplayDebug").asInt() == 1);
+	DisplayDebug = (CConfigFileTask::getInstance().configFile().getVar("DisplayDebug").asInt() == 1);
 
-	CEntityManager::instance().init();
+	CEntityManager::getInstance().init();
 
 //	World.init();
-	CLevelManager::instance().init();
+	CLevelManager::getInstance().init();
 
 //	Controler = new CControler;
 	
 //	Interface2d.init();
 
-	if (CConfigFileTask::instance().configFile().getVar("Music").asInt() == 1 || CConfigFileTask::instance().configFile().getVar("Sound").asInt() == 1)
+	if (CConfigFileTask::getInstance().configFile().getVar("Music").asInt() == 1 || CConfigFileTask::getInstance().configFile().getVar("Sound").asInt() == 1)
 	{
 //		soundState = eNone;
 	}
@@ -640,36 +613,36 @@ void mtpTarget::init()
 
 	//
 
-	if (CMtpTarget::instance().State == CMtpTarget::eLoginPassword)
+	if (CMtpTarget::getInstance().State == CMtpTarget::eLoginPassword)
 	{
-		std::string login = CConfigFileTask::instance().configFile().getVar("Login").asString();
-		std::string password = CConfigFileTask::instance().configFile().getVar("Password").asString();
+		std::string login = CConfigFileTask::getInstance().configFile().getVar("Login").asString();
+		std::string password = CConfigFileTask::getInstance().configFile().getVar("Password").asString();
 		login = NLMISC::strlwr(login);
 		password = NLMISC::strlwr(password);
-		CConfigFileTask::instance().configFile().getVar("Login").setAsString(login);
-		CConfigFileTask::instance().configFile().getVar("Password").setAsString(password);
-		CConfigFileTask::instance().configFile().save();
-		CMtpTarget::instance().State = CMtpTarget::eConnect;
+		CConfigFileTask::getInstance().configFile().getVar("Login").setAsString(login);
+		CConfigFileTask::getInstance().configFile().getVar("Password").setAsString(password);
+		CConfigFileTask::getInstance().configFile().save();
+		CMtpTarget::getInstance().State = CMtpTarget::eConnect;
 	}
 	
-	if (CMtpTarget::instance().State == CMtpTarget::eConnect)
+	if (CMtpTarget::getInstance().State == CMtpTarget::eConnect)
 	{
 //		Interface2d.network();
-		CMtpTarget::instance().State = CMtpTarget::eBeforeFirstSession;
+		CMtpTarget::getInstance().State = CMtpTarget::eBeforeFirstSession;
 //		if(nelLogoParticle!=0)
 //		{
-//			C3DTask::instance().scene().deleteInstance(nelLogoParticle);
+//			C3DTask::getInstance().scene().deleteInstance(nelLogoParticle);
 //			nelLogoParticle = 0;
 //		}
-//		if(C3DTask::instance().levelParticle()!=0)
-//			C3DTask::instance().levelParticle()->show();
+//		if(C3DTask::getInstance().levelParticle()!=0)
+//			C3DTask::getInstance().levelParticle()->show();
 
-//		if(CConfigFileTask::instance().configFile().getVar("CaptureMouse").asInt() == 1)
+//		if(CConfigFileTask::getInstance().configFile().getVar("CaptureMouse").asInt() == 1)
 //		{
-//			C3DTask::instance().driver().showCursor(false);
-//			C3DTask::instance().driver().setCapture(true);
+//			C3DTask::getInstance().driver().showCursor(false);
+//			C3DTask::getInstance().driver().setCapture(true);
 //		}
-//		C3DTask::instance().mouseListener().init();
+//		C3DTask::getInstance().mouseListener().init();
 	}
 }
 /*
@@ -686,8 +659,8 @@ void mtpTarget::updateSound ()
 	if(GNewSession)
 		loadNewSession();
 
-	CLevelManager::instance().update();
-	CEntityManager::instance().update();
+	CLevelManager::getInstance().update();
+	CEntityManager::getInstance().update();
 
 	if (State == eBeforeFirstSession)
 	{
@@ -695,39 +668,39 @@ void mtpTarget::updateSound ()
 		if(FirstResetCamera)
 		{
 			FirstResetCamera = false;
-			CMtpTarget::instance().controler().Camera.reset();
+			CMtpTarget::getInstance().controler().Camera.reset();
 		}
 	}
 	
-	CMtpTarget::instance().controler().update();
+	CMtpTarget::getInstance().controler().update();
 
 	if (FollowEntity)
-		C3DTask::instance().scene().getCam()->setMatrix(*CMtpTarget::instance().controler().Camera.getMatrixFollow());
+		C3DTask::getInstance().scene().getCam()->setMatrix(*CMtpTarget::getInstance().controler().Camera.getMatrixFollow());
 
 //	if(nelLevelParticle!=0)
-//		nelLevelParticle->setPos(C3DTask::instance().scene().getCam()->getMatrix().getPos());
+//		nelLevelParticle->setPos(C3DTask::getInstance().scene().getCam()->getMatrix().getPos());
 	
 	updateSound ();
 
 	// todo : set the listener velocity !
-	CMatrix *cameraMatrix = CMtpTarget::instance().controler().Camera.getMatrix();
-	CSoundManager::instance().updateListener(cameraMatrix->getPos(), CVector::Null, cameraMatrix->getJ(), cameraMatrix->getK());
+	CMatrix *cameraMatrix = CMtpTarget::getInstance().controler().Camera.getMatrix();
+	CSoundManager::getInstance().updateListener(cameraMatrix->getPos(), CVector::Null, cameraMatrix->getJ(), cameraMatrix->getK());
 
 	NLMISC::CConfigFile::checkConfigFiles();
 //	mtLevelManager::update ();
 
-	C3DTask::instance().clear();
+	C3DTask::getInstance().clear();
 	//	mt3dClear ();
 
-	mtpTarget::instance().render();
+	mtpTarget::getInstance().render();
 //	mt3dRender ();
-	//mtpTarget::instance().World.render();
-	CEntityManager::instance().render();
-	mtpTarget::instance().renderInterface();
+	//mtpTarget::getInstance().World.render();
+	CEntityManager::getInstance().render();
+	mtpTarget::getInstance().renderInterface();
 
 //	mt3dSwap ();
 
-//	CSoundManager::instance().update();
+//	CSoundManager::getInstance().update();
 	
 	// Give some cpu if user wanted in cfg
 	if (SleepTime >= 0)
@@ -748,14 +721,14 @@ void mtpTarget::release()
 void mtpTarget::renderInterface()
 {
 	/*
-	if (CMtpTarget::instance().State == CMtpTarget::eStartSession)
+	if (CMtpTarget::getInstance().State == CMtpTarget::eStartSession)
 	{
 		Interface2d.display(mtInterface::eDisplayWaitReady);
 	}
 	*/
-	if (CMtpTarget::instance().State == CMtpTarget::eReady)
+	if (CMtpTarget::getInstance().State == CMtpTarget::eReady)
 	{
-		TimeBeforeSessionStart -= (float)CTimeTask::instance().deltaTime();
+		TimeBeforeSessionStart -= (float)CTimeTask::getInstance().deltaTime();
 		/*
 		Interface2d.display(mtInterface::eDisplayStartSession);
 		Interface2d.setPartTime(TimeBeforeSessionStart);
@@ -763,57 +736,57 @@ void mtpTarget::renderInterface()
 		
 		if (TimeBeforeSessionStart > 4.0f)
 		{
-			CMtpTarget::instance().controler().Camera.reset();
-			CMtpTarget::instance().controler().Camera.ForcedSpeed = 0.0f;
+			CMtpTarget::getInstance().controler().Camera.reset();
+			CMtpTarget::getInstance().controler().Camera.ForcedSpeed = 0.0f;
 		}
 		else
-			CMtpTarget::instance().controler().Camera.ForcedSpeed = 1.0f;
+			CMtpTarget::getInstance().controler().Camera.ForcedSpeed = 1.0f;
 		
 		if (TimeBeforeSessionStart <= 0)
 		{
 			TimeBeforeSessionStart = 0;
-			CMtpTarget::instance().State = CMtpTarget::eGame;
+			CMtpTarget::getInstance().State = CMtpTarget::eGame;
 		}
 	}
-	if (CMtpTarget::instance().State == CMtpTarget::eGame)
+	if (CMtpTarget::getInstance().State == CMtpTarget::eGame)
 	{
-		//CMtpTarget::instance().controler().Camera.reset();
-		TimeBeforeSessionStart += (float)CTimeTask::instance().deltaTime();
-		TimeBeforeTimeout -= (float)CTimeTask::instance().deltaTime();
+		//CMtpTarget::getInstance().controler().Camera.reset();
+		TimeBeforeSessionStart += (float)CTimeTask::getInstance().deltaTime();
+		TimeBeforeTimeout -= (float)CTimeTask::getInstance().deltaTime();
 		/*
 		Interface2d.setPartTime(TimeBeforeSessionStart);
 		Interface2d.display(mtInterface::eDisplayGame);
 		*/
 	}
 	/*
-	if (CMtpTarget::instance().State == CMtpTarget::eEndSession)
+	if (CMtpTarget::getInstance().State == CMtpTarget::eEndSession)
 	{
 		Interface2d.display(mtInterface::eDisplayEndSession);
 	}
-	Interface2d.render(CMtpTarget::instance().controler().getControledEntity());
+	Interface2d.render(CMtpTarget::getInstance().controler().getControledEntity());
 	*/
 	
 	
 	if (DisplayDebug)
 	{
-		CFontManager::instance().littlePrintf(0, 6, "pos %.2f %.2f %.2f", C3DTask::instance().scene().getCam().getMatrix().getPos().x, C3DTask::instance().scene().getCam().getMatrix().getPos().y, C3DTask::instance().scene().getCam().getMatrix().getPos().z);
-		CQuat q = C3DTask::instance().scene().getCam().getMatrix().getRot();
+		CFontManager::getInstance().littlePrintf(0, 6, "pos %.2f %.2f %.2f", C3DTask::getInstance().scene().getCam().getMatrix().getPos().x, C3DTask::getInstance().scene().getCam().getMatrix().getPos().y, C3DTask::getInstance().scene().getCam().getMatrix().getPos().z);
+		CQuat q = C3DTask::getInstance().scene().getCam().getMatrix().getRot();
 		CAngleAxis aa = q.getAngleAxis();
-		CFontManager::instance().littlePrintf(0, 7, "rot %.2f %.2f %.2f %.2f", aa.Axis.x, aa.Axis.y, aa.Axis.z, aa.Angle);
+		CFontManager::getInstance().littlePrintf(0, 7, "rot %.2f %.2f %.2f %.2f", aa.Axis.x, aa.Axis.y, aa.Axis.z, aa.Angle);
 
-		CFontManager::instance().littlePrintf(0, 8, "%.2ffps %.2fms", CTimeTask::instance().fps(), CTimeTask::instance().spf()*1000.0f);
+		CFontManager::getInstance().littlePrintf(0, 8, "%.2ffps %.2fms", CTimeTask::getInstance().fps(), CTimeTask::getInstance().spf()*1000.0f);
 
-		CFontManager::instance().littlePrintf(0, 9, "FxNbFaceAsked %.2f", C3DTask::instance().scene().getGroupNbFaceAsked("Fx"));
-		CFontManager::instance().littlePrintf(0, 10, "FxNbFaceMax %d", C3DTask::instance().scene().getGroupLoadMaxPolygon("Fx"));
-		CFontManager::instance().littlePrintf(0, 11, "TotalNbFacesAsked %.2f", C3DTask::instance().scene().getNbFaceAsked());
+		CFontManager::getInstance().littlePrintf(0, 9, "FxNbFaceAsked %.2f", C3DTask::getInstance().scene().getGroupNbFaceAsked("Fx"));
+		CFontManager::getInstance().littlePrintf(0, 10, "FxNbFaceMax %d", C3DTask::getInstance().scene().getGroupLoadMaxPolygon("Fx"));
+		CFontManager::getInstance().littlePrintf(0, 11, "TotalNbFacesAsked %.2f", C3DTask::getInstance().scene().getNbFaceAsked());
 
 		CPrimitiveProfile in, out;
-		C3DTask::instance().driver().profileRenderedPrimitives(in, out);
-		CFontManager::instance().littlePrintf(0, 12, "in:  %d %d %d %d %d", in.NPoints, in.NLines, in.NTriangles, in.NQuads, in.NTriangleStrips);
-		CFontManager::instance().littlePrintf(0, 13, "out: %d %d %d %d %d", out.NPoints, out.NLines, out.NTriangles, out.NQuads, out.NTriangleStrips);
+		C3DTask::getInstance().driver().profileRenderedPrimitives(in, out);
+		CFontManager::getInstance().littlePrintf(0, 12, "in:  %d %d %d %d %d", in.NPoints, in.NLines, in.NTriangles, in.NQuads, in.NTriangleStrips);
+		CFontManager::getInstance().littlePrintf(0, 13, "out: %d %d %d %d %d", out.NPoints, out.NLines, out.NTriangles, out.NQuads, out.NTriangleStrips);
 
-		uint8 eid = CMtpTarget::instance().controler().getControledEntity();
-		CFontManager::instance().littlePrintf(0, 16, "Cam (%.2f %.2f %.2f)", CMtpTarget::instance().controler().Camera.getMatrixFollow()->getPos().x, CMtpTarget::instance().controler().Camera.getMatrixFollow()->getPos().y, CMtpTarget::instance().controler().Camera.getMatrixFollow()->getPos().z);
+		uint8 eid = CMtpTarget::getInstance().controler().getControledEntity();
+		CFontManager::getInstance().littlePrintf(0, 16, "Cam (%.2f %.2f %.2f)", CMtpTarget::getInstance().controler().Camera.getMatrixFollow()->getPos().x, CMtpTarget::getInstance().controler().Camera.getMatrixFollow()->getPos().y, CMtpTarget::getInstance().controler().Camera.getMatrixFollow()->getPos().z);
 	}
 }
 #endif
@@ -821,29 +794,29 @@ void mtpTarget::renderInterface()
 void mtpTarget::everybodyReady()
 {
 	// everybody is ok, let s count down
-	CMtpTarget::instance().State = CMtpTarget::eReady;
-	CEntityManager::instance().everybodyReady(true);
+	CMtpTarget::getInstance().State = CMtpTarget::eReady;
+	CEntityManager::getInstance().everybodyReady(true);
 }
 	
 void mtpTarget::endSession()
 {
 	// end of a session
-	CMtpTarget::instance().State = CMtpTarget::eEndSession;
-	C3DTask::instance().EnableExternalCamera = false;
-	CHudTask::instance().messages.clear();
+	CMtpTarget::getInstance().State = CMtpTarget::eEndSession;
+	C3DTask::getInstance().EnableExternalCamera = false;
+	CHudTask::getInstance().messages.clear();
 }
 
 /*
 void CMtpTarget::resetFollowedEntity()
 {
-	CMtpTarget::instance().controler().Camera.setFollowedEntity(CMtpTarget::instance().controler().getControledEntity());
-	CMtpTarget::instance().controler().ViewedEId = CMtpTarget::instance().controler().getControledEntity();
+	CMtpTarget::getInstance().controler().Camera.setFollowedEntity(CMtpTarget::getInstance().controler().getControledEntity());
+	CMtpTarget::getInstance().controler().ViewedEId = CMtpTarget::getInstance().controler().getControledEntity();
 
-//	for(uint32 entityPos = 0; entityPos < mtpTarget::instance().World.count(); entityPos++)
+//	for(uint32 entityPos = 0; entityPos < mtpTarget::getInstance().World.count(); entityPos++)
 //	{
-//		if(mtpTarget::instance().World.get(entityPos) == CMtpTarget::instance().controler().getControledEntity())
+//		if(mtpTarget::getInstance().World.get(entityPos) == CMtpTarget::getInstance().controler().getControledEntity())
 //		{
-//			CMtpTarget::instance().controler().PlayerViewedPos = entityPos;
+//			CMtpTarget::getInstance().controler().PlayerViewedPos = entityPos;
 //			break;
 //		}
 //	}

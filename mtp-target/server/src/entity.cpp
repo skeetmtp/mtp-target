@@ -176,7 +176,7 @@ void CEntity::init(std::string &name,std::string &texture, NLMISC::CRGBA &color,
 
 void CEntity::_luaInit()
 {
-	luaProxy = new CEntityProxy(CLuaEngine::instance().session(),this);
+	luaProxy = new CEntityProxy(CLuaEngine::getInstance().session(),this);
 }
 
 
@@ -238,14 +238,14 @@ void CEntity::name(const string &name)
 
 void CEntity::startPointId(uint8 id)
 {
-	StartingPointId = id % CLevelManager::instance().currentLevel().getStartPointCount();
-	CVector startPos = CLevelManager::instance().currentLevel().getStartPoint(StartingPointId)->position();
+	StartingPointId = id % CLevelManager::getInstance().currentLevel().getStartPointCount();
+	CVector startPos = CLevelManager::getInstance().currentLevel().getStartPoint(StartingPointId)->position();
 	pausePhysics();
 	dBodySetPosition(Body, startPos.x, startPos.y, startPos.z);
 	dGeomSetPosition(Geom, startPos.x, startPos.y, startPos.z);
 	resumePhysics();
 	if(type()==CEntity::Client)
-		if(CNetwork::instance().version()>=2)
+		if(CNetwork::getInstance().version()>=2)
 		{
 			string code = "";
 			code += "getEntityById(";
@@ -255,7 +255,7 @@ void CEntity::startPointId(uint8 id)
 			code += ");";
 			CNetMessage msgout(CNetMessage::ExecLua);
 			msgout.serial(code);
-			CNetwork::instance().send(msgout);
+			CNetwork::getInstance().send(msgout);
 		}
 		
 }
@@ -302,30 +302,30 @@ void CEntity::update()
 	if(SendCollideWhenFly)
 	{
 		SendCollideWhenFly = false;
-		if(CNetwork::instance().version()>=2)
+		if(CNetwork::getInstance().version()>=2)
 		{
 			CNetMessage msgout(CNetMessage::CollideWhenFly);
 			uint8 eid = id();
 			msgout.serial(eid);
 			msgout.serial(CollideWhenFlyPos);
-			CNetwork::instance().send(msgout);
+			CNetwork::getInstance().send(msgout);
 		}
 	}
 
 	H_AUTO(CEntityUpdate);
 	set<CModule *>::iterator mit;
 	for(mit=collideModules.begin();mit!=collideModules.end();mit++)
-		CLuaEngine::instance().entitySceneCollideEvent(this,*mit);	
+		CLuaEngine::getInstance().entitySceneCollideEvent(this,*mit);	
 	collideModules.clear();
 
 	set<CEntity *>::iterator eit;
 	for(eit=collideEntity.begin();eit!=collideEntity.end();eit++)
-		CLuaEngine::instance().entityEntityCollideEvent(this,*eit);	
+		CLuaEngine::getInstance().entityEntityCollideEvent(this,*eit);	
 	collideEntity.clear();
 
 	if(collideWater)
 	{
-		CLuaEngine::instance().entityWaterCollideEvent(this);	
+		CLuaEngine::getInstance().entityWaterCollideEvent(this);	
 		collideWater = false;
 	}
 
@@ -409,7 +409,7 @@ bool CEntity::openClose()
 void CEntity::setForce(const CVector &clientForce)
 {
 	// ignoring client update if not in session
-	if(CSessionManager::instance().endTime() != 0 || CSessionManager::instance().startTime() == 0 || CTime::getLocalTime() < CSessionManager::instance().startTime())
+	if(CSessionManager::getInstance().endTime() != 0 || CSessionManager::getInstance().startTime() == 0 || CTime::getLocalTime() < CSessionManager::getInstance().startTime())
 	{
 		//nlinfo("can't update user, no session");
 		return;

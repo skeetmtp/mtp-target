@@ -25,6 +25,8 @@
 // Include
 //
 
+#include <nel/misc/singleton.h>
+
 #include "session_state.h"
 
 
@@ -32,7 +34,7 @@
 // Class
 //
 
-class CWaitingClientsSessionState : public CSessionState, public CSingleton<CWaitingClientsSessionState>
+class CWaitingClientsSessionState : public CSessionState, public NLMISC::CSingleton<CWaitingClientsSessionState>
 {
 public:
 	
@@ -44,7 +46,7 @@ public:
 
 private:
 	CWaitingClientsSessionState() { _restart = false; }
-	friend class CSingleton<CWaitingClientsSessionState>;
+	friend class NLMISC::CSingleton<CWaitingClientsSessionState>;
 	bool _restart;
 	bool firstUpdate;
 };

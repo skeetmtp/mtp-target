@@ -87,7 +87,7 @@ Lunar<CEntityProxy>::RegType CEntityProxy::methods[] =
 bool CEntityProxy::call(string funcName)
 { 
 	int res;
-	lua_State *L = CLuaEngine::instance().session();
+	lua_State *L = CLuaEngine::getInstance().session();
 	if(L==0)
 		return false;
 	int mp = Lunar<CEntityProxy>::push(L, this);
@@ -172,7 +172,7 @@ int CEntityProxy::setOpenCloseCount(lua_State *luaSession)
 		CNetMessage msgout(CNetMessage::OpenClose);
 		uint8 eid = _entity->id();
 		msgout.serial(eid);
-		CNetwork::instance().send(msgout);
+		CNetwork::getInstance().send(msgout);
 	}
 	
 	_entity->NbOpenClose = noc;
@@ -210,7 +210,7 @@ int CEntityProxy::setPos(lua_State *luaSession)
 int CEntityProxy::getStartPointPos(lua_State *luaSession)
 {
 	lua_Number id = _entity->StartingPointId;
-	startPos = CLevelManager::instance().currentLevel().getStartPoint((uint32)id)->position();
+	startPos = CLevelManager::getInstance().currentLevel().getStartPoint((uint32)id)->position();
 	Lunar<CLuaVector>::push(luaSession,&startPos);
 	return 1;
 }
@@ -298,7 +298,7 @@ int CEntityProxy::displayText(lua_State *luaSession)
 		msgout.serial(message);
 		msgout.serial(col);
 		msgout.serial(duration);
-		CNetwork::instance().send(_entity->id(),msgout);
+		CNetwork::getInstance().send(_entity->id(),msgout);
 		nlinfo("display message : %s to %s",message.c_str(),_entity->name().c_str());
 	}
 
@@ -356,7 +356,7 @@ int CEntityProxy::getArrivalTime(lua_State *luaSession)
 int CEntityProxy::setArrivalTime(lua_State *luaSession)
 {
 	TTime currentTime = CTime::getLocalTime();
-	lua_Number newVal = (currentTime - CSessionManager::instance().startTime())/1000.0f;
+	lua_Number newVal = (currentTime - CSessionManager::getInstance().startTime())/1000.0f;
 	newVal = luaL_optnumber(luaSession,1,newVal);
 	_entity->ArrivalTime =(float)newVal;
 	return 0;	
@@ -380,7 +380,7 @@ int CEntityProxy::getTeam(lua_State *luaSession)
 {
 	uint teamCount = (uint)luaL_checknumber(luaSession,1);
 	lua_Number res = 0;
-	uint teamId = CEntityManager::instance().getTeam(_entity->id(),teamCount);
+	uint teamId = CEntityManager::getInstance().getTeam(_entity->id(),teamCount);
 	res = teamId;
 	lua_pushnumber(luaSession, res); 
 	return 1;	

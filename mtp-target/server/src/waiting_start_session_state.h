@@ -25,6 +25,8 @@
 // Include
 //
 
+#include <nel/misc/singleton.h>
+
 #include "session_state.h"
 
 
@@ -32,7 +34,7 @@
 // Class
 //
 
-class CWaitingStartSessionState : public CSessionState, public CSingleton<CWaitingStartSessionState>
+class CWaitingStartSessionState : public CSessionState, public NLMISC::CSingleton<CWaitingStartSessionState>
 {
 public:
 	

@@ -78,11 +78,11 @@ void CGuiButtonManager::init()
 
 	for(int i=0;i<buttonMaterialsSize;i++)
 	{
-		res = CResourceManager::instance().get(buttonMaterials[i].filename);
-		buttonMaterials[i].texture = C3DTask::instance().driver().createTextureFile(res);
+		res = CResourceManager::getInstance().get(buttonMaterials[i].filename);
+		buttonMaterials[i].texture = C3DTask::getInstance().driver().createTextureFile(res);
 		buttonMaterials[i].texture->setReleasable(false);
 		nlassert(buttonMaterials[i].texture);
-		buttonMaterials[i].material = C3DTask::instance().createMaterial();
+		buttonMaterials[i].material = C3DTask::getInstance().createMaterial();
 		buttonMaterials[i].material.setTexture(buttonMaterials[i].texture);
 		buttonMaterials[i].material.setBlend(true);
 		buttonMaterials[i].material.setZFunc(UMaterial::always);
@@ -156,10 +156,10 @@ CGuiButton::CGuiButton(const string &normalBitmap, const string &activeBitmap)
 
 void CGuiButton::resetBitmap()
 {
-	_normalBitmap       = CGuiButtonManager::instance().material(CGuiButtonManager::eNormal);
-	_activeBitmap       = CGuiButtonManager::instance().material(CGuiButtonManager::eActive);
-	_prelightBitmap     = CGuiButtonManager::instance().material(CGuiButtonManager::ePrelight);
-	_insensitiveBitmap  = CGuiButtonManager::instance().material(CGuiButtonManager::eInsensitive);
+	_normalBitmap       = CGuiButtonManager::getInstance().material(CGuiButtonManager::eNormal);
+	_activeBitmap       = CGuiButtonManager::getInstance().material(CGuiButtonManager::eActive);
+	_prelightBitmap     = CGuiButtonManager::getInstance().material(CGuiButtonManager::ePrelight);
+	_insensitiveBitmap  = CGuiButtonManager::getInstance().material(CGuiButtonManager::eInsensitive);
 	_stretched          = true;
 }
 
@@ -212,13 +212,13 @@ void CGuiButton::_render(const CVector &pos, CVector &maxSize)
 	quad.stretched(_stretched);	
 	
 	_pressed = false;
-	CVector mousePos = CGuiObjectManager::instance().mouseListener().position();
+	CVector mousePos = CGuiObjectManager::getInstance().mouseListener().position();
 
 	if(isIn(mousePos,pos,maxSize))
 	{
-		CVector mousePressedPos = CGuiObjectManager::instance().mouseListener().pressedPosition();
+		CVector mousePressedPos = CGuiObjectManager::getInstance().mouseListener().pressedPosition();
 		
-		if(CGuiObjectManager::instance().mouseListener().ButtonDown)
+		if(CGuiObjectManager::getInstance().mouseListener().ButtonDown)
 		{
 			if(isIn(mousePressedPos,pos,maxSize))
 				buttonState = CGuiButtonManager::eActive;
@@ -226,7 +226,7 @@ void CGuiButton::_render(const CVector &pos, CVector &maxSize)
 		else
 			buttonState = CGuiButtonManager::ePrelight;
 			
-		if(CGuiObjectManager::instance().mouseListener().Clicked && isIn(mousePressedPos,pos,maxSize))
+		if(CGuiObjectManager::getInstance().mouseListener().Clicked && isIn(mousePressedPos,pos,maxSize))
 		{
 			_onPressed();
 			_pressed = true;
@@ -304,7 +304,7 @@ float CGuiButton::borderHeight()
 
 void CGuiButton::XmlRegister()
 {
-	CGuiObjectManager::instance().registerClass("CGuiButton",CGuiButton::Create);
+	CGuiObjectManager::getInstance().registerClass("CGuiButton",CGuiButton::Create);
 }
 
 CGuiObject *CGuiButton::Create()

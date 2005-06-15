@@ -50,12 +50,12 @@ using namespace NLNET;
 
 void CWaitingReadySessionState::update()
 {
-	if(CSessionManager::instance().forceEnding() || CEntityManager::instance().everyBodyReady())
+	if(CSessionManager::getInstance().forceEnding() || CEntityManager::getInstance().everyBodyReady())
 	{
-		CLevelManager::instance().currentLevel().initBeforeStartLevel();
+		CLevelManager::getInstance().currentLevel().initBeforeStartLevel();
 
 		CEntityManager::EntityConstIt it;
-		for(it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
+		for(it = CEntityManager::getInstance().entities().begin(); it != CEntityManager::getInstance().entities().end(); it++)
 		{
 			if((*it)->type() == CEntity::Client)
 			{
@@ -65,7 +65,7 @@ void CWaitingReadySessionState::update()
 				
 				if(!NLMISC::CFile::isDirectory("./replay"))
 					NLMISC::CFile::createDirectory("./replay");
-				string CurrentLevel = CLevelManager::instance().currentLevel().name();
+				string CurrentLevel = CLevelManager::getInstance().currentLevel().name();
 				int maxReplaySavedCount = IService::getInstance()->ConfigFile.getVar("maxReplaySavedCount").asInt();
 				if(maxReplaySavedCount<1)
 					maxReplaySavedCount=1;
@@ -94,11 +94,11 @@ void CWaitingReadySessionState::update()
 
 		TTime currentTime = CTime::getLocalTime();
 		nlinfo("Everybody ready, start session in %g seconds(at %d)", TimeBeforeStart/1000.0f,currentTime+TimeBeforeStart);
-		changeState(CWaitingStartSessionState::instance());
-		CSessionManager::instance().startTime(currentTime+(TTime)TimeBeforeStart);
+		changeState(CWaitingStartSessionState::getInstance());
+		CSessionManager::getInstance().startTime(currentTime+(TTime)TimeBeforeStart);
 		
 		CNetMessage msgout(CNetMessage::EverybodyReady);
-		CNetwork::instance().send(msgout);
+		CNetwork::getInstance().send(msgout);
 	}
 }
 

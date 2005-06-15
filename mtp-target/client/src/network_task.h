@@ -53,7 +53,7 @@ static const float NetVirtualFrameDuration = MT_NETWORK_MY_UPDATE_PERIODE;
 // Classes
 //
 
-class CNetworkTask : public CSingleton<CNetworkTask>, public ITask
+class CNetworkTask : public NLMISC::CSingleton<CNetworkTask>, public ITask
 {
 public:
 	

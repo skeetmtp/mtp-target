@@ -25,6 +25,8 @@
 // Include
 //
 
+#include <nel/misc/singleton.h>
+
 #include "session_state.h"
 
 
@@ -32,7 +34,7 @@
 // Class
 //
 
-class CRunningSessionState : public CSessionState, public CSingleton<CRunningSessionState>
+class CRunningSessionState : public CSessionState, public NLMISC::CSingleton<CRunningSessionState>
 {
 public:
 	

@@ -162,7 +162,7 @@ void CModule::init(const std::string &name, const std::string &shapeName, uint8 
 
 void CModule::_luaInit()
 {
-	luaProxy = new CModuleProxy(CLuaEngine::instance().session(),this);
+	luaProxy = new CModuleProxy(CLuaEngine::getInstance().session(),this);
 
 	// load the lua code for this module
 	string filename = CPath::lookup("module_" + Name + ".lua", false);
@@ -173,11 +173,11 @@ void CModule::_luaInit()
 	}
 	
 
-	lua_pushliteral(CLuaEngine::instance().session(), "module");
-	Lunar<CModuleProxy>::push(CLuaEngine::instance().session(), luaProxy);
-	lua_settable(CLuaEngine::instance().session(), LUA_GLOBALSINDEX);
+	lua_pushliteral(CLuaEngine::getInstance().session(), "module");
+	Lunar<CModuleProxy>::push(CLuaEngine::getInstance().session(), luaProxy);
+	lua_settable(CLuaEngine::getInstance().session(), LUA_GLOBALSINDEX);
 	
-	luaLoad(CLuaEngine::instance().session(),filename);
+	luaLoad(CLuaEngine::getInstance().session(),filename);
 
 }
 
@@ -254,7 +254,7 @@ void CModule::visible(bool e)
 	CNetMessage msgout(CNetMessage::EnableElement);
 	msgout.serial(_id);
 	msgout.serial(e);
-	CNetwork::instance().send(msgout);
+	CNetwork::getInstance().send(msgout);
 }
 
 void CModule::enabled(bool e) 
@@ -267,7 +267,7 @@ void CModule::enabled(bool e)
 	CNetMessage msgout(CNetMessage::EnableElement);
 	msgout.serial(_id);
 	msgout.serial(e);
-	CNetwork::instance().send(msgout);
+	CNetwork::getInstance().send(msgout);
 
 	pausePhysics();
 	if(e)
@@ -294,7 +294,7 @@ void CModule::changePosition(NLMISC::CVector &pos)
 	msgout.serial(selectedBy);
 	msgout.serial(pos);
 	msgout.serial(eulerRot);
-	CNetwork::instance().send(msgout);
+	CNetwork::getInstance().send(msgout);
 }
 
 

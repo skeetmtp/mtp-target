@@ -54,7 +54,7 @@ CSoundManager::CSoundManager()
 static FSOUND_SAMPLE *loadSoundSample(const std::string &filename)
 {
 	FSOUND_SAMPLE *sample = 0;
-	string longName = CResourceManager::instance().get(filename);
+	string longName = CResourceManager::getInstance().get(filename);
 	if(!longName.empty())
 	{
 		sample = FSOUND_Sample_Load(FSOUND_FREE, longName.c_str(),FSOUND_NORMAL  | FSOUND_LOOP_OFF , 0, 0);
@@ -78,7 +78,7 @@ void CSoundManager::init()
 		return;
 	}
 	// init fmod
-	int frequency = CConfigFileTask::instance().configFile().getVar("SoundFrequency").asInt();
+	int frequency = CConfigFileTask::getInstance().configFile().getVar("SoundFrequency").asInt();
 	if (! FSOUND_Init(frequency, 32, 0))
 	{
 		nlwarning("CSoundManager: Error while initializing FMOD (%s)", FMOD_ErrorString(FSOUND_GetError()));
@@ -87,22 +87,22 @@ void CSoundManager::init()
 	
 	memset(entitySoundSamples, 0, CSoundManager::CEntitySoundsDescriptor::SoundCount * sizeof(FSOUND_SAMPLE *));
 	// load all samples
-	entitySoundSamples[CSoundManager::CEntitySoundsDescriptor::BallOpen]  = loadSoundSample(CResourceManager::instance().get(CConfigFileTask::instance().configFile().getVar("SoundBallOpen").asString()));
-	entitySoundSamples[CSoundManager::CEntitySoundsDescriptor::BallClose] = loadSoundSample(CResourceManager::instance().get(CConfigFileTask::instance().configFile().getVar("SoundBallClose").asString()));
-	entitySoundSamples[CSoundManager::CEntitySoundsDescriptor::Splash]    = loadSoundSample(CResourceManager::instance().get(CConfigFileTask::instance().configFile().getVar("SoundSplash").asString()));
-	entitySoundSamples[CSoundManager::CEntitySoundsDescriptor::Impact]    = loadSoundSample(CResourceManager::instance().get(CConfigFileTask::instance().configFile().getVar("SoundImpact").asString()));
+	entitySoundSamples[CSoundManager::CEntitySoundsDescriptor::BallOpen]  = loadSoundSample(CResourceManager::getInstance().get(CConfigFileTask::getInstance().configFile().getVar("SoundBallOpen").asString()));
+	entitySoundSamples[CSoundManager::CEntitySoundsDescriptor::BallClose] = loadSoundSample(CResourceManager::getInstance().get(CConfigFileTask::getInstance().configFile().getVar("SoundBallClose").asString()));
+	entitySoundSamples[CSoundManager::CEntitySoundsDescriptor::Splash]    = loadSoundSample(CResourceManager::getInstance().get(CConfigFileTask::getInstance().configFile().getVar("SoundSplash").asString()));
+	entitySoundSamples[CSoundManager::CEntitySoundsDescriptor::Impact]    = loadSoundSample(CResourceManager::getInstance().get(CConfigFileTask::getInstance().configFile().getVar("SoundImpact").asString()));
 	
 	// load all gui samples
 	for (uint i = 0; i < CSoundManager::GuiSoundCount; i++)
 		guiChannels[i] = -1;
 	memset(guiSoundSamples, 0, CSoundManager::GuiSoundCount * sizeof(FSOUND_SAMPLE *));
-	guiSoundSamples[CSoundManager::GuiReady] = loadSoundSample(CResourceManager::instance().get(CConfigFileTask::instance().configFile().getVar("SoundGuiReady").asString()));
+	guiSoundSamples[CSoundManager::GuiReady] = loadSoundSample(CResourceManager::getInstance().get(CConfigFileTask::getInstance().configFile().getVar("SoundGuiReady").asString()));
 #endif
 
 	/*
-       	if (CConfigFileTask::instance().configFile().getVar("Music").asInt() == 1)
+       	if (CConfigFileTask::getInstance().configFile().getVar("Music").asInt() == 1)
 	{
-		string res = CResourceManager::instance().get("zik.mp3");
+		string res = CResourceManager::getInstance().get("zik.mp3");
 		if(res.empty())
 		{
 			nlwarning("Couldn't found zip.mp3");
@@ -120,11 +120,11 @@ void CSoundManager::init()
 	useM3U = false;
 	useM3Ushuffle = true;
 
-	if (CConfigFileTask::instance().configFile().getVar("Music").asInt() == 1)
+	if (CConfigFileTask::getInstance().configFile().getVar("Music").asInt() == 1)
 	{
-		if (CConfigFileTask::instance().configFile().getVar("M3UList").asString() != "")
+		if (CConfigFileTask::getInstance().configFile().getVar("M3UList").asString() != "")
 		{
-			string m3uFileName = CConfigFileTask::instance().configFile().getVar("M3UList").asString();
+			string m3uFileName = CConfigFileTask::getInstance().configFile().getVar("M3UList").asString();
 			string m3uDirectory = CFile::getPath(m3uFileName);
 			nlinfo("CSoundManager: loading '%s'",m3uFileName.c_str());
 			m3uFile.open(m3uFileName.c_str());
@@ -150,7 +150,7 @@ void CSoundManager::init()
 					}
 				}
 				useM3U = m3uVector.size()>0;
-				if (CConfigFileTask::instance().configFile().getVar("M3UShuffle").asInt() == 0)
+				if (CConfigFileTask::getInstance().configFile().getVar("M3UShuffle").asInt() == 0)
 					useM3Ushuffle = false;
 				playStream(useM3U);
 			}
@@ -476,7 +476,7 @@ static signed char CSoundTaskStreamEndCallback(FSOUND_STREAM *stream, void *buff
 #ifdef USE_FMOD
 static signed char F_CALLBACKAPI CSoundTaskStreamEndCallback(FSOUND_STREAM *stream, void *buff, int len, void *param)
 {
-  CSoundManager::instance().playStream(CSoundManager::instance().useM3U);
+  CSoundManager::getInstance().playStream(CSoundManager::getInstance().useM3U);
   
   return true;
 }

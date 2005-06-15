@@ -29,6 +29,7 @@
 //
 // Includes
 //
+
 #include "gui_object.h"
 
 
@@ -125,7 +126,7 @@ private:
 
 
 	
-class CGuiTextManager : public CSingleton<CGuiTextManager>
+class CGuiTextManager : public NLMISC::CSingleton<CGuiTextManager>
 {
 public:
 	virtual void init();

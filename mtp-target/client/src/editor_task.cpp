@@ -69,7 +69,7 @@ void CEditorTask::init()
 
 	rayTestStart = CVector(0,0,0);
 	rayTestEnd= CVector(0,0,0);
-	testMat = C3DTask::instance().createMaterial();
+	testMat = C3DTask::getInstance().createMaterial();
 	testMat.setColor(CRGBA(255,255,255,255));
 	testMat.setZWrite(true);
 	testMat.setZFunc(UMaterial::always);
@@ -79,20 +79,20 @@ void CEditorTask::init()
 
 void CEditorTask::_mouseSelectModule() 
 {
-	bool mousePressed = CGuiObjectManager::instance().mouseListener().Pressed;
-	CVector mousePressedPos = CGuiObjectManager::instance().mouseListener().pressedPosition();
+	bool mousePressed = CGuiObjectManager::getInstance().mouseListener().Pressed;
+	CVector mousePressedPos = CGuiObjectManager::getInstance().mouseListener().pressedPosition();
 	uint32 i;
-	if(mousePressed && CLevelManager::instance().levelPresent())
+	if(mousePressed && CLevelManager::getInstance().levelPresent())
 	{
 		_selectedElement = 0;
 		//nlinfo("editor ray test");
-		CViewport vp = C3DTask::instance().scene().getViewport();
-		CMatrix camMat = C3DTask::instance().scene().getCam().getMatrix();
-		CFrustum frustum = C3DTask::instance().scene().getCam().getFrustum();
-		C3DTask::instance().driver().setFrustum(frustum);
+		CViewport vp = C3DTask::getInstance().scene().getViewport();
+		CMatrix camMat = C3DTask::getInstance().scene().getCam().getMatrix();
+		CFrustum frustum = C3DTask::getInstance().scene().getCam().getFrustum();
+		C3DTask::getInstance().driver().setFrustum(frustum);
 		CVector rayStart,rayDir,rayEnd;
-		float x = mousePressedPos.x / C3DTask::instance().screenWidth();
-		float y = 1.0f - mousePressedPos.y / C3DTask::instance().screenHeight();
+		float x = mousePressedPos.x / C3DTask::getInstance().screenWidth();
+		float y = 1.0f - mousePressedPos.y / C3DTask::getInstance().screenHeight();
 		vp.getRayWithPoint(x,y,rayStart,rayDir,camMat,frustum);
 		rayDir.normalize();
 		rayEnd = rayStart + rayDir * 10000;
@@ -101,9 +101,9 @@ void CEditorTask::_mouseSelectModule()
 		rayTestStart = rayStart;
 		
 		list<CEditableElementCommon *> bboxModules;
-		for(i=0;i<CLevelManager::instance().currentLevel().getModuleCount();i++)
+		for(i=0;i<CLevelManager::getInstance().currentLevel().getModuleCount();i++)
 		{
-			CModule *module = CLevelManager::instance().currentLevel().getModule(i);
+			CModule *module = CLevelManager::getInstance().currentLevel().getModule(i);
 			UInstance mesh = module->mesh();
 			CAABBox bbox;
 			mesh.getShapeAABBox(bbox);
@@ -116,9 +116,9 @@ void CEditorTask::_mouseSelectModule()
 			}
 		}
 		
-		for(i=0;i<CLevelManager::instance().currentLevel().getStartPointCount();i++)
+		for(i=0;i<CLevelManager::getInstance().currentLevel().getStartPointCount();i++)
 		{
-			CStartPoint *startpoint = CLevelManager::instance().currentLevel().getStartPoint(i);
+			CStartPoint *startpoint = CLevelManager::getInstance().currentLevel().getStartPoint(i);
 			UInstance mesh = startpoint->mesh();
 			CAABBox bbox;
 			mesh.getShapeAABBox(bbox);
@@ -167,19 +167,19 @@ void CEditorTask::_mouseSelectModule()
 void CEditorTask::update() 
 {
 
-	if(EnableEditor && C3DTask::instance().kbPressed(KeyF4))
+	if(EnableEditor && C3DTask::getInstance().kbPressed(KeyF4))
 	{
 		enable(!enable());
 	}
 
-	if(_enable && CLevelManager::instance().levelPresent())
+	if(_enable && CLevelManager::getInstance().levelPresent())
 	{
 		_mouseSelectModule();
 
 
-		if (C3DTask::instance().kbPressed(KeySPACE) && C3DTask::instance().kbDown(KeyCONTROL))
+		if (C3DTask::getInstance().kbPressed(KeySPACE) && C3DTask::getInstance().kbDown(KeyCONTROL))
 		{
-			CMatrix camMat = C3DTask::instance().scene().getCam().getMatrix();
+			CMatrix camMat = C3DTask::getInstance().scene().getCam().getMatrix();
 			CVector camDir = camMat.getJ();
 			CAABBox bbox;
 			_selectedElement->mesh().getShapeAABBox(bbox);
@@ -187,61 +187,61 @@ void CEditorTask::update()
 		}
 		
 
-		if (C3DTask::instance().kbPressed(KeyNUMPAD4))
+		if (C3DTask::getInstance().kbPressed(KeyNUMPAD4))
 		{
 			_mouseX += (float)Pi / 8.0f;
 		}
-		if (C3DTask::instance().kbPressed(KeyNUMPAD6))
+		if (C3DTask::getInstance().kbPressed(KeyNUMPAD6))
 		{
 			_mouseX -= (float)Pi / 8.0f;
 		}
-		if (C3DTask::instance().kbPressed(KeyNUMPAD8))
+		if (C3DTask::getInstance().kbPressed(KeyNUMPAD8))
 		{
 			_mouseY += 0.1f;
 		}
-		if (C3DTask::instance().kbPressed(KeyNUMPAD5))
+		if (C3DTask::getInstance().kbPressed(KeyNUMPAD5))
 		{
 			_mouseY -= 0.1f;
 		}
 		
 		CVector dv(0,0,0);
-		if (C3DTask::instance().kbDown(KeyUP))
+		if (C3DTask::getInstance().kbDown(KeyUP))
 		{
 			dv.y += 1.0f;
 		}
-		if (C3DTask::instance().kbDown(KeyDOWN))
+		if (C3DTask::getInstance().kbDown(KeyDOWN))
 		{
 			dv.y -= 1.0f;
 		}
-		if (C3DTask::instance().kbDown(KeyLEFT))
+		if (C3DTask::getInstance().kbDown(KeyLEFT))
 		{
 			dv.x -= 1.0f;
 		}
-		if (C3DTask::instance().kbDown(KeyRIGHT))
+		if (C3DTask::getInstance().kbDown(KeyRIGHT))
 		{
 			dv.x += 1.0f;
 		}
-		if (C3DTask::instance().kbDown(KeyPRIOR))
+		if (C3DTask::getInstance().kbDown(KeyPRIOR))
 		{
 			dv.z += 1.0f;
 		}
-		if (C3DTask::instance().kbDown(KeyNEXT))
+		if (C3DTask::getInstance().kbDown(KeyNEXT))
 		{
 			dv.z -= 1.0f;
 		}
 		
 		dv /= 4.0f;
 		
-		if (C3DTask::instance().kbDown(KeySHIFT))
+		if (C3DTask::getInstance().kbDown(KeySHIFT))
 			dv *= 0.1f;
 		
-		if (C3DTask::instance().kbDown(KeyCONTROL))
+		if (C3DTask::getInstance().kbDown(KeyCONTROL))
 			dv *= 20.0f;
 		
-		dv *= (float)CTimeTask::instance().deltaTime();
+		dv *= (float)CTimeTask::getInstance().deltaTime();
 
-		//float	mouseX = 0;//CGuiObjectManager::instance().mouseListener().MouseX;
-		//float	mouseY = -0.5f;//-CGuiObjectManager::instance().mouseListener().MouseY;
+		//float	mouseX = 0;//CGuiObjectManager::getInstance().mouseListener().MouseX;
+		//float	mouseY = -0.5f;//-CGuiObjectManager::getInstance().mouseListener().MouseY;
 
 		CMatrix m2;
 		m2.identity();
@@ -255,7 +255,7 @@ void CEditorTask::update()
 		ControlerCamMatrix.rotateZ(_mouseX);
 		ControlerCamMatrix.rotateX(_mouseY);
 		//			nlinfo("set camera matrix");
-		C3DTask::instance().scene().getCam().setMatrix(ControlerCamMatrix);			
+		C3DTask::getInstance().scene().getCam().setMatrix(ControlerCamMatrix);			
 
 		if(selectedElement() && dv.norm()!=0.0f)
 		{
@@ -263,9 +263,9 @@ void CEditorTask::update()
 			selectedElement()->position(oldPos + dv);
 			if(selectedElement()->type()==CEditableElementCommon::Module)
 			{
-				for(uint i=0;i<CLevelManager::instance().currentLevel().getModuleCount();i++)
+				for(uint i=0;i<CLevelManager::getInstance().currentLevel().getModuleCount();i++)
 				{
-					CModule *module = CLevelManager::instance().currentLevel().getModule(i);
+					CModule *module = CLevelManager::getInstance().currentLevel().getModule(i);
 					if(module && module!=selectedElement())
 					{
 						/*
@@ -287,24 +287,24 @@ void CEditorTask::update()
 			
 		}
 
-		double time = CTimeTask::instance().time();
+		double time = CTimeTask::getInstance().time();
 		if((time-_lastUpdateTime)>0.1f)
 		{
-			for(uint i=0;i<CLevelManager::instance().currentLevel().getModuleCount();i++)
+			for(uint i=0;i<CLevelManager::getInstance().currentLevel().getModuleCount();i++)
 			{
-				CModule *m = CLevelManager::instance().currentLevel().getModule(i);
+				CModule *m = CLevelManager::getInstance().currentLevel().getModule(i);
 				if(m->changed())
 				{
-					CNetworkTask::instance().updateEditableElement(m);
+					CNetworkTask::getInstance().updateEditableElement(m);
 					m->changed(false);
 				}
 			}
-			for(uint i=0;i<CLevelManager::instance().currentLevel().getStartPointCount();i++)
+			for(uint i=0;i<CLevelManager::getInstance().currentLevel().getStartPointCount();i++)
 			{
-				CStartPoint *m = CLevelManager::instance().currentLevel().getStartPoint(i);
+				CStartPoint *m = CLevelManager::getInstance().currentLevel().getStartPoint(i);
 				if(m->changed())
 				{
-					CNetworkTask::instance().updateEditableElement(m);
+					CNetworkTask::getInstance().updateEditableElement(m);
 					m->changed(false);
 				}
 			}
@@ -315,9 +315,9 @@ void CEditorTask::update()
 
 void CEditorTask::render()
 {
-	C3DTask::instance().driver().setFrustum(C3DTask::instance().scene().getCam().getFrustum());
-	UCamera cam = C3DTask::instance().scene().getCam();
-	C3DTask::instance().driver().setMatrixMode3D(cam);
+	C3DTask::getInstance().driver().setFrustum(C3DTask::getInstance().scene().getCam().getFrustum());
+	UCamera cam = C3DTask::getInstance().scene().getCam();
+	C3DTask::getInstance().driver().setMatrixMode3D(cam);
 	if(_selectedElement)
 	{
 		_selectedElement->renderSelection();
@@ -327,7 +327,7 @@ void CEditorTask::render()
 	
 	l.V0 = rayTestStart;
 	l.V1 = rayTestEnd;
-	//C3DTask::instance().driver().drawLine(l,*testMat);
+	//C3DTask::getInstance().driver().drawLine(l,*testMat);
 	
 }
 
@@ -342,9 +342,9 @@ void CEditorTask::enable(bool e)
 	{
 		nlassert(!_testFrame);
 		guiSPG<CGuiXml> xml = 0;
-		xml = CGuiXmlManager::instance().Load("editor.xml");
+		xml = CGuiXmlManager::getInstance().Load("editor.xml");
 		_testFrame = (CGuiFrame *)xml->get("editorFrame");
-		CGuiObjectManager::instance().objects.push_back(_testFrame);	
+		CGuiObjectManager::getInstance().objects.push_back(_testFrame);	
 	}
 	else
 	{
@@ -352,8 +352,8 @@ void CEditorTask::enable(bool e)
 	}
 	_enable = e;
 	FollowEntity = !e;
-	CNetworkTask::instance().setEditMode(_enable?1:0);
-	//	CMtpTarget::instance().controler().Camera.getMatrix()->getPos(ControlerFreeLookPos);
+	CNetworkTask::getInstance().setEditMode(_enable?1:0);
+	//	CMtpTarget::getInstance().controler().Camera.getMatrix()->getPos(ControlerFreeLookPos);
 }
 
 bool CEditorTask::enable()

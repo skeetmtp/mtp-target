@@ -53,18 +53,18 @@ static guiSPG<CGuiFrame> testFrame = 0;
 
 void CGuiTask::init()
 {
-	CGuiObjectManager::instance().init();
+	CGuiObjectManager::getInstance().init();
 
 
 	//test code
 	/*
 	guiSPG<CGuiXml> xml = 0;
-	xml = CGuiXmlManager::instance().Load("server_list.xml");
+	xml = CGuiXmlManager::getInstance().Load("server_list.xml");
 	testFrame = (CGuiFrame *)xml->get("serverListFrame");
-	CGuiObjectManager::instance().objects.push_back(testFrame);
+	CGuiObjectManager::getInstance().objects.push_back(testFrame);
 	guiSPG<CGuiVBox> serverVbox = (CGuiVBox *)xml->get("serverVbox");
 
-	xml = CGuiXmlManager::instance().Load("server_item.xml");
+	xml = CGuiXmlManager::getInstance().Load("server_item.xml");
 	{
 		guiSPG<CGuiHBox> serverItemHBox = (CGuiHBox *)xml->get("serverItemHBox");
 		guiSPG<CGuiText> btextServer = (CGuiText *)xml->get("btextServer");
@@ -72,7 +72,7 @@ void CGuiTask::init()
 		serverVbox->elements.push_back(serverItemHBox);
 	}
 	
-	xml = CGuiXmlManager::instance().Load("server_item.xml");
+	xml = CGuiXmlManager::getInstance().Load("server_item.xml");
 	{
 		guiSPG<CGuiHBox> serverItemHBox = (CGuiHBox *)xml->get("serverItemHBox");
 		guiSPG<CGuiText> btextServer = (CGuiText *)xml->get("btextServer");
@@ -80,7 +80,7 @@ void CGuiTask::init()
 		serverVbox->elements.push_back(serverItemHBox);
 	}
 	
-	xml = CGuiXmlManager::instance().Load("server_item.xml");
+	xml = CGuiXmlManager::getInstance().Load("server_item.xml");
 	{
 		guiSPG<CGuiHBox> serverItemHBox = (CGuiHBox *)xml->get("serverItemHBox");
 		guiSPG<CGuiText> btextServer = (CGuiText *)xml->get("btextServer");
@@ -91,10 +91,10 @@ void CGuiTask::init()
 	
 	
 	/*
-	guiSPG<CGuiXml> xml = CGuiXmlManager::instance().Load("menu.xml");
+	guiSPG<CGuiXml> xml = CGuiXmlManager::getInstance().Load("menu.xml");
 	testFrame = (CGuiFrame *)xml->get("menuFrame");
 
-	CGuiObjectManager::instance().objects.push_back(testFrame);
+	CGuiObjectManager::getInstance().objects.push_back(testFrame);
 	*/
 	
 	
@@ -113,13 +113,13 @@ void CGuiTask::init()
 
 void CGuiTask::render()
 {
-	C3DTask::instance().driver().setMatrixMode2D11 ();
-	C3DTask::instance().driver().setMatrixMode2D (CFrustum(0,640,0,480,-1,1,false));
-	C3DTask::instance().driver().setFrustum(CFrustum(0, (float)C3DTask::instance().screenWidth(), 0, (float)C3DTask::instance().screenHeight(), -1, 1, false));
-	CGuiObjectManager::instance().render();
+	C3DTask::getInstance().driver().setMatrixMode2D11 ();
+	C3DTask::getInstance().driver().setMatrixMode2D (CFrustum(0,640,0,480,-1,1,false));
+	C3DTask::getInstance().driver().setFrustum(CFrustum(0, (float)C3DTask::getInstance().screenWidth(), 0, (float)C3DTask::getInstance().screenHeight(), -1, 1, false));
+	CGuiObjectManager::getInstance().render();
 }
 
 void CGuiTask::release()
 {
-	CGuiObjectManager::instance().release();
+	CGuiObjectManager::getInstance().release();
 }

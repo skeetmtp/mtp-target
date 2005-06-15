@@ -69,7 +69,7 @@ private:
 	guiSPG<CGuiObject> _element;
 };
 
-class CGuiBinManager : public CSingleton<CGuiBinManager>
+class CGuiBinManager : public NLMISC::CSingleton<CGuiBinManager>
 {
 public:
 	virtual void init();

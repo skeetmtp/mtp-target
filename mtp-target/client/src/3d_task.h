@@ -25,10 +25,10 @@
 #ifndef MTPT_3D_TASK_H
 #define MTPT_3D_TASK_H
 
-
 //
 // Includes
 //
+#include <nel/misc/singleton.h>
 
 #include <nel/3d/u_scene.h>
 #include <nel/3d/u_instance.h>
@@ -41,7 +41,7 @@
 // Classes
 //
 
-class C3DTask : public CSingleton<C3DTask>, public ITask
+class C3DTask : public NLMISC::CSingleton<C3DTask>, public ITask
 {
 public:
 	

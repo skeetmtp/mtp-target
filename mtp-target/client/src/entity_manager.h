@@ -72,7 +72,7 @@ public:
 	bool isLocal;
 };
 
-class CEntityManager : public CSingleton<CEntityManager>, public ITask
+class CEntityManager : public NLMISC::CSingleton<CEntityManager>, public ITask
 {
 public:
 //	typedef NLMISC::CRWSynchronized <std::vector <CEntity *> >	CEntities;
@@ -81,7 +81,7 @@ public:
 	virtual void init();
 	virtual void update();
 	virtual void render();
-	virtual void release() { 	CEntityManager::uninstance();	}
+	virtual void release() { }
 		
 	void renderNames();
 	virtual std::string name() const { return "CEntityManager"; }
@@ -116,7 +116,7 @@ public:
 	std::list <uint8 > updateListId;
 	CEntities &entities() { return Entities; }
 
-	friend class CSingleton<CEntityManager>;
+	friend class NLMISC::CSingleton<CEntityManager>;
 protected:
 	CEntityManager();
 private:

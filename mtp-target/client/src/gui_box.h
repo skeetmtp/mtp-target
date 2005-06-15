@@ -29,11 +29,13 @@
 //
 // Includes
 //
+
+#include <nel/misc/singleton.h>
+
 #include <nel/3d/u_material.h>
 
 #include "gui_stretched_quad.h"
 #include "gui_container.h"
-
 
 
 //
@@ -108,7 +110,7 @@ private:
 	
 };
 
-class CGuiBoxManager : public CSingleton<CGuiBoxManager>
+class CGuiBoxManager : public NLMISC::CSingleton<CGuiBoxManager>
 {
 public:
 	virtual void init();

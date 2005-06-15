@@ -56,21 +56,21 @@ void CGuiProgressBarManager::init()
 {
 	string res;
 
-	res = CResourceManager::instance().get("progress.tga");
-	_textureProgress = C3DTask::instance().driver().createTextureFile(res);
+	res = CResourceManager::getInstance().get("progress.tga");
+	_textureProgress = C3DTask::getInstance().driver().createTextureFile(res);
 	nlassert(_textureProgress);
 	
-	_materialProgress = C3DTask::instance().createMaterial();
+	_materialProgress = C3DTask::getInstance().createMaterial();
 	_materialProgress.setTexture(_textureProgress);
 	_materialProgress.setBlend(true);
 	_materialProgress.setZFunc(UMaterial::always);
 	_materialProgress.setDoubleSided();
 	
-	res = CResourceManager::instance().get("progress-bar.tga");
-	_textureProgressBar = C3DTask::instance().driver().createTextureFile(res);
+	res = CResourceManager::getInstance().get("progress-bar.tga");
+	_textureProgressBar = C3DTask::getInstance().driver().createTextureFile(res);
 	nlassert(_textureProgress);
 	
-	_materialProgressBar = C3DTask::instance().createMaterial();
+	_materialProgressBar = C3DTask::getInstance().createMaterial();
 	_materialProgressBar.setTexture(_textureProgressBar);
 	_materialProgressBar.setBlend(true);
 	_materialProgressBar.setZFunc(UMaterial::always);
@@ -98,7 +98,7 @@ void CGuiProgressBarManager::release()
 CGuiProgressBar::CGuiProgressBar()
 {
 	_percent = 0.1f;
-	quad.material(CGuiProgressBarManager::instance()._materialProgress);
+	quad.material(CGuiProgressBarManager::getInstance()._materialProgress);
 	CGuiTextPercent *text = new CGuiTextPercent;
 	text->ptrValue(&_percent);
 	element(text);
@@ -124,7 +124,7 @@ void CGuiProgressBar::_render(const CVector &pos,CVector &maxSize)
 	
 	quad.size(expSize);
 	quad.position(globalPos);
-	quad.material(CGuiProgressBarManager::instance()._materialProgress);
+	quad.material(CGuiProgressBarManager::getInstance()._materialProgress);
 	quad.render();
 
 	if(_percent>0.0f)
@@ -133,7 +133,7 @@ void CGuiProgressBar::_render(const CVector &pos,CVector &maxSize)
 		float barHeight = expSize.y-4;
 		quad.size(CVector(barWidth,barHeight,0));
 		quad.position(globalPos+CVector(2,2,0));
-		quad.material(CGuiProgressBarManager::instance()._materialProgressBar);
+		quad.material(CGuiProgressBarManager::getInstance()._materialProgressBar);
 		quad.render();
 	}
 
@@ -164,7 +164,7 @@ void CGuiProgressBar::ptrValue(float *ptrValue)
 
 void CGuiProgressBar::XmlRegister()
 {
-	CGuiObjectManager::instance().registerClass("CGuiProgressBar",CGuiProgressBar::Create);
+	CGuiObjectManager::getInstance().registerClass("CGuiProgressBar",CGuiProgressBar::Create);
 }
 
 CGuiObject *CGuiProgressBar::Create()

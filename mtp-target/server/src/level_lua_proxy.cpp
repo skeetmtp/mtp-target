@@ -55,7 +55,7 @@ Lunar<CLevelProxy>::RegType CLevelProxy::methods[] =
 bool CLevelProxy::call(string funcName)
 { 
 	int res;
-	lua_State *L = CLuaEngine::instance().session();
+	lua_State *L = CLuaEngine::getInstance().session();
 	if(L==0)
 		return false;
 	int mp = Lunar<CLevelProxy>::push(L, this);

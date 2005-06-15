@@ -123,8 +123,8 @@ void CEntityManager::remove(uint8 eid)
 	else
 	{
 		nlinfo("Removing client eid %hu name '%s'", (uint16)c->id(), c->name().c_str());
-		CLuaEngine::instance().entityLeaveEvent(c);
-		CSessionManager::instance().editMode(0);
+		CLuaEngine::getInstance().entityLeaveEvent(c);
+		CSessionManager::getInstance().editMode(0);
 
 		if(c->type() == CEntity::Client)
 		{
@@ -136,7 +136,7 @@ void CEntityManager::remove(uint8 eid)
 			FILE *fp = fopen("connection.stat", "ab");
 			if(fp)
 			{
-				fprintf(fp, "%u %s - '%s' '%s'\n", ltime, d, c->name().c_str(),CLevelManager::instance().haveCurrentLevel()?CLevelManager::instance().currentLevel().name().c_str():"");
+				fprintf(fp, "%u %s - '%s' '%s'\n", ltime, d, c->name().c_str(),CLevelManager::getInstance().haveCurrentLevel()?CLevelManager::getInstance().currentLevel().name().c_str():"");
 				fclose(fp);
 			}
 			fp = fopen("clients_count.stat", "ab");
@@ -153,11 +153,11 @@ void CEntityManager::remove(uint8 eid)
 		{
 			CNetMessage msgout(CNetMessage::Logout);
 			msgout.serial(eid);
-			CNetwork::instance().send(msgout);		
+			CNetwork::getInstance().send(msgout);		
 			
 			if(c->type() == CEntity::Client)
 			{
-				CNetwork::instance().sendChat(c->name()+" leaves !");
+				CNetwork::getInstance().sendChat(c->name()+" leaves !");
 			}
 		}
 
@@ -175,7 +175,7 @@ void CEntityManager::reset()
 			if((*it)->type() == CEntity::Client)
 			{
 				CClient *c = (CClient *)(*it);
-				string name = toString("ping_state_%"NL_I64"u_%s_%s.csv", current, CLevelManager::instance().levelFilename().c_str(), c->name().c_str());
+				string name = toString("ping_state_%"NL_I64"u_%s_%s.csv", current, CLevelManager::getInstance().levelFilename().c_str(), c->name().c_str());
 				FILE *fp = fopen(name.c_str(), "wb");
 				if(fp)
 				{
@@ -194,7 +194,7 @@ void CEntityManager::reset()
 
 void CEntityManager::release()
 {
-	CNetwork::instance().release();
+	CNetwork::getInstance().release();
 }
 
 uint8 CEntityManager::findNewId()
@@ -293,7 +293,7 @@ void CEntityManager::login(CEntity *e)
 		msgout.serial(oc);
 		msgout.serial(e->Trace);
 		msgout.serial(e->MeshName);
-		CNetwork::instance().sendAllExcept(nid, msgout);
+		CNetwork::getInstance().sendAllExcept(nid, msgout);
 
 		if(e->type() == CEntity::Client)
 		{
@@ -301,7 +301,7 @@ void CEntityManager::login(CEntity *e)
 			CNetMessage msgout2(CNetMessage::Chat);
 			string str = n + " comes in !";
 			msgout2.serial(str);
-			CNetwork::instance().sendAllExcept(nid, msgout2);
+			CNetwork::getInstance().sendAllExcept(nid, msgout2);
 		}
 	}
 
@@ -325,21 +325,21 @@ void CEntityManager::login(CEntity *e)
 		// version 5 client can't handle startsession on login 
 		if(e->networkVersion>=6) //TODO remove this when server version will be >= 6 
 		{
-			if(CLevelManager::instance().haveCurrentLevel())
-				CurrentLevel = CLevelManager::instance().currentLevel().fileName();
+			if(CLevelManager::getInstance().haveCurrentLevel())
+				CurrentLevel = CLevelManager::getInstance().currentLevel().fileName();
 		}
 		
 		msgout.serial(CurrentLevel);
 		float timeBeforeTimeout;
-		if (CSessionManager::instance().startTime() == 0)
+		if (CSessionManager::getInstance().startTime() == 0)
 		{
 			timeBeforeTimeout = 0;
 		}
 		else
 		{
 			TTime currentTime = CTime::getLocalTime();
-			timeBeforeTimeout = (float)(CSessionManager::instance().startTime()+(TTime)CLevelManager::instance().timeTimeout()-currentTime);
-			//timeBeforeTimeout = (float)((TTime)CLevelManager::instance().timeTimeout() - CTime::getLocalTime()-CSessionManager::instance().startTime())/1000.0f;
+			timeBeforeTimeout = (float)(CSessionManager::getInstance().startTime()+(TTime)CLevelManager::getInstance().timeTimeout()-currentTime);
+			//timeBeforeTimeout = (float)((TTime)CLevelManager::getInstance().timeTimeout() - CTime::getLocalTime()-CSessionManager::getInstance().startTime())/1000.0f;
 		}
 		msgout.serial(timeBeforeTimeout);
 
@@ -347,7 +347,7 @@ void CEntityManager::login(CEntity *e)
 		msgout.serial(oc);
 		msgout.serial(e->Trace);
 		msgout.serial(e->MeshName);
-		CNetwork::instance().send(nid, msgout);
+		CNetwork::getInstance().send(nid, msgout);
 		
 		// send the welcome message to the new client
 		CNetMessage msgout2(CNetMessage::Chat);
@@ -357,7 +357,7 @@ void CEntityManager::login(CEntity *e)
 			string str = welcome.asString(i);
 			msgout2.serial(str);
 		}
-		CNetwork::instance().send(nid, msgout2);
+		CNetwork::getInstance().send(nid, msgout2);
 		
 		// send all entities informations to the new client
 		{
@@ -383,7 +383,7 @@ void CEntityManager::login(CEntity *e)
 					msgout.serial(oc);
 					msgout.serial((*it)->Trace);
 					msgout.serial((*it)->MeshName);
-					CNetwork::instance().send(nid, msgout);
+					CNetwork::getInstance().send(nid, msgout);
 				}
 			}
 		}
@@ -469,7 +469,7 @@ uint CEntityManager::getTeam(uint8 eid,uint teamCount)
 				{
 					for(uint j=0;j<teamCount;j++)
 					{
-						if(teamPack[i].size()<(CLevelManager::instance().currentLevel().getStartPointCount()/teamCount))
+						if(teamPack[i].size()<(CLevelManager::getInstance().currentLevel().getStartPointCount()/teamCount))
 						{
 							teamPack[i].push_back(e->name());
 							break;
@@ -574,7 +574,7 @@ void CEntityManager::displayText(float x,float y, float scale, CRGBA col, double
 	msgout.serial(message);
 	msgout.serial(col);
 	msgout.serial(duration);
-	CNetwork::instance().send(msgout);
+	CNetwork::getInstance().send(msgout);
 	nlinfo("display message : %s to all",message.c_str());
 }
 
@@ -596,7 +596,7 @@ void CEntityManager::displayText(uint8 eid, float x,float y, float scale, CRGBA 
 		msgout.serial(message);
 		msgout.serial(col);
 		msgout.serial(duration);
-		CNetwork::instance().send(e->id(),msgout);
+		CNetwork::getInstance().send(e->id(),msgout);
 		nlinfo("display message : %s to %s",message.c_str(),e->name().c_str());
 	}
 }
@@ -727,7 +727,7 @@ void CEntityManager::openClose(uint8 eid)
 		// send the new state to all entities
 		CNetMessage msgout(CNetMessage::OpenClose);
 		msgout.serial(eid);
-		CNetwork::instance().send(msgout);
+		CNetwork::getInstance().send(msgout);
 	}
 }
  
@@ -847,8 +847,8 @@ string CEntityManager::check(const string &login, const string &password, bool d
 				{
 					return toString("Your score (%d) is now too high for this server (limited to %d). Try a more difficult server", score, maxScore);
 				}
-				CNetwork::instance().forwardToPublicChat(login+" comes in! ("+toString(humanClientCount())+" players)");
-				//CNetwork::instance().sendToPublicChat("set topic " + toString(humanClientCount()) + " players");
+				CNetwork::getInstance().forwardToPublicChat(login+" comes in! ("+toString(humanClientCount())+" players)");
+				//CNetwork::getInstance().sendToPublicChat("set topic " + toString(humanClientCount()) + " players");
 				return "";
 			}
 			else
@@ -871,8 +871,8 @@ string CEntityManager::check(const string &login, const string &password, bool d
 	accounts.setAsString("0", accounts.size());
 	IService::getInstance()->ConfigFile.save();
 
-	CNetwork::instance().forwardToPublicChat(login+" comes in! ("+toString(humanClientCount())+" players)");
-	//CNetwork::instance().sendToPublicChat("set topic " + toString(humanClientCount()) + " players");
+	CNetwork::getInstance().forwardToPublicChat(login+" comes in! ("+toString(humanClientCount())+" players)");
+	//CNetwork::getInstance().sendToPublicChat("set topic " + toString(humanClientCount()) + " players");
 	return "";
 }
 
@@ -882,9 +882,9 @@ CEntity *getByString(std::string ident)
 
 	uint8 val = atoi(ident.c_str());
 	if(val>0)
-		res = CEntityManager::instance().getById(val);
+		res = CEntityManager::getInstance().getById(val);
 	else
-		res = CEntityManager::instance().getByName(ident);
+		res = CEntityManager::getInstance().getByName(ident);
 
 	return res;
 }
@@ -896,7 +896,7 @@ CEntity *getByString(std::string ident)
 
 NLMISC_COMMAND(addbot, "add a bot", "[<name>]")
 {
-	CEntityManager::instance().addBot((args.size() > 0) ? args[0] : "bot", false);
+	CEntityManager::getInstance().addBot((args.size() > 0) ? args[0] : "bot", false);
 	return true;
 }
  
@@ -904,8 +904,8 @@ NLMISC_COMMAND(displayentities, "display info about all entities", "")
 {
 	if(args.size() != 0) return false;
 	
-	log.displayNL("Displaying %d entities:", CEntityManager::instance().entities().size());
-	for(CEntityManager::EntityConstIt it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
+	log.displayNL("Displaying %d entities:", CEntityManager::getInstance().entities().size());
+	for(CEntityManager::EntityConstIt it = CEntityManager::getInstance().entities().begin(); it != CEntityManager::getInstance().entities().end(); it++)
 	{
 		(*it)->display(log);
 	}
@@ -917,17 +917,17 @@ MTPT_COMMAND(playerlist, "switch user chat on/off", "[<eid>|<name>]")
 	if(!entity)
 		return true;
 	string res = "";
-	for(CEntityManager::EntityConstIt it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
+	for(CEntityManager::EntityConstIt it = CEntityManager::getInstance().entities().begin(); it != CEntityManager::getInstance().entities().end(); it++)
 	{
 		res += toString("%d#%s ",(*it)->id(),(*it)->name().c_str());
 		if(res.size()>100)
 		{
-			CNetwork::instance().sendChat(entity->id(),res);
+			CNetwork::getInstance().sendChat(entity->id(),res);
 			res = "";
 		}
 	}
 	if(res.size())
-		CNetwork::instance().sendChat(entity->id(),res);
+		CNetwork::getInstance().sendChat(entity->id(),res);
 	
 	return true;
 }
@@ -956,13 +956,13 @@ MTPT_COMMAND(kick, "kick a user from the server", "[<eid>|<name>]")
 		string reason = toString("You have been kicked !");
 		CNetMessage msgout(CNetMessage::Error);
 		msgout.serial(reason);
-		CNetwork::instance().send(eid, msgout);
+		CNetwork::getInstance().send(eid, msgout);
 	}
 	
 	if(c)
 	{
 		CMessage msgout("KC");
-		const CInetAddress inetAddr = CNetwork::instance().hostAddress(c->sock());
+		const CInetAddress inetAddr = CNetwork::getInstance().hostAddress(c->sock());
 		string ip = inetAddr.ipAddress();
 		string userName = c->name();
 		string kickerName = "server";
@@ -978,7 +978,7 @@ MTPT_COMMAND(kick, "kick a user from the server", "[<eid>|<name>]")
 		CUnifiedNetwork::getInstance()->send("LS", msgout);
 	}
 
-	CEntityManager::instance().remove(eid);
+	CEntityManager::getInstance().remove(eid);
 	return true;
 }
 
@@ -995,9 +995,9 @@ MTPT_COMMAND(mute, "switch user chat on/off", "[<eid>|<name>]")
 
 	e->canSpeak(!e->canSpeak());
 	if(entity)
-		CNetwork::instance().sendChat(entity->id(),toString("%s chat is now %s",e->name().c_str(),e->canSpeak()?"on":"off"));
+		CNetwork::getInstance().sendChat(entity->id(),toString("%s chat is now %s",e->name().c_str(),e->canSpeak()?"on":"off"));
 	else
-		CNetwork::instance().tellToPublicChat(toString("%s chat is now %s",e->name().c_str(),e->canSpeak()?"on":"off"));
+		CNetwork::getInstance().tellToPublicChat(toString("%s chat is now %s",e->name().c_str(),e->canSpeak()?"on":"off"));
 	
 	return true;
 }
@@ -1019,7 +1019,7 @@ MTPT_COMMAND(ban, "ban a user from the server", "[<eid>|<name>] [duration]")
 	{
 		CMessage msgout("BC");
 
-		const CInetAddress inetAddr = CNetwork::instance().hostAddress(c->sock());
+		const CInetAddress inetAddr = CNetwork::getInstance().hostAddress(c->sock());
 		string ip = inetAddr.ipAddress();
 		string userName = c->name();
 		string kickerName = "server";
@@ -1040,11 +1040,11 @@ MTPT_COMMAND(ban, "ban a user from the server", "[<eid>|<name>] [duration]")
 		string reason = "You have been banned";
 		CNetMessage msgout2(CNetMessage::Error);
 		msgout2.serial(reason);
-		CNetwork::instance().send(c->id(), msgout2);
+		CNetwork::getInstance().send(c->id(), msgout2);
 	}
 
 
-	CEntityManager::instance().remove(e->id());
+	CEntityManager::getInstance().remove(e->id());
 	
 	//TODO
 	
@@ -1069,7 +1069,7 @@ MTPT_COMMAND(report, "report a problematic user", "[<eid>|<name>] [comment]")
 
 	CMessage msgout("RC");
 
-	const CInetAddress inetAddr = CNetwork::instance().hostAddress(c->sock());
+	const CInetAddress inetAddr = CNetwork::getInstance().hostAddress(c->sock());
 	string ip = inetAddr.ipAddress();
 	string userName = c->name();
 	string reporterName = "server";
@@ -1101,7 +1101,7 @@ NLMISC_DYNVARIABLE(uint32, NbEntities, "Number of entities (player+bot)")
 {
 	if(!get) return;
 	
-	*pointer = CEntityManager::instance().entities().size();
+	*pointer = CEntityManager::getInstance().entities().size();
 }
 
 NLMISC_DYNVARIABLE(uint32, NbClients, "Number of players")
@@ -1109,7 +1109,7 @@ NLMISC_DYNVARIABLE(uint32, NbClients, "Number of players")
 	if(!get) return;
 
 	uint32 nb = 0;
-	for(CEntityManager::EntityConstIt it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
+	for(CEntityManager::EntityConstIt it = CEntityManager::getInstance().entities().begin(); it != CEntityManager::getInstance().entities().end(); it++)
 	{
 		if((*it)->type() == CEntity::Client)
 		{
@@ -1129,7 +1129,7 @@ NLMISC_DYNVARIABLE(string, Watch1, "")
 	}
 
 	{
-		for(CEntityManager::EntityConstIt it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
+		for(CEntityManager::EntityConstIt it = CEntityManager::getInstance().entities().begin(); it != CEntityManager::getInstance().entities().end(); it++)
 		{
 			if((*it)->id() == WatchingId)
 			{
@@ -1162,7 +1162,7 @@ NLMISC_DYNVARIABLE(string, Watch2, "")
 	}
 	
 	{
-		for(CEntityManager::EntityConstIt it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
+		for(CEntityManager::EntityConstIt it = CEntityManager::getInstance().entities().begin(); it != CEntityManager::getInstance().entities().end(); it++)
 		{
 			if((*it)->id() == WatchingId)
 			{
@@ -1197,7 +1197,7 @@ NLMISC_DYNVARIABLE(string, Watch3, "")
 	}
 	
 	{
-		for(CEntityManager::EntityConstIt it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
+		for(CEntityManager::EntityConstIt it = CEntityManager::getInstance().entities().begin(); it != CEntityManager::getInstance().entities().end(); it++)
 		{
 			if((*it)->id() == WatchingId)
 			{
@@ -1222,7 +1222,7 @@ NLMISC_DYNVARIABLE(string, Watch4, "")
 	}
 	
 	{
-		for(CEntityManager::EntityConstIt it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
+		for(CEntityManager::EntityConstIt it = CEntityManager::getInstance().entities().begin(); it != CEntityManager::getInstance().entities().end(); it++)
 		{
 			if((*it)->id() == WatchingId)
 			{
@@ -1249,7 +1249,7 @@ NLMISC_DYNVARIABLE(string, Watch5, "")
 	}
 	
 	{
-		for(CEntityManager::EntityConstIt it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
+		for(CEntityManager::EntityConstIt it = CEntityManager::getInstance().entities().begin(); it != CEntityManager::getInstance().entities().end(); it++)
 		{
 			if((*it)->id() == WatchingId)
 			{
@@ -1366,14 +1366,14 @@ void CEntityManager::checkAfkClient()
 		string reason = "Away from keyboard";
 		CNetMessage msgout(CNetMessage::Error);
 		msgout.serial(reason);
-		CNetwork::instance().send(IdToRemove[i], msgout);
+		CNetwork::getInstance().send(IdToRemove[i], msgout);
 		
-		CEntityManager::instance().remove(IdToRemove[i]);
+		CEntityManager::getInstance().remove(IdToRemove[i]);
 	}
 	IdToRemove.clear();
 	for(uint i = 0; i < msgs.size(); i++)
 	{
-		CNetwork::instance().sendChat(msgs[i]);
+		CNetwork::getInstance().sendChat(msgs[i]);
 	}
 	msgs.clear();
 	
@@ -1412,14 +1412,14 @@ bool CEntityManager::everyBodyReady()
 		string reason = "waiting for ready has timed out";
 		CNetMessage msgout(CNetMessage::Error);
 		msgout.serial(reason);
-		CNetwork::instance().send(IdToRemove[i], msgout);
+		CNetwork::getInstance().send(IdToRemove[i], msgout);
 
-		CEntityManager::instance().remove(IdToRemove[i]);
+		CEntityManager::getInstance().remove(IdToRemove[i]);
 	}
 	IdToRemove.clear();
 	for(uint i = 0; i < msgs.size(); i++)
 	{
-		CNetwork::instance().sendChat(msgs[i]);
+		CNetwork::getInstance().sendChat(msgs[i]);
 	}
 	msgs.clear();
 	

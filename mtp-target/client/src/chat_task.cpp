@@ -67,8 +67,8 @@ static std::list<std::string>::reverse_iterator CurrentChatLine = ChatText.rbegi
 	
 void CChatTask::init()
 {
-	chatLineCount = CConfigFileTask::instance().configFile().getVar("ChatLineCount").asInt();
-	logChat = CConfigFileTask::instance().configFile().getVar("LogChat").asInt()!=0;
+	chatLineCount = CConfigFileTask::getInstance().configFile().getVar("ChatLineCount").asInt();
+	logChat = CConfigFileTask::getInstance().configFile().getVar("LogChat").asInt()!=0;
 	fp = NULL;
 	if(logChat)
 	{
@@ -84,7 +84,7 @@ void CChatTask::init()
 void CChatTask::update()
 {
 	// Get user input
-	string res = C3DTask::instance().kbGetString();
+	string res = C3DTask::getInstance().kbGetString();
 	for (const char *src = res.c_str(); *src != '\0';src++)
 	{
 		if (*src == 27)
@@ -111,8 +111,8 @@ void CChatTask::update()
 						{
 							string comment = ChatInput.substr(8);
 							fprintf(SessionFile,"0 CM %s\n",comment.c_str());
-							addLine(">> you marked this replay(" + CMtpTarget::instance().sessionFileName()+") : " + comment);
-							CMtpTarget::instance().moveReplay(true);
+							addLine(">> you marked this replay(" + CMtpTarget::getInstance().sessionFileName()+") : " + comment);
+							CMtpTarget::getInstance().moveReplay(true);
 						}
 						else
 						{
@@ -121,15 +121,15 @@ void CChatTask::update()
 					}
 					else if(ChatInput.substr(0,5)=="/help")
 					{
-						CNetworkTask::instance().command(ChatInput.substr(1));
+						CNetworkTask::getInstance().command(ChatInput.substr(1));
 						addLine("/help : this help");
 						addLine("/replay [comment] : mark a replay with the comment");
 					}
 					else
-						CNetworkTask::instance().command(ChatInput.substr(1));
+						CNetworkTask::getInstance().command(ChatInput.substr(1));
 				}
 				else
-					CNetworkTask::instance().chat(ChatInput);
+					CNetworkTask::getInstance().chat(ChatInput);
 			}
 			ChatInput = "";
 			continue;
@@ -144,7 +144,7 @@ void CChatTask::update()
 			ChatInput += *src;
 		}
 	}
-	if (C3DTask::instance().kbPressed(KeyPRIOR))
+	if (C3DTask::getInstance().kbPressed(KeyPRIOR))
 	{
 		std::list<std::string>::reverse_iterator it = ChatText.rend();
 		sint32 i;
@@ -159,7 +159,7 @@ void CChatTask::update()
 			// nothing
 		}
 	}
-	if (C3DTask::instance().kbPressed(KeyNEXT))
+	if (C3DTask::getInstance().kbPressed(KeyNEXT))
 	{
 		// go back down
 		for (sint32 i = 0; i < chatLineCount && CurrentChatLine != ChatText.rbegin(); i++, --CurrentChatLine)
@@ -173,19 +173,19 @@ void CChatTask::render()
 	uint cl = chatLineCount;
 //ace todo	if(large) cl *= 4;
 	
-	C3DTask::instance().driver().setFrustum(CFrustum(0, (float)C3DTask::instance().screenWidth(), 0, (float)C3DTask::instance().screenHeight(), -1, 1, false));
-	C3DTask::instance().driver().clearZBuffer();
+	C3DTask::getInstance().driver().setFrustum(CFrustum(0, (float)C3DTask::getInstance().screenWidth(), 0, (float)C3DTask::getInstance().screenHeight(), -1, 1, false));
+	C3DTask::getInstance().driver().clearZBuffer();
 	
 	// black background
-	C3DTask::instance().driver().drawQuad(0.0f, (float)C3DTask::instance().screenHeight() - 16*(cl+1)-8, C3DTask::instance().screenWidth(), C3DTask::instance().screenHeight(), CRGBA (0, 0, 0, 64));
+	C3DTask::getInstance().driver().drawQuad(0.0f, (float)C3DTask::getInstance().screenHeight() - 16*(cl+1)-8, C3DTask::getInstance().screenWidth(), C3DTask::getInstance().screenHeight(), CRGBA (0, 0, 0, 64));
 	
 	// text
 	std::list<std::string>::reverse_iterator it = CurrentChatLine;
 	for (sint32 i = cl - 1; i >= 0 && it != ChatText.rend(); i--, ++it)
 	{
-		CFontManager::instance().littlePrintf(0.0f, (float)i, "%s", (*it).c_str());
+		CFontManager::getInstance().littlePrintf(0.0f, (float)i, "%s", (*it).c_str());
 	}
-	CFontManager::instance().littlePrintf(0.0f, (float)cl, "> %s", ChatInput.c_str());
+	CFontManager::getInstance().littlePrintf(0.0f, (float)cl, "> %s", ChatInput.c_str());
 }
 
 void CChatTask::release()

@@ -52,7 +52,7 @@ public:
 	virtual void init(CGuiXml *xml,xmlNodePtr node);
 };
 
-class CGuiSpacerManager : public CSingleton<CGuiSpacerManager>
+class CGuiSpacerManager : public NLMISC::CSingleton<CGuiSpacerManager>
 {
 public:
 	virtual void init();

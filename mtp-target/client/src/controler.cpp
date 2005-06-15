@@ -86,7 +86,7 @@ uint8 CControler::getControledEntity() const
 
 void CControler::swapOpenClose()
 {
-	CVector dir = CEntityManager::instance()[EId].interpolator().currentDirection();
+	CVector dir = CEntityManager::getInstance()[EId].interpolator().currentDirection();
 	dir.z = 0;
 	dir.normalize();
 	
@@ -118,7 +118,7 @@ void CControler::update()
 	CVector	deltaDirection(CVector::Null);
 	float	deltaPique = 0.0f;
 	float	deltaRot = 0.0f;
-	float	speed = CEntityManager::instance()[EId].interpolator().currentSpeed().norm();
+	float	speed = CEntityManager::getInstance()[EId].interpolator().currentSpeed().norm();
 	float	speedRatio = 2.0f;
 	{
 		CMatrix *mat = Camera.getMatrixNoZoom();
@@ -132,46 +132,46 @@ void CControler::update()
 		if(right.norm()>1.0f)
 			nlinfo(">>right = %f",right.norm());
 		*/
-		if (!FollowEntity && !CEditorTask::instance().enable())
+		if (!FollowEntity && !CEditorTask::getInstance().enable())
 		{			
 			CVector dv(0,0,0);
-			if (C3DTask::instance().kbDown(KeyUP))
+			if (C3DTask::getInstance().kbDown(KeyUP))
 			{
 				dv.y += 1.0f;
 			}
-			if (C3DTask::instance().kbDown(KeyDOWN))
+			if (C3DTask::getInstance().kbDown(KeyDOWN))
 			{
 				dv.y -= 1.0f;
 			}
-			if (C3DTask::instance().kbDown(KeyLEFT))
+			if (C3DTask::getInstance().kbDown(KeyLEFT))
 			{
 				dv.x -= 1.0f;
 			}
-			if (C3DTask::instance().kbDown(KeyRIGHT))
+			if (C3DTask::getInstance().kbDown(KeyRIGHT))
 			{
 				dv.x += 1.0f;
 			}
-			if (C3DTask::instance().kbDown(KeyPRIOR))
+			if (C3DTask::getInstance().kbDown(KeyPRIOR))
 			{
 				dv.z += 1.0f;
 			}
-			if (C3DTask::instance().kbDown(KeyNEXT))
+			if (C3DTask::getInstance().kbDown(KeyNEXT))
 			{
 				dv.z -= 1.0f;
 			}
 
 			dv /= 4.0f;
 
-			if (C3DTask::instance().kbDown(KeySHIFT))
+			if (C3DTask::getInstance().kbDown(KeySHIFT))
 				dv *= 13.0f;
 
-			if (C3DTask::instance().kbDown(KeyCONTROL))
+			if (C3DTask::getInstance().kbDown(KeyCONTROL))
 				dv *= 40.0f;
 			
-			dv *= (float)CTimeTask::instance().deltaTime();
+			dv *= (float)CTimeTask::getInstance().deltaTime();
 
-			float mouseX = C3DTask::instance().mouseListener().MouseX;
-			float mouseY = -C3DTask::instance().mouseListener().MouseY;
+			float mouseX = C3DTask::getInstance().mouseListener().MouseX;
+			float mouseY = -C3DTask::getInstance().mouseListener().MouseY;
 			
 			CMatrix m2;
 			m2.identity();
@@ -187,84 +187,84 @@ void CControler::update()
 			ControlerCamMatrix.rotateZ(mouseX);
 			ControlerCamMatrix.rotateX(mouseY);
 			//nlinfo("set camera matrix q = %f %f %f : %f",ControlerFreeLookRot.getAxis().x,ControlerFreeLookRot.getAxis().y,ControlerFreeLookRot.getAxis().z,ControlerFreeLookRot.getAngle());
-			C3DTask::instance().scene().getCam().setMatrix(ControlerCamMatrix);
+			C3DTask::getInstance().scene().getCam().setMatrix(ControlerCamMatrix);
 		}
 		else
 		{
-			if(!CEntityManager::instance()[EId].openClose())
+			if(!CEntityManager::getInstance()[EId].openClose())
 			{
 				/*
-				if (C3DTask::instance().kbDown(mtLEFT))
+				if (C3DTask::getInstance().kbDown(mtLEFT))
 					deltaRot += ROT_SPEED_CLOSE;
-				if (C3DTask::instance().kbDown(mtRIGHT))
+				if (C3DTask::getInstance().kbDown(mtRIGHT))
 					deltaRot -= ROT_SPEED_CLOSE;
 				*/
 				if(speed>1.0f)
 				{
-					if (C3DTask::instance().kbDown(KeyLEFT))
+					if (C3DTask::getInstance().kbDown(KeyLEFT))
 						deltaAccel -= right * speed * speedRatio;
-					if (C3DTask::instance().kbDown(KeyRIGHT))
+					if (C3DTask::getInstance().kbDown(KeyRIGHT))
 						deltaAccel += right * speed * speedRatio;	
 				}
 				else
 				{
-					if (C3DTask::instance().kbDown(KeyLEFT))
+					if (C3DTask::getInstance().kbDown(KeyLEFT))
 						deltaAccel -= right ;
-					if (C3DTask::instance().kbDown(KeyRIGHT))
+					if (C3DTask::getInstance().kbDown(KeyRIGHT))
 						deltaAccel += right ;					
 				}
 
-				if (C3DTask::instance().kbDown(KeyUP))
+				if (C3DTask::getInstance().kbDown(KeyUP))
 					deltaAccel += lookAt;
-				if (C3DTask::instance().kbDown(KeyDOWN))
+				if (C3DTask::getInstance().kbDown(KeyDOWN))
 					deltaAccel -= lookAt;
 			}
 			else
 			{
-				if (C3DTask::instance().kbDown(KeyUP))
+				if (C3DTask::getInstance().kbDown(KeyUP))
 					deltaPique -= PIQUE_SPEED;
-				if (C3DTask::instance().kbDown(KeyDOWN))
+				if (C3DTask::getInstance().kbDown(KeyDOWN))
 					deltaPique += PIQUE_SPEED;
 
-				if (C3DTask::instance().kbDown(KeyLEFT))
+				if (C3DTask::getInstance().kbDown(KeyLEFT))
 					deltaRot += ROT_SPEED_OPEN;
-				if (C3DTask::instance().kbDown(KeyRIGHT))
+				if (C3DTask::getInstance().kbDown(KeyRIGHT))
 					deltaRot -= ROT_SPEED_OPEN;
 			}
 		}
 		
-		if (C3DTask::instance().kbPressed(KeyESCAPE))
-			CTaskManager::instance().exit();
+		if (C3DTask::getInstance().kbPressed(KeyESCAPE))
+			CTaskManager::getInstance().exit();
 			//exit(0);
 
-		if (C3DTask::instance().kbPressed(KeyF1))
+		if (C3DTask::getInstance().kbPressed(KeyF1))
 		{
-			if (C3DTask::instance().kbDown(KeySHIFT))
+			if (C3DTask::getInstance().kbDown(KeySHIFT))
 			{
-//				mtpTarget::instance().World.switchPhysic();
-				if(CLevelManager::instance().levelPresent())
-					CLevelManager::instance().currentLevel().switchStartPositions();
+//				mtpTarget::getInstance().World.switchPhysic();
+				if(CLevelManager::getInstance().levelPresent())
+					CLevelManager::getInstance().currentLevel().switchStartPositions();
 			}
 			else
 			{
-//				mtpTarget::instance().World.switchLevel();
-				if(CLevelManager::instance().levelPresent())
-					CLevelManager::instance().currentLevel().switchLevel();
+//				mtpTarget::getInstance().World.switchLevel();
+				if(CLevelManager::getInstance().levelPresent())
+					CLevelManager::getInstance().currentLevel().switchLevel();
 			}
 		}
 
-		if (C3DTask::instance().kbPressed(KeyF3))
+		if (C3DTask::getInstance().kbPressed(KeyF3))
 		{
-			UDriver::TPolygonMode p = C3DTask::instance().driver().getPolygonMode ();
+			UDriver::TPolygonMode p = C3DTask::getInstance().driver().getPolygonMode ();
 			p = UDriver::TPolygonMode(((int)p+1)%3);
-			C3DTask::instance().driver().setPolygonMode (p);
+			C3DTask::getInstance().driver().setPolygonMode (p);
 		}
 
-		if (C3DTask::instance().kbDown(KeyCONTROL) && C3DTask::instance().kbPressed(KeyF4))
+		if (C3DTask::getInstance().kbDown(KeyCONTROL) && C3DTask::getInstance().kbPressed(KeyF4))
 		{
-			if (C3DTask::instance().kbDown(KeySHIFT))
+			if (C3DTask::getInstance().kbDown(KeySHIFT))
 			{
-//				mtpTarget::instance().World.switchStartPosition();
+//				mtpTarget::getInstance().World.switchStartPosition();
 			}
 			else
 			{
@@ -272,95 +272,95 @@ void CControler::update()
 			}
 		}
 
-		if (C3DTask::instance().kbDown(KeyCONTROL))
+		if (C3DTask::getInstance().kbDown(KeyCONTROL))
 		{
-			if (C3DTask::instance().kbPressed(KeyF5))
-				CNetworkTask::instance().command("forceEnd");
+			if (C3DTask::getInstance().kbPressed(KeyF5))
+				CNetworkTask::getInstance().command("forceEnd");
 			//mtNetSendCommand("forceEnd");
 			
-			if (C3DTask::instance().kbPressed(KeyF6))
-				CNetworkTask::instance().command("reset");
+			if (C3DTask::getInstance().kbPressed(KeyF6))
+				CNetworkTask::getInstance().command("reset");
 			//mtNetSendCommand("reset");
 		}
 		else
 		{
-			if (C3DTask::instance().kbPressed(KeyF5))
-				CNetworkTask::instance().command("addBot");
+			if (C3DTask::getInstance().kbPressed(KeyF5))
+				CNetworkTask::getInstance().command("addBot");
 			//mtNetSendCommand("forceEnd");
 			
-			if (C3DTask::instance().kbPressed(KeyF6))
-				CNetworkTask::instance().command("kick bot");
+			if (C3DTask::getInstance().kbPressed(KeyF6))
+				CNetworkTask::getInstance().command("kick bot");
 			//mtNetSendCommand("reset");
 		}
 		
-		if (C3DTask::instance().kbPressed(KeyPAUSE) && !ReplayFile.empty())
+		if (C3DTask::getInstance().kbPressed(KeyPAUSE) && !ReplayFile.empty())
 		{
-			CTimeTask::instance().reset();
+			CTimeTask::getInstance().reset();
 		}
-		if (C3DTask::instance().kbPressed(KeyF7))
+		if (C3DTask::getInstance().kbPressed(KeyF7))
 		{
 			FollowEntity = !FollowEntity;
-			CMtpTarget::instance().controler().Camera.getMatrix()->getPos(ControlerFreeLookPos);
+			CMtpTarget::getInstance().controler().Camera.getMatrix()->getPos(ControlerFreeLookPos);
 		}
 
-		if (C3DTask::instance().kbPressed(KeyF8))
+		if (C3DTask::getInstance().kbPressed(KeyF8))
 		{
 			// F8 -> release/capture the mouse cursor
 			if (!CaptureState)
 			{
-				C3DTask::instance().driver().setCapture(false);
-				C3DTask::instance().driver().showCursor(true);
-				C3DTask::instance().mouseListener().removeFromServer(C3DTask::instance().driver().EventServer);
+				C3DTask::getInstance().driver().setCapture(false);
+				C3DTask::getInstance().driver().showCursor(true);
+				C3DTask::getInstance().mouseListener().removeFromServer(C3DTask::getInstance().driver().EventServer);
 			}
 			else
 			{
-				C3DTask::instance().driver().setCapture(true);
-				C3DTask::instance().driver().showCursor(false);
-				C3DTask::instance().mouseListener().addToServer(C3DTask::instance().driver().EventServer);
+				C3DTask::getInstance().driver().setCapture(true);
+				C3DTask::getInstance().driver().showCursor(false);
+				C3DTask::getInstance().mouseListener().addToServer(C3DTask::getInstance().driver().EventServer);
 			}
 			CaptureState = !CaptureState;
 		}
 
-		if (C3DTask::instance().kbPressed(KeyF9))
+		if (C3DTask::getInstance().kbPressed(KeyF9))
 		{
 /*			ViewedEId++;
-			if(ViewedEId==mtpTarget::instance().World.count())
+			if(ViewedEId==mtpTarget::getInstance().World.count())
 				ViewedEId=0;
-			CEntity *entity= mtpTarget::instance().World.get(ViewedEId);
+			CEntity *entity= mtpTarget::getInstance().World.get(ViewedEId);
 			camera.setFollowedEntity(entity);
 */
-			ViewedEId = CEntityManager::instance().findPreviousEId(ViewedEId);
+			ViewedEId = CEntityManager::getInstance().findPreviousEId(ViewedEId);
 			Camera.setFollowedEntity(ViewedEId);
 		}
 
-		if (C3DTask::instance().kbPressed(KeyF10))
+		if (C3DTask::getInstance().kbPressed(KeyF10))
 		{
 /*			if(ViewedEId==0)
-				ViewedEId=mtpTarget::instance().World.count()-1;
+				ViewedEId=mtpTarget::getInstance().World.count()-1;
 			else
 				ViewedEId--;
 
-			CEntity *entity= mtpTarget::instance().World.get(ViewedEId);
+			CEntity *entity= mtpTarget::getInstance().World.get(ViewedEId);
 			camera.setFollowedEntity(entity);
 */
-			ViewedEId = CEntityManager::instance().findNextEId(ViewedEId);
+			ViewedEId = CEntityManager::getInstance().findNextEId(ViewedEId);
 			Camera.setFollowedEntity(ViewedEId);
 		}
 
-		if (C3DTask::instance().kbPressed(KeyF11))
+		if (C3DTask::getInstance().kbPressed(KeyF11))
 		{
-			CMtpTarget::instance().resetFollowedEntity();
+			CMtpTarget::getInstance().resetFollowedEntity();
 		}
 
-		if (C3DTask::instance().kbPressed(KeyF12))
+		if (C3DTask::getInstance().kbPressed(KeyF12))
 		{
-			UCamera c = C3DTask::instance().scene().getCam();
+			UCamera c = C3DTask::getInstance().scene().getCam();
 			CVector v = c.getMatrix().getPos();
 			CQuat q;
 			c.getMatrix().getRot(q);
 			
-			if(CLevelManager::instance().levelPresent())
-				nlinfo("Add this in the '%s', in the ExternalCamera section:", CLevelManager::instance().currentLevel().filename().c_str());
+			if(CLevelManager::getInstance().levelPresent())
+				nlinfo("Add this in the '%s', in the ExternalCamera section:", CLevelManager::getInstance().currentLevel().filename().c_str());
 			else
 				nlinfo("no level to get ExternalCamera ");
 			nlinfo("\t{ Position = CVector(%f, %f, %f), Rotation = CAngleAxis(%f, %f, %f, %f) },",
@@ -368,44 +368,44 @@ void CControler::update()
 		}
 		
 		/*
-		if(C3DTask::instance().kbDown(KeyMENU))
+		if(C3DTask::getInstance().kbDown(KeyMENU))
 			nlinfo(">>KeyMENU");
-		if(C3DTask::instance().kbDown(KeyLMENU))
+		if(C3DTask::getInstance().kbDown(KeyLMENU))
 			nlinfo(">>KeyLMENU");
-		if(C3DTask::instance().kbDown(KeyRMENU))
+		if(C3DTask::getInstance().kbDown(KeyRMENU))
 			nlinfo(">>KeyRMENU");
 
-		if(C3DTask::instance().kbPressed(KeyCONTROL))
+		if(C3DTask::getInstance().kbPressed(KeyCONTROL))
 			nlinfo(">>KeyCONTROL");
-		if(C3DTask::instance().kbPressed(KeyLCONTROL))
+		if(C3DTask::getInstance().kbPressed(KeyLCONTROL))
 			nlinfo(">>KeyLCONTROL");
-		if(C3DTask::instance().kbPressed(KeyRCONTROL))
+		if(C3DTask::getInstance().kbPressed(KeyRCONTROL))
 			nlinfo(">>KeyRCONTROL");
 			*/
 		
 
-		if (C3DTask::instance().kbPressed(KeyLCONTROL) || C3DTask::instance().kbPressed(KeyRCONTROL) || C3DTask::instance().kbPressed(KeyCONTROL) && !C3DTask::instance().kbDown(KeyMENU))
+		if (C3DTask::getInstance().kbPressed(KeyLCONTROL) || C3DTask::getInstance().kbPressed(KeyRCONTROL) || C3DTask::getInstance().kbPressed(KeyCONTROL) && !C3DTask::getInstance().kbDown(KeyMENU))
 		{
 			//trick to remove all key control pressed event
-			C3DTask::instance().kbPressed(KeyLCONTROL);
-			C3DTask::instance().kbPressed(KeyRCONTROL);
-			C3DTask::instance().kbPressed(KeyCONTROL);
+			C3DTask::getInstance().kbPressed(KeyLCONTROL);
+			C3DTask::getInstance().kbPressed(KeyRCONTROL);
+			C3DTask::getInstance().kbPressed(KeyCONTROL);
 
-			CNetworkTask::instance().openClose();
+			CNetworkTask::getInstance().openClose();
 			//if(isLocal())
 			swapOpenClose();
 		}
 		
 
-		if (C3DTask::instance().kbDown(KeyMENU) && C3DTask::instance().kbPressed(KeyA))
+		if (C3DTask::getInstance().kbDown(KeyMENU) && C3DTask::getInstance().kbPressed(KeyA))
 		{
-			C3DTask::instance().EnableExternalCamera = !C3DTask::instance().EnableExternalCamera;
+			C3DTask::getInstance().EnableExternalCamera = !C3DTask::getInstance().EnableExternalCamera;
 		}
 	}
 
-	float dt = (float)CTimeTask::instance().deltaTime();
+	float dt = (float)CTimeTask::getInstance().deltaTime();
 
-	VirtualFrameTime += (float)CTimeTask::instance().deltaTime();
+	VirtualFrameTime += (float)CTimeTask::getInstance().deltaTime();
 	Accel     += 10.0f * deltaAccel * ( (dt + MissedTime) );
 	Pique     += 10.0f * deltaPique * ( (dt + MissedTime) ); 
 	RotZ      += 10.0f * deltaRot   * ( (dt + MissedTime) );
@@ -421,26 +421,26 @@ void CControler::update()
 	Pique = max(Pique, 0.0f);
 	Pique = min(Pique, 1.0f);
 
-	CVector rotation = CEntityManager::instance()[EId].interpolator().rotation();
+	CVector rotation = CEntityManager::getInstance()[EId].interpolator().rotation();
 	rotation.x  = Pique;
 	//rotation.z  = RotZ;
 	rotation.y  = deltaRot;
-	CEntityManager::instance()[EId].interpolator().rotation(rotation);
+	CEntityManager::getInstance()[EId].interpolator().rotation(rotation);
 
 	if(VirtualFrameTime >= NetVirtualFrameDuration)
 	{
 		//TODO gerer la diff de temps entre _virtualFrameTime et NetVirtualFrameDuration
-		if(!CEntityManager::instance()[EId].openClose())
+		if(!CEntityManager::getInstance()[EId].openClose())
 		{
 			CVector newForce(Accel.x, Accel.y, 0.0f);
-			CNetworkTask::instance().force(newForce);
+			CNetworkTask::getInstance().force(newForce);
 			//nlinfo(">> force=%f",newForce.norm());
 		}
 		else
 		{
 			float realRotz = RotZ - (float)NLMISC::Pi / 2.0f;
 			CVector newForce(realRotz, 0.0f, Pique);
-			CNetworkTask::instance().force(newForce);
+			CNetworkTask::getInstance().force(newForce);
 		}
 	
 		Accel = CVector::Null;

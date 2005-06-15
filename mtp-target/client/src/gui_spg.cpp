@@ -27,7 +27,7 @@ bool guiSPGCounter::release()
 { 
 	if (--refCounter <= 0) 
 	{
-		guiSPGManager::instance().remove(p);
+		guiSPGManager::getInstance().remove(p);
 		delete this;
 		return true;
 	}
@@ -37,7 +37,7 @@ bool guiSPGCounter::release()
 
 guiSPGManager *guiSPGManager::_instance = 0;
 
-guiSPGManager &guiSPGManager::instance()
+guiSPGManager &guiSPGManager::getInstance()
 {
 	if(_instance==0)
 		_instance = new guiSPGManager;

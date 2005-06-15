@@ -30,7 +30,8 @@
 // Includes
 //
 
-#include "nel/misc/thread.h"
+#include <nel/misc/thread.h>
+#include <nel/misc/singleton.h>
 
 #include "../../common/net_message.h"
 
@@ -39,7 +40,7 @@
 // Classes
 //
 
-class CNetwork : public CSingleton<CNetwork>
+class CNetwork : public NLMISC::CSingleton<CNetwork>
 {
 public:
 
@@ -81,7 +82,7 @@ private:
 
 	CNetwork();
 
-	friend class CSingleton<CNetwork>;
+	friend class NLMISC::CSingleton<CNetwork>;
 
 	NLNET::CBufServer	*BufServer;
 	uint32 updateCount;

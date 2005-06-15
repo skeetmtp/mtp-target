@@ -70,7 +70,7 @@ bool CModuleProxy::call(string funcName)
 { 
 //	nlinfo("CModuleProxy::call(%s)",funcName.c_str());
 	int res;
-	lua_State *L = CLuaEngine::instance().session();
+	lua_State *L = CLuaEngine::getInstance().session();
 	if(L==0)
 		return false;
 	int mp = Lunar<CModuleProxy>::push(L, this);

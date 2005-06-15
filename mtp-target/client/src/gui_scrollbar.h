@@ -52,7 +52,7 @@ private:
 	float _percent;
 };
 
-class CGuiProgressBarManager : public CSingleton<CGuiProgressBarManager>
+class CGuiProgressBarManager : public NLMISC::CSingleton<CGuiProgressBarManager>
 {
 public:
 	virtual void init();

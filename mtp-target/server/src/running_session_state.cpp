@@ -51,7 +51,7 @@ using namespace NLMISC;
 void CRunningSessionState::update()
 {
 	TTime currentTime = CTime::getLocalTime();
-	if(CSessionManager::instance().forceEnding() || ( currentTime > CSessionManager::instance().startTime()+(TTime)TimeBeforeCheck && CSessionManager::instance().editMode()==0 ) )
+	if(CSessionManager::getInstance().forceEnding() || ( currentTime > CSessionManager::getInstance().startTime()+(TTime)TimeBeforeCheck && CSessionManager::getInstance().editMode()==0 ) )
 	{
 	vector<string> chat;
 
@@ -60,13 +60,13 @@ void CRunningSessionState::update()
 
 		bool everybodyStopped = true;
 
-		if(currentTime > CSessionManager::instance().startTime()+(TTime)CLevelManager::instance().timeTimeout())
+		if(currentTime > CSessionManager::getInstance().startTime()+(TTime)CLevelManager::getInstance().timeTimeout())
 		{
 			nlinfo("Session time out!!!");
 		}
 		else
 		{
-			for(it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
+			for(it = CEntityManager::getInstance().entities().begin(); it != CEntityManager::getInstance().entities().end(); it++)
 			{
 				CEntity *c = *it;
 				if(c->InGame)
@@ -81,14 +81,14 @@ void CRunningSessionState::update()
 					{
 						if(c->ArrivalTime==0 && c->CurrentScore>0)
 						{
-							c->ArrivalTime =(float)(currentTime - CSessionManager::instance().startTime())/1000.0f;
+							c->ArrivalTime =(float)(currentTime - CSessionManager::getInstance().startTime())/1000.0f;
 							nlinfo("*** ARRIVAL TIME '%s' %f",c->name().c_str(),c->ArrivalTime);
 
 							CNetMessage msgout(CNetMessage::TimeArrival);
 							uint8 eid = c->id();
 							msgout.serial(eid);
 							msgout.serial(c->ArrivalTime);
-							CNetwork::instance().send(msgout);
+							CNetwork::getInstance().send(msgout);
 						}
 					}
 				}
@@ -98,54 +98,54 @@ void CRunningSessionState::update()
 		if(everybodyStopped)
 			nlinfo("everybodyStopped");
 
-		if(CSessionManager::instance().forceEnding() || everybodyStopped)
+		if(CSessionManager::getInstance().forceEnding() || everybodyStopped)
 		{
 
-			CLuaEngine::instance().levelEndSession();
-			CLuaEngine::instance().release();
-			CEntityManager::instance().checkAfkClient();//kick away client
+			CLuaEngine::getInstance().levelEndSession();
+			CLuaEngine::getInstance().release();
+			CEntityManager::getInstance().checkAfkClient();//kick away client
 
 			nlinfo("compute best tit");
-			CEntityManager::EntityConstIt  bestit1 = CEntityManager::instance().entities().end();
-			CEntityManager::EntityConstIt  bestit2 = CEntityManager::instance().entities().end();
-			CEntityManager::EntityConstIt  bestit3 = CEntityManager::instance().entities().end();
-			for(it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
+			CEntityManager::EntityConstIt  bestit1 = CEntityManager::getInstance().entities().end();
+			CEntityManager::EntityConstIt  bestit2 = CEntityManager::getInstance().entities().end();
+			CEntityManager::EntityConstIt  bestit3 = CEntityManager::getInstance().entities().end();
+			for(it = CEntityManager::getInstance().entities().begin(); it != CEntityManager::getInstance().entities().end(); it++)
 			{
 				if((*it)->CurrentScore > 0 && (*it)->ArrivalTime > 11)
 				{
-					if(bestit1 == CEntityManager::instance().entities().end() || (*bestit1)->ArrivalTime >(*it)->ArrivalTime)
+					if(bestit1 == CEntityManager::getInstance().entities().end() || (*bestit1)->ArrivalTime >(*it)->ArrivalTime)
 					{
 						bestit1 = it;
 					}
-					else if(bestit2 == CEntityManager::instance().entities().end() || (*bestit2)->ArrivalTime >(*it)->ArrivalTime)
+					else if(bestit2 == CEntityManager::getInstance().entities().end() || (*bestit2)->ArrivalTime >(*it)->ArrivalTime)
 					{
 						bestit2 = it;
 					}
-					else if(bestit3 == CEntityManager::instance().entities().end() || (*bestit3)->ArrivalTime > (*it)->ArrivalTime)
+					else if(bestit3 == CEntityManager::getInstance().entities().end() || (*bestit3)->ArrivalTime > (*it)->ArrivalTime)
 					{
 						bestit3 = it;
 					}
 				}
 			}
 			nlinfo("compute bonus time");
-			if(CLevelManager::instance().bonusTime())
+			if(CLevelManager::getInstance().bonusTime())
 			{
-				switch(CEntityManager::instance().entities().size())
+				switch(CEntityManager::getInstance().entities().size())
 				{
 				case 0:
 				case 1:
 					break;
 				case 2:
-					if(bestit1 != CEntityManager::instance().entities().end()) (*bestit1)->CurrentScore +=  50;
+					if(bestit1 != CEntityManager::getInstance().entities().end()) (*bestit1)->CurrentScore +=  50;
 					break;
 				case 3:
-					if(bestit1 != CEntityManager::instance().entities().end()) (*bestit1)->CurrentScore += 100;
-					if(bestit2 != CEntityManager::instance().entities().end()) (*bestit2)->CurrentScore +=  50;
+					if(bestit1 != CEntityManager::getInstance().entities().end()) (*bestit1)->CurrentScore += 100;
+					if(bestit2 != CEntityManager::getInstance().entities().end()) (*bestit2)->CurrentScore +=  50;
 					break;
 				default:
-					if(bestit1 != CEntityManager::instance().entities().end()) (*bestit1)->CurrentScore += 150;
-					if(bestit2 != CEntityManager::instance().entities().end()) (*bestit2)->CurrentScore += 100;
-					if(bestit3 != CEntityManager::instance().entities().end()) (*bestit3)->CurrentScore +=  50;
+					if(bestit1 != CEntityManager::getInstance().entities().end()) (*bestit1)->CurrentScore += 150;
+					if(bestit2 != CEntityManager::getInstance().entities().end()) (*bestit2)->CurrentScore += 100;
+					if(bestit3 != CEntityManager::getInstance().entities().end()) (*bestit3)->CurrentScore +=  50;
 					break;
 				}
 			}
@@ -156,23 +156,23 @@ void CRunningSessionState::update()
 			// prepare a message for login service to update the score on database
 			CMessage msgout2("SU");
 
-			string levelname = CLevelManager::instance().levelFilename();
+			string levelname = CLevelManager::getInstance().levelFilename();
 			uint32 nbplayers = 0;
 			// count players
-			for(it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
+			for(it = CEntityManager::getInstance().entities().begin(); it != CEntityManager::getInstance().entities().end(); it++)
 				if((*it)->type() == CEntity::Client)
 					nbplayers++;
 
-			float sessionduration = (float)(currentTime - CSessionManager::instance().startTime())/1000.0f;
+			float sessionduration = (float)(currentTime - CSessionManager::getInstance().startTime())/1000.0f;
 
 			msgout2.serial(levelname, nbplayers, sessionduration);
 
-			for(it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
+			for(it = CEntityManager::getInstance().entities().begin(); it != CEntityManager::getInstance().entities().end(); it++)
 			{
 				if((*it)->type() == CEntity::Client)
 				{
 					bool breakTime = false; // ace set to false
-					string res = CLevelManager::instance().updateStats((*it)->name(), (*it)->CurrentScore, (*it)->ArrivalTime, breakTime);
+					string res = CLevelManager::getInstance().updateStats((*it)->name(), (*it)->CurrentScore, (*it)->ArrivalTime, breakTime);
 					if(!res.empty())
 					{
 						chat.push_back(res);
@@ -216,23 +216,23 @@ void CRunningSessionState::update()
 			IService::getInstance()->ConfigFile.save();
 			
 			// send the message to all entities
-			CNetwork::instance().send(msgout);
+			CNetwork::getInstance().send(msgout);
 
 			// only push the score to database if there s some clients
 			if(nbplayers != 0)
 				CUnifiedNetwork::getInstance()->send("LS", msgout2);
 
-			CEntityManager::instance().saveAllValidReplay();
+			CEntityManager::getInstance().saveAllValidReplay();
 			nlinfo("replay saved");
-			changeState(CEndingSessionState::instance());
+			changeState(CEndingSessionState::getInstance());
 			nlinfo("reset CRunningSessionState variables");
-			CSessionManager::instance().endTime(currentTime);
-			CSessionManager::instance().forceEnding(false);
+			CSessionManager::getInstance().endTime(currentTime);
+			CSessionManager::getInstance().forceEnding(false);
 		}
 	}
 	
 	// chat must be call outside the client accessor
 	for(uint i = 0; i < chat.size(); i++)
-		CNetwork::instance().sendChat(chat[i]);
+		CNetwork::getInstance().sendChat(chat[i]);
 	}
 }

@@ -56,7 +56,7 @@ public:
 private:
 };
 
-class CGuiFrameManager : public CSingleton<CGuiFrameManager>
+class CGuiFrameManager : public NLMISC::CSingleton<CGuiFrameManager>
 {
 public:
 	virtual void init();

@@ -78,7 +78,7 @@ using namespace NL3D;
 
 CModule::CModule() : CModuleCommon()
 {
-	mat = C3DTask::instance().createMaterial();
+	mat = C3DTask::getInstance().createMaterial();
 	LuaProxy = 0;
 }
 
@@ -87,7 +87,7 @@ CModule::~CModule()
 {
 	if(!Mesh.empty())
 	{
-		C3DTask::instance().scene().deleteInstance(Mesh);
+		C3DTask::getInstance().scene().deleteInstance(Mesh);
 	}
 }
 
@@ -99,10 +99,10 @@ void CModule::init(const string &name, const std::string &shapeName, uint8 id, c
 	// Get collision faces
 //	loadMesh(ShapeName, Vertices, Normals, Indices,false);
 	
-	ShapeName = CResourceManager::instance().get(shapeName+".shape");
+	ShapeName = CResourceManager::getInstance().get(shapeName+".shape");
 	NbFaces = loadMesh(ShapeName, Vertices, Normals, Indices, AutoEdges);
 
-	Mesh = C3DTask::instance().scene().createInstance (ShapeName);
+	Mesh = C3DTask::getInstance().scene().createInstance (ShapeName);
 	if (Mesh.empty())
 	{
 		nlwarning ("Can't load '%s.shape'", Name.c_str());
@@ -128,10 +128,10 @@ void CModule::luaInit()
 		delete LuaProxy;
 		LuaProxy = 0;
 	}
-	if(CLevelManager::instance().levelPresent())
+	if(CLevelManager::getInstance().levelPresent())
 	{
-		LuaProxy = new CModuleProxy(CLevelManager::instance().currentLevel().luaState(),this);	
-		nlinfo("CModule::luaInit(), luaState=0x%p , proxy = 0x%p",CLevelManager::instance().currentLevel().luaState(),LuaProxy);
+		LuaProxy = new CModuleProxy(CLevelManager::getInstance().currentLevel().luaState(),this);	
+		nlinfo("CModule::luaInit(), luaState=0x%p , proxy = 0x%p",CLevelManager::getInstance().currentLevel().luaState(),LuaProxy);
 	}
 	else
 		nlwarning("lua init : no level loaded");
@@ -159,15 +159,15 @@ void CModule::renderSelection()
 		tri.V2 = matrix * (Vertices[Indices[i*3+2]] + grow * Normals[Indices[i*3+2]]);
 
 #if 0
-		C3DTask::instance().driver().drawTriangle(tri,mat);
+		C3DTask::getInstance().driver().drawTriangle(tri,mat);
 #else
 		CLine line1(tri.V0,tri.V1);
 		CLine line2(tri.V1,tri.V2);
 		CLine line3(tri.V2,tri.V0);
 		
-		C3DTask::instance().driver().drawLine(line1,mat);
-		C3DTask::instance().driver().drawLine(line2,mat);
-		C3DTask::instance().driver().drawLine(line3,mat);
+		C3DTask::getInstance().driver().drawLine(line1,mat);
+		C3DTask::getInstance().driver().drawLine(line2,mat);
+		C3DTask::getInstance().driver().drawLine(line3,mat);
 #endif
 		
 	}

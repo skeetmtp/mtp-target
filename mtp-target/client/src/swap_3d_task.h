@@ -37,7 +37,7 @@
 // Classes
 //
 
-class CSwap3DTask : public CSingleton<CSwap3DTask>, public ITask
+class CSwap3DTask : public NLMISC::CSingleton<CSwap3DTask>, public ITask
 {
 public:
 	

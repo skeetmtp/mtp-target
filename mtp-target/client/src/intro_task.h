@@ -37,7 +37,7 @@
 // Classes
 //
 
-class CIntroTask : public CSingleton<CIntroTask>, public ITask
+class CIntroTask : public NLMISC::CSingleton<CIntroTask>, public ITask
 {
 public:
 

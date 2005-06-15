@@ -49,7 +49,7 @@ namespace NL3D
 // Classes
 //
 
-class CSkyTask : public CSingleton<CSkyTask>, public ITask
+class CSkyTask : public NLMISC::CSingleton<CSkyTask>, public ITask
 {
 public:
 
@@ -63,7 +63,7 @@ public:
 	void shapeName(std::string shapeName);
 	std::string shapeName();
 	
-	friend class CSingleton<CSkyTask>;
+	friend class NLMISC::CSingleton<CSkyTask>;
 protected:
 	CSkyTask();
 	

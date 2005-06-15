@@ -125,11 +125,11 @@ UMaterial CGuiBitmap::load(const string &filename)
 {
 	string res;
 	
-	res = CResourceManager::instance().get(filename);
-	_texture= C3DTask::instance().driver().createTextureFile(res);
+	res = CResourceManager::getInstance().get(filename);
+	_texture= C3DTask::getInstance().driver().createTextureFile(res);
 	nlassert(_texture);
 	
-	_material = C3DTask::instance().createMaterial();
+	_material = C3DTask::getInstance().createMaterial();
 	_material.setTexture(_texture);
 	_material.setBlend(true);
 	_material.setZFunc(UMaterial::always);
@@ -146,7 +146,7 @@ NL3D::UMaterial CGuiBitmap::material()
 
 void CGuiBitmap::XmlRegister()
 {
-	CGuiObjectManager::instance().registerClass("CGuiBitmap",CGuiBitmap::Create);
+	CGuiObjectManager::getInstance().registerClass("CGuiBitmap",CGuiBitmap::Create);
 }
 
 CGuiObject *CGuiBitmap::Create()

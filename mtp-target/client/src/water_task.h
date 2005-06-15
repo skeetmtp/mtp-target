@@ -50,7 +50,7 @@ namespace NL3D
 // Classes
 //
 
-class CWaterTask : public CSingleton<CWaterTask>, public ITask
+class CWaterTask : public NLMISC::CSingleton<CWaterTask>, public ITask
 {
 public:
 
@@ -71,7 +71,7 @@ public:
 	std::string heightMap0Name();
 	std::string heightMap1Name();
 	
-	friend class CSingleton<CWaterTask>;
+	friend class NLMISC::CSingleton<CWaterTask>;
 protected:
 	CWaterTask();
 	

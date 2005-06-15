@@ -71,8 +71,8 @@ C3dMouseListener::~C3dMouseListener()
 
 void C3dMouseListener::init()
 {
-	_allowMouse = CConfigFileTask::instance().configFile().getVar("AllowMouse").asInt();
-	_inverseMouse = CConfigFileTask::instance().configFile().getVar("InverseMouse").asInt() == 1;
+	_allowMouse = CConfigFileTask::getInstance().configFile().getVar("AllowMouse").asInt();
+	_inverseMouse = CConfigFileTask::getInstance().configFile().getVar("InverseMouse").asInt() == 1;
 }
 
 void C3dMouseListener::reset()
@@ -85,7 +85,7 @@ void C3dMouseListener::reset()
 
 void C3dMouseListener::operator ()(const CEvent& event)
 {
-	if(CGuiObjectManager::instance().objects.size()!=0)
+	if(CGuiObjectManager::getInstance().objects.size()!=0)
 		return;
 	
 	CEventMouse* mouseEvent = (CEventMouse*)&event;
@@ -93,7 +93,7 @@ void C3dMouseListener::operator ()(const CEvent& event)
 	switch (_allowMouse)
 	{
 	case 1:
-		if (event==EventMouseMoveId && (mouseEvent->Button&leftButton!=0  || !FollowEntity))
+		if (event==EventMouseMoveId && ((mouseEvent->Button&leftButton)!=0  || !FollowEntity))
 		{
 			MouseX += 0.5f - mouseEvent->X;
 			if (_inverseMouse)
@@ -107,10 +107,10 @@ void C3dMouseListener::operator ()(const CEvent& event)
 			MouseWheel += (mouseEvent->Direction? -1 : +1);
 		}
 		// Update mouse position
-		C3DTask::instance().driver().setMousePos(0.5f, 0.5f);
+		C3DTask::getInstance().driver().setMousePos(0.5f, 0.5f);
 		break;
 	case 2:
-		if (event==EventMouseMoveId && (mouseEvent->Button&leftButton!=0 || !FollowEntity) )
+		if (event==EventMouseMoveId && ((mouseEvent->Button&leftButton)!=0 || !FollowEntity) )
 		{
 			MouseX += 0.5f - mouseEvent->X;
 			if (_inverseMouse)
@@ -130,7 +130,7 @@ void C3dMouseListener::operator ()(const CEvent& event)
 			MouseWheel += (mouseEvent->Direction? -1 : +1);
 		}
 		// Update mouse position
-		C3DTask::instance().driver().setMousePos(0.5f, 0.5f);
+		C3DTask::getInstance().driver().setMousePos(0.5f, 0.5f);
 		break;
 	case 3:
 		if (event==EventMouseMoveId)
@@ -142,7 +142,7 @@ void C3dMouseListener::operator ()(const CEvent& event)
 				MouseY += 0.5f - mouseEvent->Y;
 			
 			// Update mouse position
-			C3DTask::instance().driver().setMousePos(0.5f, 0.5f);
+			C3DTask::getInstance().driver().setMousePos(0.5f, 0.5f);
 		}
 		else if (event == EventMouseUpId)
 		{

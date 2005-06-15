@@ -56,21 +56,21 @@ void CGuiScaleManager::init()
 {
 	string res;
 
-	res = CResourceManager::instance().get("arrow.tga");
-	_textureArrow = C3DTask::instance().driver().createTextureFile(res);
+	res = CResourceManager::getInstance().get("arrow.tga");
+	_textureArrow = C3DTask::getInstance().driver().createTextureFile(res);
 	nlassert(_textureArrow);
 	
-	_materialArrow = C3DTask::instance().createMaterial();
+	_materialArrow = C3DTask::getInstance().createMaterial();
 	_materialArrow.setTexture(_textureArrow);
 	_materialArrow.setBlend(true);
 	_materialArrow.setZFunc(UMaterial::always);
 	_materialArrow.setDoubleSided();
 	
-	res = CResourceManager::instance().get("progress.tga");
-	_textureProgress = C3DTask::instance().driver().createTextureFile(res);
+	res = CResourceManager::getInstance().get("progress.tga");
+	_textureProgress = C3DTask::getInstance().driver().createTextureFile(res);
 	nlassert(_textureProgress);
 	
-	_materialProgress = C3DTask::instance().createMaterial();
+	_materialProgress = C3DTask::getInstance().createMaterial();
 	_materialProgress.setTexture(_textureProgress);
 	_materialProgress.setBlend(true);
 	_materialProgress.setZFunc(UMaterial::always);
@@ -111,7 +111,7 @@ NL3D::UMaterial CGuiScaleManager::materialProgress()
 CGuiScale::CGuiScale()
 {
 	_percent = 0.1f;
-	quad.material(CGuiScaleManager::instance().materialArrow());
+	quad.material(CGuiScaleManager::getInstance().materialArrow());
 	_button = new CGuiButton();
 	
 	_buttonPressed = false;
@@ -173,11 +173,11 @@ void CGuiHScale::_render(const CVector &pos,CVector &maxSize)
 	CVector expSize = expandSize(maxSize);
 	
 	CVector scrollPos1((expSize.x-4-_button->width())*_percent,0,0);
-	CVector mousePos = CGuiObjectManager::instance().mouseListener().position();
-	CVector mousePressedPos = CGuiObjectManager::instance().mouseListener().pressedPosition();
+	CVector mousePos = CGuiObjectManager::getInstance().mouseListener().position();
+	CVector mousePressedPos = CGuiObjectManager::getInstance().mouseListener().pressedPosition();
 	
 	
-	if( !_buttonPressed && CGuiObjectManager::instance().mouseListener().ButtonDown &&_button->isIn(mousePressedPos,pos+scrollPos1,maxSize))
+	if( !_buttonPressed && CGuiObjectManager::getInstance().mouseListener().ButtonDown &&_button->isIn(mousePressedPos,pos+scrollPos1,maxSize))
 	{
 		_buttonPressed = true;
 		_buttonPressedMousePos = mousePos;	
@@ -188,7 +188,7 @@ void CGuiHScale::_render(const CVector &pos,CVector &maxSize)
 		_percent = _buttonPressedPercent + (mousePos.x - _buttonPressedMousePos.x) / (expSize.x + -_button->width());
 	}
 	
-	if( !_buttonPressed && CGuiObjectManager::instance().mouseListener().Clicked 
+	if( !_buttonPressed && CGuiObjectManager::getInstance().mouseListener().Clicked 
 		&& isIn(mousePos,pos,maxSize) && isIn(mousePressedPos,pos,maxSize)
 		&& !(_button->isIn(mousePos,pos+scrollPos1,maxSize) && _button->isIn(mousePressedPos,pos+scrollPos1,maxSize))
 		)
@@ -198,7 +198,7 @@ void CGuiHScale::_render(const CVector &pos,CVector &maxSize)
 		else
 			_percent += 0.1f;
 	}
-	else if (CGuiObjectManager::instance().mouseListener().ButtonDown)
+	else if (CGuiObjectManager::getInstance().mouseListener().ButtonDown)
 	{
 		if(_button->isIn(mousePos,pos+scrollPos1,maxSize) )
 		{
@@ -206,7 +206,7 @@ void CGuiHScale::_render(const CVector &pos,CVector &maxSize)
 		}	
 	}
 	
-	if(CGuiObjectManager::instance().mouseListener().Clicked)
+	if(CGuiObjectManager::getInstance().mouseListener().Clicked)
 		_buttonPressed = false;
 	
 	_percent = min(1.0f,_percent);
@@ -219,7 +219,7 @@ void CGuiHScale::_render(const CVector &pos,CVector &maxSize)
 	
 	quad.size(expSize);
 	quad.position(globalPos + CVector(0,dy/2,0));
-	quad.material(CGuiScaleManager::instance().materialProgress());
+	quad.material(CGuiScaleManager::getInstance().materialProgress());
 	quad.render();
 	
 	CVector scrollPos((expSize.x-_button->width())*_percent,0,0);
@@ -246,7 +246,7 @@ void CGuiHScale::alignment(int alignment)
 
 void CGuiHScale::XmlRegister()
 {
-	CGuiObjectManager::instance().registerClass("CGuiHScale",CGuiHScale::Create);
+	CGuiObjectManager::getInstance().registerClass("CGuiHScale",CGuiHScale::Create);
 }
 
 CGuiObject *CGuiHScale::Create()
@@ -283,11 +283,11 @@ void CGuiVScale::_render(const CVector &pos,CVector &maxSize)
 	CVector expSize = expandSize(maxSize);
 	
 	CVector scrollPos1(0,(expSize.y-4-_button->height())*_percent,0);
-	CVector mousePos = CGuiObjectManager::instance().mouseListener().position();
-	CVector mousePressedPos = CGuiObjectManager::instance().mouseListener().pressedPosition();
+	CVector mousePos = CGuiObjectManager::getInstance().mouseListener().position();
+	CVector mousePressedPos = CGuiObjectManager::getInstance().mouseListener().pressedPosition();
 	
 	
-	if( !_buttonPressed && CGuiObjectManager::instance().mouseListener().ButtonDown &&_button->isIn(mousePressedPos,pos+scrollPos1,maxSize))
+	if( !_buttonPressed && CGuiObjectManager::getInstance().mouseListener().ButtonDown &&_button->isIn(mousePressedPos,pos+scrollPos1,maxSize))
 	{
 		_buttonPressed = true;
 		_buttonPressedMousePos = mousePos;	
@@ -298,7 +298,7 @@ void CGuiVScale::_render(const CVector &pos,CVector &maxSize)
 		_percent = _buttonPressedPercent + (mousePos.y - _buttonPressedMousePos.y) / (expSize.y + -_button->height());
 	}
 	
-	if( !_buttonPressed && CGuiObjectManager::instance().mouseListener().Clicked 
+	if( !_buttonPressed && CGuiObjectManager::getInstance().mouseListener().Clicked 
 		&& isIn(mousePos,pos,maxSize) && isIn(mousePressedPos,pos,maxSize)
 		&& !(_button->isIn(mousePos,pos+scrollPos1,maxSize) && _button->isIn(mousePressedPos,pos+scrollPos1,maxSize))
 		)
@@ -308,7 +308,7 @@ void CGuiVScale::_render(const CVector &pos,CVector &maxSize)
 		else
 			_percent += 0.1f;
 	}
-	else if (CGuiObjectManager::instance().mouseListener().ButtonDown)
+	else if (CGuiObjectManager::getInstance().mouseListener().ButtonDown)
 	{
 		if(_button->isIn(mousePos,pos+scrollPos1,maxSize) )
 		{
@@ -316,7 +316,7 @@ void CGuiVScale::_render(const CVector &pos,CVector &maxSize)
 		}	
 	}
 	
-	if(CGuiObjectManager::instance().mouseListener().Clicked)
+	if(CGuiObjectManager::getInstance().mouseListener().Clicked)
 		_buttonPressed = false;
 	
 	_percent = min(1.0f,_percent);
@@ -329,7 +329,7 @@ void CGuiVScale::_render(const CVector &pos,CVector &maxSize)
 	
 	quad.size(expSize);
 	quad.position(globalPos + CVector(dx/2.0f,0,0));
-	quad.material(CGuiScaleManager::instance().materialProgress());
+	quad.material(CGuiScaleManager::getInstance().materialProgress());
 	quad.render();
 	
 	CVector scrollPos(0,(expSize.y-_button->height())*_percent,0);
@@ -354,7 +354,7 @@ void CGuiVScale::alignment(int alignment)
 
 void CGuiVScale::XmlRegister()
 {
-	CGuiObjectManager::instance().registerClass("CGuiVScale",CGuiVScale::Create);
+	CGuiObjectManager::getInstance().registerClass("CGuiVScale",CGuiVScale::Create);
 }
 
 CGuiObject *CGuiVScale::Create()

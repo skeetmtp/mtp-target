@@ -29,6 +29,9 @@
 //
 // Includes
 //
+
+#include <nel/misc/singleton.h>
+
 #include "gui_mouse_listener.h"
 #include "gui_event_behaviour.h"
 #include "gui_spg.h"
@@ -133,7 +136,7 @@ typedef CGuiObject * (*CreateObjectCB) ();
 typedef std::map<std::string,CreateObjectCB> string2CreateFunction;
 
 
-class CGuiObjectManager : public CSingleton<CGuiObjectManager>
+class CGuiObjectManager : public NLMISC::CSingleton<CGuiObjectManager>
 {
 public:
 	virtual void init();

@@ -36,7 +36,7 @@
 // Classes
 //
 
-class CScoreTask : public CSingleton<CScoreTask>, public ITask
+class CScoreTask : public NLMISC::CSingleton<CScoreTask>, public ITask
 {
 public:
 

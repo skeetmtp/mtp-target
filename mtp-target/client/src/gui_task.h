@@ -36,7 +36,7 @@
 // Classes
 //
 
-class CGuiTask : public CSingleton<CGuiTask>, public ITask
+class CGuiTask : public NLMISC::CSingleton<CGuiTask>, public ITask
 {
 public:
 

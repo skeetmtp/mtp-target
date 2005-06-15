@@ -25,6 +25,8 @@
 // Includes
 //
 
+#include <nel/misc/singleton.h>
+
 #include "level.h"
 
 
@@ -32,7 +34,7 @@
 // Classes
 //
 
-class CLevelManager : public CSingleton<CLevelManager>
+class CLevelManager : public NLMISC::CSingleton<CLevelManager>
 {
 public:
 
@@ -83,7 +85,7 @@ private:
 	// private ctor due to singleton pattern
 	CLevelManager();
 
-	friend class CSingleton<CLevelManager>;
+	friend class NLMISC::CSingleton<CLevelManager>;
 };
 
 #endif

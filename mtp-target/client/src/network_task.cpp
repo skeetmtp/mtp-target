@@ -140,7 +140,7 @@ bool CNetworkTask::connected()
 static void cbDisconnect(TSockId from, void *arg)
 {
 	// we lost the connection to the server
-	CMtpTarget::instance().error(string("Server lost !"));
+	CMtpTarget::getInstance().error(string("Server lost !"));
 }
 
 string CNetworkTask::connect(const CInetAddress &ip, const string &cookie)
@@ -156,15 +156,15 @@ string CNetworkTask::connect(const CInetAddress &ip, const string &cookie)
 		Sock.setDisconnectionCallback(cbDisconnect, 0);
 
 		CNetMessage msgout(CNetMessage::Login);
-		string login = CConfigFileTask::instance().configFile().getVar("Login").asString();
-		string password = CConfigFileTask::instance().configFile().getVar("Password").asString();
-		CRGBA color(CConfigFileTask::instance().configFile().getVar("EntityColor").asInt(0), CConfigFileTask::instance().configFile().getVar("EntityColor").asInt(1), CConfigFileTask::instance().configFile().getVar("EntityColor").asInt(2));
-		string texture = CConfigFileTask::instance().configFile().getVar("EntityTexture").asString();
-		networkVersion = CConfigFileTask::instance().configFile().getVar("NetworkVersion").asInt();
+		string login = CConfigFileTask::getInstance().configFile().getVar("Login").asString();
+		string password = CConfigFileTask::getInstance().configFile().getVar("Password").asString();
+		CRGBA color(CConfigFileTask::getInstance().configFile().getVar("EntityColor").asInt(0), CConfigFileTask::getInstance().configFile().getVar("EntityColor").asInt(1), CConfigFileTask::getInstance().configFile().getVar("EntityColor").asInt(2));
+		string texture = CConfigFileTask::getInstance().configFile().getVar("EntityTexture").asString();
+		networkVersion = CConfigFileTask::getInstance().configFile().getVar("NetworkVersion").asInt();
 		string co = cookie;
 		msgout.serial(networkVersion, co, login);
 		msgout.serial(password, color, texture);
-		CNetworkTask::instance().send(msgout);
+		CNetworkTask::getInstance().send(msgout);
 	}
 	catch (Exception &e)
 	{
@@ -183,19 +183,19 @@ void CNetworkTask::send(CNetMessage &msg)
 {
 	msg.send(&Sock);
 	if(sendCount==0)
-		sendStartTime = CTimeTask::instance().time();
+		sendStartTime = CTimeTask::getInstance().time();
 	sendCount++;
 	if((sendCount%100)==0 && sendCount)
 	{
 // TODO put the new stat
-//		double dtime = CTimeTask::instance().time() - sendStartTime;
+//		double dtime = CTimeTask::getInstance().time() - sendStartTime;
 //		double fbsent = (double)Sock.bytesSent();
 //		double fbrceiv = (double)Sock.bytesReceived();
 //		double dfbsent = fbsent - sendStartCount;
 //		double dfbrceiv = fbrceiv - rceivStartCount;
 //		if(dtime>0.1)
 //			nlinfo("during %f, up = %fB/s (%f) down = %fB/s (%f)",dtime,dfbsent/dtime,dfbsent,dfbrceiv/dtime,dfbrceiv);
-//		sendStartTime = CTimeTask::instance().time();
+//		sendStartTime = CTimeTask::getInstance().time();
 //		sendStartCount = fbsent;
 //		rceivStartCount = fbrceiv;
 	}

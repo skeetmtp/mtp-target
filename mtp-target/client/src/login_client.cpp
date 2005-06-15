@@ -162,9 +162,9 @@ string CLoginClientMtp::authenticate (const string &loginServiceAddr, const stri
 	msgout.serial (OS);
 	msgout.serial (Proc);
 	msgout.serial (Mem);
-	_GfxInfos = C3DTask::instance().driver().getDriverInformation();
+	_GfxInfos = C3DTask::getInstance().driver().getDriverInformation();
 	_GfxInfos += " / ";
-	_GfxInfos += C3DTask::instance().driver().getVideocardInformation();
+	_GfxInfos += C3DTask::getInstance().driver().getVideocardInformation();
 	msgout.serial (_GfxInfos);
 
 	_CallbackClient->send (msgout);
@@ -175,9 +175,9 @@ string CLoginClientMtp::authenticate (const string &loginServiceAddr, const stri
 	{
 		_CallbackClient->update ();
 		nlSleep(10);
-		C3DTask::instance().update();
-		CTimeTask::instance().update();
-		if(C3DTask::instance().kbPressed(KeyESCAPE))
+		C3DTask::getInstance().update();
+		CTimeTask::getInstance().update();
+		if(C3DTask::getInstance().kbPressed(KeyESCAPE))
 			return "CLoginClientMtp::authenticate(): user abort";
 	}
 	
@@ -219,9 +219,9 @@ string CLoginClientMtp::confirmConnection (uint32 shardListIndex)
 	{
 		_CallbackClient->update ();
 		nlSleep(10);
-		C3DTask::instance().update();
-		CTimeTask::instance().update();
-		if(C3DTask::instance().kbPressed(KeyESCAPE))
+		C3DTask::getInstance().update();
+		CTimeTask::getInstance().update();
+		if(C3DTask::getInstance().kbPressed(KeyESCAPE))
 			return "CLoginClientMtp::confirmConnection(): user abort";
 	}
 	

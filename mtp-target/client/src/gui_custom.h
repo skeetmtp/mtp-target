@@ -34,7 +34,7 @@
 // Classes
 //
 
-class CGuiCustom : public CSingleton<CGuiCustom>
+class CGuiCustom : public NLMISC::CSingleton<CGuiCustom>
 {
 public:
 	CGuiCustom();

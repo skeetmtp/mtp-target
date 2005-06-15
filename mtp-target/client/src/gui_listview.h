@@ -96,7 +96,7 @@ private:
 	uint _selectedRow;
 };
 
-class CGuiListViewManager : public CSingleton<CGuiListViewManager>
+class CGuiListViewManager : public NLMISC::CSingleton<CGuiListViewManager>
 {
 public:
 	virtual void init();

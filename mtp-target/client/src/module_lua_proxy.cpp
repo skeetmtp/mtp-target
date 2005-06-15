@@ -58,9 +58,9 @@ bool CModuleProxy::call(string funcName)
 { 
 //	nlinfo("CModuleProxy::call(%s)",funcName.c_str());
 	int res;
-	if(!CLevelManager::instance().levelPresent())
+	if(!CLevelManager::getInstance().levelPresent())
 		return false;
-	lua_State *L = CLevelManager::instance().currentLevel().luaState();
+	lua_State *L = CLevelManager::getInstance().currentLevel().luaState();
 	if(L==0)
 		return false;
 	int mp = Lunar<CModuleProxy>::push(L, this);

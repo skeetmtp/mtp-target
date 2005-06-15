@@ -24,6 +24,7 @@
 #include <nel/misc/common.h>
 #include <nel/misc/events.h>
 #include <nel/misc/fast_mem.h>
+#include <nel/misc/singleton.h>
 #include <nel/misc/config_file.h>
 #include <nel/misc/system_info.h>
 #include <nel/misc/mem_displayer.h>
@@ -40,4 +41,3 @@
 #include "global.h"
 
 #include "task.h"
-#include "../../common/singleton.h"

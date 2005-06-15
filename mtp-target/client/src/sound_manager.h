@@ -38,13 +38,14 @@
 #	include <fmod_errors.h>
 #endif
 
+#include <nel/misc/singleton.h>
 
 
 //
 // Classes
 //
 
-class CSoundManager : public CSingleton<CSoundManager>, public ITask
+class CSoundManager : public NLMISC::CSingleton<CSoundManager>, public ITask
 {
 public:
 
@@ -128,7 +129,7 @@ public:
 
 #endif // USE_FMOD
 
-	friend class CSingleton<CSoundManager>;
+	friend class NLMISC::CSingleton<CSoundManager>;
 	CSoundManager();
 
 	std::string getNextMusicRes(); // get next file url from m3u playlist

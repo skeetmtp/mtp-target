@@ -60,9 +60,9 @@ static void cbChat(CClient *c, CNetMessage &msgin)
 	string msg;
 	msgin.serial(msg);
 	if(c->canSpeak())
-		CNetwork::instance().sendChat("<"+c->name()+"> "+msg);
+		CNetwork::getInstance().sendChat("<"+c->name()+"> "+msg);
 	else
-		CNetwork::instance().sendChat(c->id(),"<"+c->name()+"> "+msg,false);
+		CNetwork::getInstance().sendChat(c->id(),"<"+c->name()+"> "+msg,false);
 }
 
 static void cbCommand(CClient *c, CNetMessage &msgin)
@@ -81,18 +81,18 @@ static void cbCommand(CClient *c, CNetMessage &msgin)
 	{
 		if(c->isAdmin() || c->isModerator())
 		{
-			CNetwork::instance().sendChat(c->id(),string("/reset (CTRL+F6): hard reset of session (could crash)"));
-			CNetwork::instance().sendChat(c->id(),string("/reparsePath"));
-			CNetwork::instance().sendChat(c->id(),string("/playerList"));
-			CNetwork::instance().sendChat(c->id(),string("/report nick info"));
-			CNetwork::instance().sendChat(c->id(),string("/ban nick duration"));
-			CNetwork::instance().sendChat(c->id(),string("/kick nick"));
-			CNetwork::instance().sendChat(c->id(),string("/forceEnd (CTRL+F5): force end of session (safe)"));
-			CNetwork::instance().sendChat(c->id(),string("/forceMap mapname : try to force this map for next level"));
+			CNetwork::getInstance().sendChat(c->id(),string("/reset (CTRL+F6): hard reset of session (could crash)"));
+			CNetwork::getInstance().sendChat(c->id(),string("/reparsePath"));
+			CNetwork::getInstance().sendChat(c->id(),string("/playerList"));
+			CNetwork::getInstance().sendChat(c->id(),string("/report nick info"));
+			CNetwork::getInstance().sendChat(c->id(),string("/ban nick duration"));
+			CNetwork::getInstance().sendChat(c->id(),string("/kick nick"));
+			CNetwork::getInstance().sendChat(c->id(),string("/forceEnd (CTRL+F5): force end of session (safe)"));
+			CNetwork::getInstance().sendChat(c->id(),string("/forceMap mapname : try to force this map for next level"));
 		}
 		else
 		{
-			CNetwork::instance().sendChat(c->id(),string("/voteMap mapname : vote to start this map for next level"));
+			CNetwork::getInstance().sendChat(c->id(),string("/voteMap mapname : vote to start this map for next level"));
 		}
 		return;
 	}
@@ -103,30 +103,30 @@ static void cbCommand(CClient *c, CNetMessage &msgin)
 		string arg = cmd.substr(8);
 		if(!arg.empty())
 			c->voteMap(arg);
-		CNetwork::instance().sendChat(c->name()+" executed: /"+cmd);
+		CNetwork::getInstance().sendChat(c->name()+" executed: /"+cmd);
 	}
 	else if(cmd.substr(0,2)=="v ")
 	{
 		string arg = cmd.substr(2);
 		if(!arg.empty())
 			c->voteMap(arg);
-		CNetwork::instance().sendChat(c->name()+" executed: /"+cmd);
+		CNetwork::getInstance().sendChat(c->name()+" executed: /"+cmd);
 	}
 	else if(cmd.substr(0,8)=="petition")
 	{
 		string msg = "shout " + c->name() + " need assistance";
-		CNetwork::instance().forwardToPublicChat(msg);
-		CNetwork::instance().sendChat(c->name()+" executed: /"+cmd);
+		CNetwork::getInstance().forwardToPublicChat(msg);
+		CNetwork::getInstance().sendChat(c->name()+" executed: /"+cmd);
 	}
 	else if(c->isAdmin() || c->isModerator())
 	{
-		//CNetwork::instance().networkTask().addCommand(cmd);
-		CNetwork::instance().sendChat(c->name()+" executed: /"+cmd);
+		//CNetwork::getInstance().networkTask().addCommand(cmd);
+		CNetwork::getInstance().sendChat(c->name()+" executed: /"+cmd);
 		CCommand::execute(c, cmd, *InfoLog);
 	}
 	else
 	{
-		CNetwork::instance().sendChat(c->name()+" tried to execute the admin command /"+cmd);
+		CNetwork::getInstance().sendChat(c->name()+" tried to execute the admin command /"+cmd);
 	}
 }
 
@@ -146,7 +146,7 @@ static void cbLogin(CClient *c, CNetMessage &msgin)
 	string texture;
 	string trace;
 	string mesh;
-	uint32 networkVersion = CNetwork::instance().version();
+	uint32 networkVersion = CNetwork::getInstance().version();
 	string error;
 
 	c->Score = 0;
@@ -156,13 +156,13 @@ static void cbLogin(CClient *c, CNetMessage &msgin)
 	// first, check the version used by client
 	msgin.serial(networkVersion); 
 
-	if(networkVersion < CNetwork::instance().version())
+	if(networkVersion < CNetwork::getInstance().version())
 	{
-		nlinfo("bad client version %d should be %d",networkVersion,CNetwork::instance().version());
+		nlinfo("bad client version %d should be %d",networkVersion,CNetwork::getInstance().version());
 		string reason = toString("login failed: bad client version(%d)! Get latest one on Mtp Target web site", networkVersion);
 		CNetMessage msgout(CNetMessage::Error);
 		msgout.serial(reason);
-		CNetwork::instance().send(c->id(), msgout);
+		CNetwork::getInstance().send(c->id(), msgout);
 		return;
 	}
 	c->networkVersion = networkVersion;
@@ -182,7 +182,7 @@ static void cbLogin(CClient *c, CNetMessage &msgin)
 		if(cookie.empty())
 		{
 			// check in normal way
-			error = CEntityManager::instance().check(login, password, false, c->Score);
+			error = CEntityManager::getInstance().check(login, password, false, c->Score);
 		}
 		else
 		{
@@ -196,7 +196,7 @@ static void cbLogin(CClient *c, CNetMessage &msgin)
 			}
 			else
 			{
-				error = CEntityManager::instance().check(login, password, true, c->Score);
+				error = CEntityManager::getInstance().check(login, password, true, c->Score);
 			}
 		}
 	}
@@ -213,14 +213,14 @@ static void cbLogin(CClient *c, CNetMessage &msgin)
 			c->uid(lc.getUserId());
 		}
 	
-		CEntityManager::instance().login(c);
+		CEntityManager::getInstance().login(c);
 	}
 	else
 	{
 		nlwarning("Login client '%s' failed: %s", login.c_str(), error.c_str());
 		CNetMessage msgout(CNetMessage::Error);
 		msgout.serial(error);
-		CNetwork::instance().send(c->id(), msgout);
+		CNetwork::getInstance().send(c->id(), msgout);
 	}
 
 	{
@@ -243,7 +243,7 @@ static void cbLogin(CClient *c, CNetMessage &msgin)
 		fp = fopen("clients_count.stat", "ab");
 		if(fp)
 		{
-			fprintf(fp, "%u %s c %d\n", ltime, d, CEntityManager::instance().humanClientCount());
+			fprintf(fp, "%u %s c %d\n", ltime, d, CEntityManager::getInstance().humanClientCount());
 			fclose(fp);
 		}
 	}
@@ -254,7 +254,7 @@ static void cbOpenClose(CClient *c, CNetMessage &msgin)
 	nlinfo("cbOpenClose");
 	TTime currentTime = CTime::getLocalTime();
 	
-	if(CSessionManager::instance().endTime() != 0 || CSessionManager::instance().startTime() == 0 || currentTime < CSessionManager::instance().startTime())
+	if(CSessionManager::getInstance().endTime() != 0 || CSessionManager::getInstance().startTime() == 0 || currentTime < CSessionManager::getInstance().startTime())
 	{
 		// ignoring client update if not in session
 		nlinfo("Can't open or close client '%s' because there's no session", c->name().c_str());
@@ -266,7 +266,7 @@ static void cbOpenClose(CClient *c, CNetMessage &msgin)
 		CNetMessage msgout(CNetMessage::OpenClose);
 		uint8 eid = c->id();
 		msgout.serial(eid);
-		CNetwork::instance().send(msgout);
+		CNetwork::getInstance().send(msgout);
 	}
 }
 
@@ -276,7 +276,7 @@ static void cbEditMode(CClient *c, CNetMessage &msgin)
 	uint8 editMode;
 	msgin.serial(editMode);
 	if(c->isAdmin())
-		CSessionManager::instance().editMode(editMode);
+		CSessionManager::getInstance().editMode(editMode);
 }
 
 static void cbUpdateElement(CClient *c, CNetMessage &msgin)
@@ -293,7 +293,7 @@ static void cbUpdateElement(CClient *c, CNetMessage &msgin)
 	CVector eulerRot;
 	msgin.serial(eulerRot);
 
-	if(c->isAdmin() && CSessionManager::instance().currentStateName()=="Running")
+	if(c->isAdmin() && CSessionManager::getInstance().currentStateName()=="Running")
 	{
 		CNetMessage msgout(CNetMessage::UpdateElement);
 		msgout.serial(elementType);
@@ -301,14 +301,14 @@ static void cbUpdateElement(CClient *c, CNetMessage &msgin)
 		msgout.serial(selectedBy);
 		msgout.serial(pos);
 		msgout.serial(eulerRot);
-		CNetwork::instance().sendAllExcept(c->id(),msgout);
+		CNetwork::getInstance().sendAllExcept(c->id(),msgout);
 
-		if(CSessionManager::instance().editMode()==0)
-			CSessionManager::instance().editMode(1);
+		if(CSessionManager::getInstance().editMode()==0)
+			CSessionManager::getInstance().editMode(1);
 		if(elementType==CEditableElementCommon::Module)
-			CLevelManager::instance().currentLevel().updateModule(elementId,pos,eulerRot);
+			CLevelManager::getInstance().currentLevel().updateModule(elementId,pos,eulerRot);
 		else if(elementType==CEditableElementCommon::StartPosition)
-			CLevelManager::instance().currentLevel().updateStartPoint(elementId,pos,eulerRot);
+			CLevelManager::getInstance().currentLevel().updateStartPoint(elementId,pos,eulerRot);
 	}
 	
 }
@@ -321,7 +321,7 @@ static void cbReady(CClient *c, CNetMessage &msgin)
 	CNetMessage msgout(CNetMessage::Ready);
 	uint8 eid = c->id();
 	msgout.serial(eid);
-	CNetwork::instance().send(msgout);
+	CNetwork::getInstance().send(msgout);
 }
 
 static void cbRequestCRCKey(CClient *c, CNetMessage &msgin)
@@ -359,7 +359,7 @@ static void cbRequestCRCKey(CClient *c, CNetMessage &msgin)
 
 	msgout.serial(serverfn);
 	msgout.serial(serverHashKey);
-	CNetwork::instance().send(c->id(),msgout);	
+	CNetwork::getInstance().send(c->id(),msgout);	
 }
 	
 static void cbRequestDownload(CClient *c, CNetMessage &msgin)
@@ -380,7 +380,7 @@ static void cbRequestDownload(CClient *c, CNetMessage &msgin)
 		nlwarning("Client '%s' wants an unknown file '%s'", c->name().c_str(), fn.c_str());
 		string res = toString("ERROR:File '%s' is not found", fn.c_str());
 		msgout.serial(res);
-		CNetwork::instance().send(c->id(),msgout);
+		CNetwork::getInstance().send(c->id(),msgout);
 		return;
 	}
 
@@ -395,7 +395,7 @@ static void cbRequestDownload(CClient *c, CNetMessage &msgin)
 	{
 		CHashKey serverHashKey = getSHA1(path);
 		/*
-		CEntityManager::CEntities::CReadAccessor acces(CEntityManager::instance().entities());
+		CEntityManager::CEntities::CReadAccessor acces(CEntityManager::getInstance().entities());
 		for(CEntityManager::EntityConstIt it = acces.value().begin(); it != acces.value().end(); it++)
 		{
 			nlassert(*it);
@@ -407,13 +407,13 @@ static void cbRequestDownload(CClient *c, CNetMessage &msgin)
 			CNetMessage msgout(CNetMessage::RequestCRCKey);
 			msgout.serial(fn);
 			msgout.serial(serverHashKey);
-			CNetwork::instance().send(nid, msgout);
+			CNetwork::getInstance().send(nid, msgout);
 		}
 		*/
 		CNetMessage msgout(CNetMessage::RequestCRCKey);
 		msgout.serial(fn);
 		msgout.serial(serverHashKey);
-		CNetwork::instance().sendAllExcept(c->id(), msgout);
+		CNetwork::getInstance().sendAllExcept(c->id(), msgout);
 	}
 
 	if(packedPath.empty() || !packedFileUpToDate )
@@ -442,7 +442,7 @@ static void cbRequestDownload(CClient *c, CNetMessage &msgin)
 		nlwarning("Can't open file '%s'", packedPath.c_str());
 		string res = toString("ERROR:Can't open file '%s'", packedPath.c_str());
 		msgout.serial(res);
-		CNetwork::instance().send(c->id(),msgout);
+		CNetwork::getInstance().send(c->id(),msgout);
 		return;
 	}
 
@@ -451,7 +451,7 @@ static void cbRequestDownload(CClient *c, CNetMessage &msgin)
 		nlwarning("Can't seek file '%s' to part %d", packedPath.c_str(), part);
 		string res = toString("ERROR:Can't seek file '%s' part %d", packedPath.c_str(), part);
 		msgout.serial(res);
-		CNetwork::instance().send(c->id(),msgout);
+		CNetwork::getInstance().send(c->id(),msgout);
 		fclose(fp);
 		return;
 	}
@@ -474,7 +474,7 @@ static void cbRequestDownload(CClient *c, CNetMessage &msgin)
 			nlwarning("Failed to read file '%s' to part %d: %s", packedPath.c_str(), part, strerror(errno));
 			string res = toString("ERROR:Failed to read file '%s' part %d: %s", packedPath.c_str(), part, strerror(errno));
 			msgout.serial(res);
-			CNetwork::instance().send(c->id(),msgout);
+			CNetwork::getInstance().send(c->id(),msgout);
 			fclose(fp);
 			return;
 		}
@@ -489,7 +489,7 @@ static void cbRequestDownload(CClient *c, CNetMessage &msgin)
 	nlinfo("the file eof is : %d size = %d", eof, res);
 	msgout.serial(eof);
 
-	CNetwork::instance().send(c->id(),msgout);
+	CNetwork::getInstance().send(c->id(),msgout);
 	fclose(fp);
 }
 
@@ -555,7 +555,7 @@ void netCallbacksHandler(CClient *c, CNetMessage &msgin)
 
 	nlassert(c);
 	nlassert(c->type() == CEntity::Client);
-	if(CEntityManager::instance().getById(c->id())==0)
+	if(CEntityManager::getInstance().getById(c->id())==0)
 	{
 		nlwarning("netCallbacksHandler(%d) cannot do cb since client does not exist",msgin.type());
 		return;

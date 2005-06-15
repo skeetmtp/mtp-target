@@ -54,15 +54,15 @@ using namespace NLMISC;
 void CGuiFrameManager::init()
 {
 	string res;
-	res = CResourceManager::instance().get("frame.tga");
-	_texture = C3DTask::instance().driver().createTextureFile(res);
+	res = CResourceManager::getInstance().get("frame.tga");
+	_texture = C3DTask::getInstance().driver().createTextureFile(res);
 	nlassert(_texture);
 	/*
 	_texture->setWrapS(UTexture::Clamp);
 	_textureFrame->setWrapT(UTexture::Clamp);
 	*/
 	
-	_material = C3DTask::instance().createMaterial();
+	_material = C3DTask::getInstance().createMaterial();
 	_material.setTexture(_texture);
 	_material.setBlend(true);
 	_material.setZFunc(UMaterial::always);
@@ -101,7 +101,7 @@ NL3D::UMaterial *CGuiFrameManager::material()
 //
 CGuiFrame::CGuiFrame()
 {
-	quad.material(CGuiFrameManager::instance()._material);
+	quad.material(CGuiFrameManager::getInstance()._material);
 	//alignment( CGuiObject::eAlignLeft | CGuiObject::eAlignUp);
 }
 
@@ -118,18 +118,18 @@ void CGuiFrame::_render(const CVector &pos,CVector &maxSize)
 
 	CScissor scissor;
 	scissor.init(globalPos.x,1.0f-globalPos.y-maxSize.y,maxSize.x,maxSize.y);
-	//C3DTask::instance().driver().setScissor(scissor);
+	//C3DTask::getInstance().driver().setScissor(scissor);
 
 	CGuiBin::_render(globalPos,maxSize);
 	
 	scissor.initFullScreen();
-	C3DTask::instance().driver().setScissor(scissor);	
+	C3DTask::getInstance().driver().setScissor(scissor);	
 }
 
 
 void CGuiFrame::XmlRegister()
 {
-	CGuiObjectManager::instance().registerClass("CGuiFrame",CGuiFrame::Create);
+	CGuiObjectManager::getInstance().registerClass("CGuiFrame",CGuiFrame::Create);
 }
 
 CGuiObject *CGuiFrame::Create()

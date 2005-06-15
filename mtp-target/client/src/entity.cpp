@@ -175,7 +175,7 @@ void CEntity::update()
 		{
 			//nlinfo("water set pos begin");
 			NLMISC::CVector pos = m.getPos();
-			pos.z = WaterModel->getAttenuatedHeight(NLMISC::CVector2f(pos.x, pos.y), CMtpTarget::instance().controler().Camera.getMatrix()->getPos());
+			pos.z = WaterModel->getAttenuatedHeight(NLMISC::CVector2f(pos.x, pos.y), CMtpTarget::getInstance().controler().Camera.getMatrix()->getPos());
 			m.setPos(pos);
 			//nlinfo("water set pos end");
 		}
@@ -203,7 +203,7 @@ void CEntity::update()
 		if(isLocal())
 		{
 			SoundsDescriptor.play(CSoundManager::CEntitySoundsDescriptor::Impact);
-			CHudTask::instance().addMessage(CHudMessage(0,15,1,string("don't touch anything when you fly"),CRGBA(255,255,0,255),5));
+			CHudTask::getInstance().addMessage(CHudMessage(0,15,1,string("don't touch anything when you fly"),CRGBA(255,255,0,255),5));
 		}
 		if(!ImpactParticle.empty())
 		{
@@ -276,11 +276,11 @@ void CEntity::collisionWithWater(bool col)
 
 bool CEntity::namePosOnScreen(CVector &res) 
 {
-	if(CMtpTarget::instance().controler().getControledEntity() != id() || !ReplayFile.empty())
+	if(CMtpTarget::getInstance().controler().getControledEntity() != id() || !ReplayFile.empty())
 	{
 		CVector p = interpolator().currentPosition();
-		CVector dpos = p - CMtpTarget::instance().controler().Camera.getMatrix()->getPos();
-		CMatrix cameraMatrix = C3DTask::instance().scene().getCam().getMatrix();
+		CVector dpos = p - CMtpTarget::getInstance().controler().Camera.getMatrix()->getPos();
+		CMatrix cameraMatrix = C3DTask::getInstance().scene().getCam().getMatrix();
 		if(dpos.norm()>1) return false;
 			
 		CVector vv = cameraMatrix.getPos() - p;
@@ -293,7 +293,7 @@ bool CEntity::namePosOnScreen(CVector &res)
 		if (p.y < 0.0f)
 			return false;
 		
-		p = C3DTask::instance().scene().getCam().getFrustum().project(p);
+		p = C3DTask::getInstance().scene().getCam().getFrustum().project(p);
 		res = p;
 		return 0<p.x && p.x<1 && 0<p.y && p.y<1;
 		
@@ -304,17 +304,17 @@ bool CEntity::namePosOnScreen(CVector &res)
 void CEntity::renderName() const
 {
 	// display name of other people than me
-	if(CMtpTarget::instance().controler().getControledEntity() != id() || !ReplayFile.empty())
+	if(CMtpTarget::getInstance().controler().getControledEntity() != id() || !ReplayFile.empty())
 	{
 		const CVector &pos = interpolator().currentPosition();
 		CVector camPos;
-		if(CMtpTarget::instance().isSpectatorOnly())
+		if(CMtpTarget::getInstance().isSpectatorOnly())
 			camPos = ControlerFreeLookPos;
 		else
-			camPos = CMtpTarget::instance().controler().Camera.getMatrix()->getPos();
+			camPos = CMtpTarget::getInstance().controler().Camera.getMatrix()->getPos();
 		CVector dpos = pos - camPos;
 		if(dpos.norm()<1)
-			CFontManager::instance().printf3D(color(),pos,0.01f, name().c_str());
+			CFontManager::getInstance().printf3D(color(),pos,0.01f, name().c_str());
 	}
 }
 
@@ -332,32 +332,32 @@ void CEntity::reset()
 	
 	if(!TraceParticleOpen.empty())
 	{
-		C3DTask::instance().scene().deleteInstance(TraceParticleOpen);
+		C3DTask::getInstance().scene().deleteInstance(TraceParticleOpen);
 	}
 	if(!TraceParticleClose.empty())
 	{
-		C3DTask::instance().scene().deleteInstance(TraceParticleClose);
+		C3DTask::getInstance().scene().deleteInstance(TraceParticleClose);
 	}
 	
 	if(!ImpactParticle.empty())
 	{
-		C3DTask::instance().scene().deleteInstance(ImpactParticle);
+		C3DTask::getInstance().scene().deleteInstance(ImpactParticle);
 	}
 	
 	if(!CloseMesh.empty())
 	{
-		nlinfo(">>   C3DTask::instance().scene().deleteInstance(CloseMesh);");
+		nlinfo(">>   C3DTask::getInstance().scene().deleteInstance(CloseMesh);");
 		CloseMesh.hide();
-		//C3DTask::instance().scene().deleteInstance(CloseMesh);
+		//C3DTask::getInstance().scene().deleteInstance(CloseMesh);
 	}
 	
 	if(!OpenMesh.empty())
 	{
 		OpenMesh.hide();
-		//C3DTask::instance().scene().deleteInstance(OpenMesh);
+		//C3DTask::getInstance().scene().deleteInstance(OpenMesh);
 	}
 
-	CSoundManager::instance().unregisterEntity(SoundsDescriptor);
+	CSoundManager::getInstance().unregisterEntity(SoundsDescriptor);
 
 	Type = Unknown;
 	Name.clear();
@@ -427,7 +427,7 @@ void CEntity::init(TEntity type, const std::string &name, sint32 totalScore, CRG
 	this->totalScore(totalScore);
 	
 	//nlinfo("CEntity::init() , texture=%s",Texture.c_str());
-	CSoundManager::instance().registerEntity(SoundsDescriptor);
+	CSoundManager::getInstance().registerEntity(SoundsDescriptor);
 }
 
 void CEntity::luaInit()
@@ -437,10 +437,10 @@ void CEntity::luaInit()
 		delete LuaProxy;
 		LuaProxy = 0;
 	}
-	if(CLevelManager::instance().levelPresent())
+	if(CLevelManager::getInstance().levelPresent())
 	{
-		LuaProxy = new CEntityProxy(CLevelManager::instance().currentLevel().luaState(),this);	
-		nlinfo("CEntity::luaInit(), luaState=0x%p , proxy = 0x%p",CLevelManager::instance().currentLevel().luaState(),LuaProxy);
+		LuaProxy = new CEntityProxy(CLevelManager::getInstance().currentLevel().luaState(),this);	
+		nlinfo("CEntity::luaInit(), luaState=0x%p , proxy = 0x%p",CLevelManager::getInstance().currentLevel().luaState(),LuaProxy);
 	}
 	else
 		nlwarning("lua init : no level loaded");
@@ -453,7 +453,7 @@ void CEntity::load3d()
 	bool ok;
 	if(!Texture.empty())
 	{
-		TextureFilename = CResourceManager::instance().get("ping_ball_"+Texture+".tga", ok);
+		TextureFilename = CResourceManager::getInstance().get("ping_ball_"+Texture+".tga", ok);
 		if(!ok) TextureFilename = "";
 	}
 
@@ -462,8 +462,8 @@ void CEntity::load3d()
 
 	if(CloseMesh.empty())
 	{
-		string res = CResourceManager::instance().get("entity_"+MeshName+"_close.shape");
-		CloseMesh = C3DTask::instance().scene().createInstance(res);
+		string res = CResourceManager::getInstance().get("entity_"+MeshName+"_close.shape");
+		CloseMesh = C3DTask::getInstance().scene().createInstance(res);
 	}
 	for(uint i = 0; i < CloseMesh.getNumMaterials(); i++)
 	{
@@ -481,8 +481,8 @@ void CEntity::load3d()
 
 	if(OpenMesh.empty())
 	{
-		string res = CResourceManager::instance().get("entity_"+MeshName+"_open.shape");
-		OpenMesh = C3DTask::instance().scene().createInstance(res);
+		string res = CResourceManager::getInstance().get("entity_"+MeshName+"_open.shape");
+		OpenMesh = C3DTask::getInstance().scene().createInstance(res);
 	}
 	for(uint i = 0; i < OpenMesh.getNumMaterials(); i++)
 	{
@@ -498,7 +498,7 @@ void CEntity::load3d()
 	OpenMesh.setTransformMode (UTransformable::DirectMatrix);
 
 
-	if(CConfigFileTask::instance().configFile().getVar("DisplayParticle").asInt() == 1)
+	if(CConfigFileTask::getInstance().configFile().getVar("DisplayParticle").asInt() == 1)
 	{
 		string TraceFilename = "trace";
 		if(!Trace.empty())
@@ -506,8 +506,8 @@ void CEntity::load3d()
 
 		if(TraceParticleOpen.empty())
 		{
-			string res = CResourceManager::instance().get(TraceFilename+"_open.ps");
-			TraceParticleOpen.cast(C3DTask::instance().scene().createInstance(res));
+			string res = CResourceManager::getInstance().get(TraceFilename+"_open.ps");
+			TraceParticleOpen.cast(C3DTask::getInstance().scene().createInstance(res));
 			TraceParticleOpen.setTransformMode (UTransformable::RotQuat);
 			TraceParticleOpen.setOrderingLayer(2);
 			TraceParticleOpen.activateEmitters(true);
@@ -516,8 +516,8 @@ void CEntity::load3d()
 		}
 		if(TraceParticleClose.empty())
 		{
-			string res = CResourceManager::instance().get(TraceFilename+"_close.ps");
-			TraceParticleClose.cast(C3DTask::instance().scene().createInstance(res));
+			string res = CResourceManager::getInstance().get(TraceFilename+"_close.ps");
+			TraceParticleClose.cast(C3DTask::getInstance().scene().createInstance(res));
 			TraceParticleClose.setTransformMode (UTransformable::RotQuat);
 			TraceParticleClose.setOrderingLayer(2);
 			TraceParticleClose.activateEmitters(true);
@@ -528,10 +528,10 @@ void CEntity::load3d()
 		ParticuleCloseActivated = OpenClose ? 0:1;
 	}
 	
-	if(ImpactParticle.empty() && CConfigFileTask::instance().configFile().getVar("DisplayParticle").asInt() == 1)
+	if(ImpactParticle.empty() && CConfigFileTask::getInstance().configFile().getVar("DisplayParticle").asInt() == 1)
 	{
-		string res = CResourceManager::instance().get("impact.ps");
-		ImpactParticle.cast(C3DTask::instance().scene().createInstance(res));
+		string res = CResourceManager::getInstance().get("impact.ps");
+		ImpactParticle.cast(C3DTask::getInstance().scene().createInstance(res));
 		ImpactParticle.setTransformMode (UTransformable::RotQuat);
 		ImpactParticle.setOrderingLayer(2);
 		ImpactParticle.activateEmitters(false);
@@ -544,13 +544,13 @@ void CEntity::load3d()
 
 bool CEntity::isLocal()
 { 
-	return CMtpTarget::instance().controler().getControledEntity() == Id;
+	return CMtpTarget::getInstance().controler().getControledEntity() == Id;
 }
 
 void CEntity::setIsLocal(bool local)
 {
 	if(local)
-		CMtpTarget::instance().controler().setControledEntity(id());
+		CMtpTarget::getInstance().controler().setControledEntity(id());
 }
 
 
@@ -561,12 +561,12 @@ void CEntity::fadeOpenParticleColorTo(const NLMISC::CRGBA &color,float duration)
 	FadeOpenParticleColor = color;
 	FadeOpenParticleStartColor = TraceParticleOpen.getUserColor();
 	FadeOpenParticleDuration = duration;
-	FadeOpenParticleStartTime = (float)CTimeTask::instance().time();
+	FadeOpenParticleStartTime = (float)CTimeTask::getInstance().time();
 }
 
 void CEntity::fadeOpenParticleColorUpdate()
 {
-	float time = (float)CTimeTask::instance().time();
+	float time = (float)CTimeTask::getInstance().time();
 	float lpos = (time  - FadeOpenParticleStartTime) / FadeOpenParticleDuration;
 	if(lpos<0 || 1<lpos) return;
 	
@@ -583,12 +583,12 @@ void CEntity::fadeCloseParticleColorTo(const NLMISC::CRGBA &color,float duration
 	FadeCloseParticleColor = color;
 	FadeCloseParticleStartColor = TraceParticleClose.getUserColor();
 	FadeCloseParticleDuration = duration;
-	FadeCloseParticleStartTime = (float)CTimeTask::instance().time();
+	FadeCloseParticleStartTime = (float)CTimeTask::getInstance().time();
 }
 
 void CEntity::fadeCloseParticleColorUpdate()
 {
-	float time = (float)CTimeTask::instance().time();
+	float time = (float)CTimeTask::getInstance().time();
 	float lpos = (time  - FadeCloseParticleStartTime) / FadeCloseParticleDuration;
 	if(lpos<0 || 1<lpos) return;
 	
@@ -626,7 +626,7 @@ void CEntity::totalScore(sint32 score)
 { 
 	if(isLocal())
 	{
-		CMtpTarget::instance().displayTutorialInfo(score<=CConfigFileTask::instance().configFile().getVar("MinTotalScoreToHideTutorial").asInt());
+		CMtpTarget::getInstance().displayTutorialInfo(score<=CConfigFileTask::getInstance().configFile().getVar("MinTotalScoreToHideTutorial").asInt());
 	}
 	TotalScore = score; 
 }
@@ -634,9 +634,9 @@ void CEntity::totalScore(sint32 score)
 void CEntity::startPointId(uint8 spid) 
 { 
 	StartPointId = spid;
-	if(isLocal() && CLevelManager::instance().levelPresent())
+	if(isLocal() && CLevelManager::getInstance().levelPresent())
 	{
-		CMtpTarget::instance().controler().Camera.setInitialPosition(CLevelManager::instance().currentLevel().cameraPosition(StartPointId));
+		CMtpTarget::getInstance().controler().Camera.setInitialPosition(CLevelManager::getInstance().currentLevel().cameraPosition(StartPointId));
 	}
 }
 

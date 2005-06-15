@@ -74,7 +74,7 @@ using namespace NL3D;
 
 CStartPoint::CStartPoint():CStartPointCommon()
 {
-	mat = C3DTask::instance().createMaterial();
+	mat = C3DTask::getInstance().createMaterial();
 }
 
 
@@ -82,7 +82,7 @@ CStartPoint::~CStartPoint()
 {
 	if(!Mesh.empty())
 	{
-		C3DTask::instance().scene().deleteInstance(Mesh);
+		C3DTask::getInstance().scene().deleteInstance(Mesh);
 	}
 }
 
@@ -90,10 +90,10 @@ void CStartPoint::init(const std::string &name, const std::string &shapeName, ui
 {
 	CStartPointCommon::init(name, shapeName, id, position, rotation);
 
-	ShapeName = CResourceManager::instance().get("col_box.shape");
+	ShapeName = CResourceManager::getInstance().get("col_box.shape");
 	NbFaces = loadMesh(ShapeName, Vertices, Normals, Indices, AutoEdges);
 
-	Mesh = C3DTask::instance().scene().createInstance (ShapeName);
+	Mesh = C3DTask::getInstance().scene().createInstance (ShapeName);
 	if (Mesh.empty())
 	{
 		nlwarning ("Can't load '%s.shape'", Name.c_str());
@@ -148,42 +148,42 @@ void CStartPoint::renderSelection()
 
 	l.V0 = a;
 	l.V1 = b;
-	C3DTask::instance().driver().drawLine(l,mat);
+	C3DTask::getInstance().driver().drawLine(l,mat);
 	l.V0 = b;
 	l.V1 = c;
-	C3DTask::instance().driver().drawLine(l,mat);
+	C3DTask::getInstance().driver().drawLine(l,mat);
 	l.V0 = c;
 	l.V1 = d;
-	C3DTask::instance().driver().drawLine(l,mat);
+	C3DTask::getInstance().driver().drawLine(l,mat);
 	l.V0 = d;
 	l.V1 = a;
-	C3DTask::instance().driver().drawLine(l,mat);
+	C3DTask::getInstance().driver().drawLine(l,mat);
 	
 	l.V0 = e;
 	l.V1 = f;
-	C3DTask::instance().driver().drawLine(l,mat);
+	C3DTask::getInstance().driver().drawLine(l,mat);
 	l.V0 = f;
 	l.V1 = g;
-	C3DTask::instance().driver().drawLine(l,mat);
+	C3DTask::getInstance().driver().drawLine(l,mat);
 	l.V0 = g;
 	l.V1 = h;
-	C3DTask::instance().driver().drawLine(l,mat);
+	C3DTask::getInstance().driver().drawLine(l,mat);
 	l.V0 = h;
 	l.V1 = e;
-	C3DTask::instance().driver().drawLine(l,mat);
+	C3DTask::getInstance().driver().drawLine(l,mat);
 	
 	l.V0 = a;
 	l.V1 = e;
-	C3DTask::instance().driver().drawLine(l,mat);
+	C3DTask::getInstance().driver().drawLine(l,mat);
 	l.V0 = b;
 	l.V1 = f;
-	C3DTask::instance().driver().drawLine(l,mat);
+	C3DTask::getInstance().driver().drawLine(l,mat);
 	l.V0 = c;
 	l.V1 = g;
-	C3DTask::instance().driver().drawLine(l,mat);
+	C3DTask::getInstance().driver().drawLine(l,mat);
 	l.V0 = d;
 	l.V1 = h;
-	C3DTask::instance().driver().drawLine(l,mat);
+	C3DTask::getInstance().driver().drawLine(l,mat);
 	
 	
 	/*
@@ -192,7 +192,7 @@ void CStartPoint::renderSelection()
 	quad.V2 = c;
 	quad.V3 = d;
 
-	C3DTask::instance().driver().drawQuad(quad,mat);
+	C3DTask::getInstance().driver().drawQuad(quad,mat);
 	*/			
 }
 

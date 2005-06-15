@@ -40,7 +40,7 @@ typedef std::map<void *,guiSPGCounter *> pointer2Counter;
 class guiSPGManager
 {
 public:
-	static guiSPGManager &instance();
+	static guiSPGManager &getInstance();
 	guiSPGCounter *get(void *p);
 	void add(void *p,guiSPGCounter *counter);
 	void remove(void *p);
@@ -82,7 +82,7 @@ public:
 	//!constructor
 	guiSPG() : counter(0),p(0) {};
 	//!constructor
-	guiSPG( T* p_ )  { if(p_) counter=guiSPGManager::instance().get(p_); p=p_; counter->addRef();};
+	guiSPG( T* p_ )  { if(p_) counter=guiSPGManager::getInstance().get(p_); p=p_; counter->addRef();};
 	//!Copy constructor.
 	template <class U> guiSPG<T>(const guiSPG<U>& sp_ ) {
 		if(sp_.counter)
@@ -162,7 +162,7 @@ public:
 		release();
 		if(newp)
 		{
-			counter = guiSPGManager::instance().get(newp);
+			counter = guiSPGManager::getInstance().get(newp);
 			counter->addRef();
 		}
 		p = newp;

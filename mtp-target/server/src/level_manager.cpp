@@ -95,8 +95,7 @@ void CLevelManager::release()
 		delete CurrentLevel;
 		CurrentLevel = 0;
 	}
-	CLuaEngine::instance().release();
-	CLevelManager::uninstance();
+	CLuaEngine::getInstance().release();
 }
 
 bool CLevelManager::newLevel(string &str1, string &str2)
@@ -105,8 +104,8 @@ bool CLevelManager::newLevel(string &str1, string &str2)
 	pausePhysics();
 
 	// reset old state with default state
-	CNetwork::instance().reset();
-	CEntityManager::instance().reset();
+	CNetwork::getInstance().reset();
+	CEntityManager::getInstance().reset();
 	timeTimeout(60 * 1000);
 
 	nlinfo("newLevel (%d/%d)",LevelSessionCount,MaxLevelSessionCount);
@@ -155,10 +154,10 @@ bool CLevelManager::newLevel(string &str1, string &str2)
 
 	uint32 maxCount = 0;
 	uint8 maxCountId = 0;
-	uint32 nbEntities = CEntityManager::instance().nbEntities();
+	uint32 nbEntities = CEntityManager::getInstance().nbEntities();
 	for(i=0; i<nbEntities;i++)
 	{
-		CEntity *e = CEntityManager::instance().getNthEntity(i);
+		CEntity *e = CEntityManager::getInstance().getNthEntity(i);
 		if(e && e->voteMap().size()>0)
 		{
 			uint8 j;
@@ -183,7 +182,7 @@ bool CLevelManager::newLevel(string &str1, string &str2)
 		}
 	}
 
-	int voteCountNeeded = CEntityManager::instance().humanClientCount()/3+1;
+	int voteCountNeeded = CEntityManager::getInstance().humanClientCount()/3+1;
 	if(voteCountNeeded<0)
 		voteCountNeeded=0;
 
@@ -191,12 +190,12 @@ bool CLevelManager::newLevel(string &str1, string &str2)
 	if(maxCount>=(uint)voteCountNeeded)
 	{
 		NextLevelId = maxCountId;
-		CNetwork::instance().sendChat("voteMap "+levels[maxCountId] + " succeed");
+		CNetwork::getInstance().sendChat("voteMap "+levels[maxCountId] + " succeed");
 		voteSucceed = true;
 	}
 	else if(maxCount>0)
 	{
-		CNetwork::instance().sendChat(toString("voteMap %s failed with %d votes < %d required",levels[maxCountId].c_str(),maxCount,voteCountNeeded));
+		CNetwork::getInstance().sendChat(toString("voteMap %s failed with %d votes < %d required",levels[maxCountId].c_str(),maxCount,voteCountNeeded));
 	}
 
 	if(preferedMap.size()>0)
@@ -213,7 +212,7 @@ bool CLevelManager::newLevel(string &str1, string &str2)
 	}
 	if(preferedMap.size()>0)
 	{
-		CNetwork::instance().sendChat("forceMap : "+preferedMap + " : file not found");
+		CNetwork::getInstance().sendChat("forceMap : "+preferedMap + " : file not found");
 		preferedMap = "";
 	}
 	
@@ -369,7 +368,7 @@ void CLevelManager::forceMap(const std::string &mapName)
 NLMISC_COMMAND(displaylevel, "display the current level", "")
 {
 	if(args.size() != 0) return false;
-	CLevelManager::instance().display(&log);
+	CLevelManager::getInstance().display(&log);
 	return true;
 }
 
@@ -378,7 +377,7 @@ NLMISC_COMMAND(forcemap, "try to force this map for next level", "")
 	if(args.size() != 1) return false;
 	
 	log.displayNL("forceMap %s", args[0].c_str());
-	CLevelManager::instance().forceMap(args[0]);
+	CLevelManager::getInstance().forceMap(args[0]);
 	return true;
 }
 
@@ -386,7 +385,7 @@ NLMISC_DYNVARIABLE(string, CurrentLevel, "")
 {
 	if(get)
 	{
-		*pointer = CLevelManager::instance().levelName();
+		*pointer = CLevelManager::getInstance().levelName();
 	}
 }
 

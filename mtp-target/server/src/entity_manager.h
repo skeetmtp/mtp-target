@@ -27,6 +27,7 @@
 
 #include <nel/misc/reader_writer.h>
 #include <nel/misc/variable.h>
+#include <nel/misc/singleton.h>
 
 #include "entity.h"
 #include "client.h"
@@ -43,7 +44,7 @@ extern NLMISC::CVariable<bool> SavePingStat;
 // Classes
 //
 
-class CEntityManager : public CSingleton<CEntityManager>
+class CEntityManager : public NLMISC::CSingleton<CEntityManager>
 {
 public:
 

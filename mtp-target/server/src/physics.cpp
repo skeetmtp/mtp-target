@@ -37,7 +37,6 @@
 #include "lua_engine.h"
 #include "level_manager.h"
 #include "entity_manager.h"
-//#include "../../common/level_manager.h"
 
 
 //
@@ -50,14 +49,14 @@ using namespace NLNET;
 
 
 //
-// Classes
-//
-
-
-
-//
 // Variables
 //
+
+class PhysicsThread;
+
+static const float worldStep = 0.001f;
+
+static PhysicsThread *physicThread = 0;
 
 TTime syncStartPhyTime = CTime::getLocalTime();
 SyncPhyTime syncPhyTime("syncPhyTime");
@@ -71,118 +70,14 @@ CSynchronized<dSpaceID>		Space("Space");
 dJointGroupID	ContactGroup = 0;
 dGeomID			Water = 0;
 
-//list<CCollisionEntity> CollisionEntityList;
-//vector<CVector> StartPointList;
-
 CSynchronized<PauseFlags> physicPauseFlags("physicPauseFlags");
+
+//
+// Functions
+//
+
 void checkPhysicPaused();
 
-
-//
-//
-//
-
-/*void startPointCallback(const mtLevelManager::mtStartPoint &startPoint)
-{
-//	StartPointList.push_back(CVector(startPoint.posX, startPoint.posY, startPoint.posZ));
-}
-
-void cameraCallback(const mtLevelManager::mtCamera &camera,unsigned int id)
-{
-	// there s no need to get info about the module because it s only "visual"
-}
-
-void boxCallback(const mtLevelManager::mtBox &box)
-{
-	CollisionEntityList.push_back(CCollisionEntity());
-	CCollisionEntity *entity = &(*(--CollisionEntityList.end()));
-	
-	CVector scale(box.scaleX, box.scaleY, box.scaleZ);
-	scale *= GSCALE;
-	entity->setBox(scale);
-	entity->setPosition(CVector(box.posX, box.posY, box.posZ));
-	entity->setRotation(CAngleAxis(CVector(box.axisX, box.axisY, box.axisZ), box.angle));
-	
-	entity->Score			= box.score;
-	entity->Accel			= box.accel;
-	entity->Friction		= box.friction;
-	entity->Bounce			= box.bounce;
-	entity->LuaFunctionName	= box.luaFunctionName;
-	entity->Name			= box.name;
-
-	dGeomSetCategoryBits(entity->Geom, MT_SCENE_SPECTRUM); //ceci est un element de la scene
-	dGeomSetCollideBits(entity->Geom, MT_CLIENT_SPECTRUM); //collide unikement avec les entity
-}
-
-void triCollCallback(mtLevelManager::mtTriColl &triColl)
-{
-  	CollisionEntityList.push_back(CCollisionEntity());
-	CCollisionEntity *entity = &(*(--CollisionEntityList.end()));
-	uint32 i;
-
-	// vertices must be multiple of 3
-	nlassert(triColl.vertices.size()%3 == 0);
- 	entity->Vertices.resize(triColl.vertices.size());
-	for(i=0;i<triColl.vertices.size();i+=3)
-	{
-		entity->Vertices[i+0] = triColl.vertices[i+0] * triColl.scaleX;
-		entity->Vertices[i+1] = triColl.vertices[i+1] * triColl.scaleY;
-		entity->Vertices[i+2] = triColl.vertices[i+2] * triColl.scaleZ;
-	}
-	entity->Indices.resize(triColl.indices.size());
-	for(i=0;i<triColl.indices.size();i++)
-		entity->Indices[i] = triColl.indices[i];
-
-	dTriMeshDataID data = dGeomTriMeshDataCreate();
-	dGeomTriMeshDataBuild(data, &entity->Vertices[0], 3*sizeof(dReal), entity->Vertices.size()/3, &entity->Indices[0], entity->Indices.size(), 3*sizeof(int));
-	
-	entity->Geom = dCreateTriMesh(Space, data, _dTriCallback, _dTriArrayCallback, _dTriRayCallback);
-	nlassert(entity->Geom);
-	dGeomSetData(entity->Geom, entity);
-
-//  OLD ODE CODE FOR TRI COL
-//	dGeomID userGeomId;
-//	entity->geom = userGeomId = dCreateTriList(space, _dTriCallback, _dTriArrayCallback, _dTriRayCallback);
-//	dGeomSetData(userGeomId, entity);
-//
-//	dVector3 *f = &entity->vertices[0];
-//	dGeomTriListBuild(userGeomId, &entity->vertices[0], sizeof(dcVector3), entity->vertices.size(), &entity->indices[0], sizeof(int), entity->indices.size(), 3 * sizeof(int));
-
-	entity->setPosition(CVector(triColl.posX, triColl.posY, triColl.posZ));
-	entity->setRotation(CAngleAxis(CVector(triColl.axisX, triColl.axisY, triColl.axisZ), triColl.angle));
-	
-	entity->Score = triColl.score;
-	entity->Accel = triColl.accel;
-	entity->Friction = triColl.friction;
-	entity->Bounce = triColl.bounce;
-	entity->LuaFunctionName = triColl.luaFunctionName;
-	entity->Name = triColl.name;
-
-	dGeomSetCategoryBits(entity->Geom, MT_SCENE_SPECTRUM); //ceci est un element de la scene
-	dGeomSetCollideBits(entity->Geom, MT_CLIENT_SPECTRUM); //collide unikement avec les entity
-}
-
-void moduleCallback(const mtLevelManager::mtModule &module)
-{
-	// there s no need to get info about the module because it s only "visual"
-}
-
-
-
-
-void resetCallback()
-{
-	CollisionEntityList.clear();
-//	StartPointList.clear();
-
-	// reload default values
-	initVariables();
-
-	CLuaEngine::stop();
-	CLuaEngine::start();
-
-}
-*/
 #define SET_VAR(__name) if(var == #__name) { __name = (float) atof(val.c_str()); __name##FromCfg=false; found=true; }
 
 void optionCallback(const string &var, const string &val)
@@ -251,7 +146,7 @@ static void nearCallback(void *data, dGeomID o1, dGeomID o2)
 		entity2 =(CEntity*) dGeomGetData(o2);
 		entity = entity1;
 
-		if(CLevelManager::instance().haveCurrentLevel() && !CLevelManager::instance().currentLevel().crashedClientCollide())
+		if(CLevelManager::getInstance().haveCurrentLevel() && !CLevelManager::getInstance().currentLevel().crashedClientCollide())
 			if(entity1->FreezeCommand || entity2->FreezeCommand) //one of the entity if freez(collide scen when flying ?) don't disturb other players
 				return;
 	}
@@ -308,14 +203,14 @@ static void nearCallback(void *data, dGeomID o1, dGeomID o2)
 			break;
 		case CLIENT_CLIENT:
 
-			if(CLevelManager::instance().haveCurrentLevel() && CLevelManager::instance().currentLevel().clientBounce())
+			if(CLevelManager::getInstance().haveCurrentLevel() && CLevelManager::getInstance().currentLevel().clientBounce())
 			{
 				contact[i].surface.mode = dContactBounce;
 				//			contact[i].surface.mu = dInfinity;
 				contact[i].surface.mu = 0;
 				contact[i].surface.mu2 = 0;
-				contact[i].surface.bounce = CLevelManager::instance().currentLevel().clientBounceCoef();
-				contact[i].surface.bounce_vel = CLevelManager::instance().currentLevel().clientBounceVel();
+				contact[i].surface.bounce = CLevelManager::getInstance().currentLevel().clientBounceCoef();
+				contact[i].surface.bounce_vel = CLevelManager::getInstance().currentLevel().clientBounceVel();
 			}
 			else
 			{
@@ -463,177 +358,181 @@ static void nearCallback(void *data, dGeomID o1, dGeomID o2)
 	}
 }
 
-static float worldStep = 0.001f;
+
+void updatePhysics()
+{
+	static TTime lastTime = CTime::getLocalTime();
+	static float deltaTime = worldStep;
+
+	TTime newTime = CTime::getLocalTime();
+	deltaTime = (float)(newTime - lastTime)/1000.0f;
+	int   nbLoop = int(deltaTime / worldStep);
+	float missedTime = deltaTime - nbLoop * worldStep;
+	nlinfo("physic nbloop = %d = %f / %f (missed %f)",nbLoop,deltaTime,worldStep,missedTime);
+	lastTime = newTime-(TTime)missedTime;
+	{
+		SyncPhyTime::CAccessor acces(&syncPhyTime);
+		acces.value() = newTime;
+		//				nlinfo("%f %"NL_I64"d", (float)(newTime-syncStartPhyTime)/1000.0f, newTime);
+	}
+
+	{
+		CEntityManager::EntityConstIt it;
+		for(int step=0;step<nbLoop;step++)
+		{
+			//_CrtCheckMemory();
+
+			for(it = CEntityManager::getInstance().entities().begin(); it != CEntityManager::getInstance().entities().end(); it++)
+			{
+				CEntity *e = (*it);
+
+				e->ColState = "";
+
+				if(!e->InGame)
+				{
+					dBodySetLinearVel(e->Body, 0, 0, 0);
+				}
+				else
+				{
+					//SKEET_WARNING tentative de virer le bug du score a zero sur tricol
+					//e->CurrentScore = 0;
+					if(e->OpenClose)
+					{
+						if(e->FreezeCommand)
+						{
+							dBodyAddForce(e->Body, 0, 0, 0);
+						}
+						else
+						{
+							// we must set the friction force for planning
+							dMass mass;
+							dBodyGetMass(e->Body, &mass);
+							//dBodyAddForce(e->Body, e->ForceX, e->ForceY, + e->ForceZ - mass.mass * Gravity * 0.8);
+
+							float angle = e->Force.z - 0.5f;
+							angle = angle * 3.1415f;
+							float hspeed,zspeed;
+							if(angle<0.0f)
+								hspeed =  OpenAccelCoef;
+							else
+							{
+								hspeed = OpenAccelCoef * (float)cos(angle);
+								if(hspeed<OpenMinHSpeed)
+									hspeed=OpenMinHSpeed;
+							}
+							float minAngleToZSpeed = 1.0f - OpenMinAngleToZSpeed;
+							if(e->Force.z<minAngleToZSpeed)
+								zspeed = - OpenZSpeed * (float)sin(((minAngleToZSpeed - e->Force.z) / minAngleToZSpeed) * 3.1415f * 0.5f);
+							else
+								zspeed = 0;
+							if(-zspeed<OpenMinZSpeed)
+								zspeed=-OpenMinZSpeed;
+							double dx = cos(e->Force.x) * hspeed;
+							double dy = sin(e->Force.x) * hspeed;
+							dBodyAddForce(e->Body, (dReal)dx, (dReal)dy, zspeed);
+							//nlinfo("angle = %f,  zspeed = %f ,   hspeed = %f",angle,zspeed,hspeed);
+	/*
+							dMatrix3 R;
+							dRFromEulerAngles(R,e->ForceZ * 3.1415 - 3.1415 / 2.0f , -0.5f * (e->ForceX + 3.1415 / 2.0f),0);
+							dBodySetRotation(e->Body,R);
+	*/
+						}
+						dBodySetLinearVel(e->Body, 0, 0, 0);
+						dBodySetAngularVel(e->Body, 0, 0, 0);
+					}
+					else
+					{
+						const dReal *curentLenVel;
+						if(e->Accel)
+							dBodyAddForce(e->Body, e->Force.x, e->Force.y, e->Force.z);
+						curentLenVel = dBodyGetLinearVel(e->Body);
+						CVector currentLinearVelocity(curentLenVel[0],curentLenVel[1],curentLenVel[2]);
+						if(e->maxLinearVelocity()>0 && currentLinearVelocity.norm()>e->maxLinearVelocity())
+						{
+							currentLinearVelocity.normalize();
+							currentLinearVelocity *= e->maxLinearVelocity();
+							dBodySetAngularVel(e->Body, currentLinearVelocity.x,currentLinearVelocity.y,currentLinearVelocity.z);
+						}
+					}
+
+					//if(e->NbOpenClose >= e->MaxOpenClose)
+					if(e->Friction)
+					{
+						if(e->Friction>1000)
+							e->Friction = 1000.0f;
+						const dReal *avel = dBodyGetAngularVel(e->Body);
+						dReal friction = 1.0f - (e->Friction / 1000.0f);
+						dBodySetAngularVel(e->Body, avel[0]*friction, avel[1]*friction, avel[2]*friction);
+					}
+				}
+				e->Friction = e->DefaultFriction;
+	//					e->jointed = false;
+				if(e->type()==CEntity::Bot && !e->FreezeCommand && e->InGame && e->NbOpenClose<e->MaxOpenClose)
+				{
+					CVector v;
+					CBot *b = (CBot *)e;
+					b->getBotDelta(v);
+					if(!v.isNull())
+					{
+						const dReal *oldp;
+						oldp = dBodyGetPosition(b->Body);
+						dBodySetPosition(b->Body, oldp[0]+v.x,oldp[1]+v.y,oldp[2]+v.z);
+					}
+				}
+
+			}
+
+			{
+				CSynchronized<dSpaceID>::CAccessor acces(&Space);
+				dSpaceCollide(acces.value(), 0, &nearCallback);
+				dWorldStep(World, worldStep);
+			}
+
+
+			// reset bad evaluation
+			for(it = CEntityManager::getInstance().entities().begin(); it != CEntityManager::getInstance().entities().end(); it++)
+			{
+				const dReal *vel = dBodyGetLinearVel((*it)->Body);
+				if(fabs(vel[0])>1000.0 || fabs(vel[1])>1000.0 || fabs(vel[2])>1000.0)
+					dBodySetLinearVel((*it)->Body, 0.0f, 0.0f, 0.0f);
+			}
+
+			dJointGroupEmpty(ContactGroup);
+		}
+
+		/*
+		CLuaEngine::levelUpdate();
+		for(it = acces.value().begin(); it != acces.value().end(); it++)
+		{
+			CEntity *entity = (*it);
+			CLuaEngine::clientUpdate(entity);
+		}
+		*/
+		
+		/*CollisionEntityListIt eit;
+		for(eit = CollisionEntityList.begin(); eit != CollisionEntityList.end(); eit++)
+		{
+			CCollisionEntity *entity = &(*eit);
+			CLuaEngine::collisionEntityUpdate(entity);
+		}*/
+	}
+
+}
 
 class PhysicsThread : public IRunnable
 {
 	void run()
 	{
 		PhysicThreadId = myGetThreadId();
-		static TTime lastTime = CTime::getLocalTime();
-		static float deltaTime = worldStep;
 		while(true)
 		{
-			TTime newTime = CTime::getLocalTime();
-			deltaTime = (float)(newTime - lastTime)/1000.0f;
-			int   nbLoop = int(deltaTime / worldStep);
-			float missedTime = deltaTime - nbLoop * worldStep;
-			//nlinfo("physic nbloop = %d = %f / %f (missed %f)",nbLoop,deltaTime,worldStep,missedTime);
-			lastTime = newTime-(TTime)missedTime;
-			{
-				SyncPhyTime::CAccessor acces(&syncPhyTime);
-				acces.value() = newTime;
-				//				nlinfo("%f %"NL_I64"d", (float)(newTime-syncStartPhyTime)/1000.0f, newTime);
-			}
-
-			{
-				CEntityManager::EntityConstIt it;
-				for(int step=0;step<nbLoop;step++)
-				{
-					//_CrtCheckMemory();
-
-					for(it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
-					{
-						CEntity *e = (*it);
-
-						e->ColState = "";
-
-						if(!e->InGame)
-						{
-							dBodySetLinearVel(e->Body, 0, 0, 0);
-						}
-						else
-						{
-							//SKEET_WARNING tentative de virer le bug du score a zero sur tricol
-							//e->CurrentScore = 0;
-							if(e->OpenClose)
-							{
-								if(e->FreezeCommand)
-								{
-									dBodyAddForce(e->Body, 0, 0, 0);
-								}
-								else
-								{
-									// we must set the friction force for planning
-									dMass mass;
-									dBodyGetMass(e->Body, &mass);
-									//dBodyAddForce(e->Body, e->ForceX, e->ForceY, + e->ForceZ - mass.mass * Gravity * 0.8);
-
-									float angle = e->Force.z - 0.5f;
-									angle = angle * 3.1415f;
-									float hspeed,zspeed;
-									if(angle<0.0f)
-										hspeed =  OpenAccelCoef;
-									else
-									{
-										hspeed = OpenAccelCoef * (float)cos(angle);
-										if(hspeed<OpenMinHSpeed)
-											hspeed=OpenMinHSpeed;
-									}
-									float minAngleToZSpeed = 1.0f - OpenMinAngleToZSpeed;
-									if(e->Force.z<minAngleToZSpeed)
-										zspeed = - OpenZSpeed * (float)sin(((minAngleToZSpeed - e->Force.z) / minAngleToZSpeed) * 3.1415f * 0.5f);
-									else
-										zspeed = 0;
-									if(-zspeed<OpenMinZSpeed)
-										zspeed=-OpenMinZSpeed;
-									double dx = cos(e->Force.x) * hspeed;
-									double dy = sin(e->Force.x) * hspeed;
-									dBodyAddForce(e->Body, (dReal)dx, (dReal)dy, zspeed);
-									//nlinfo("angle = %f,  zspeed = %f ,   hspeed = %f",angle,zspeed,hspeed);
-	/*
-									dMatrix3 R;
-									dRFromEulerAngles(R,e->ForceZ * 3.1415 - 3.1415 / 2.0f , -0.5f * (e->ForceX + 3.1415 / 2.0f),0);
-									dBodySetRotation(e->Body,R);
-	*/
-								}
-								dBodySetLinearVel(e->Body, 0, 0, 0);
-								dBodySetAngularVel(e->Body, 0, 0, 0);
-							}
-							else
-							{
-								const dReal *curentLenVel;
-								if(e->Accel)
-									dBodyAddForce(e->Body, e->Force.x, e->Force.y, e->Force.z);
-								curentLenVel = dBodyGetLinearVel(e->Body);
-								CVector currentLinearVelocity(curentLenVel[0],curentLenVel[1],curentLenVel[2]);
-								if(e->maxLinearVelocity()>0 && currentLinearVelocity.norm()>e->maxLinearVelocity())
-								{
-									currentLinearVelocity.normalize();
-									currentLinearVelocity *= e->maxLinearVelocity();
-									dBodySetAngularVel(e->Body, currentLinearVelocity.x,currentLinearVelocity.y,currentLinearVelocity.z);
-								}
-							}
-
-							//if(e->NbOpenClose >= e->MaxOpenClose)
-							if(e->Friction)
-							{
-								if(e->Friction>1000)
-									e->Friction = 1000.0f;
-								const dReal *avel = dBodyGetAngularVel(e->Body);
-								dReal friction = 1.0f - (e->Friction / 1000.0f);
-								dBodySetAngularVel(e->Body, avel[0]*friction, avel[1]*friction, avel[2]*friction);
-							}
-						}
-						e->Friction = e->DefaultFriction;
-	//					e->jointed = false;
-						if(e->type()==CEntity::Bot && !e->FreezeCommand && e->InGame && e->NbOpenClose<e->MaxOpenClose)
-						{
-							CVector v;
-							CBot *b = (CBot *)e;
-							b->getBotDelta(v);
-							if(!v.isNull())
-							{
-								const dReal *oldp;
-								oldp = dBodyGetPosition(b->Body);
-								dBodySetPosition(b->Body, oldp[0]+v.x,oldp[1]+v.y,oldp[2]+v.z);
-							}
-						}
-
-					}
-
-					{
-						CSynchronized<dSpaceID>::CAccessor acces(&Space);
-						dSpaceCollide(acces.value(), 0, &nearCallback);
-						dWorldStep(World, worldStep);
-					}
-
-
-					// reset bad evaluation
-					for(it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
-					{
-						const dReal *vel = dBodyGetLinearVel((*it)->Body);
-						if(fabs(vel[0])>1000.0 || fabs(vel[1])>1000.0 || fabs(vel[2])>1000.0)
-							dBodySetLinearVel((*it)->Body, 0.0f, 0.0f, 0.0f);
-					}
-
-					dJointGroupEmpty(ContactGroup);
-				}
-			
-				/*
-				CLuaEngine::levelUpdate();
-				for(it = acces.value().begin(); it != acces.value().end(); it++)
-				{
-					CEntity *entity = (*it);
-					CLuaEngine::clientUpdate(entity);
-				}
-				*/
-				
-				/*CollisionEntityListIt eit;
-				for(eit = CollisionEntityList.begin(); eit != CollisionEntityList.end(); eit++)
-				{
-					CCollisionEntity *entity = &(*eit);
-					CLuaEngine::collisionEntityUpdate(entity);
-				}*/
-			}
+			updatePhysics();
 			nlSleep(10);
 			checkPhysicPaused();
 		}
 	}
 	
 };
-
-static PhysicsThread *physicThread = 0;
 
 //
 // Functions
@@ -670,9 +569,9 @@ void initPhysics()
 	
 	//		addClient("dummy");
 	
-	physicThread = new PhysicsThread;
+/*ace more thread	physicThread = new PhysicsThread;
 	thread = IThread::create(physicThread);
-	thread->start();
+	thread->start();*/
 }
 
 
@@ -729,55 +628,13 @@ NLMISC_COMMAND(subCloseAccelCoef, "sub accel coef", "") { CloseAccelCoef -= 1.0f
 NLMISC_COMMAND(addGravity, "add gravity", "") { Gravity += 0.5f; return true; }
 NLMISC_COMMAND(subGravity, "sub gravity", "") { Gravity -= 0.5f; return true; }
 
-#define DISP_VAR(__name) log.displayNL("%s = %g (from %s)", #__name, __name, (__name##FromCfg?"cfg":"level"));
-
-/* TODO: mettre ca dans level.cpp
-NLMISC_COMMAND(displayLevel, "display the current level", "")
-{
-	log.displayNL("LevelName = %s (from %s)", LevelName.c_str(), (LevelNameFromCfg?"cfg":"level"));
-	log.displayNL("Author = %s (from %s)", Author.c_str(), (AuthorFromCfg?"cfg":"level"));
-	
-	DISP_VAR(DefaultMaxOpenClose);
-	DISP_VAR(TimeBeforeStart);
-	DISP_VAR(TimeBeforeRestart);
-	DISP_VAR(TimeBeforeCheck);
-	DISP_VAR(TimeTimeout);
-	DISP_VAR(NbWaitingClients);
-	DISP_VAR(OpenAccelCoef);
-	DISP_VAR(CloseAccelCoef);
-	DISP_VAR(SphereDensity);
-	DISP_VAR(Gravity);
-	DISP_VAR(BounceWater);
-	DISP_VAR(BounceVelWater);
-	DISP_VAR(BounceClient);
-	DISP_VAR(BounceVelClient);
-	DISP_VAR(BounceScene);
-	DISP_VAR(BounceVelScene);
-	DISP_VAR(MinVelBeforeEnd);
-	DISP_VAR(NbMaxClients);
-	DISP_VAR(ModuleScore);
-	DISP_VAR(ModuleBounce);
-	DISP_VAR(ModuleAccel);
-	DISP_VAR(ModuleFriction);
-
-	std::list<CCollisionEntity>::iterator it;
-	sint i;
-	log.displayNL("The level contains %d collision entity:", CollisionEntityList.size());
-	for(i = 0, it = CollisionEntityList.begin(); it != CollisionEntityList.end(); it++, i++)
-	{
-		CVector pos;
-		(*it).getPosition(pos);
-		log.displayNL("Collision entity %d :'%s' pos %.2g %.2g %.2g", i, (*it).Name.c_str(), pos.x, pos.y, pos.z);
-		log.displayNL("  score %d accel %g friction %g %sbounce luafct '%s'", (*it).Score, (*it).Accel, (*it).Friction, ((*it).Bounce?"":"no "), (*it).LuaFunctionName.c_str());
-	}
-
-	return true;
-}
-*/
-
+//#define DISP_VAR(__name) log.displayNL("%s = %g (from %s)", #__name, __name, (__name##FromCfg?"cfg":"level"));
 
 void checkPhysicPaused()
 {
+	// ace no thread
+	return;
+
 	{
 		bool pause;
 		{
@@ -804,6 +661,8 @@ void checkPhysicPaused()
 
 bool pausePhysics(bool waitAck)
 {
+	// ace no thread
+	return true;
 	/*
 	bool pause;
 	{
@@ -835,6 +694,9 @@ bool pausePhysics(bool waitAck)
 
 bool isPhysicsPaused()
 {
+	// ace no thread
+	return false;
+
 	bool ackPaused;
 	{
 		CSynchronized<PauseFlags>::CAccessor acces(&physicPauseFlags);
@@ -845,6 +707,9 @@ bool isPhysicsPaused()
 
 void resumePhysics()
 {
+	// ace no thread
+	return;
+
 	CSynchronized<PauseFlags>::CAccessor acces(&physicPauseFlags);
 	if(acces.value().pauseCount>0) 
 	{

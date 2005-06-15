@@ -32,13 +32,14 @@
 // Includes
 //
 
+#include <nel/misc/singleton.h>
 
 
 //
 // Classes
 //
 
-class CTaskManager : public CSingleton<CTaskManager>
+class CTaskManager : public NLMISC::CSingleton<CTaskManager>
 {
 public:
 

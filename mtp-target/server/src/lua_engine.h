@@ -25,6 +25,8 @@
 // Includes
 //
 
+#include <nel/misc/singleton.h>
+
 #include "../../common/lua_utility.h"
 #include "../../common/lunar.h"
 #include "entity_lua_proxy.h"
@@ -36,7 +38,7 @@
 // Classes
 //
 
-class CLuaEngine : public CSingleton<CLuaEngine>
+class CLuaEngine : public NLMISC::CSingleton<CLuaEngine>
 {
 public:
 	CLuaEngine();

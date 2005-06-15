@@ -36,7 +36,7 @@
 // Classes
 //
 
-class CLevelManager : public CSingleton<CLevelManager>, public ITask
+class CLevelManager : public NLMISC::CSingleton<CLevelManager>, public ITask
 {
 public:
 
@@ -56,7 +56,7 @@ public:
 	// find and load a new level
 	void loadLevel(const std::string &fileName);
 protected:
-	friend class CSingleton<CLevelManager>;
+	friend class NLMISC::CSingleton<CLevelManager>;
 	CLevelManager();
 
 private:

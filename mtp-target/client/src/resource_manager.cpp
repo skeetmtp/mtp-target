@@ -76,7 +76,7 @@ using namespace NLMISC;
 void CResourceManagerLan::init()
 {
 	CPath::remapExtension("dds", "tga", true);
-	CacheDirectory = CPath::standardizePath(CConfigFileTask::instance().configFile().getVar("CacheDirectory").asString());
+	CacheDirectory = CPath::standardizePath(CConfigFileTask::getInstance().configFile().getVar("CacheDirectory").asString());
 
 	if(!CFile::isDirectory(CacheDirectory))
 	{
@@ -86,7 +86,7 @@ void CResourceManagerLan::init()
 		}
 	}
 
-	CConfigFile::CVar &v = CConfigFileTask::instance().configFile().getVar("Path");
+	CConfigFile::CVar &v = CConfigFileTask::getInstance().configFile().getVar("Path");
 	for (int i = 0; i < v.size(); i++)
 		CPath::addSearchPath (v.asString(i), true, false);
 
@@ -185,7 +185,7 @@ void CResourceManagerLan::loadChildren(const std::string &filename)
 		bank->setShapeCacheSize(shapeCache,1024*1024);
 		std::vector<std::string> filelist;
 		filelist.push_back(filename);
-		CDriverUser *drv = (CDriverUser *)(&C3DTask::instance().driver());
+		CDriverUser *drv = (CDriverUser *)(&C3DTask::getInstance().driver());
 		bank->preLoadShapes(shapeCache,filelist,string("*.ps"),NULL,true,drv->getDriver());
 		bool b = bank->isShapeWaiting();
 		IShape *is = bank->getShape(fn);
@@ -213,14 +213,14 @@ void CResourceManagerLan::loadChildren(const std::string &filename)
 
 bool CResourceManagerLan::waitNetworkMessage(bool stopFlag,bool &received, bool displayBackground)
 {
-		C3DTask::instance().update();
-		CTimeTask::instance().update();
-		//CBackgroundTask::instance().update();
-		CChatTask::instance().update();
-		CGuiTask::instance().update();
-		CNetworkTask::instance().update();
+		C3DTask::getInstance().update();
+		CTimeTask::getInstance().update();
+		//CBackgroundTask::getInstance().update();
+		CChatTask::getInstance().update();
+		CGuiTask::getInstance().update();
+		CNetworkTask::getInstance().update();
 		
-		if (C3DTask::instance().kbPressed(KeyESCAPE) || !C3DTask::instance().driver().isActive() || !CNetworkTask::instance().connected())
+		if (C3DTask::getInstance().kbPressed(KeyESCAPE) || !C3DTask::getInstance().driver().isActive() || !CNetworkTask::getInstance().connected())
 		{
 			exit(1);
 			received = false;
@@ -228,26 +228,26 @@ bool CResourceManagerLan::waitNetworkMessage(bool stopFlag,bool &received, bool 
 		}
 		
 		//			mt3dUpdate();
-		//			mtpTarget::instance().updateTime ();
-		//			mtpTarget::instance().Interface2d.updateChat();
+		//			mtpTarget::getInstance().updateTime ();
+		//			mtpTarget::getInstance().Interface2d.updateChat();
 		
-		C3DTask::instance().clear();
+		C3DTask::getInstance().clear();
 		//			mt3dClear ();
 		
 		// ace todo put this in task	
 		
-		//			mtpTarget::instance().Interface2d.displayBackground();
-		//			mtpTarget::instance().Interface2d.displayChat(true);
+		//			mtpTarget::getInstance().Interface2d.displayBackground();
+		//			mtpTarget::getInstance().Interface2d.displayChat(true);
 		
-		C3DTask::instance().render();
+		C3DTask::getInstance().render();
 		if(displayBackground)
-			CBackgroundTask::instance().render();
-		CChatTask::instance().render();
-		CGuiTask::instance().render();
+			CBackgroundTask::getInstance().render();
+		CChatTask::getInstance().render();
+		CGuiTask::getInstance().render();
 		
-		//CFontManager::instance().littlePrintf(3.0f, 29.0f, str.c_str());
+		//CFontManager::getInstance().littlePrintf(3.0f, 29.0f, str.c_str());
 		
-		CSwap3DTask::instance().render();
+		CSwap3DTask::getInstance().render();
 		
 		//			mt3dSwap ();
 		
@@ -303,7 +303,7 @@ string CResourceManagerLan::get(const string &filename, bool &ok)
 	string path = CPath::lookup(fn, false, false);
 	string fns = CFile::getFilename(path);
 
-	double currentTime = CTimeTask::instance().time();
+	double currentTime = CTimeTask::getInstance().time();
 	float updatePercent = 0;
 	guiSPG<CGuiFrame> mainFrame = 0;
 
@@ -313,29 +313,29 @@ string CResourceManagerLan::get(const string &filename, bool &ok)
 	{
 		//nlinfo("!path.empty()");
 		CRCUpToDate = true;
-		if(CNetworkTask::instance().connected())
+		if(CNetworkTask::getInstance().connected())
 		{
 			//nlinfo("connected");
 			double lastCheckTime = 0;
 			filename2LastCRCCheckTime::iterator it = CRCCheckTimes.find(fn);
 			if(it!=CRCCheckTimes.end())
 				lastCheckTime = (*it).second;
-			if( it==CRCCheckTimes.end() && CConfigFileTask::instance().configFile().getVar("CRCCheck").asInt())
+			if( it==CRCCheckTimes.end() && CConfigFileTask::getInstance().configFile().getVar("CRCCheck").asInt())
 			{
-				guiSPG<CGuiXml> xml = CGuiXmlManager::instance().Load("checking.xml");
+				guiSPG<CGuiXml> xml = CGuiXmlManager::getInstance().Load("checking.xml");
 				mainFrame = (CGuiFrame *)xml->get("checkingFrame");
 				guiSPG<CGuiText>  checkingMessage = (CGuiText *)xml->get("checkingMessage");
 				checkingMessage->text = "Please wait while checking : ";
 				guiSPG<CGuiText>  checkingFilename = (CGuiText *)xml->get("checkingFilename");
 				checkingFilename->text = fn;
-				CGuiObjectManager::instance().objects.push_back(mainFrame);
+				CGuiObjectManager::getInstance().objects.push_back(mainFrame);
 
 				nlinfo("CResourceManagerLan::get(%s) sending RequestCRCKey and waiting result",fn.c_str());
 				CHashKey hashKey = getSHA1(path);
 				CNetMessage msgout(CNetMessage::RequestCRCKey);
 				msgout.serial(fns);
 				msgout.serial(hashKey);
-				CNetworkTask::instance().send(msgout);
+				CNetworkTask::getInstance().send(msgout);
 				
 				CRCReceived = false;
 				bool messageReceived;
@@ -344,11 +344,11 @@ string CResourceManagerLan::get(const string &filename, bool &ok)
 				nlassert(tid==TaskManagerThreadId || tid==NetworkThreadId);
 				if(tid==TaskManagerThreadId)
 				{
-					while(waitNetworkMessage(CRCReceived,messageReceived) && !CMtpTarget::instance().error())
+					while(waitNetworkMessage(CRCReceived,messageReceived) && !CMtpTarget::getInstance().error())
 						checkTaskManagerPaused();
 				}
 				else
-					while(waitNetworkMessage(CRCReceived,messageReceived) && !CMtpTarget::instance().error());
+					while(waitNetworkMessage(CRCReceived,messageReceived) && !CMtpTarget::getInstance().error());
 					
 				if(!messageReceived)
 					return unk;
@@ -372,14 +372,14 @@ string CResourceManagerLan::get(const string &filename, bool &ok)
 		}
 	}
 
-	if(!CNetworkTask::instance().connected())
+	if(!CNetworkTask::getInstance().connected())
 	{
 		//nlinfo("!connected");
 		// we can't download the file
 		return unk;
 	}
 	
-	guiSPG<CGuiXml> xml = CGuiXmlManager::instance().Load("updating.xml");
+	guiSPG<CGuiXml> xml = CGuiXmlManager::getInstance().Load("updating.xml");
 	mainFrame = (CGuiFrame *)xml->get("updatingFrame");
 	guiSPG<CGuiText>  updatingMessage = (CGuiText *)xml->get("updatingMessage");
 	updatingMessage->text = "Please wait while dowloading : ";
@@ -387,7 +387,7 @@ string CResourceManagerLan::get(const string &filename, bool &ok)
 	updatingFilename->text = fn;
 	guiSPG<CGuiProgressBar>  updatingProgressBar = (CGuiProgressBar *)xml->get("updatingProgressBar");
 	updatingProgressBar->ptrValue(&updatePercent);
-	CGuiObjectManager::instance().objects.push_back(mainFrame);		
+	CGuiObjectManager::getInstance().objects.push_back(mainFrame);		
 	
 	
 	Eof = false;
@@ -407,7 +407,7 @@ string CResourceManagerLan::get(const string &filename, bool &ok)
 	
 	while(!Eof)
 	{
-		if(CMtpTarget::instance().error())
+		if(CMtpTarget::getInstance().error())
 		{
 			CFile::deleteFile(packedfn);
 			return unk;			
@@ -417,7 +417,7 @@ string CResourceManagerLan::get(const string &filename, bool &ok)
 		CNetMessage msgout(CNetMessage::RequestDownload);
 		msgout.serial(fn);
 		msgout.serial(part);
-		CNetworkTask::instance().send(msgout);
+		CNetworkTask::getInstance().send(msgout);
 
 		string str = toString("Please wait while downloading '%s' part %d", fn.c_str(), part);
 

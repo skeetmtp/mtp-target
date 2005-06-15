@@ -74,7 +74,7 @@ public:
 
 	virtual void onPressed()
 	{
-		CIntroTask::instance().doConnectionOnLine(_serverId);
+		CIntroTask::getInstance().doConnectionOnLine(_serverId);
 	}
 private:
 	uint32 _serverId;
@@ -87,7 +87,7 @@ public:
 	virtual ~CGuiExitButtonEventBehaviour() {}
 	virtual void onPressed()
 	{
-		CTaskManager::instance().exit();
+		CTaskManager::getInstance().exit();
 	}
 private:
 };
@@ -102,7 +102,7 @@ public:
 		int rowId = _serverListView->selectedRow();
 		nlinfo("user want to connect to server : %d",rowId);
 		if(rowId>=0)
-			CIntroTask::instance().doConnectionOnLine(rowId);
+			CIntroTask::getInstance().doConnectionOnLine(rowId);
 	}
 private:
 	guiSPG<CGuiListView> _serverListView;
@@ -117,7 +117,7 @@ public:
 	{
 		nlinfo("user want to connect to server : %d",rowId);
 		if(rowId>=0)
-			CIntroTask::instance().doConnectionOnLine(rowId);
+			CIntroTask::getInstance().doConnectionOnLine(rowId);
 	}
 private:
 };
@@ -129,16 +129,16 @@ private:
 
 void CIntroTask::reset()
 {
-	CGuiObjectManager::instance().objects.clear();
+	CGuiObjectManager::getInstance().objects.clear();
 	State=eInit;
 }
 
 void CIntroTask::init()
 {
-	CTaskManager::instance().add(CBackgroundTask::instance(), 59);
-	_autoLogin = CConfigFileTask::instance().configFile().getVar("AutoLogin").asInt();
+	CTaskManager::getInstance().add(CBackgroundTask::getInstance(), 59);
+	_autoLogin = CConfigFileTask::getInstance().configFile().getVar("AutoLogin").asInt();
 	if(_autoLogin!=0)
-		AutoServerId = CConfigFileTask::instance().configFile().getVar("AutoServerId").asInt();
+		AutoServerId = CConfigFileTask::getInstance().configFile().getVar("AutoServerId").asInt();
 	else if(AutoServerId!=-1)
 		_autoLogin = 1; //auto online login
 	
@@ -147,10 +147,10 @@ void CIntroTask::init()
 
 void CIntroTask::error(string &reason)
 {
-	guiSPG<CGuiXml> xml = CGuiXmlManager::instance().Load("error_server.xml");
+	guiSPG<CGuiXml> xml = CGuiXmlManager::getInstance().Load("error_server.xml");
 	_errorServerFrame = (CGuiFrame *)xml->get("errorServerFrame");
 	guiSPG<CGuiText>  errorServerReason = (CGuiText *)xml->get("errorServerReason");
-	CGuiObjectManager::instance().objects.push_back(_errorServerFrame);
+	CGuiObjectManager::getInstance().objects.push_back(_errorServerFrame);
 
 	errorServerReason->text = reason;
 }
@@ -202,12 +202,12 @@ void CIntroTask::updateInit()
 	listView->rows.push_back(row4);
 	
 	
-	CGuiObjectManager::instance().objects.push_back(testFrame);
+	CGuiObjectManager::getInstance().objects.push_back(testFrame);
 	State = eNone;
 	
 #else
 	guiSPG<CGuiXml> xml = 0;
-	xml = CGuiXmlManager::instance().Load("menu.xml");
+	xml = CGuiXmlManager::getInstance().Load("menu.xml");
 	menuFrame = (CGuiFrame *)xml->get("menuFrame");
 	howToPlay = (CGuiButton *)xml->get("bHowToPlay");
 	playOnLineButton = (CGuiButton *)xml->get("bPlayOnline");
@@ -215,27 +215,27 @@ void CIntroTask::updateInit()
 	exitButton3 = (CGuiButton *)xml->get("bExit");
 	exitButton3->eventBehaviour = new CGuiExitButtonEventBehaviour();
 	
-	xml = CGuiXmlManager::instance().Load("login.xml");
+	xml = CGuiXmlManager::getInstance().Load("login.xml");
 	loginFrame = (CGuiFrame *)xml->get("loginFrame");
 	loginText = (CGuiText*)xml->get("loginEntry");
-	loginText->text = CConfigFileTask::instance().configFile().getVar("Login").asString();
+	loginText->text = CConfigFileTask::getInstance().configFile().getVar("Login").asString();
 	passwordText = (CGuiText*)xml->get("passwordEntry");
-	passwordText->text = CConfigFileTask::instance().configFile().getVar("Password").asString();
+	passwordText->text = CConfigFileTask::getInstance().configFile().getVar("Password").asString();
 	loginButton = (CGuiButton *)xml->get("bLogin");
 	backButton1 = (CGuiButton *)xml->get("bBack");
 
-	xml = CGuiXmlManager::instance().Load("login_lan.xml");
+	xml = CGuiXmlManager::getInstance().Load("login_lan.xml");
 	loginLanFrame = (CGuiFrame *)xml->get("loginFrame");
 	loginLanText = (CGuiText*)xml->get("loginEntry");
-	loginLanText->text = CConfigFileTask::instance().configFile().getVar("Login").asString();
+	loginLanText->text = CConfigFileTask::getInstance().configFile().getVar("Login").asString();
 	passwordLanText = (CGuiText*)xml->get("passwordEntry");
-	passwordLanText->text = CConfigFileTask::instance().configFile().getVar("Password").asString();
+	passwordLanText->text = CConfigFileTask::getInstance().configFile().getVar("Password").asString();
 	serverLanText = (CGuiText*)xml->get("serverEntry");
-	serverLanText->text = CConfigFileTask::instance().configFile().getVar("ServerHost").asString();
+	serverLanText->text = CConfigFileTask::getInstance().configFile().getVar("ServerHost").asString();
 	loginLanButton = (CGuiButton *)xml->get("bLogin");
 	backLanButton1 = (CGuiButton *)xml->get("bBack");
 	
-	xml = CGuiXmlManager::instance().Load("server_list.xml");
+	xml = CGuiXmlManager::getInstance().Load("server_list.xml");
 	serverListFrame = (CGuiFrame *)xml->get("serverListFrame");
 	serverVbox = (CGuiVBox *)xml->get("serverVbox");
 	backButton2 = (CGuiButton *)xml->get("bBack");
@@ -246,7 +246,7 @@ void CIntroTask::updateInit()
 	
 	serverListView = new CGuiListView;
 
-	CGuiObjectManager::instance().objects.push_back(menuFrame);
+	CGuiObjectManager::getInstance().objects.push_back(menuFrame);
 	State = eMenu;
 
 	if(_autoLogin==1)
@@ -255,8 +255,8 @@ void CIntroTask::updateInit()
 		State = eLoginOnlan;
 #endif
 	
-	if(CConfigFileTask::instance().configFile().getVar("CustomGui").asInt()>0)
-		CGuiCustom::instance().load("data/gui/custom/");
+	if(CConfigFileTask::getInstance().configFile().getVar("CustomGui").asInt()>0)
+		CGuiCustom::getInstance().load("data/gui/custom/");
 	
 }
 
@@ -270,14 +270,14 @@ void CIntroTask::updateMenu()
 	}
 	if(playOnLineButton->pressed())
 	{
-		CGuiObjectManager::instance().objects.clear();
-		CGuiObjectManager::instance().objects.push_back(loginFrame);
+		CGuiObjectManager::getInstance().objects.clear();
+		CGuiObjectManager::getInstance().objects.push_back(loginFrame);
 		State = eLoginOnline;
 	}
 	if(playOnLanButton->pressed())
 	{
-		CGuiObjectManager::instance().objects.clear();
-		CGuiObjectManager::instance().objects.push_back(loginLanFrame);
+		CGuiObjectManager::getInstance().objects.clear();
+		CGuiObjectManager::getInstance().objects.push_back(loginLanFrame);
 		State = eLoginOnlan;
 	}
 	
@@ -290,8 +290,8 @@ void CIntroTask::updateLoginOnline()
 	if(backButton1->pressed())
 	{
 		State = eMenu;
-		CGuiObjectManager::instance().objects.clear();
-		CGuiObjectManager::instance().objects.push_back(menuFrame);	
+		CGuiObjectManager::getInstance().objects.clear();
+		CGuiObjectManager::getInstance().objects.push_back(menuFrame);	
 		return;
 	}
 
@@ -299,18 +299,18 @@ void CIntroTask::updateLoginOnline()
 	{
 		loginText->text = NLMISC::strlwr(loginText->text);
 		passwordText->text = NLMISC::strlwr(passwordText->text);
-		CConfigFileTask::instance().configFile().getVar("Login").setAsString(loginText->text);
-		CConfigFileTask::instance().configFile().getVar("Password").setAsString(passwordText->text);
-		CConfigFileTask::instance().configFile().save();
+		CConfigFileTask::getInstance().configFile().getVar("Login").setAsString(loginText->text);
+		CConfigFileTask::getInstance().configFile().getVar("Password").setAsString(passwordText->text);
+		CConfigFileTask::getInstance().configFile().save();
 		_errorServerFrame = 0;
 
-		string loginServer = CConfigFileTask::instance().configFile().getVar("LSHost").asString();
+		string loginServer = CConfigFileTask::getInstance().configFile().getVar("LSHost").asString();
 		string reason = CLoginClientMtp::authenticate(loginServer, loginText->text, passwordText->text, 0);
 		if(!reason.empty())
 		{
 			_autoLogin = 0;
 			error(reason);
-			CGuiObjectManager::instance().objects.push_back(loginFrame);
+			CGuiObjectManager::getInstance().objects.push_back(loginFrame);
 		}
 		else
 		{
@@ -345,7 +345,7 @@ void CIntroTask::updateLoginOnline()
 				serverListView->rows.push_back(row);
 				/*
 				guiSPG<CGuiXml> xml = 0;
-				xml = CGuiXmlManager::instance().Load("server_item.xml");
+				xml = CGuiXmlManager::getInstance().Load("server_item.xml");
 				{
 					guiSPG<CGuiHBox> serverItemHBox = (CGuiHBox *)xml->get("serverItemHBox");
 					guiSPG<CGuiText> btextServer = (CGuiText *)xml->get("btextServer");
@@ -372,8 +372,8 @@ void CIntroTask::updateLoginOnline()
 
 			serverListVBox->elements.push_back(serverListButtonBox);
 
-			CGuiObjectManager::instance().objects.clear();
-			CGuiObjectManager::instance().objects.push_back(serverListFrame);
+			CGuiObjectManager::getInstance().objects.clear();
+			CGuiObjectManager::getInstance().objects.push_back(serverListFrame);
 			State = eServerList;
 		}
 
@@ -388,8 +388,8 @@ void CIntroTask::updateLoginOnlan()
 	if(backLanButton1->pressed())
 	{
 		State = eMenu;
-		CGuiObjectManager::instance().objects.clear();
-		CGuiObjectManager::instance().objects.push_back(menuFrame);	
+		CGuiObjectManager::getInstance().objects.clear();
+		CGuiObjectManager::getInstance().objects.push_back(menuFrame);	
 		return;
 	}
 	
@@ -398,12 +398,12 @@ void CIntroTask::updateLoginOnlan()
 		loginLanText->text = NLMISC::strlwr(loginLanText->text);
 		passwordLanText->text = NLMISC::strlwr(passwordLanText->text);
 		serverLanText->text = NLMISC::strlwr(serverLanText->text);
-		CConfigFileTask::instance().configFile().getVar("Login").setAsString(loginLanText->text);
-		CConfigFileTask::instance().configFile().getVar("Password").setAsString(passwordLanText->text);
-		CConfigFileTask::instance().configFile().getVar("ServerHost").setAsString(serverLanText->text);
-		CConfigFileTask::instance().configFile().save();
+		CConfigFileTask::getInstance().configFile().getVar("Login").setAsString(loginLanText->text);
+		CConfigFileTask::getInstance().configFile().getVar("Password").setAsString(passwordLanText->text);
+		CConfigFileTask::getInstance().configFile().getVar("ServerHost").setAsString(serverLanText->text);
+		CConfigFileTask::getInstance().configFile().save();
 		
-		CGuiObjectManager::instance().objects.clear();
+		CGuiObjectManager::getInstance().objects.clear();
 		State = eConnectionOnlan;
 	}
 	
@@ -419,8 +419,8 @@ void CIntroTask::updateServerList()
 	if(backButton2->pressed() || serverListBackButton->pressed())
 	{
 		State = eMenu;
-		CGuiObjectManager::instance().objects.clear();
-		CGuiObjectManager::instance().objects.push_back(menuFrame);
+		CGuiObjectManager::getInstance().objects.clear();
+		CGuiObjectManager::getInstance().objects.push_back(menuFrame);
 		return;
 	}
 }
@@ -429,7 +429,7 @@ void CIntroTask::updateConnectionOnLine()
 {
 	if(State!=eConnectionOnline) return;
 	
-	CGuiObjectManager::instance().objects.clear();
+	CGuiObjectManager::getInstance().objects.clear();
 	
 	CInetAddress ip;
 	string cookie;
@@ -439,31 +439,31 @@ void CIntroTask::updateConnectionOnLine()
 	{
 		_autoLogin = 0;
 		error(reason);
-		CGuiObjectManager::instance().objects.push_back(loginFrame);
+		CGuiObjectManager::getInstance().objects.push_back(loginFrame);
 		State = eLoginOnline;
 		return;
 	}
 
-	nlinfo("CNetworkTask::instance().connect()");
-	reason = CNetworkTask::instance().connect(ip, cookie);
+	nlinfo("CNetworkTask::getInstance().connect()");
+	reason = CNetworkTask::getInstance().connect(ip, cookie);
 	if(!reason.empty())
 	{
 		_autoLogin = 0;
 		error(reason);
-		CGuiObjectManager::instance().objects.push_back(loginFrame);
+		CGuiObjectManager::getInstance().objects.push_back(loginFrame);
 		State = eLoginOnline;
 		return;
 	}
 
-	CResourceManager::instance().connected(true);
+	CResourceManager::getInstance().connected(true);
 	_autoLogin = 0;//autologin only once
 	stop();
 	// stop the background
-	CBackgroundTask::instance().stop();
+	CBackgroundTask::getInstance().stop();
 	// go to the game task
-	CTaskManager::instance().add(CGameTask::instance(), 60);
+	CTaskManager::getInstance().add(CGameTask::getInstance(), 60);
 	
-	CGuiObjectManager::instance().objects.clear();
+	CGuiObjectManager::getInstance().objects.clear();
 	State = eNone;
 }
 
@@ -472,21 +472,21 @@ void CIntroTask::updateConnectionOnLan()
 {
 	if(State!=eConnectionOnlan) return;
 	
-	CGuiObjectManager::instance().objects.clear();
+	CGuiObjectManager::getInstance().objects.clear();
 	
-	string res = CNetworkTask::instance().connect(CInetAddress(CConfigFileTask::instance().configFile().getVar("ServerHost").asString()+":"+toString(CConfigFileTask::instance().configFile().getVar("TcpPort").asInt())));
+	string res = CNetworkTask::getInstance().connect(CInetAddress(CConfigFileTask::getInstance().configFile().getVar("ServerHost").asString()+":"+toString(CConfigFileTask::getInstance().configFile().getVar("TcpPort").asInt())));
 	if(res.empty())
 	{
 		//no internet patch on lan
-		//CResourceManager::instance().connected(true);
+		//CResourceManager::getInstance().connected(true);
 		_autoLogin = 0;//autologin only once
 		stop();
 		// stop the background
-		CBackgroundTask::instance().stop();
+		CBackgroundTask::getInstance().stop();
 		// go to the game task
-		CTaskManager::instance().add(CGameTask::instance(), 60);
+		CTaskManager::getInstance().add(CGameTask::getInstance(), 60);
 		
-		CGuiObjectManager::instance().objects.clear();
+		CGuiObjectManager::getInstance().objects.clear();
 		State = eNone;
 		return;		
 	}
@@ -494,7 +494,7 @@ void CIntroTask::updateConnectionOnLan()
 	{
 		_autoLogin = 0;
 		error(res);
-		CGuiObjectManager::instance().objects.push_back(loginLanFrame);
+		CGuiObjectManager::getInstance().objects.push_back(loginLanFrame);
 		State = eLoginOnlan;
 		return;
 	}
@@ -521,10 +521,10 @@ void CIntroTask::update()
 	updateConnectionOnLine();
 	updateConnectionOnLan();
 	
-	if(C3DTask::instance().kbPressed(KeyESCAPE))
+	if(C3DTask::getInstance().kbPressed(KeyESCAPE))
 	{
 		// want to quit
-		CTaskManager::instance().exit();
+		CTaskManager::getInstance().exit();
 	}
 
 	
@@ -532,7 +532,7 @@ void CIntroTask::update()
 
 void CIntroTask::render()
 {
-	CFontManager::instance().littlePrintf(0.0f, 0.0f, toString("v%s %s",MTPT_RELEASE_VERSION_NUMBER,MTPT_RELEASE_VERSION_NAME).c_str());
+	CFontManager::getInstance().littlePrintf(0.0f, 0.0f, toString("v%s %s",MTPT_RELEASE_VERSION_NUMBER,MTPT_RELEASE_VERSION_NAME).c_str());
 }
 
 void CIntroTask::release()

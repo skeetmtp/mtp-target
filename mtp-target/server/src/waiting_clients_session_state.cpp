@@ -51,19 +51,19 @@ using namespace NLMISC;
 
 void CWaitingClientsSessionState::update()
 {
-	uint humanClientCount = CEntityManager::instance().humanClientCount();
+	uint humanClientCount = CEntityManager::getInstance().humanClientCount();
 
 	if(humanClientCount >= NbWaitingClients)
 	{
 		CEntityManager::EntityConstIt it;
 		// ok to launch a session
-		changeState(CWaitingReadySessionState::instance());
+		changeState(CWaitingReadySessionState::getInstance());
 
 		string string1, string2;
 //ace		mtLevelManager::newLevel(CurrentLevel, string1, string2);
 
-		CLevelManager::instance().newLevel(string1, string2);
-		string CurrentLevel = CLevelManager::instance().currentLevel().fileName();
+		CLevelManager::getInstance().newLevel(string1, string2);
+		string CurrentLevel = CLevelManager::getInstance().currentLevel().fileName();
 
 //ace		string luaCodeFilename = CPath::lookup(CurrentLevel+".lua", false);
 //		CLuaEngine::loadLevelCode(luaCodeFilename);
@@ -73,13 +73,13 @@ void CWaitingClientsSessionState::update()
 		nlinfo("CWaitingClientsSessionState ends : reset every body");
 		static uint st = 0;
 		uint i=st++;
-		for(it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++, i++)
+		for(it = CEntityManager::getInstance().entities().begin(); it != CEntityManager::getInstance().entities().end(); it++, i++)
 		{
 			//dGeomSetPosition((*it)->Geom, StartX+2.5*i, StartY, StartZ);
 			//dBodySetPosition((*it)->Body, StartX+2.5*i, StartY, StartZ);
 			
 			CVector startPos;
-			CLevelManager::instance().currentLevel().nextStartingPoint(startPos, (*it)->StartingPointId);
+			CLevelManager::getInstance().currentLevel().nextStartingPoint(startPos, (*it)->StartingPointId);
 
 			//i = i % StartPointList.size();
 			//(*it)->StartingPointId = i;
@@ -120,13 +120,13 @@ void CWaitingClientsSessionState::update()
 		nlinfo("sending StartSession to everybody");
 		CNetMessage msgout(CNetMessage::StartSession);
 		msgout.serial(TimeBeforeStart);
-		float ttimeout = (float)CLevelManager::instance().timeTimeout();
+		float ttimeout = (float)CLevelManager::getInstance().timeTimeout();
 		msgout.serial(ttimeout);
 		msgout.serial(CurrentLevel, string1, string2);
 		//ace		msgout.serial(CurrentLevel, LevelName, string1, string2, Author);
 		vector<uint8> ranks;
 		vector<uint8> eids;
-		for(it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
+		for(it = CEntityManager::getInstance().entities().begin(); it != CEntityManager::getInstance().entities().end(); it++)
 		{
 			CEntity *e = *it;
 			ranks.push_back(e->StartingPointId);
@@ -135,21 +135,21 @@ void CWaitingClientsSessionState::update()
 		}
 		msgout.serialCont(ranks);		
 		msgout.serialCont(eids);		
-		CNetwork::instance().send(msgout);
+		CNetwork::getInstance().send(msgout);
 		
-		for(it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++, i++)
+		for(it = CEntityManager::getInstance().entities().begin(); it != CEntityManager::getInstance().entities().end(); it++, i++)
 		{
 			if((*it)->type() == CEntity::Bot)
 			{
 				CNetMessage msgout(CNetMessage::Ready);
 				uint8 eid = (*it)->id();
 				msgout.serial(eid);
-				CNetwork::instance().send(msgout);
+				CNetwork::getInstance().send(msgout);
 			}
 		}
 
 /*
-		for(it = CEntityManager::instance().entities().begin(); it != CEntityManager::instance().entities().end(); it++)
+		for(it = CEntityManager::getInstance().entities().begin(); it != CEntityManager::getInstance().entities().end(); it++)
 		{
 			CLuaEngine::clientInit(*it);
 		}
@@ -164,19 +164,19 @@ void CWaitingClientsSessionState::update()
 
 		dWorldSetGravity(World, 0.0f, 0.0f, 0.0f);
 		nlinfo("set gravity : off");
-		CSessionManager::instance().forceEnding(false);
+		CSessionManager::getInstance().forceEnding(false);
 	}
 	else
 	{
 		if(_restart)
 		{
-			CNetwork::instance().sendToPublicChat("quit restart required");
+			CNetwork::getInstance().sendToPublicChat("quit restart required");
 			nlinfo("server restart required");
 			throw "server restart required";
 		}
 		if(firstUpdate)
 		{
-			CLevelManager::instance().release();
+			CLevelManager::getInstance().release();
 		}
 	}
 	firstUpdate = false;
@@ -184,6 +184,6 @@ void CWaitingClientsSessionState::update()
 
 NLMISC_COMMAND(restart, "restart server when human player count = 0", "")
 {
-	CWaitingClientsSessionState::instance().restart();
+	CWaitingClientsSessionState::getInstance().restart();
 	return true;
 }

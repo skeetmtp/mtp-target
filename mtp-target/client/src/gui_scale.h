@@ -90,7 +90,7 @@ public:
 	virtual void init(CGuiXml *xml,xmlNodePtr node);
 };
 
-class CGuiScaleManager : public CSingleton<CGuiScaleManager>
+class CGuiScaleManager : public NLMISC::CSingleton<CGuiScaleManager>
 {
 public:
 	virtual void init();

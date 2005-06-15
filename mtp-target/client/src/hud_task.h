@@ -49,7 +49,7 @@ public:
 		if(duration==0)
 			this->endTime = 0;
 		else
-			this->endTime = duration + CTimeTask::instance().time();
+			this->endTime = duration + CTimeTask::getInstance().time();
 	}
 	virtual ~CHudMessage()
 	{
@@ -65,7 +65,7 @@ protected:
 private:
 };
 
-class CHudTask : public CSingleton<CHudTask>, public ITask
+class CHudTask : public NLMISC::CSingleton<CHudTask>, public ITask
 {
 public:
 

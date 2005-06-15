@@ -88,8 +88,8 @@ CLevel::CLevel(const string &filename)
 
 void CLevel::_luaInit()
 {
-	CLuaEngine::instance().init(FileName);
-	lua_State *_luaSession = CLuaEngine::instance().session();
+	CLuaEngine::getInstance().init(FileName);
+	lua_State *_luaSession = CLuaEngine::getInstance().session();
 	if(_luaSession)
 		Valid = true;
 	else
@@ -120,9 +120,9 @@ void CLevel::_luaInit()
 
 	string ServerLua;
 	luaGetGlobalVariable(_luaSession, ServerLua);
-	luaLoad(CLuaEngine::instance().session(),ServerLua);
+	luaLoad(CLuaEngine::getInstance().session(),ServerLua);
 
-	if(!CLuaEngine::instance().session())
+	if(!CLuaEngine::getInstance().session())
 		return;
 	luaGetGlobalVariable(_luaSession, Name);
 	//	nlinfo("level name '%s'", Name.c_str());
@@ -247,18 +247,18 @@ void CLevel::_luaInit()
 void CLevel::initBeforeStartLevel()
 {
 	
-	CEntityManager::instance().initBeforeStartLevel();
+	CEntityManager::getInstance().initBeforeStartLevel();
 
 	for(uint i = 0; i < Modules.size(); i++)
 		Modules[i]->initBeforeStartLevel();
 
-	CLuaEngine::instance().levelInit();
+	CLuaEngine::getInstance().levelInit();
 	
 }
 
 CLevel::~CLevel()
 {
-	CLuaEngine::instance().release();
+	CLuaEngine::getInstance().release();
 	
 	for(uint i = 0; i < Modules.size(); i++)
 		delete Modules[i];
@@ -444,7 +444,7 @@ void CLevel::save()
 	CNetMessage msgout(CNetMessage::RequestCRCKey);
 	msgout.serial(FileName);
 	msgout.serial(serverHashKey);
-	CNetwork::instance().send(msgout);
+	CNetwork::getInstance().send(msgout);
 	*/
 
 	
@@ -532,7 +532,7 @@ bool CLevel::changed()
 
 bool CLevel::valid()
 { 
-	return Valid && !CLuaEngine::instance().hasError(); 
+	return Valid && !CLuaEngine::getInstance().hasError(); 
 }
 
 

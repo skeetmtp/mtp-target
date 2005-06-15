@@ -68,7 +68,7 @@ CGuiMouseListener::CGuiMouseListener()
 	ButtonDown = false;
 	RightButtonDown = false;
 	Clicked = false;
-	LastClickedTime = CTimeTask::instance().time();
+	LastClickedTime = CTimeTask::getInstance().time();
 	DoubleClicked = false;
 	LastButtonDown = false;   
 	_captureCursor = false;
@@ -87,27 +87,27 @@ void CGuiMouseListener::update()
 {
 	Pressed = ButtonDown && !LastButtonDown;
 	Clicked = !ButtonDown && LastButtonDown;
-	double dtime = CTimeTask::instance().time()-LastClickedTime ;
+	double dtime = CTimeTask::getInstance().time()-LastClickedTime ;
 	DoubleClicked = Clicked && dtime<0.3f;
 	if(Clicked)
-		LastClickedTime = CTimeTask::instance().time();
+		LastClickedTime = CTimeTask::getInstance().time();
 	
 	LastButtonDown = ButtonDown;
 	
-	bool shouldCaptureCursor = CGuiObjectManager::instance().objects.size()==0 && _captureCursor;
+	bool shouldCaptureCursor = CGuiObjectManager::getInstance().objects.size()==0 && _captureCursor;
 	if(shouldCaptureCursor != _cursorCaptured)
 	{
 		if(shouldCaptureCursor)
 		{
-			C3DTask::instance().driver().setCapture(true);
-			C3DTask::instance().driver().showCursor(false);
-			C3DTask::instance().mouseListener().addToServer(C3DTask::instance().driver().EventServer);
+			C3DTask::getInstance().driver().setCapture(true);
+			C3DTask::getInstance().driver().showCursor(false);
+			C3DTask::getInstance().mouseListener().addToServer(C3DTask::getInstance().driver().EventServer);
 		}
 		else
 		{
-			C3DTask::instance().driver().setCapture(false);
-			C3DTask::instance().driver().showCursor(true);
-			C3DTask::instance().mouseListener().removeFromServer(C3DTask::instance().driver().EventServer);
+			C3DTask::getInstance().driver().setCapture(false);
+			C3DTask::getInstance().driver().showCursor(true);
+			C3DTask::getInstance().mouseListener().removeFromServer(C3DTask::getInstance().driver().EventServer);
 		}
 		_cursorCaptured = shouldCaptureCursor;
 	}
@@ -180,16 +180,16 @@ void CGuiMouseListener::removeFromServer (CEventServer& server)
 CVector CGuiMouseListener::position()
 {
 	CVector res(0,0,0);
-	res.x = MouseX * C3DTask::instance().screenWidth();
-	res.y = MouseY * C3DTask::instance().screenHeight(); 
+	res.x = MouseX * C3DTask::getInstance().screenWidth();
+	res.y = MouseY * C3DTask::getInstance().screenHeight(); 
 	return res;
 }
 
 CVector CGuiMouseListener::pressedPosition()
 {
 	CVector res(0,0,0);
-	res.x = PressedX * C3DTask::instance().screenWidth();
-	res.y = PressedY * C3DTask::instance().screenHeight(); 
+	res.x = PressedX * C3DTask::getInstance().screenWidth();
+	res.y = PressedY * C3DTask::getInstance().screenHeight(); 
 	return res;
 }
 

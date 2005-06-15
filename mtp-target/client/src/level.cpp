@@ -89,15 +89,15 @@ CLevel::CLevel(const string &filename)
 	Valid = false;
 	_changed = false;
 
-	DisplayStartPositions = CConfigFileTask::instance().configFile().getVar("DisplayStartPositions").asInt() == 1;
-	DisplayLevel  = CConfigFileTask::instance().configFile().getVar("DisplayLevel").asInt() == 1;
+	DisplayStartPositions = CConfigFileTask::getInstance().configFile().getVar("DisplayStartPositions").asInt() == 1;
+	DisplayLevel  = CConfigFileTask::getInstance().configFile().getVar("DisplayLevel").asInt() == 1;
 
 	LuaState = luaOpenAndLoad(filename);
 
 	if(!LuaState)
 	{
 		nlwarning("LEVEL: luaOpenAndLoad() failed while trying to load level '%s'", filename.c_str());
-		CMtpTarget::instance().error(string("Missing file : "+filename));
+		CMtpTarget::getInstance().error(string("Missing file : "+filename));
 		return;
 	}
 
@@ -124,8 +124,8 @@ CLevel::CLevel(const string &filename)
 		StartPoints.push_back(startPoint);
 		
 			/*
-		string res = CResourceManager::instance().get("col_box.shape");
-		UInstance *inst = C3DTask::instance().scene().createInstance (res);
+		string res = CResourceManager::getInstance().get("col_box.shape");
+		UInstance *inst = C3DTask::getInstance().scene().createInstance (res);
 		if (!inst)
 		{
 			nlwarning ("Can't load 'col_box.shape'");
@@ -154,11 +154,11 @@ CLevel::CLevel(const string &filename)
 	{
 		nlinfo("camera %g %g %g", Cameras[i].x, Cameras[i].y, Cameras[i].z);
 		
-		uint8 eid = CMtpTarget::instance().controler().getControledEntity();
-		CEntityManager::instance()[eid].startPointId(CEntityManager::instance()[eid].rank());
-		if (i == 0 || eid != 255 && CEntityManager::instance()[eid].startPointId() == (uint8)i)
+		uint8 eid = CMtpTarget::getInstance().controler().getControledEntity();
+		CEntityManager::getInstance()[eid].startPointId(CEntityManager::getInstance()[eid].rank());
+		if (i == 0 || eid != 255 && CEntityManager::getInstance()[eid].startPointId() == (uint8)i)
 		{
-			CMtpTarget::instance().controler().Camera.setInitialPosition(Cameras[i]);
+			CMtpTarget::getInstance().controler().Camera.setInitialPosition(Cameras[i]);
 		}
 	}
 	
@@ -348,80 +348,80 @@ CLevel::CLevel(const string &filename)
 	DisplayLevel = true;
 
 	Valid = true;
-	if(!C3DTask::instance().levelParticle().empty())
-		C3DTask::instance().levelParticle().show();
+	if(!C3DTask::getInstance().levelParticle().empty())
+		C3DTask::getInstance().levelParticle().show();
 
 	float cameraMinDistFromStartPointToMove = 0.5f;
 	luaGetGlobalVariable(LuaState, cameraMinDistFromStartPointToMove);
-	CMtpTarget::instance().controler().Camera.minDistFromStartPointToMove(cameraMinDistFromStartPointToMove);
+	CMtpTarget::getInstance().controler().Camera.minDistFromStartPointToMove(cameraMinDistFromStartPointToMove);
 	
 	float cameraMinDistFromStartPointToMoveVerticaly = 0.01f;
 	luaGetGlobalVariable(LuaState, cameraMinDistFromStartPointToMoveVerticaly);
-	CMtpTarget::instance().controler().Camera.minDistFromStartPointToMoveVerticaly(cameraMinDistFromStartPointToMoveVerticaly);
+	CMtpTarget::getInstance().controler().Camera.minDistFromStartPointToMoveVerticaly(cameraMinDistFromStartPointToMoveVerticaly);
 	
 	CLuaRGBA sunAmbientColor(82, 100, 133, 255);
 	luaGetGlobalVariable(LuaState, sunAmbientColor);
 	nlinfo("sunAmbientColor = %d %d %d %d", sunAmbientColor.R, sunAmbientColor.G, sunAmbientColor.B, sunAmbientColor.A);
-	C3DTask::instance().driver().setAmbientColor(sunAmbientColor);
-	C3DTask::instance().scene().setSunAmbient(sunAmbientColor);
+	C3DTask::getInstance().driver().setAmbientColor(sunAmbientColor);
+	C3DTask::getInstance().scene().setSunAmbient(sunAmbientColor);
 	
 	CLuaRGBA sunDiffuseColor(255,255,255,255);
 	luaGetGlobalVariable(LuaState, sunDiffuseColor);
-	C3DTask::instance().scene().setSunDiffuse(sunDiffuseColor);
+	C3DTask::getInstance().scene().setSunDiffuse(sunDiffuseColor);
 	
 	CLuaRGBA sunSpecularColor(255,255,255,255);
 	luaGetGlobalVariable(LuaState, sunSpecularColor);
-	C3DTask::instance().scene().setSunDiffuse(sunSpecularColor);
+	C3DTask::getInstance().scene().setSunDiffuse(sunSpecularColor);
 	
 	CLuaVector sunDirection(-1,0,-1);
 	luaGetGlobalVariable(LuaState, sunDirection);
-	C3DTask::instance().scene().setSunDirection(sunDirection);
+	C3DTask::getInstance().scene().setSunDirection(sunDirection);
 	
 	CLuaRGBA clearColor;
 	CConfigFile::CVar v;
-	v = CConfigFileTask::instance().configFile().getVar("ClearColor");
+	v = CConfigFileTask::getInstance().configFile().getVar("ClearColor");
 	nlassert(v.size()==4);
 	clearColor.set(v.asInt(0),v.asInt(1),v.asInt(2),v.asInt(3));	
 	luaGetGlobalVariable(LuaState, clearColor);
-	C3DTask::instance().clearColor(clearColor);
+	C3DTask::getInstance().clearColor(clearColor);
 	
-	float fogDistMin = CConfigFileTask::instance().configFile().getVar("FogDistMin").asFloat();
+	float fogDistMin = CConfigFileTask::getInstance().configFile().getVar("FogDistMin").asFloat();
 	luaGetGlobalVariable(LuaState, fogDistMin);
-	float fogDistMax = CConfigFileTask::instance().configFile().getVar("FogDistMax").asFloat();
+	float fogDistMax = CConfigFileTask::getInstance().configFile().getVar("FogDistMax").asFloat();
 	luaGetGlobalVariable(LuaState, fogDistMax);
 	CLuaRGBA fogColor = clearColor;
 	luaGetGlobalVariable(LuaState, fogColor);
-	C3DTask::instance().driver().setupFog(fogDistMin,fogDistMax,fogColor);
+	C3DTask::getInstance().driver().setupFog(fogDistMin,fogDistMax,fogColor);
 	
 	string skyShapeFileName;
 	luaGetGlobalVariable(LuaState, skyShapeFileName);
 	nlinfo("skyShapeFileName '%s'", skyShapeFileName.c_str());
-	CSkyTask::instance().shapeName(skyShapeFileName);
+	CSkyTask::getInstance().shapeName(skyShapeFileName);
 	
-	CTaskManager::instance().add(CSkyTask::instance(), 100);
+	CTaskManager::getInstance().add(CSkyTask::getInstance(), 100);
 	
 
 
 	string skyEnvMap0Name;
 	luaGetGlobalVariable(LuaState, skyEnvMap0Name);
 	nlinfo("skyEnvMap0Name '%s'", skyEnvMap0Name.c_str());
-	CWaterTask::instance().envMap0Name(skyEnvMap0Name);
+	CWaterTask::getInstance().envMap0Name(skyEnvMap0Name);
 	string skyEnvMap1Name;
 	luaGetGlobalVariable(LuaState, skyEnvMap1Name);
 	nlinfo("skyEnvMap1Name '%s'", skyEnvMap1Name.c_str());
-	CWaterTask::instance().envMap1Name(skyEnvMap1Name);
+	CWaterTask::getInstance().envMap1Name(skyEnvMap1Name);
 	string skyHeightMap0Name;
 	luaGetGlobalVariable(LuaState, skyHeightMap0Name);
 	nlinfo("skyHeightMap0Name '%s'", skyHeightMap0Name.c_str());
-	CWaterTask::instance().heightMap0Name(skyHeightMap0Name);
+	CWaterTask::getInstance().heightMap0Name(skyHeightMap0Name);
 	string skyHeightMap1Name;
 	luaGetGlobalVariable(LuaState, skyHeightMap1Name);
 	nlinfo("skyHeightMap1Name '%s'", skyHeightMap1Name.c_str());
-	CWaterTask::instance().heightMap1Name(skyHeightMap1Name);
-	CTaskManager::instance().add(CWaterTask::instance(), 111);
+	CWaterTask::getInstance().heightMap1Name(skyHeightMap1Name);
+	CTaskManager::getInstance().add(CWaterTask::getInstance(), 111);
 	
 
-	CTaskManager::instance().add(CLensFlareTask::instance(), 140);
+	CTaskManager::getInstance().add(CLensFlareTask::getInstance(), 140);
 
 	
 }
@@ -430,19 +430,19 @@ CLevel::CLevel(const string &filename)
 CLevel::~CLevel()
 {
 	nlinfo("delete level");
-	CTaskManager::instance().remove(CWaterTask::instance());
-	CTaskManager::instance().remove(CSkyTask::instance());
-	CTaskManager::instance().remove(CLensFlareTask::instance());
+	CTaskManager::getInstance().remove(CWaterTask::getInstance());
+	CTaskManager::getInstance().remove(CSkyTask::getInstance());
+	CTaskManager::getInstance().remove(CLensFlareTask::getInstance());
 
 	/*
-	if(C3DTask::instance().levelParticle()!=0)
-		C3DTask::instance().levelParticle()->hide();
+	if(C3DTask::getInstance().levelParticle()!=0)
+		C3DTask::getInstance().levelParticle()->hide();
 		*/
 
 	if(changed())
-		CResourceManagerLan::instance().refresh(FileName);
+		CResourceManagerLan::getInstance().refresh(FileName);
 
-	CEditorTask::instance().reset();
+	CEditorTask::getInstance().reset();
 
 	if(LuaState)
 		luaClose(LuaState);
@@ -463,7 +463,7 @@ CLevel::~CLevel()
 	for(uint j = 0; j < StartPoints.size(); j++)
 	{
 		delete StartPoints[j];
-		//C3DTask::instance().scene().deleteInstance(StartPositions[j]);
+		//C3DTask::getInstance().scene().deleteInstance(StartPositions[j]);
 	}
 	StartPoints.clear();
 }
@@ -496,7 +496,7 @@ void CLevel::reset()
 	if(!LuaState)
 	{
 		nlwarning("LEVEL: luaOpenAndLoad() failed while trying to load level '%s'", FileName.c_str());
-		CMtpTarget::instance().error(string("Missing file : "+FileName));
+		CMtpTarget::getInstance().error(string("Missing file : "+FileName));
 		return;
 	}
 	
@@ -513,12 +513,12 @@ void CLevel::reset()
 	for(uint i = 0; i < Cameras.size(); i++)
 	{
 		nlinfo("camera %g %g %g", Cameras[i].x, Cameras[i].y, Cameras[i].z);
-		uint8 eid = CMtpTarget::instance().controler().getControledEntity();
+		uint8 eid = CMtpTarget::getInstance().controler().getControledEntity();
 		if(ReplayFile.empty())
-			CEntityManager::instance()[eid].startPointId(CEntityManager::instance()[eid].rank());
-		if (i == 0 || eid != 255 && CEntityManager::instance()[eid].startPointId() == (uint8)i)
+			CEntityManager::getInstance()[eid].startPointId(CEntityManager::getInstance()[eid].rank());
+		if (i == 0 || eid != 255 && CEntityManager::getInstance()[eid].startPointId() == (uint8)i)
 		{
-			CMtpTarget::instance().controler().Camera.setInitialPosition(Cameras[i]);
+			CMtpTarget::getInstance().controler().Camera.setInitialPosition(Cameras[i]);
 		}
 	}
 	
@@ -530,7 +530,7 @@ void CLevel::reset()
 	for(uint i = 0; i < StartPoints.size(); i++)
 	{
 		nlinfo("%g %g %g", StartPoints[i].x, StartPoints[i].y, StartPoints[i].z);
-		string res = CResourceManager::instance().get("col_box.shape");
+		string res = CResourceManager::getInstance().get("col_box.shape");
 		UInstance *inst = StartPositions[i];
 		
 		inst->setTransformMode(UTransformable::RotQuat);
@@ -567,7 +567,7 @@ void CLevel::reset()
 		nlinfo("name %s", Name.c_str());
 		lua_pop(LuaState, 1);  // removes `value'; keeps `key' for next iteration
 		
-		string res = CResourceManager::instance().get(Name+".shape");
+		string res = CResourceManager::getInstance().get(Name+".shape");
 		UInstance *inst = Meshes[j++];
 		if (inst == 0)
 		{
@@ -593,7 +593,7 @@ void CLevel::reset()
 	lua_register(LuaState, "getEntityById", getEntityById);	
 	lua_register(LuaState, "getModuleById", getModuleById);	
 	lua_register(LuaState, "getParticlesById", getParticlesById);	
-	CEntityManager::instance().luaInit();
+	CEntityManager::getInstance().luaInit();
 	for(uint j = 0; j<getModuleCount();j++)
 		if(Modules[j])
 			Modules[j]->luaInit();
@@ -737,7 +737,7 @@ int CLevel::getEntityByName(lua_State *L)
 	unsigned int len;
 	const char *entityName = luaL_checklstring(L, 1, &len);
 	string name(entityName);
-	CEntity *e = CEntityManager::instance().getByName(name);
+	CEntity *e = CEntityManager::getInstance().getByName(name);
 	if(e)
 		nlinfo("Lua(0x%p) : getEntityByName(%s))=0x%p(0x%p)",L,name.c_str(),e,e->LuaProxy);
 	if(e==0)
@@ -757,8 +757,8 @@ int CLevel::getModuleByName(lua_State *L)
 	const char *moduleName = luaL_checklstring(L, 1, &len);
 	string name(moduleName);
 	CModule *m = 0;
-	if(CLevelManager::instance().levelPresent())
-		m = CLevelManager::instance().currentLevel().getModule(name);
+	if(CLevelManager::getInstance().levelPresent())
+		m = CLevelManager::getInstance().currentLevel().getModule(name);
 	if(m)
 		nlinfo("Lua(0x%p) : getModuleById(%s))=0x%p(0x%p)",L,name.c_str(),m,m->LuaProxy);
 	if(m==0)
@@ -777,8 +777,8 @@ int CLevel::getParticlesByName(lua_State *L)
 	const char *particlesName = luaL_checklstring(L, 1, &len);
 	string name(particlesName);
 	CParticles *p = 0;
-	if(CLevelManager::instance().levelPresent())
-		p = CLevelManager::instance().currentLevel().getParticles(name);
+	if(CLevelManager::getInstance().levelPresent())
+		p = CLevelManager::getInstance().currentLevel().getParticles(name);
 	if(p)
 		nlinfo("Lua(0x%p) : getParticlesByName(%s))=0x%p(0x%p)",L,name.c_str(),p,p->LuaProxy);
 	if(p==0)
@@ -794,7 +794,7 @@ int CLevel::getParticlesByName(lua_State *L)
 int CLevel::getEntityById(lua_State *L)
 {
 	uint8 id = (uint8 )luaL_checknumber(L,1);
-	CEntity *e = CEntityManager::instance().getById(id);
+	CEntity *e = CEntityManager::getInstance().getById(id);
 	if(e)
 		nlinfo("Lua(0x%p) : getEntityById(%d))=0x%p(0x%p)",L,id,e,e->LuaProxy);
 	if(e==0)
@@ -812,8 +812,8 @@ int CLevel::getModuleById(lua_State *L)
 {
 	uint8 id = (uint8 )luaL_checknumber(L,1);
 	CModule *m = 0;
-	if(CLevelManager::instance().levelPresent())
-		m = CLevelManager::instance().currentLevel().getModule(id);
+	if(CLevelManager::getInstance().levelPresent())
+		m = CLevelManager::getInstance().currentLevel().getModule(id);
 	if(m)
 		nlinfo("Lua(0x%p) : getModuleById(%d))=0x%p(0x%p)",L,id,m,m->LuaProxy);
 	if(m==0)
@@ -830,8 +830,8 @@ int CLevel::getParticlesById(lua_State *L)
 {
 	uint8 id = (uint8 )luaL_checknumber(L,1);
 	CParticles *p = 0;
-	if(CLevelManager::instance().levelPresent())
-		p = CLevelManager::instance().currentLevel().getParticles(id);
+	if(CLevelManager::getInstance().levelPresent())
+		p = CLevelManager::getInstance().currentLevel().getParticles(id);
 	if(p)
 		nlinfo("Lua(0x%p) : getParticlesById(%d))=0x%p(0x%p)",L,id,p,p->LuaProxy);
 	if(p==0)

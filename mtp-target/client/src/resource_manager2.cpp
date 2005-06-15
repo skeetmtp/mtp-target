@@ -204,8 +204,8 @@ public:
 	virtual void run()
 	{
 		DownloadList.clear();
-		HttpServerFile = CConfigFileTask::instance().configFile().getVar("HttpServerFile").asString()+"/";
-		CacheDirectory = CPath::standardizePath(CConfigFileTask::instance().configFile().getVar("CacheDirectory").asString());
+		HttpServerFile = CConfigFileTask::getInstance().configFile().getVar("HttpServerFile").asString()+"/";
+		CacheDirectory = CPath::standardizePath(CConfigFileTask::getInstance().configFile().getVar("CacheDirectory").asString());
 		while(true)
 		{
 			string nextFilename = getNextFileToDownload();
@@ -352,7 +352,7 @@ private:
 void CResourceManager::init()
 {
 	CPath::remapExtension("dds", "tga", true);
-	CacheDirectory = CPath::standardizePath(CConfigFileTask::instance().configFile().getVar("CacheDirectory").asString());
+	CacheDirectory = CPath::standardizePath(CConfigFileTask::getInstance().configFile().getVar("CacheDirectory").asString());
 
 	if(!CFile::isDirectory(CacheDirectory))
 	{
@@ -362,7 +362,7 @@ void CResourceManager::init()
 		}
 	}
 
-	CConfigFile::CVar &v = CConfigFileTask::instance().configFile().getVar("Path");
+	CConfigFile::CVar &v = CConfigFileTask::getInstance().configFile().getVar("Path");
 	for (int i = 0; i < v.size(); i++)
 		CPath::addSearchPath (v.asString(i), true, false);
 
@@ -426,7 +426,7 @@ void CResourceManager::loadChildren(const std::string &filename)
 		bank->setShapeCacheSize(shapeCache,1024*1024);
 		std::vector<std::string> filelist;
 		filelist.push_back(filename);
-		CDriverUser *drv = (CDriverUser *)(&C3DTask::instance().driver());
+		CDriverUser *drv = (CDriverUser *)(&C3DTask::getInstance().driver());
 		bank->preLoadShapes(shapeCache,filelist,string("*.ps"),NULL,true,drv->getDriver());
 		bool b = bank->isShapeWaiting();
 		IShape *is = bank->getShape(fn);
@@ -461,40 +461,40 @@ string CResourceManager::get(const string &filename)
 
 void CResourceManager::update3DWhileDownloading()
 {
-	C3DTask::instance().update();
-	CTimeTask::instance().update();
-	//CBackgroundTask::instance().update();
-	CChatTask::instance().update();
-	CGuiTask::instance().update();
-	CNetworkTask::instance().update();
+	C3DTask::getInstance().update();
+	CTimeTask::getInstance().update();
+	//CBackgroundTask::getInstance().update();
+	CChatTask::getInstance().update();
+	CGuiTask::getInstance().update();
+	CNetworkTask::getInstance().update();
 	
-	if (C3DTask::instance().kbPressed(KeyESCAPE) || !C3DTask::instance().driver().isActive() || !CNetworkTask::instance().connected())
+	if (C3DTask::getInstance().kbPressed(KeyESCAPE) || !C3DTask::getInstance().driver().isActive() || !CNetworkTask::getInstance().connected())
 	{
 		exit(1);
 		return;
 	}
 	
 	//			mt3dUpdate();
-	//			mtpTarget::instance().updateTime ();
-	//			mtpTarget::instance().Interface2d.updateChat();
+	//			mtpTarget::getInstance().updateTime ();
+	//			mtpTarget::getInstance().Interface2d.updateChat();
 	
-	C3DTask::instance().clear();
+	C3DTask::getInstance().clear();
 	//			mt3dClear ();
 	
 	// ace todo put this in task	
 	
-	//			mtpTarget::instance().Interface2d.displayBackground();
-	//			mtpTarget::instance().Interface2d.displayChat(true);
+	//			mtpTarget::getInstance().Interface2d.displayBackground();
+	//			mtpTarget::getInstance().Interface2d.displayChat(true);
 	
-	C3DTask::instance().render();
-	CBackgroundTask::instance().render();
-	CChatTask::instance().render();
-	CGuiTask::instance().render();
+	C3DTask::getInstance().render();
+	CBackgroundTask::getInstance().render();
+	CChatTask::getInstance().render();
+	CGuiTask::getInstance().render();
 	
 	
-	//CFontManager::instance().littlePrintf(3.0f, 29.0f, str.c_str());
+	//CFontManager::getInstance().littlePrintf(3.0f, 29.0f, str.c_str());
 	
-	CSwap3DTask::instance().render();
+	CSwap3DTask::getInstance().render();
 	
 	//			mt3dSwap ();
 	
@@ -528,7 +528,7 @@ string CResourceManager::get(const string &filename, bool &ok)
 	string path = CPath::lookup(fn, false, false);
 	string fns = CFile::getFilename(path);
 
-	double currentTime = CTimeTask::instance().time();
+	double currentTime = CTimeTask::getInstance().time();
 	float updatePercent = 0;
 	guiSPG<CGuiFrame> mainFrame = 0;
 
@@ -536,7 +536,7 @@ string CResourceManager::get(const string &filename, bool &ok)
 
 	if(!connected())
 	{
-		return CResourceManagerLan::instance().get(filename,ok);
+		return CResourceManagerLan::getInstance().get(filename,ok);
 		if(!path.empty())
 		{
 			ok = true;
@@ -588,7 +588,7 @@ string CResourceManager::get(const string &filename, bool &ok)
 		if(ResourceManagerRunnable)
 		{
 			ResourceManagerRunnable->addFilename(fn);
-			guiSPG<CGuiXml> xml = CGuiXmlManager::instance().Load("updating.xml");
+			guiSPG<CGuiXml> xml = CGuiXmlManager::getInstance().Load("updating.xml");
 			mainFrame = (CGuiFrame *)xml->get("updatingFrame");
 			guiSPG<CGuiText>  updatingMessage = (CGuiText *)xml->get("updatingMessage");
 			updatingMessage->text = "Please wait while dowloading : ";
@@ -596,7 +596,7 @@ string CResourceManager::get(const string &filename, bool &ok)
 			updatingFilename->text = fn;
 			guiSPG<CGuiProgressBar>  updatingProgressBar = (CGuiProgressBar *)xml->get("updatingProgressBar");
 			updatingProgressBar->ptrValue(&updatePercent);
-			CGuiObjectManager::instance().objects.push_back(mainFrame);		
+			CGuiObjectManager::getInstance().objects.push_back(mainFrame);		
 
 			while(ResourceManagerRunnable && ResourceManagerRunnable->filenameInQueue(fn))
 			{
@@ -612,7 +612,7 @@ string CResourceManager::get(const string &filename, bool &ok)
 			CNetMessage msgout(CNetMessage::RequestCRCKey);
 			msgout.serial(fn);
 			msgout.serial(serverHashKey);
-			CNetworkTask::instance().send(msgout);
+			CNetworkTask::getInstance().send(msgout);
 		}
 		string path = CPath::lookup(fn, false, false);
 		if(path.empty())
@@ -626,7 +626,7 @@ string CResourceManager::get(const string &filename, bool &ok)
 			{
 				nlwarning("cannot provide any file");
 				string msg = toString("Cannot get file from server : '%s'\n please contact developers",fn.c_str());
-				CMtpTarget::instance().error(msg);	
+				CMtpTarget::getInstance().error(msg);	
 			}
 		}
 		nlinfo("return : '%s'",path.c_str());
@@ -643,8 +643,8 @@ void CResourceManager::connected(bool c)
 
 	if(c)
 	{
-		string crcFileName = CConfigFileTask::instance().configFile().getVar("CrcFileName").asString();
-		HttpServerFile = CConfigFileTask::instance().configFile().getVar("HttpServerFile").asString()+"/";
+		string crcFileName = CConfigFileTask::getInstance().configFile().getVar("CrcFileName").asString();
+		HttpServerFile = CConfigFileTask::getInstance().configFile().getVar("HttpServerFile").asString()+"/";
 		string srcfn = HttpServerFile + crcFileName;
 		string destfn = CacheDirectory + crcFileName;
 		bool res = downloadFile(srcfn,destfn);

@@ -109,11 +109,11 @@ float convert8_8fp(uint rsx,uint rdx)
 	sint8 dx;
 	sint8 sx = rsx - (F88_MANTISSA_MAX_VALUE*2-1);
 	
-	nlassert(fabs(sx)<(F88_MANTISSA_MAX_VALUE*2));
+	nlassert(fabs((float)sx)<(F88_MANTISSA_MAX_VALUE*2));
 	
 	if(sx==0)
 		return 0;
-	dxisneg = sx&1 != 0;
+	dxisneg = (sx&1) != 0;
 	sx = sx / 2;
 	if(sx>0)
 		sx--;
@@ -185,7 +185,7 @@ uint8 computeMantis8_8(float x,float &mx,uint8 &dx)
 	}
 		
 	dx -= F88_EXPONENT_MAX_VALUE/2;
-	nlassert(fabs(sx)<(F88_MANTISSA_MAX_VALUE*2));
+	nlassert(fabs((float)sx)<(F88_MANTISSA_MAX_VALUE*2));
 	return sx+(F88_MANTISSA_MAX_VALUE*2-1);	
 }
 

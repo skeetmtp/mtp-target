@@ -59,9 +59,9 @@ Lunar<CEntityProxy>::RegType CEntityProxy::methods[] =
 bool CEntityProxy::call(string funcName)
 { 
 	int res;
-	if(!CLevelManager::instance().levelPresent())
+	if(!CLevelManager::getInstance().levelPresent())
 		return false;
-	lua_State *L = CLevelManager::instance().currentLevel().luaState();
+	lua_State *L = CLevelManager::getInstance().currentLevel().luaState();
 	if(L==0)
 		return false;
 	int mp = Lunar<CEntityProxy>::push(L, this);
@@ -128,7 +128,7 @@ int CEntityProxy::cacheFile(lua_State *luaSession)
 	unsigned int len;
 	const char *text = luaL_checklstring(luaSession, 1, &len);
 	string filename(text);
-	CResourceManager::instance().get(filename);
+	CResourceManager::getInstance().get(filename);
 	return 0;	
 }
 

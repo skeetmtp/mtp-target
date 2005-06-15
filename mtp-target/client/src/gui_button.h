@@ -90,7 +90,7 @@ private:
 	std::string _onClickScript;
 };
 
-class CGuiButtonManager : public CSingleton<CGuiButtonManager>
+class CGuiButtonManager : public NLMISC::CSingleton<CGuiButtonManager>
 {
 public:
 	enum TButtonMaterialId 

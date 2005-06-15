@@ -57,7 +57,7 @@ public:
 private:
 };
 
-class CGuiScriptManager : public CSingleton<CGuiScriptManager>
+class CGuiScriptManager : public NLMISC::CSingleton<CGuiScriptManager>
 {
 public:
 	virtual void init();

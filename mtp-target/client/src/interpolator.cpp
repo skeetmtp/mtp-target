@@ -134,7 +134,7 @@ CInterpolator::CInterpolator(double dt)
 	Entity = 0;
 	DT = dt;
 
-	MaxDistBetween2Keys = CConfigFileTask::instance().configFile().getVar("InterpolatorMaxDistBetween2Keys").asFloat();
+	MaxDistBetween2Keys = CConfigFileTask::getInstance().configFile().getVar("InterpolatorMaxDistBetween2Keys").asFloat();
 
 	reset();
 }
@@ -157,7 +157,7 @@ void CInterpolator::reset()
 	MeanKeyDiffTime  = 0.0;
 	OutOfKeyCount  = 0;
 	
-//	nlinfo("reset[0x%p] (%f)",this,CTimeTask::instance().time());
+//	nlinfo("reset[0x%p] (%f)",this,CTimeTask::getInstance().time());
 }
 
 void CInterpolator::entity(CEntity *entity)
@@ -171,7 +171,7 @@ void CInterpolator::addKey(const CEntityInterpolatorKey &k)
 {
 	CEntityInterpolatorKey key = k;
 
-	double time = CTimeTask::instance().time(); //current time
+	double time = CTimeTask::getInstance().time(); //current time
 	if(!Available || StartTime==0.0)
 	{
 		StartTime = time;
@@ -186,7 +186,7 @@ void CInterpolator::addKey(const CEntityInterpolatorKey &k)
 	{
 		//nlinfo("(%f)start time correction : [0x%p] : %f-%f = %f (%f)",time,this,AddKeyTime,localTime,AddKeyTime-localTime,StartTime);
 		/*
-		if(Entity->id()==CMtpTarget::instance().controler().getControledEntity())
+		if(Entity->id()==CMtpTarget::getInstance().controler().getControledEntity())
 			nlinfo("(%f)addKeyTime[0x%p] too early: %f-%f = %fms (%f)",time,this,AddKeyTime,localTime,(AddKeyTime-localTime)*1000,StartTime);
 		*/
 		StartTime -=  AddKeyTime - localTime;
@@ -204,7 +204,7 @@ void CInterpolator::addKey(const CEntityInterpolatorKey &k)
 		}
 		*/
 		/*
-		if(Entity->id()==CMtpTarget::instance().controler().getControledEntity())
+		if(Entity->id()==CMtpTarget::getInstance().controler().getControledEntity())
 			nlinfo("(%f)addKeyTime[0x%p] too late : %f-%f = %fms (%f)",time,this,AddKeyTime,localTime,(AddKeyTime-localTime)*1000,StartTime);
 		*/
 	}
@@ -232,10 +232,10 @@ void CInterpolator::update()
 	if(OutOfKeyCount<0)
 		OutOfKeyCount=0;
 //	nlinfo("outofkeycount = %d ; keysize = %d",_outOfKeyCount,_keys.size());
-	if(Entity->id()==CMtpTarget::instance().controler().getControledEntity())
+	if(Entity->id()==CMtpTarget::getInstance().controler().getControledEntity())
 		autoAdjustLct();
 
-	LocalTime = CTimeTask::instance().time() - StartTime;
+	LocalTime = CTimeTask::getInstance().time() - StartTime;
 	DeltaTime = LocalTime - LastUpdateTime;
 	ServerTime = LocalTime - LCT;
 	LastUpdateTime = LocalTime;
@@ -258,7 +258,7 @@ void CInterpolator::update()
 	string chatLine1 = chatLine(ServerTime);
 	if(chatLine1.size() && LastChatLine!=chatLine1)
 	{
-		CChatTask::instance().addLine(chatLine1);
+		CChatTask::getInstance().addLine(chatLine1);
 	}
 	LastChatLine = chatLine1;
 	
@@ -584,7 +584,7 @@ void CExtendedInterpolator::update()
 
 	CVector dir = CurrentDirection;//smoothDirection();
 	dir.z = 0.0f;
-	if(dir.norm() > 0.001f && (CMtpTarget::instance().State == CMtpTarget::eGame || CMtpTarget::instance().isSpectatorOnly()))
+	if(dir.norm() > 0.001f && (CMtpTarget::getInstance().State == CMtpTarget::eGame || CMtpTarget::getInstance().isSpectatorOnly()))
 	{
 		dir.normalize();
 		float instantFacing = (float)acos(dir.y);

@@ -63,7 +63,7 @@ private:
 	NL3D::UMaterial _material;
 };
 
-class CGuiBitmapManager : public CSingleton<CGuiBitmapManager>
+class CGuiBitmapManager : public NLMISC::CSingleton<CGuiBitmapManager>
 {
 public:
 	virtual void init();

@@ -62,7 +62,7 @@ extern sint32 AutoServerId;
 //
 
 
-class CMtpTarget : public CSingleton<CMtpTarget>, public ITask
+class CMtpTarget : public NLMISC::CSingleton<CMtpTarget>, public ITask
 {
 public:
 
@@ -135,11 +135,9 @@ private:
 //////////////////////////////////////////////////////////////////////////
 
 
-class mtpTarget
+class mtpTarget : public NLMISC::CSingleton<mtpTarget>
 {
 public:
-
-	static mtpTarget &instance();
 
 	void	init();
 	void	update();
@@ -162,8 +160,6 @@ public:
 
 		
 private:
-
-	static mtpTarget *Instance;
 
 //	bool loadPhysicLevel(const char *filename);
 //	bool loadLevel(const char *filename);

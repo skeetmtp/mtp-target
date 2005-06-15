@@ -36,7 +36,7 @@
 // Classes
 //
 
-class CChatTask : public CSingleton<CChatTask>, public ITask
+class CChatTask : public NLMISC::CSingleton<CChatTask>, public ITask
 {
 public:
 

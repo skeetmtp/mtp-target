@@ -74,7 +74,7 @@ static void cbChat(CNetMessage &msgin)
 	while(msgin.getPos() < (sint32)msgin.length())
 	{
 		msgin.serial(msg);
-		CChatTask::instance().addLine(msg);
+		CChatTask::getInstance().addLine(msg);
 		if(SessionFile) 
 			fprintf(SessionFile, "%hu CH %s\n",0, msg.c_str());
 	}
@@ -98,7 +98,7 @@ static void cbError(CNetMessage &msgin)
 	}
 #endif
 
-	CMtpTarget::instance().error(msg);	
+	CMtpTarget::getInstance().error(msg);	
 }
 
 static void cbLogin(CNetMessage &msgin)
@@ -125,7 +125,7 @@ static void cbLogin(CNetMessage &msgin)
 	}
 
 	//TODO remove size test when server version will be 6
-	if(CNetworkTask::instance().networkVersion>=6)
+	if(CNetworkTask::getInstance().networkVersion>=6)
 	{
 		msgin.serial(oc);
 		msgin.serial(trace);
@@ -134,27 +134,27 @@ static void cbLogin(CNetMessage &msgin)
 	nlinfo("NET: cbLogin self=%d eid=%hu name='%s' totalScore='%d' color=(%d,%d,%d) texture='%s' spec=%d oc=%d trace='%s' mesh='%s'", 
 		self, (uint16)eid, name.c_str(), totalScore, color.R, color.G, color.B, texture.c_str(), spec, oc, trace.c_str(), mesh.c_str());
 		
-	nldebug("player list.size = %d", CEntityManager::instance().size());
+	nldebug("player list.size = %d", CEntityManager::getInstance().size());
 
-	CEntityManager::instance().add(eid, name, totalScore, color, texture, spec, self, trace, mesh);
+	CEntityManager::getInstance().add(eid, name, totalScore, color, texture, spec, self, trace, mesh);
 
 	if(oc)
-		CEntityManager::instance()[eid].swapOpenClose();
+		CEntityManager::getInstance()[eid].swapOpenClose();
 
 
 	if(self)
 	{
-		CMtpTarget::instance().displayTutorialInfo(totalScore<=CConfigFileTask::instance().configFile().getVar("MinTotalScoreToHideTutorial").asInt());
+		CMtpTarget::getInstance().displayTutorialInfo(totalScore<=CConfigFileTask::getInstance().configFile().getVar("MinTotalScoreToHideTutorial").asInt());
 
 		nlinfo("levelName='%s' timeBeforeTimeout=%f", levelName.c_str(), timeBeforeTimeout);
 		
 		if (!levelName.empty())
-			CMtpTarget::instance().startSession(0, timeBeforeTimeout/1000.0f, levelName, "", "", true);
+			CMtpTarget::getInstance().startSession(0, timeBeforeTimeout/1000.0f, levelName, "", "", true);
 		else
-			CMtpTarget::instance().timeBeforeTimeout(timeBeforeTimeout/1000.0f);
+			CMtpTarget::getInstance().timeBeforeTimeout(timeBeforeTimeout/1000.0f);
 	}
 
-	CGuiCustom::instance().onLogin(name);
+	CGuiCustom::getInstance().onLogin(name);
 }
 
 static void cbLogout(CNetMessage &msgin)
@@ -164,37 +164,37 @@ static void cbLogout(CNetMessage &msgin)
 	nlinfo("NET: cbLogout eid=%hu", (uint16)eid);
 
 	// check if the player exists
-	if(!CEntityManager::instance().exist(eid)) { nlwarning("The eid doesn't exist"); return; }
+	if(!CEntityManager::getInstance().exist(eid)) { nlwarning("The eid doesn't exist"); return; }
 
 	// if it's my eid, it means that i have to disconnect because i was kicked out from the server
-	if(CMtpTarget::instance().controler().getControledEntity()==eid)
+	if(CMtpTarget::getInstance().controler().getControledEntity()==eid)
 	{
-		CMtpTarget::instance().error("You have been kicked");
+		CMtpTarget::getInstance().error("You have been kicked");
 		//nlerror("You have been kicked");
 	}
 
-	CGuiCustom::instance().onLogout(CEntityManager::instance()[eid].name());
-	CEntityManager::instance().remove(eid);
+	CGuiCustom::getInstance().onLogout(CEntityManager::getInstance()[eid].name());
+	CEntityManager::getInstance().remove(eid);
 }
 
 static void cbOpenClose(CNetMessage &msgin)
 {
 	uint8 eid;
 	msgin.serial(eid);
-	nlinfo("NET: cbOpenClose eid=%hu (%s)", (uint16)eid,CEntityManager::instance()[eid].name().c_str());
+	nlinfo("NET: cbOpenClose eid=%hu (%s)", (uint16)eid,CEntityManager::getInstance()[eid].name().c_str());
 
 	// check if the player exists
-	if(!CEntityManager::instance().exist(eid)) { nlwarning("The eid doesn't exist"); return; }
+	if(!CEntityManager::getInstance().exist(eid)) { nlwarning("The eid doesn't exist"); return; }
 	
-	//CEntityManager::instance()[eid].addOpenCloseKey = true;
-	CEntityManager::instance()[eid].swapOpenClose();
+	//CEntityManager::getInstance()[eid].addOpenCloseKey = true;
+	CEntityManager::getInstance()[eid].swapOpenClose();
 
 	if(SessionFile) fprintf(SessionFile, "%hu OC\n", (uint16)eid);
 }
 
 static void cbUpdate(CNetMessage &msgin)
 {
-	//nlinfo("cbUpdate %f",CTimeTask::instance().time());
+	//nlinfo("cbUpdate %f",CTimeTask::getInstance().time());
 	float rsxTime;
 	uint8 eid;
 	CVector pos;
@@ -208,20 +208,20 @@ static void cbUpdate(CNetMessage &msgin)
 	CNetMessage msgout(CNetMessage::Update);
 	msgout.serial(pingnb);
 //	nlinfo("*********** send the pong %u %"NL_I64"u", pingnb, CTime::getLocalTime());
-	CNetworkTask::instance().send(msgout);
+	CNetworkTask::getInstance().send(msgout);
 	
 	//msgin.serial (rsxTime);
 
 	//while(msgin.getPos() < (sint32)msgin.length())
-	//nlassert(CEntityManager::instance().updateListId.size());
+	//nlassert(CEntityManager::getInstance().updateListId.size());
 	std::list <uint8 >::iterator it;
-	//for(it=CEntityManager::instance().updateListId.begin();it!=CEntityManager::instance().updateListId.end();it++)
+	//for(it=CEntityManager::getInstance().updateListId.begin();it!=CEntityManager::getInstance().updateListId.end();it++)
 	for(eid=0;eid<255;eid++)
 	{
-		if(CEntityManager::instance().exist(eid))
+		if(CEntityManager::getInstance().exist(eid))
 		{
-			if(!CEntityManager::instance()[eid].isLocal())
-				CEntityManager::instance()[eid].interpolator().dt(MT_NETWORK_UPDATE_PERIODE);
+			if(!CEntityManager::getInstance()[eid].isLocal())
+				CEntityManager::getInstance()[eid].interpolator().dt(MT_NETWORK_UPDATE_PERIODE);
 
 			if(msgin.getPos() >= (sint32)msgin.length())
 			{
@@ -270,30 +270,30 @@ static void cbUpdate(CNetMessage &msgin)
 			dpos.x = convert8_8fp(nsx,ndx);
 			
 
-			if(CEntityManager::instance().exist(eid))
+			if(CEntityManager::getInstance().exist(eid))
 			{
-				pos = CEntityManager::instance()[eid].LastSent2OthersPos + dpos;
-				CEntityManager::instance()[eid].LastSent2OthersPos = pos;
-				CEntityManager::instance()[eid].LastSent2MePos = pos;
+				pos = CEntityManager::getInstance()[eid].LastSent2OthersPos + dpos;
+				CEntityManager::getInstance()[eid].LastSent2OthersPos = pos;
+				CEntityManager::getInstance()[eid].LastSent2MePos = pos;
 				if(DisplayDebug)
 					nlinfo("TCP update client %hu a %g %g %g ping %hu", (uint16)eid, pos.x, pos.y, pos.z);
 				if(SessionFile) 
 					fprintf(SessionFile, "%hu PO %f %f %f\n", (uint16)eid, pos.x, pos.y, pos.z);
 				//TODO remove rsxTime param
 				bool oc = false;
-				if(CEntityManager::instance()[eid].addOpenCloseKey)
+				if(CEntityManager::getInstance()[eid].addOpenCloseKey)
 				{
-					CEntityManager::instance()[eid].addOpenCloseKey = false;
+					CEntityManager::getInstance()[eid].addOpenCloseKey = false;
 					oc = true;
 				}
 				CCrashEvent ce(false,CVector::Null);
-				if(CEntityManager::instance()[eid].addCrashEventKey.Crash)
+				if(CEntityManager::getInstance()[eid].addCrashEventKey.Crash)
 				{
-					ce = CEntityManager::instance()[eid].addCrashEventKey;
-					CEntityManager::instance()[eid].addCrashEventKey.Crash = false;
+					ce = CEntityManager::getInstance()[eid].addCrashEventKey;
+					CEntityManager::getInstance()[eid].addCrashEventKey.Crash = false;
 				}
-				CEntityManager::instance()[eid].interpolator().addKey(CEntityInterpolatorKey(CEntityState(pos,false,oc,ce),rsxTime));
-				//CEntityManager::instance()[eid].ping(ping);
+				CEntityManager::getInstance()[eid].interpolator().addKey(CEntityInterpolatorKey(CEntityState(pos,false,oc,ce),rsxTime));
+				//CEntityManager::getInstance()[eid].ping(ping);
 			}
 			else
 			{
@@ -306,7 +306,7 @@ static void cbUpdate(CNetMessage &msgin)
 
 static void cbUpdateOne(CNetMessage &msgin)
 {
-	//nlinfo("cbUpdateOne %f",CTimeTask::instance().time());
+	//nlinfo("cbUpdateOne %f",CTimeTask::getInstance().time());
 	float rsxTime = 0.0f;
 	uint8 eid;
 	CVector pos;
@@ -316,7 +316,7 @@ static void cbUpdateOne(CNetMessage &msgin)
 	
 	// reply to the update first (used for the ping)
 	//CNetMessage msgout(CNetMessage::Update);
-	//CNetworkTask::instance().send(msgout);
+	//CNetworkTask::getInstance().send(msgout);
 	
 	//msgin.serial (rsxTime);
 	
@@ -324,7 +324,7 @@ static void cbUpdateOne(CNetMessage &msgin)
 	{
 		float deltaCoef = 100;
 		//msgin.serial(eid);
-		eid = CMtpTarget::instance().controler().getControledEntity();
+		eid = CMtpTarget::getInstance().controler().getControledEntity();
 		/*
 		uint8 dxx,sxx;
 		msgin.serial(sxx,dxx);
@@ -365,29 +365,29 @@ static void cbUpdateOne(CNetMessage &msgin)
 		
 		//nlinfo(">>>>dx =  %f ",dpos.x - mdx);
 
-		if(CEntityManager::instance().exist(eid))
+		if(CEntityManager::getInstance().exist(eid))
 		{
-			pos = CEntityManager::instance()[eid].LastSent2MePos + dpos;
-			CEntityManager::instance()[eid].LastSent2MePos = pos;
+			pos = CEntityManager::getInstance()[eid].LastSent2MePos + dpos;
+			CEntityManager::getInstance()[eid].LastSent2MePos = pos;
 			if(DisplayDebug)
 				nlinfo("TCP updateOne client %hu a %g %g %g ping %hu", (uint16)eid, pos.x, pos.y, pos.z);
 			if(SessionFile) 
 				fprintf(SessionFile, "%hu PO %f %f %f\n", (uint16)eid, pos.x, pos.y, pos.z);
 			
 			bool oc = false;
-			if(CEntityManager::instance()[eid].addOpenCloseKey)
+			if(CEntityManager::getInstance()[eid].addOpenCloseKey)
 			{
-				CEntityManager::instance()[eid].addOpenCloseKey = false;
+				CEntityManager::getInstance()[eid].addOpenCloseKey = false;
 				oc = true;
 			}
 			CCrashEvent ce(false,CVector::Null);
-			if(CEntityManager::instance()[eid].addCrashEventKey.Crash)
+			if(CEntityManager::getInstance()[eid].addCrashEventKey.Crash)
 			{
-				ce = CEntityManager::instance()[eid].addCrashEventKey;
-				CEntityManager::instance()[eid].addCrashEventKey.Crash = false;
+				ce = CEntityManager::getInstance()[eid].addCrashEventKey;
+				CEntityManager::getInstance()[eid].addCrashEventKey.Crash = false;
 			}
-			CEntityManager::instance()[eid].interpolator().addKey(CEntityInterpolatorKey(CEntityState(pos,false,oc,ce),rsxTime));
-			//CEntityManager::instance()[eid].ping(ping);
+			CEntityManager::getInstance()[eid].interpolator().addKey(CEntityInterpolatorKey(CEntityState(pos,false,oc,ce),rsxTime));
+			//CEntityManager::getInstance()[eid].ping(ping);
 		}
 		/*
 		else
@@ -402,7 +402,7 @@ static void cbUpdateOne(CNetMessage &msgin)
 
 static void cbFullUpdate(CNetMessage &msgin)
 {
-	//nlinfo("cbFullUpdate %f",CTimeTask::instance().time());
+	//nlinfo("cbFullUpdate %f",CTimeTask::getInstance().time());
 	float rsxTime = 0.0f;
 
 	// reply to the update first (used for the ping)
@@ -410,14 +410,14 @@ static void cbFullUpdate(CNetMessage &msgin)
 	msgin.serial(pingnb);
 	CNetMessage msgout(CNetMessage::Update);
 	msgout.serial(pingnb);
-	CNetworkTask::instance().send(msgout);
+	CNetworkTask::getInstance().send(msgout);
 //	nlinfo("*********** send the pong %u %"NL_I64"u", pingnb, CTime::getLocalTime());
 	
 	//msgin.serial (rsxTime);
 
-	//nlassert(CEntityManager::instance().updateListId.size());
+	//nlassert(CEntityManager::getInstance().updateListId.size());
 	//std::list <uint8 >::iterator it;
-	//for(it=CEntityManager::instance().updateListId.begin();it!=CEntityManager::instance().updateListId.end();it++)
+	//for(it=CEntityManager::getInstance().updateListId.begin();it!=CEntityManager::getInstance().updateListId.end();it++)
 	while(msgin.getPos() < (sint32)msgin.length())
 	{
 		//eid = *it;
@@ -426,12 +426,12 @@ static void cbFullUpdate(CNetMessage &msgin)
 		CVector pos;
 		uint16 ping;
 		msgin.serial(eid, pos ,ping);
-		//pos = CEntityManager::instance()[eid].LastSentPos + dpos;
+		//pos = CEntityManager::getInstance()[eid].LastSentPos + dpos;
 		
-		if(CEntityManager::instance().exist(eid))
+		if(CEntityManager::getInstance().exist(eid))
 		{
-			CEntityManager::instance()[eid].LastSent2MePos = pos;
-			CEntityManager::instance()[eid].LastSent2OthersPos = pos;
+			CEntityManager::getInstance()[eid].LastSent2MePos = pos;
+			CEntityManager::getInstance()[eid].LastSent2OthersPos = pos;
 			if(DisplayDebug)
 				nlinfo("TCP updateFull client %hu a %g %g %g ping %hu", (uint16)eid, pos.x, pos.y, pos.z, ping);
 
@@ -439,19 +439,19 @@ static void cbFullUpdate(CNetMessage &msgin)
 				fprintf(SessionFile, "%hu PO %f %f %f\n", (uint16)eid, pos.x, pos.y, pos.z);
 
 			bool oc = false;
-			if(CEntityManager::instance()[eid].addOpenCloseKey)
+			if(CEntityManager::getInstance()[eid].addOpenCloseKey)
 			{
-				CEntityManager::instance()[eid].addOpenCloseKey = false;
+				CEntityManager::getInstance()[eid].addOpenCloseKey = false;
 				oc = true;
 			}
 			CCrashEvent ce(false,CVector::Null);
-			if(CEntityManager::instance()[eid].addCrashEventKey.Crash)
+			if(CEntityManager::getInstance()[eid].addCrashEventKey.Crash)
 			{
-				ce = CEntityManager::instance()[eid].addCrashEventKey;
-				CEntityManager::instance()[eid].addCrashEventKey.Crash = false;
+				ce = CEntityManager::getInstance()[eid].addCrashEventKey;
+				CEntityManager::getInstance()[eid].addCrashEventKey.Crash = false;
 			}
-			CEntityManager::instance()[eid].interpolator().addKey(CEntityInterpolatorKey(CEntityState(pos,false,oc,ce),rsxTime));
-			CEntityManager::instance()[eid].ping(ping);
+			CEntityManager::getInstance()[eid].interpolator().addKey(CEntityInterpolatorKey(CEntityState(pos,false,oc,ce),rsxTime));
+			CEntityManager::getInstance()[eid].ping(ping);
 		}
 		/*
 		else
@@ -466,12 +466,12 @@ static void cbFullUpdate(CNetMessage &msgin)
 
 static void cbUpdateList(CNetMessage &msgin)
 {
-	CEntityManager::instance().updateListId.clear();
+	CEntityManager::getInstance().updateListId.clear();
 	while(msgin.getPos() < (sint32)msgin.length())
 	{
 		uint8 eid;
 		msgin.serial(eid);
-		CEntityManager::instance().updateListId.push_back(eid);
+		CEntityManager::getInstance().updateListId.push_back(eid);
 	}
 }
 
@@ -495,12 +495,12 @@ static void cbUpdateElement(CNetMessage &msgin)
 	switch(elementType)
 	{
 	case CEditableElementCommon::Module:
-		if(CLevelManager::instance().levelPresent())
-			CLevelManager::instance().currentLevel().updateModule(elementId,pos,eulerRot,selectedBy);
+		if(CLevelManager::getInstance().levelPresent())
+			CLevelManager::getInstance().currentLevel().updateModule(elementId,pos,eulerRot,selectedBy);
 		break;
 	case CEditableElementCommon::StartPosition:
-		if(CLevelManager::instance().levelPresent())
-			CLevelManager::instance().currentLevel().updateStartPoint(elementId,pos,eulerRot,selectedBy);
+		if(CLevelManager::getInstance().levelPresent())
+			CLevelManager::getInstance().currentLevel().updateStartPoint(elementId,pos,eulerRot,selectedBy);
 		break;
 	default:
 		nlwarning("Unknown elemen type %hu", (uint16)elementType);
@@ -516,9 +516,9 @@ static void cbReady(CNetMessage &msgin)
 	nlinfo("NET: cbReady eid=%hu", (uint16)eid);
 
 	// check if the player exists
-	if(!CEntityManager::instance().exist(eid)) { nlwarning("The eid doesn't exist"); return; }
+	if(!CEntityManager::getInstance().exist(eid)) { nlwarning("The eid doesn't exist"); return; }
 	
-	CEntityManager::instance()[eid].ready(true);
+	CEntityManager::getInstance()[eid].ready(true);
 }
 
 static void cbEverybodyReady(CNetMessage &msgin)
@@ -526,7 +526,7 @@ static void cbEverybodyReady(CNetMessage &msgin)
 	nlinfo("NET: cbEverybodyReady");
 
 	// called when everybody is ready, can start the countdown
-	mtpTarget::instance().everybodyReady();
+	mtpTarget::getInstance().everybodyReady();
 }
 
 static void cbEnableElement(CNetMessage &msgin)
@@ -536,8 +536,8 @@ static void cbEnableElement(CNetMessage &msgin)
 	msgin.serial(elementId, enabled);
 	nlinfo("NET: cbEnableElement");
 	
-	if(CLevelManager::instance().levelPresent())
-		CLevelManager::instance().currentLevel().getModule(elementId)->enabled(enabled);
+	if(CLevelManager::getInstance().levelPresent())
+		CLevelManager::getInstance().currentLevel().getModule(elementId)->enabled(enabled);
 }
 
 static void cbRequestCRCKey(CNetMessage &msgin)
@@ -547,7 +547,7 @@ static void cbRequestCRCKey(CNetMessage &msgin)
 	msgin.serial(fn, hashKey);
 	nlinfo("NET: cbRequestCRCKey fn='%s' hashKey='%s'", fn.c_str(), hashKey.toString().c_str());
 
-	CResourceManagerLan::instance().receivedCRC(fn);
+	CResourceManagerLan::getInstance().receivedCRC(fn);
 }
 
 static void cbRequestDownload(CNetMessage &msgin)
@@ -568,7 +568,7 @@ static void cbRequestDownload(CNetMessage &msgin)
 		msgin.serialCont(buf);
 		msgin.serial(eof);
 	}
-	CResourceManagerLan::instance().receivedBlock(res, buf, eof, fileSize, receivedError);
+	CResourceManagerLan::getInstance().receivedBlock(res, buf, eof, fileSize, receivedError);
 }
 
 static void cbDisplayText(CNetMessage &msgin)
@@ -581,7 +581,7 @@ static void cbDisplayText(CNetMessage &msgin)
 	nlinfo("NET: cbDisplayText x=%f y=%f s=%f col=(%d,%d,%d), duration=%f message='%s'",
 		x, y, s, col.R, col.G, col.B, duration, message.c_str());
 
-	CHudTask::instance().addMessage(CHudMessage(x,y,s,message,col,duration));
+	CHudTask::getInstance().addMessage(CHudMessage(x,y,s,message,col,duration));
 }
 
 static void cbStartSession(CNetMessage &msgin)
@@ -602,20 +602,20 @@ static void cbStartSession(CNetMessage &msgin)
 
 	for(uint32 i=0;i<eids.size();i++)
 	{
-		if(CEntityManager::instance().exist(eids[i]))
-			CEntityManager::instance()[eids[i]].rank(ranks[i]);
+		if(CEntityManager::getInstance().exist(eids[i]))
+			CEntityManager::getInstance()[eids[i]].rank(ranks[i]);
 	}
 
-	CMtpTarget::instance().startSession(timebeforestart / 1000.0f, timeout / 1000.0f, levelName, str1, str2);
+	CMtpTarget::getInstance().startSession(timebeforestart / 1000.0f, timeout / 1000.0f, levelName, str1, str2);
 
 	/*
-	msgin.serial (mtpTarget::instance().Interface2d.LevelName);
-	msgin.serial (mtpTarget::instance().Interface2d.FullLevelName);
-	msgin.serial (mtpTarget::instance().Interface2d.string1);
-	msgin.serial (mtpTarget::instance().Interface2d.string2);
-	msgin.serial (mtpTarget::instance().Interface2d.Author);
+	msgin.serial (mtpTarget::getInstance().Interface2d.LevelName);
+	msgin.serial (mtpTarget::getInstance().Interface2d.FullLevelName);
+	msgin.serial (mtpTarget::getInstance().Interface2d.string1);
+	msgin.serial (mtpTarget::getInstance().Interface2d.string2);
+	msgin.serial (mtpTarget::getInstance().Interface2d.Author);
 
-	mtpTarget::instance().startSession(timebeforestart / 1000, timeout / 1000, mtpTarget::instance().Interface2d.LevelName);
+	mtpTarget::getInstance().startSession(timebeforestart / 1000, timeout / 1000, mtpTarget::getInstance().Interface2d.LevelName);
 */
   
 }
@@ -640,30 +640,30 @@ static void cbEndSession(CNetMessage &msgin)
 		
 		msgin.serial(eid, currentScore, totalScore);
 		
-		//CEntity *entity = mtpTarget::instance().World.getEntityById(id);
+		//CEntity *entity = mtpTarget::getInstance().World.getEntityById(id);
 		//nlassert(entity!=0);
 		//entity->setScore(currentScore, totalScore);
-		if(CEntityManager::instance().exist(eid))
+		if(CEntityManager::getInstance().exist(eid))
 		{
-			CEntityManager::instance()[eid].currentScore(currentScore);
-			CEntityManager::instance()[eid].totalScore(totalScore);
+			CEntityManager::getInstance()[eid].currentScore(currentScore);
+			CEntityManager::getInstance()[eid].totalScore(totalScore);
 		}
 	}
-	mtpTarget::instance().endSession();
+	mtpTarget::getInstance().endSession();
 	
 	if(SessionFile)
 	{
 		fclose (SessionFile);
 		SessionFile = 0;
-		if(CMtpTarget::instance().moveReplay())
+		if(CMtpTarget::getInstance().moveReplay())
 		{
 			string markedReplayDir = "replay/marked/";
 			if(!NLMISC::CFile::isDirectory(markedReplayDir))
 				NLMISC::CFile::createDirectory(markedReplayDir);
-			string newFilename = markedReplayDir + NLMISC::CFile::getFilename(CMtpTarget::instance().sessionFileName());
-			NLMISC::CFile::moveFile(newFilename.c_str(),CMtpTarget::instance().sessionFileName().c_str());
+			string newFilename = markedReplayDir + NLMISC::CFile::getFilename(CMtpTarget::getInstance().sessionFileName());
+			NLMISC::CFile::moveFile(newFilename.c_str(),CMtpTarget::getInstance().sessionFileName().c_str());
 		}
-		CMtpTarget::instance().moveReplay(false);
+		CMtpTarget::getInstance().moveReplay(false);
 	}
 }
 
@@ -673,8 +673,8 @@ static void cbExecLua(CNetMessage &msgin)
 	msgin.serial(luaCode);
 	nlinfo("NET: cbExecLua luaCode='%s'", luaCode.c_str());
 
-	if(CLevelManager::instance().levelPresent())
-		CLevelManager::instance().currentLevel().execLuaCode(luaCode);
+	if(CLevelManager::getInstance().levelPresent())
+		CLevelManager::getInstance().currentLevel().execLuaCode(luaCode);
 }
 
 static void cbCollideWhenFly(CNetMessage &msgin)
@@ -685,15 +685,15 @@ static void cbCollideWhenFly(CNetMessage &msgin)
 	nlinfo("NET: cbCollideWhenFly eid=%hu, pos=(%f,%f,%f)", (uint16)eid, pos.x, pos.y, pos.z);
 
 	// check if the player exists
-	if(!CEntityManager::instance().exist(eid)) { nlwarning("The eid doesn't exist"); return; }
+	if(!CEntityManager::getInstance().exist(eid)) { nlwarning("The eid doesn't exist"); return; }
 
-	if(CMtpTarget::instance().controler().getControledEntity()==eid)
+	if(CMtpTarget::getInstance().controler().getControledEntity()==eid)
 	{
 		// it's my collide when fly
-		C3DTask::instance().EnableExternalCamera = true;
+		C3DTask::getInstance().EnableExternalCamera = true;
 	}
 
-	CEntityManager::instance()[eid].addCrashEventKey = CCrashEvent(true,pos);
+	CEntityManager::getInstance()[eid].addCrashEventKey = CCrashEvent(true,pos);
 	if(SessionFile) 
 		fprintf(SessionFile, "%hu CE %f %f %f\n", (uint16)eid,pos.x,pos.y,pos.z);
 }
@@ -706,12 +706,12 @@ static void cbTimeArrival(CNetMessage &msgin)
 	nlinfo("NET: cbTimeArrival eid=%hu, time=%f", (uint16)eid, time);
 	
 	// check if the player exists
-	if(!CEntityManager::instance().exist(eid)) { nlwarning("The eid doesn't exist"); return; }
+	if(!CEntityManager::getInstance().exist(eid)) { nlwarning("The eid doesn't exist"); return; }
 	
-	if(CMtpTarget::instance().controler().getControledEntity()==eid)
+	if(CMtpTarget::getInstance().controler().getControledEntity()==eid)
 	{
 		// it's my arrival
-		C3DTask::instance().EnableExternalCamera = true;
+		C3DTask::getInstance().EnableExternalCamera = true;
 	}
 }
 

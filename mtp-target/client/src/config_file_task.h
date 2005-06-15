@@ -30,13 +30,14 @@
 // Includes
 //
 
+#include <nel/misc/singleton.h>
 
 
 //
 // Classes
 //
 
-class CConfigFileTask : public CSingleton<CConfigFileTask>, public ITask
+class CConfigFileTask : public NLMISC::CSingleton<CConfigFileTask>, public ITask
 {
 public:
 	

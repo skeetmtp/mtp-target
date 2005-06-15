@@ -30,9 +30,10 @@
 // Includes
 //
 
-#include <nel/misc/thread.h>
 #include <nel/misc/types_nl.h>
 #include <nel/misc/mem_stream.h>
+#include <nel/misc/types_nl.h>
+#include <nel/misc/thread.h>
 #include <nel/misc/sha1.h>
 
 #include "resource_manager.h"
@@ -46,7 +47,7 @@
 typedef std::map<std::string, CHashKey> filename2CRC;
 class CResourceManagerRunnable;
 
-class CResourceManager : public CSingleton<CResourceManager>, public ITask
+class CResourceManager : public NLMISC::CSingleton<CResourceManager>, public ITask
 {
 public:
 

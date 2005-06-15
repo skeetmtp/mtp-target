@@ -78,7 +78,7 @@ using namespace NL3D;
 
 CParticles::CParticles() : CParticlesCommon()
 {
-	mat = C3DTask::instance().createMaterial();
+	mat = C3DTask::getInstance().createMaterial();
 	LuaProxy = 0;
 }
 
@@ -87,7 +87,7 @@ CParticles::~CParticles()
 {
 	if(!Mesh.empty())
 	{
-		C3DTask::instance().scene().deleteInstance(Mesh);
+		C3DTask::getInstance().scene().deleteInstance(Mesh);
 	}
 }
 
@@ -99,10 +99,10 @@ void CParticles::init(const string &name, const std::string &fileName, uint8 id,
 	// Get collision faces
 //	loadMesh(ShapeName, Vertices, Normals, Indices,false);
 	
-	ShapeName = CResourceManager::instance().get(fileName+".ps");
+	ShapeName = CResourceManager::getInstance().get(fileName+".ps");
 
-	string res = CResourceManager::instance().get(ShapeName);
-	Mesh = C3DTask::instance().scene().createInstance(res);
+	string res = CResourceManager::getInstance().get(ShapeName);
+	Mesh = C3DTask::getInstance().scene().createInstance(res);
 	if (Mesh.empty())
 	{
 		nlwarning ("Can't load '%s'", ShapeName.c_str());
@@ -127,10 +127,10 @@ void CParticles::luaInit()
 		delete LuaProxy;
 		LuaProxy = 0;
 	}
-	if(CLevelManager::instance().levelPresent())
+	if(CLevelManager::getInstance().levelPresent())
 	{
-		LuaProxy = new CParticlesProxy(CLevelManager::instance().currentLevel().luaState(),this);	
-		nlinfo("CParticles::luaInit(), luaState=0x%p , proxy = 0x%p",CLevelManager::instance().currentLevel().luaState(),LuaProxy);
+		LuaProxy = new CParticlesProxy(CLevelManager::getInstance().currentLevel().luaState(),this);	
+		nlinfo("CParticles::luaInit(), luaState=0x%p , proxy = 0x%p",CLevelManager::getInstance().currentLevel().luaState(),LuaProxy);
 	}
 	else
 		nlwarning("lua init : no level loaded");

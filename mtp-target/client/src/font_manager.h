@@ -52,7 +52,7 @@ protected:
 private:
 };
 
-class CFontManager : public CSingleton<CFontManager>, public ITask
+class CFontManager : public NLMISC::CSingleton<CFontManager>, public ITask
 {
 public:
 

@@ -29,9 +29,12 @@
 //
 // Includes
 //
-#include "gui_object.h"
+
+#include <nel/misc/singleton.h>
 #include <nel/misc/i_xml.h>
-//class CGuiObject;
+
+#include "gui_object.h"
+
 
 //
 // Classes
@@ -62,7 +65,7 @@ protected:
 private:
 };
 
-class CGuiXmlManager : public CSingleton<CGuiXmlManager>
+class CGuiXmlManager : public NLMISC::CSingleton<CGuiXmlManager>
 {
 public:
 	static CGuiXml *Load(const std::string &filename, lua_State *luaState=0);

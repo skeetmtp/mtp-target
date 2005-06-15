@@ -36,7 +36,7 @@
 // Classes
 //
 
-class CLensFlareTask : public CSingleton<CLensFlareTask>, public ITask
+class CLensFlareTask : public NLMISC::CSingleton<CLensFlareTask>, public ITask
 {
 public:
 	
@@ -47,7 +47,7 @@ public:
 
 	virtual std::string name() const { return "CLensFlareTask"; }
 
-	friend class CSingleton<CLensFlareTask>;
+	friend class NLMISC::CSingleton<CLensFlareTask>;
 protected:
 	CLensFlareTask();
 	

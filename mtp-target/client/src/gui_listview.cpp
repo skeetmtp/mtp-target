@@ -157,40 +157,40 @@ void CGuiListViewManager::init()
 	
 	string res;
 
-	res = CResourceManager::instance().get("row_listview.tga");
-	_rowTexture = C3DTask::instance().driver().createTextureFile(res);
+	res = CResourceManager::getInstance().get("row_listview.tga");
+	_rowTexture = C3DTask::getInstance().driver().createTextureFile(res);
 	nlassert(_rowTexture);
 	
 	_rowTexture->setWrapS(UTexture::Clamp);
 	
 	
-	_rowMaterial = C3DTask::instance().createMaterial();
+	_rowMaterial = C3DTask::getInstance().createMaterial();
 	_rowMaterial.setTexture(_rowTexture);
 	_rowMaterial.setBlend(true);
 	_rowMaterial.setZFunc(UMaterial::always);
 	_rowMaterial.setDoubleSided();
 	
-	res = CResourceManager::instance().get("selected_row_listview.tga");
-	_selectedRowTexture = C3DTask::instance().driver().createTextureFile(res);
+	res = CResourceManager::getInstance().get("selected_row_listview.tga");
+	_selectedRowTexture = C3DTask::getInstance().driver().createTextureFile(res);
 	nlassert(_selectedRowTexture);
 	
 	_selectedRowTexture->setWrapS(UTexture::Clamp);
 	
 	
-	_selectedRowMaterial = C3DTask::instance().createMaterial();
+	_selectedRowMaterial = C3DTask::getInstance().createMaterial();
 	_selectedRowMaterial.setTexture(_selectedRowTexture);
 	_selectedRowMaterial.setBlend(true);
 	_selectedRowMaterial.setZFunc(UMaterial::always);
 	_selectedRowMaterial.setDoubleSided();
 	
-	res = CResourceManager::instance().get("header_listview.tga");
-	_headerTexture = C3DTask::instance().driver().createTextureFile(res);
+	res = CResourceManager::getInstance().get("header_listview.tga");
+	_headerTexture = C3DTask::getInstance().driver().createTextureFile(res);
 	nlassert(_headerTexture);
 	
 	_headerTexture->setWrapS(UTexture::Clamp);
 	
 	
-	_headerMaterial = C3DTask::instance().createMaterial();
+	_headerMaterial = C3DTask::getInstance().createMaterial();
 	_headerMaterial.setTexture(_headerTexture);
 	_headerMaterial.setBlend(true);
 	_headerMaterial.setZFunc(UMaterial::always);
@@ -251,7 +251,7 @@ CGuiListView::CGuiListView()
 	_spacing = 0;
 	_selectedRow = 1;
 	eventBehaviour = 0;
-	quad.material(CGuiListViewManager::instance().rowMaterial());
+	quad.material(CGuiListViewManager::getInstance().rowMaterial());
 }
 
 CGuiListView::~CGuiListView()
@@ -430,13 +430,13 @@ void CGuiListView::_render(const CVector &pos,CVector &maxSize)
 			CGuiObject *obj = *it2;
 			CGuiStretchedQuad quad;
 			if(rowCount==0)
-				quad.material(CGuiListViewManager::instance().headerMaterial());
+				quad.material(CGuiListViewManager::getInstance().headerMaterial());
 			else
 			{
 				if(rowCount==_selectedRow)
-					quad.material(CGuiListViewManager::instance().selectedRowMaterial());
+					quad.material(CGuiListViewManager::getInstance().selectedRowMaterial());
 				else
-					quad.material(CGuiListViewManager::instance().rowMaterial());
+					quad.material(CGuiListViewManager::getInstance().rowMaterial());
 			}
 			//		quad.size(CVector(obj->width(),obj->height()-0,0));
 			CVector qSize= obj->renderedSize();
@@ -450,20 +450,20 @@ void CGuiListView::_render(const CVector &pos,CVector &maxSize)
 			rcount++;
 		}
 
-		CVector mousePos = CGuiObjectManager::instance().mouseListener().position();
+		CVector mousePos = CGuiObjectManager::getInstance().mouseListener().position();
 		
 		if(row->isIn(mousePos,row->renderedPos(),row->renderedSize()))
 		{
-			CVector mousePressedPos = CGuiObjectManager::instance().mouseListener().pressedPosition();
+			CVector mousePressedPos = CGuiObjectManager::getInstance().mouseListener().pressedPosition();
 			
-			if(CGuiObjectManager::instance().mouseListener().ButtonDown)
+			if(CGuiObjectManager::getInstance().mouseListener().ButtonDown)
 			{
 				if(row->isIn(mousePressedPos,row->renderedPos(),row->renderedSize()))
 					_selectedRow = rowCount;
 				else
 					_selectedRow = 0;
 			}
-			if(CGuiObjectManager::instance().mouseListener().DoubleClicked)
+			if(CGuiObjectManager::getInstance().mouseListener().DoubleClicked)
 			{
 				if(eventBehaviour)
 					eventBehaviour->onPressed(_selectedRow-1);
@@ -525,7 +525,7 @@ void CGuiListView::luaPush(lua_State *L)
 
 void CGuiListView::XmlRegister()
 {
-	CGuiObjectManager::instance().registerClass("CGuiListView",CGuiListView::Create);
+	CGuiObjectManager::getInstance().registerClass("CGuiListView",CGuiListView::Create);
 }
 
 CGuiObject *CGuiListView::Create()

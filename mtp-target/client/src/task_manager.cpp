@@ -220,20 +220,20 @@ NLMISC_COMMAND(displayTasks, "display all task", "")
 {
 	if(args.size() != 0) return false;
 
-	log.displayNL("There's %d tasks:", CTaskManager::instance().Tasks.size());
+	log.displayNL("There's %d tasks:", CTaskManager::getInstance().Tasks.size());
 	log.displayNL("Init order call:");
-	for(std::list<ITask*>::iterator it = CTaskManager::instance().Tasks.begin(); it != CTaskManager::instance().Tasks.end(); it++)
+	for(std::list<ITask*>::iterator it = CTaskManager::getInstance().Tasks.begin(); it != CTaskManager::getInstance().Tasks.end(); it++)
 	{
 		//log.displayNL("  %s %s", (*it)->name().c_str(), ((*it)->Execute?"Running":"Stop"));
 	}
 	log.displayNL("Update order call:");
-	for(std::list<ITask*>::iterator it = CTaskManager::instance().OrderSortedTasks.begin(); it != CTaskManager::instance().OrderSortedTasks.end(); it++)
+	for(std::list<ITask*>::iterator it = CTaskManager::getInstance().OrderSortedTasks.begin(); it != CTaskManager::getInstance().OrderSortedTasks.end(); it++)
 	{
 		log.displayNL("  %s", (*it)->name().c_str());
 		(*it)->render();
 	}
 	log.displayNL("Release order call:");
-	for(std::list<ITask*>::reverse_iterator it = CTaskManager::instance().Tasks.rbegin(); it != CTaskManager::instance().Tasks.rend(); it++)
+	for(std::list<ITask*>::reverse_iterator it = CTaskManager::getInstance().Tasks.rbegin(); it != CTaskManager::getInstance().Tasks.rend(); it++)
 	{
 		log.displayNL("  %s", (*it)->name().c_str());
 		(*it)->release();

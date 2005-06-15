@@ -50,8 +50,8 @@ using namespace NLMISC;
 void CEndingSessionState::update()
 {
 	TTime currentTime = CTime::getLocalTime();
-	if(currentTime > CSessionManager::instance().endTime()+(TTime)TimeBeforeRestart)
+	if(currentTime > CSessionManager::getInstance().endTime()+(TTime)TimeBeforeRestart)
 	{
-		CSessionManager::instance().reset();
+		CSessionManager::getInstance().reset();
 	}
 }

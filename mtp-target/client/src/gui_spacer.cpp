@@ -75,7 +75,7 @@ CGuiSpacer::~CGuiSpacer()
 
 void CGuiSpacer::XmlRegister()
 {
-	CGuiObjectManager::instance().registerClass("CGuiSpacer",CGuiSpacer::Create);
+	CGuiObjectManager::getInstance().registerClass("CGuiSpacer",CGuiSpacer::Create);
 }
 
 CGuiObject *CGuiSpacer::Create()

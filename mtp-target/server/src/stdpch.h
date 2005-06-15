@@ -32,10 +32,9 @@
 #include <nel/misc/command.h>
 #include <nel/misc/fast_mem.h>
 #include <nel/misc/variable.h>
+#include <nel/misc/singleton.h>
 #include <nel/misc/system_info.h>
 #include <nel/misc/config_file.h>
 #include <nel/misc/mem_displayer.h>
 
 #include <nel/net/service.h>
-
-#include "../../common/singleton.h"

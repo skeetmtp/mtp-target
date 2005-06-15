@@ -104,25 +104,25 @@ template<class OutIt> void Split( const std::string& s, char sep, OutIt dest )
 void CGuiTextManager::init()
 {
 	string res;
-	res = CResourceManager::instance().get("cursor.tga");
-	_cursorTexture = C3DTask::instance().driver().createTextureFile(res);
+	res = CResourceManager::getInstance().get("cursor.tga");
+	_cursorTexture = C3DTask::getInstance().driver().createTextureFile(res);
 	nlassert(_cursorTexture);
 	_cursorTexture->setWrapS(UTexture::Clamp);
 	_cursorTexture->setWrapT(UTexture::Clamp);
 	
-	_cursorMaterial = C3DTask::instance().createMaterial();
+	_cursorMaterial = C3DTask::getInstance().createMaterial();
 	_cursorMaterial.setTexture(_cursorTexture);
 	_cursorMaterial.setBlend(true);
 	_cursorMaterial.setZFunc(UMaterial::always);
 	_cursorMaterial.setDoubleSided();
 	
-	res = CResourceManager::instance().get("entry.tga");
-	_entryTexture = C3DTask::instance().driver().createTextureFile(res);
+	res = CResourceManager::getInstance().get("entry.tga");
+	_entryTexture = C3DTask::getInstance().driver().createTextureFile(res);
 	nlassert(_entryTexture);
 	_entryTexture->setWrapS(UTexture::Clamp);
 	_entryTexture->setWrapT(UTexture::Clamp);
 	
-	_entryMaterial = C3DTask::instance().createMaterial();
+	_entryMaterial = C3DTask::getInstance().createMaterial();
 	_entryMaterial.setTexture(_entryTexture);
 	_entryMaterial.setBlend(true);
 	_entryMaterial.setZFunc(UMaterial::always);
@@ -169,7 +169,7 @@ void CGuiTextCursor::Render(const CVector &position,int height)
 	{
 		CGuiStretchedQuad quad;
 		quad.stretched(false);
-		quad.material(CGuiTextManager::instance().cursorMaterial());
+		quad.material(CGuiTextManager::getInstance().cursorMaterial());
 		quad.size(CVector(2,(float)height,0));
 		quad.position(position);
 		quad.render();
@@ -257,7 +257,7 @@ void CGuiText::_render(const CVector &pos,CVector &maxSize)
 	if(isEntry())
 	{
 		CGuiStretchedQuad quad;
-		quad.material(CGuiTextManager::instance().entryMaterial());
+		quad.material(CGuiTextManager::getInstance().entryMaterial());
 		quad.size(expSize);
 		quad.position(globalPosition(pos,maxSize));
 		quad.render();
@@ -271,10 +271,10 @@ void CGuiText::_render(const CVector &pos,CVector &maxSize)
 
 	if(focused() && isEntry())
 	{
-		CGuiTextCursor::Render(cursorPos,CFontManager::instance().guiFontSize());
+		CGuiTextCursor::Render(cursorPos,CFontManager::getInstance().guiFontSize());
 		if(isEditable())
 		{
-			string res = C3DTask::instance().kbGetString();
+			string res = C3DTask::getInstance().kbGetString();
 			if(res.size())
 			{
 				for (const char *src = res.c_str(); *src != '\0';src++)
@@ -296,7 +296,7 @@ void CGuiText::_render(const CVector &pos,CVector &maxSize)
 				}
 			}
 			
-			if (C3DTask::instance().kbPressed(KeyDELETE))
+			if (C3DTask::getInstance().kbPressed(KeyDELETE))
 			{
 				if (text.length() > 0 && cursorIndex()<text.size())
 				{
@@ -304,17 +304,17 @@ void CGuiText::_render(const CVector &pos,CVector &maxSize)
 				}
 			}
 
-			if (C3DTask::instance().kbPressed(KeyUP))
+			if (C3DTask::getInstance().kbPressed(KeyUP))
 				cursorUp();
-			if (C3DTask::instance().kbPressed(KeyDOWN))
+			if (C3DTask::getInstance().kbPressed(KeyDOWN))
 				cursorDown();
-			if (C3DTask::instance().kbPressed(KeyLEFT))
+			if (C3DTask::getInstance().kbPressed(KeyLEFT))
 				cursorLeft();
-			if (C3DTask::instance().kbPressed(KeyRIGHT))
+			if (C3DTask::getInstance().kbPressed(KeyRIGHT))
 				cursorRight();
-			if (C3DTask::instance().kbPressed(KeyHOME))
+			if (C3DTask::getInstance().kbPressed(KeyHOME))
 				cursorHome();
-			if (C3DTask::instance().kbPressed(KeyEND))
+			if (C3DTask::getInstance().kbPressed(KeyEND))
 				cursorEnd();
 		}
 	}
@@ -470,7 +470,7 @@ void CGuiText::cursorRight()
 
 float CGuiText::_width()
 {
-	float w = CGuiMultilineText::size(false, CFontManager::instance().guiFontSize(),text).x;
+	float w = CGuiMultilineText::size(false, CFontManager::getInstance().guiFontSize(),text).x;
 	if(isEntry())
 		return w + 4;
 	else
@@ -479,7 +479,7 @@ float CGuiText::_width()
 
 float CGuiText::_height()
 {
-	float h = CGuiMultilineText::size(false, CFontManager::instance().guiFontSize(),text).y;
+	float h = CGuiMultilineText::size(false, CFontManager::getInstance().guiFontSize(),text).y;
 	if(isEntry())
 		return h + 4;
 	else
@@ -551,7 +551,7 @@ void CGuiText::luaPush(lua_State *L)
 
 void CGuiText::XmlRegister()
 {
-	CGuiObjectManager::instance().registerClass("CGuiText",CGuiText::Create);
+	CGuiObjectManager::getInstance().registerClass("CGuiText",CGuiText::Create);
 }
 
 CGuiObject *CGuiText::Create()
@@ -613,7 +613,7 @@ void CGuiTextPercent::ptrValue(float *ptrValue)
 
 void CGuiTextPercent::XmlRegister()
 {
-	CGuiObjectManager::instance().registerClass("CGuiTextPercent",CGuiTextPercent::Create);
+	CGuiObjectManager::getInstance().registerClass("CGuiTextPercent",CGuiTextPercent::Create);
 }
 
 CGuiObject *CGuiTextPercent::Create()

@@ -87,15 +87,15 @@ void CGuiBoxManager::init()
 {
 	
 	string res;
-	res = CResourceManager::instance().get("box_debug.tga");
-	_texture = C3DTask::instance().driver().createTextureFile(res);
+	res = CResourceManager::getInstance().get("box_debug.tga");
+	_texture = C3DTask::getInstance().driver().createTextureFile(res);
 	nlassert(_texture);
 	
 	//_texture->setWrapS(UTexture::Clamp);
 	//_textureFrame->setWrapT(UTexture::Clamp);
 	
 	
-	_material = C3DTask::instance().createMaterial();
+	_material = C3DTask::getInstance().createMaterial();
 	_material.setTexture(_texture);
 	_material.setBlend(true);
 	_material.setZFunc(UMaterial::always);
@@ -133,7 +133,7 @@ NL3D::UMaterial CGuiBoxManager::material()
 CGuiBox::CGuiBox()
 {
 	_spacing = 2;
-	quad.material(CGuiBoxManager::instance().material());
+	quad.material(CGuiBoxManager::getInstance().material());
 }
 
 CGuiBox::~CGuiBox()
@@ -291,7 +291,7 @@ float CGuiVBox::_height()
 
 void CGuiVBox::XmlRegister()
 {
-	CGuiObjectManager::instance().registerClass("CGuiVBox",CGuiVBox::Create);
+	CGuiObjectManager::getInstance().registerClass("CGuiVBox",CGuiVBox::Create);
 }
 
 CGuiObject *CGuiVBox::Create()
@@ -407,7 +407,7 @@ float CGuiHBox::_height()
 
 void CGuiHBox::XmlRegister()
 {
-	CGuiObjectManager::instance().registerClass("CGuiHBox",CGuiHBox::Create);
+	CGuiObjectManager::getInstance().registerClass("CGuiHBox",CGuiHBox::Create);
 }
 
 CGuiObject *CGuiHBox::Create()

@@ -30,6 +30,7 @@
 // Includes
 //
 
+#include <nel/misc/singleton.h>
 #include <nel/misc/value_smoother.h>
 
 
@@ -37,7 +38,7 @@
 // Classes
 //
 
-class CTimeTask : public CSingleton<CTimeTask>, public ITask
+class CTimeTask : public NLMISC::CSingleton<CTimeTask>, public ITask
 {
 public:
 

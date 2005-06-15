@@ -60,16 +60,16 @@ using namespace NLMISC;
 	
 void CGameTask::init()
 {
-	CTaskManager::instance().add(CLevelManager::instance(), 60);
-	CTaskManager::instance().add(CHudTask::instance(), 1020);
-	CTaskManager::instance().add(CScoreTask::instance(), 1030);
-	CTaskManager::instance().add(CChatTask::instance(), 1040);
+	CTaskManager::getInstance().add(CLevelManager::getInstance(), 60);
+	CTaskManager::getInstance().add(CHudTask::getInstance(), 1020);
+	CTaskManager::getInstance().add(CScoreTask::getInstance(), 1030);
+	CTaskManager::getInstance().add(CChatTask::getInstance(), 1040);
 
 	bool tocFound = false;
-	//tocFound = CGuiCustom::instance().load("data/gui/custom/");
-	tocFound =  CGuiCustom::instance().count()>0;
-	if(!tocFound && CConfigFileTask::instance().configFile().getVar("CaptureMouse").asInt() == 1)
-		C3DTask::instance().captureCursor(true);
+	//tocFound = CGuiCustom::getInstance().load("data/gui/custom/");
+	tocFound =  CGuiCustom::getInstance().count()>0;
+	if(!tocFound && CConfigFileTask::getInstance().configFile().getVar("CaptureMouse").asInt() == 1)
+		C3DTask::getInstance().captureCursor(true);
 
 	
 
@@ -81,7 +81,7 @@ void CGameTask::update()
 
 void CGameTask::render()
 {
-	C3DTask::instance().clear();
+	C3DTask::getInstance().clear();
 }
 
 void CGameTask::release()
@@ -91,9 +91,9 @@ void CGameTask::release()
 void CGameTask::stop()
 {
 	ITask::stop();
-	CLevelManager::instance().stop();
-	CHudTask::instance().stop();
-	CScoreTask::instance().stop();
-	CChatTask::instance().stop();
+	CLevelManager::getInstance().stop();
+	CHudTask::getInstance().stop();
+	CScoreTask::getInstance().stop();
+	CChatTask::getInstance().stop();
 }
 

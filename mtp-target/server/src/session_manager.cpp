@@ -50,7 +50,7 @@ void CSessionManager::init()
 {
 	// set the first state
 	CurrentState = 0;
-	changeState(CWaitingClientsSessionState::instance());
+	changeState(CWaitingClientsSessionState::getInstance());
 	
 	ForceEnding = false;
 
@@ -67,7 +67,6 @@ void CSessionManager::update()
 
 void CSessionManager::release()
 {
-	CSessionManager::uninstance();
 }
 
 void CSessionManager::changeState(CSessionState &ns)
@@ -87,13 +86,13 @@ void CSessionManager::changeState(CSessionState &ns)
 	CNetMessage msgout(CNetMessage::SessionState);
 	string sn = ns.shortName();
 	msgout.serial(sn);
-	CNetwork::instance().send(msgout);
+	CNetwork::getInstance().send(msgout);
 }	
 
 void CSessionManager::reset()
 {
-	CEntityManager::instance().saveAllValidReplay();
-	changeState(CWaitingClientsSessionState::instance());
+	CEntityManager::getInstance().saveAllValidReplay();
+	changeState(CWaitingClientsSessionState::getInstance());
 	StartTime = 0;
 	EndTime = 0;
 }
@@ -105,14 +104,14 @@ void CSessionManager::reset()
 
 NLMISC_COMMAND(reset, "reset the session brutally", "")
 {
-	CSessionManager::instance().reset();
+	CSessionManager::getInstance().reset();
 	log.displayNL("reset");
 	return true;
 }
 
 NLMISC_COMMAND(forceend, "end the session en display the score", "")
 {
-	CSessionManager::instance().forceEnding(true);
+	CSessionManager::getInstance().forceEnding(true);
 	log.displayNL("forceEnd");
 	return true;
 }
@@ -129,7 +128,7 @@ NLMISC_DYNVARIABLE(string, CurrentState, "")
 {
 	if(get)
 	{
-		*pointer = CSessionManager::instance().currentStateName();
+		*pointer = CSessionManager::getInstance().currentStateName();
 	}
 }
 
@@ -137,10 +136,10 @@ NLMISC_DYNVARIABLE(sint32, Timeout, "")
 {
 	if(get)
 	{
-		if(CSessionManager::instance().startTime())
+		if(CSessionManager::getInstance().startTime())
 		{
 			TTime currentTime = CTime::getLocalTime();
-			*pointer = (sint32)((CSessionManager::instance().startTime()+(TTime)CLevelManager::instance().timeTimeout() - currentTime)/1000);
+			*pointer = (sint32)((CSessionManager::getInstance().startTime()+(TTime)CLevelManager::getInstance().timeTimeout() - currentTime)/1000);
 		}
 		else
 		{

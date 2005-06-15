@@ -200,7 +200,7 @@ CGuiToc *CGuiToc::Load(const string &filename)
 			nlinfo("found : %s",xmlFilename.c_str());
 			res->xml = CGuiXmlManager::Load(xmlFilename,res->LuaState);
 			
-			//CGuiObjectManager::instance().objects.push_back(res->xml->getRoot());
+			//CGuiObjectManager::getInstance().objects.push_back(res->xml->getRoot());
 			break;
 		}
 		//filenameList.push_back(filename);
@@ -215,7 +215,7 @@ int CGuiToc::sendChat(lua_State *L)
 	unsigned int len;
 	const char *charChatLine= luaL_checklstring(L, 1, &len);
 	string chatLine(charChatLine);
-	CNetworkTask::instance().chat(chatLine);
+	CNetworkTask::getInstance().chat(chatLine);
 	return 0;
 }
 
@@ -224,7 +224,7 @@ int CGuiToc::sendCommand(lua_State *L)
 	unsigned int len;
 	const char *cCommandLine= luaL_checklstring(L, 1, &len);
 	string cmdLine(cCommandLine);
-	CNetworkTask::instance().command(cmdLine);
+	CNetworkTask::getInstance().command(cmdLine);
 	return 0;
 }
 
@@ -233,7 +233,7 @@ int CGuiToc::sendToConsole(lua_State *L)
 	unsigned int len;
 	const char *cText= luaL_checklstring(L, 1, &len);
 	string text(cText);
-	CChatTask::instance().addToInput(text);
+	CChatTask::getInstance().addToInput(text);
 	return 0;
 }
 
@@ -242,7 +242,7 @@ int CGuiToc::getGuiElementByName(lua_State *L)
 	unsigned int len;
 	const char *elementName = luaL_checklstring(L, 1, &len);
 	string name(elementName);
-	CGuiObject *object = CGuiCustom::instance().getTocByLuaState(L)->xml->get(name);
+	CGuiObject *object = CGuiCustom::getInstance().getTocByLuaState(L)->xml->get(name);
 	if(object==0)
 	{
 		nlwarning("getGuiElementByName(%s)==0",name.c_str());

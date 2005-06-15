@@ -41,5 +41,5 @@ using namespace NLMISC;
 
 void CSessionState::changeState(CSessionState &ns)
 {
-	CSessionManager::instance().changeState(ns);
+	CSessionManager::getInstance().changeState(ns);
 }

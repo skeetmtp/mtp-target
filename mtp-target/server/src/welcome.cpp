@@ -230,7 +230,7 @@ void cbLSConnection(const std::string &serviceName, uint16 sid, void *arg)
 
 	// send online players
 
-	std::list <CEntity*> &ent = CEntityManager::instance().entities();
+	std::list <CEntity*> &ent = CEntityManager::getInstance().entities();
 	sint32 nbplayers = 0;
 	for(CEntityManager::EntityConstIt it = ent.begin(); it != ent.end(); it++)
 	{

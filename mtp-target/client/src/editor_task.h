@@ -37,7 +37,7 @@
 // Classes
 //
 
-class CEditorTask : public CSingleton<CEditorTask>, public ITask
+class CEditorTask : public NLMISC::CSingleton<CEditorTask>, public ITask
 {
 public:
 

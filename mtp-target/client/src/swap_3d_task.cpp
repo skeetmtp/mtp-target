@@ -49,15 +49,15 @@ using namespace NLMISC;
 
 void CSwap3DTask::init()
 {
-	SleepTime = CConfigFileTask::instance().configFile().getVar("Sleep").asInt();
+	SleepTime = CConfigFileTask::getInstance().configFile().getVar("Sleep").asInt();
 }
 
 void CSwap3DTask::render()
 {
-	C3DTask::instance().driver().swapBuffers();
+	C3DTask::getInstance().driver().swapBuffers();
 
-	if(!C3DTask::instance().kbDown(KeyMENU) && C3DTask::instance().kbPressed(KeyF2))
-		C3DTask::instance().takeScreenShot();
+	if(!C3DTask::getInstance().kbDown(KeyMENU) && C3DTask::getInstance().kbPressed(KeyF2))
+		C3DTask::getInstance().takeScreenShot();
 	
 	if (SleepTime >= 0)
 		nlSleep (SleepTime);

@@ -132,10 +132,10 @@ int main(int argc, char **argv)
 
 	TaskManagerThreadId = getThreadId();
 	// add the main task
-	CTaskManager::instance().add(CMtpTarget::instance(), 70);
+	CTaskManager::getInstance().add(CMtpTarget::getInstance(), 70);
 
 	// start the execution
-	CTaskManager::instance().execute();
+	CTaskManager::getInstance().execute();
 
 	// return
 	return EXIT_SUCCESS;

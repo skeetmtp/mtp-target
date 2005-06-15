@@ -25,6 +25,8 @@
 // Includes
 //
 
+#include <nel/misc/singleton.h>
+
 #include "session_state.h"
 #include "entity_manager.h"
 
@@ -33,7 +35,7 @@
 // Class
 //
 
-class CSessionManager : public CSingleton<CSessionManager>
+class CSessionManager : public NLMISC::CSingleton<CSessionManager>
 {
 public:
 	

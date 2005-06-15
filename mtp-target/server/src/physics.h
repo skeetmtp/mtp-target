@@ -57,101 +57,19 @@ bool isPhysicsPaused();
 void resumePhysics();
 
 void initPhysics();
+void updatePhysics();
 void releasePhysics();
-
-
-extern dWorldID			World;
-
-extern NLMISC::CSynchronized<dSpaceID>		Space;
-
-extern dJointGroupID	ContactGroup;
-extern dGeomID			Water;
 
 
 //
 // Classes
 //
 
-/*class CCollisionEntity
-{
-public:
-	CCollisionEntity() : Score(0), Accel(0.0f), Friction(0.0f), Bounce(false), Geom(0), LuaUserData(0), LuaUserDataRef(0)
-	{
-	}
-	
-	~CCollisionEntity()
-	{
-		if(Geom)
-		{
-			dGeomDestroy(Geom);
-			Geom = 0;
-		}
-	}
-	
-	void setTriColl(const std::string &filename)
-	{
-		nlassert(!Geom);
-		dGeomSetData(Geom, (void*)this);
-	}
-	
-	void setBox(const NLMISC::CVector &size)
-	{
-		nlassert(!Geom);
-		Geom = dCreateBox(Space, size.x, size.y, size.z);
-		dGeomSetData(Geom, (void*)this);
-	}
-	
-	void setRotation(const NLMISC::CAngleAxis &aa)
-	{
-		nlassert(Geom);
-		dMatrix3 R;
-		dRFromAxisAndAngle(R, aa.Axis.x, aa.Axis.y, aa.Axis.z, aa.Angle);
-		dGeomSetRotation(Geom, R);
-	}
-	
-	void setPosition(const NLMISC::CVector &pos)
-	{
-		nlassert(Geom);
-		dGeomSetPosition(Geom, pos.x, pos.y, pos.z);
-	}
-
-	void getPosition(NLMISC::CVector &pos) const
-	{
-		nlassert(Geom);
-		const dReal *p = dGeomGetPosition(Geom);
-		if(p == 0)
-			pos = NLMISC::CVector::Null;
-		else
-		{
-			pos.x = p[0];
-			pos.y = p[1];
-			pos.z = p[2];
-		}
-	}
-	
-	uint32		Score;
-	float		Accel;
-	float		Friction;
-	bool		Bounce;
-	std::string	Name;
-
-	dGeomID				Geom;		// TODO SKEET_WARNING put in private
-	std::vector<dReal>	Vertices;	// 3 entries for one vertex (x,y,z)
-	std::vector<int>	Indices;
-	
-	void		*LuaUserData;
-	int			 LuaUserDataRef;	
-	std::string	 LuaFunctionName;
-};*/
-
 //
 // Typedefs
 //
 
 typedef NLMISC::CSynchronized<NLMISC::TTime> SyncPhyTime;
-
-//typedef std::list<CCollisionEntity>::iterator CollisionEntityListIt;
-//extern std::list<CCollisionEntity> CollisionEntityList;
 
 //
 // Variables
@@ -160,6 +78,11 @@ typedef NLMISC::CSynchronized<NLMISC::TTime> SyncPhyTime;
 extern NLMISC::TTime syncStartPhyTime;
 extern SyncPhyTime syncPhyTime;
 
-//extern std::vector<NLMISC::CVector> StartPointList;
+extern dWorldID			World;
+
+extern NLMISC::CSynchronized<dSpaceID>		Space;
+
+extern dJointGroupID	ContactGroup;
+extern dGeomID			Water;
 
 #endif

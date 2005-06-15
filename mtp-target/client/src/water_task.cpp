@@ -94,22 +94,22 @@ CWaterTask::CWaterTask():ITask()
 
 void cbVar (CConfigFile::CVar &var)
 {
-	if (CWaterTask::instance().WaterShape == 0)
+	if (CWaterTask::getInstance().WaterShape == 0)
 	{
 		nlwarning ("Can't set water parameter");
 		return;
 	}
 	
 	if (var.Name == "Map1Scale")
-		CWaterTask::instance().WaterShape->setHeightMapScale(0, NLMISC::CVector2f(var.asFloat(0), var.asFloat(1)));
+		CWaterTask::getInstance().WaterShape->setHeightMapScale(0, NLMISC::CVector2f(var.asFloat(0), var.asFloat(1)));
 	else if (var.Name == "Map2Scale")
-		CWaterTask::instance().WaterShape->setHeightMapScale(1, NLMISC::CVector2f(var.asFloat(0), var.asFloat(1)));
+		CWaterTask::getInstance().WaterShape->setHeightMapScale(1, NLMISC::CVector2f(var.asFloat(0), var.asFloat(1)));
 	else if (var.Name == "Map1Speed")
-		CWaterTask::instance().WaterShape->setHeightMapSpeed(0, NLMISC::CVector2f(var.asFloat(0), var.asFloat(1)));
+		CWaterTask::getInstance().WaterShape->setHeightMapSpeed(0, NLMISC::CVector2f(var.asFloat(0), var.asFloat(1)));
 	else if (var.Name == "Map2Speed")
-		CWaterTask::instance().WaterShape->setHeightMapSpeed(1, NLMISC::CVector2f(var.asFloat(0), var.asFloat(1)));
+		CWaterTask::getInstance().WaterShape->setHeightMapSpeed(1, NLMISC::CVector2f(var.asFloat(0), var.asFloat(1)));
 	else if (var.Name == "WaveHeightFactor")
-		CWaterTask::instance().WaterShape->setWaveHeightFactor(var.asFloat());
+		CWaterTask::getInstance().WaterShape->setWaveHeightFactor(var.asFloat());
 	else if (var.Name == "WavesParams")
 	{
 		CWaterHeightMap &whm = GetWaterPoolManager().getPoolByID(0);
@@ -127,32 +127,32 @@ void cbVar (CConfigFile::CVar &var)
 
 void CWaterTask::init()
 {
-	nelWaterScene = C3DTask::instance().driver().createScene(false);
+	nelWaterScene = C3DTask::getInstance().driver().createScene(false);
 
-	nelWaterScene->getCam().setPerspective(degToRad(CConfigFileTask::instance().configFile().getVar("Fov").asFloat()), 1.33f, 1.0f*GScale, 30000.0f*GScale);
+	nelWaterScene->getCam().setPerspective(degToRad(CConfigFileTask::getInstance().configFile().getVar("Fov").asFloat()), 1.33f, 1.0f*GScale, 30000.0f*GScale);
 	nelWaterScene->getCam().setTransformMode (UTransformable::DirectMatrix);
 
 ////
-	if(CConfigFileTask::instance().configFile().getVar("DisplayWater").asInt() == 2)
+	if(CConfigFileTask::getInstance().configFile().getVar("DisplayWater").asInt() == 2)
 	{
 		string res;
 		static std::string shapeName("water_quad.shape");
-		CSceneUser *su = dynamic_cast<CSceneUser *>(&C3DTask::instance().scene());
+		CSceneUser *su = dynamic_cast<CSceneUser *>(&C3DTask::getInstance().scene());
 //		CSceneUser *su = dynamic_cast<CSceneUser *>(nelWaterScene);
 		CScene		&scene = su->getScene ();
 
 		// load textures
-		res = CResourceManager::instance().get(envMap0Name());
+		res = CResourceManager::getInstance().get(envMap0Name());
 		ITexture *envMap1   = new CTextureFile(res);
-		res = CResourceManager::instance().get(envMap1Name());
+		res = CResourceManager::getInstance().get(envMap1Name());
 		ITexture *envMap2   = new CTextureFile(res);
 		
-		res = CResourceManager::instance().get(heightMap0Name());
+		res = CResourceManager::getInstance().get(heightMap0Name());
 		ITexture *heightMap  = new CTextureFile(res);
-		res = CResourceManager::instance().get(heightMap1Name());
+		res = CResourceManager::getInstance().get(heightMap1Name());
 		ITexture *heightMap2 = new CTextureFile(res);
 
-		res = CResourceManager::instance().get("colormap.tga");
+		res = CResourceManager::getInstance().get("colormap.tga");
 		ITexture *colorMap = new CTextureFile(res);
 		
 		WaterShape = new CWaterShape;
@@ -174,20 +174,20 @@ void CWaterTask::init()
 
 		float res2 = whm.getPropagationTime ();
 
-		CConfigFileTask::instance().configFile().setCallback("Map1Scale", cbVar);
-		cbVar (CConfigFileTask::instance().configFile().getVar("Map1Scale"));
-		CConfigFileTask::instance().configFile().setCallback("Map2Scale", cbVar);
-		cbVar (CConfigFileTask::instance().configFile().getVar("Map2Scale"));
-		CConfigFileTask::instance().configFile().setCallback("Map1Speed", cbVar);
-		cbVar (CConfigFileTask::instance().configFile().getVar("Map1Speed"));
-		CConfigFileTask::instance().configFile().setCallback("Map2Speed", cbVar);
-		cbVar (CConfigFileTask::instance().configFile().getVar("Map2Speed"));
-		CConfigFileTask::instance().configFile().setCallback("WaveHeightFactor", cbVar);
-		cbVar (CConfigFileTask::instance().configFile().getVar("WaveHeightFactor"));
-		CConfigFileTask::instance().configFile().setCallback("WavesParams", cbVar);
-		cbVar (CConfigFileTask::instance().configFile().getVar("WavesParams"));
-		CConfigFileTask::instance().configFile().setCallback("WavesPropagation", cbVar);
-		cbVar (CConfigFileTask::instance().configFile().getVar("WavesPropagation"));
+		CConfigFileTask::getInstance().configFile().setCallback("Map1Scale", cbVar);
+		cbVar (CConfigFileTask::getInstance().configFile().getVar("Map1Scale"));
+		CConfigFileTask::getInstance().configFile().setCallback("Map2Scale", cbVar);
+		cbVar (CConfigFileTask::getInstance().configFile().getVar("Map2Scale"));
+		CConfigFileTask::getInstance().configFile().setCallback("Map1Speed", cbVar);
+		cbVar (CConfigFileTask::getInstance().configFile().getVar("Map1Speed"));
+		CConfigFileTask::getInstance().configFile().setCallback("Map2Speed", cbVar);
+		cbVar (CConfigFileTask::getInstance().configFile().getVar("Map2Speed"));
+		CConfigFileTask::getInstance().configFile().setCallback("WaveHeightFactor", cbVar);
+		cbVar (CConfigFileTask::getInstance().configFile().getVar("WaveHeightFactor"));
+		CConfigFileTask::getInstance().configFile().setCallback("WavesParams", cbVar);
+		cbVar (CConfigFileTask::getInstance().configFile().getVar("WavesParams"));
+		CConfigFileTask::getInstance().configFile().setCallback("WavesPropagation", cbVar);
+		cbVar (CConfigFileTask::getInstance().configFile().getVar("WavesPropagation"));
 
 //		WaterShape->setHeightMapScale(0, NLMISC::CVector2f(0.08f/2, 0.072f/2));
 //		WaterShape->setHeightMapScale(1, NLMISC::CVector2f(0.1f/2, 0.091f/2));
@@ -214,11 +214,11 @@ void CWaterTask::init()
 		//	whm.enableWaves ();
 		//	whm.setWaves (3.0f, 1.0f, 2.0f, false);
 	}
-	else if(CConfigFileTask::instance().configFile().getVar("DisplayWater").asInt() == 1)
+	else if(CConfigFileTask::getInstance().configFile().getVar("DisplayWater").asInt() == 1)
 	{
 		string res;
-		res = CResourceManager::instance().get("water_light.shape");
-		WaterMesh = C3DTask::instance().scene().createInstance(res);
+		res = CResourceManager::getInstance().get("water_light.shape");
+		WaterMesh = C3DTask::getInstance().scene().createInstance(res);
 		WaterMesh.setPos(0.0f,0.0f,1.0f*GScale);
 	}
 
@@ -229,29 +229,29 @@ void CWaterTask::update()
 	/*
 	CMatrix waterCameraMatrix;
 	waterCameraMatrix.identity();
-	waterCameraMatrix = C3DTask::instance().scene().getCam()->getMatrix();
+	waterCameraMatrix = C3DTask::getInstance().scene().getCam()->getMatrix();
 	waterCameraMatrix.setPos(CVector::Null);
 	*/
 	
-	nelWaterScene->getCam().setMatrix(C3DTask::instance().scene().getCam().getMatrix());
+	nelWaterScene->getCam().setMatrix(C3DTask::getInstance().scene().getCam().getMatrix());
 	
-	nelWaterScene->animate (CTimeTask::instance().time());
+	nelWaterScene->animate (CTimeTask::getInstance().time());
 	
 }
 
 void CWaterTask::render()
 {
-	C3DTask::instance().driver().enableFog(true);
+	C3DTask::getInstance().driver().enableFog(true);
 	nelWaterScene->render ();
-	C3DTask::instance().driver().enableFog(false);
+	C3DTask::getInstance().driver().enableFog(false);
 	
 	// Must clear ZBuffer For incoming rendering.
-	//C3DTask::instance().driver().clearZBuffer();
+	//C3DTask::getInstance().driver().clearZBuffer();
 }
 
 void CWaterTask::release()
 {
-	CSceneUser *su = dynamic_cast<CSceneUser *>(&C3DTask::instance().scene());
+	CSceneUser *su = dynamic_cast<CSceneUser *>(&C3DTask::getInstance().scene());
 //	CSceneUser *su = dynamic_cast<CSceneUser *>(nelWaterScene);
 	CScene		&scene = su->getScene ();
 
@@ -264,7 +264,7 @@ void CWaterTask::release()
 
 	if(nelWaterScene)
 	{
-		C3DTask::instance().driver().deleteScene(nelWaterScene);
+		C3DTask::getInstance().driver().deleteScene(nelWaterScene);
 		nelWaterScene = 0;
 	}
 

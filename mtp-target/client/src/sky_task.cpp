@@ -90,12 +90,12 @@ CSkyTask::CSkyTask():ITask()
 
 void CSkyTask::init()
 {
-	nelSkyScene = C3DTask::instance().driver().createScene(false);
+	nelSkyScene = C3DTask::getInstance().driver().createScene(false);
 
-	nelSkyScene->getCam().setPerspective(degToRad(CConfigFileTask::instance().configFile().getVar("Fov").asFloat()), 1.33f, 0.15f, 3000.0f);
+	nelSkyScene->getCam().setPerspective(degToRad(CConfigFileTask::getInstance().configFile().getVar("Fov").asFloat()), 1.33f, 0.15f, 3000.0f);
 	nelSkyScene->getCam().setTransformMode (UTransformable::DirectMatrix);
 
-	string res = CResourceManager::instance().get(shapeName());
+	string res = CResourceManager::getInstance().get(shapeName());
 	nelSkyMesh = nelSkyScene->createInstance(res);
 	if (!nelSkyMesh.empty())
 	{
@@ -104,7 +104,7 @@ void CSkyTask::init()
 	}
 
 ////
-	if(CConfigFileTask::instance().configFile().getVar("DisplayClouds").asInt() == 1)
+	if(CConfigFileTask::getInstance().configFile().getVar("DisplayClouds").asInt() == 1)
 	{
 		nelCloudScape = nelSkyScene->createCloudScape();
 		SCloudScapeSetup css;	
@@ -128,24 +128,24 @@ void CSkyTask::update()
 {
 	CMatrix skyCameraMatrix;
 	skyCameraMatrix.identity();
-	skyCameraMatrix = C3DTask::instance().scene().getCam().getMatrix();
+	skyCameraMatrix = C3DTask::getInstance().scene().getCam().getMatrix();
 	skyCameraMatrix.setPos(CVector::Null);
 	
 	nelSkyScene->getCam().setMatrix(skyCameraMatrix);
 	
-	nelSkyScene->animate (CTimeTask::instance().time());
+	nelSkyScene->animate (CTimeTask::getInstance().time());
 	
 	if (nelCloudScape)
-		nelCloudScape->anim (CTimeTask::instance().deltaTime()); // WARNING this function work with screen
+		nelCloudScape->anim (CTimeTask::getInstance().deltaTime()); // WARNING this function work with screen
 }
 
 void CSkyTask::render()
 {
-	C3DTask::instance().driver().clearZBuffer();
+	C3DTask::getInstance().driver().clearZBuffer();
 	nelSkyScene->render ();
 	
 	// Must clear ZBuffer For incoming rendering.
-	//C3DTask::instance().driver().clearZBuffer();
+	//C3DTask::getInstance().driver().clearZBuffer();
 	
 	if (nelCloudScape)
 		nelCloudScape->render ();
@@ -166,7 +166,7 @@ void CSkyTask::release()
 
 	if(nelSkyScene)
 	{
-		C3DTask::instance().driver().deleteScene(nelSkyScene);
+		C3DTask::getInstance().driver().deleteScene(nelSkyScene);
 		nelSkyScene = 0;
 	}
 

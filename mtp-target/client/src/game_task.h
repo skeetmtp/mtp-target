@@ -36,7 +36,7 @@
 // Classes
 //
 
-class CGameTask : public CSingleton<CGameTask>, public ITask
+class CGameTask : public NLMISC::CSingleton<CGameTask>, public ITask
 {
 public:
 

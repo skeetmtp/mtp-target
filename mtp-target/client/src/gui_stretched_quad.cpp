@@ -142,7 +142,7 @@ void CGuiStretchedQuad::render()
 		q.V2 += _offset;
 		q.V3 += _offset;
 		
-		C3DTask::instance().driver().drawQuad(q,_material);
+		C3DTask::getInstance().driver().drawQuad(q,_material);
 
 		return;
 	}
@@ -199,7 +199,7 @@ void CGuiStretchedQuad::render()
 	q.V1 += _offset;
 	q.V2 += _offset;
 	q.V3 += _offset;
-	C3DTask::instance().driver().drawQuad(q,_material);
+	C3DTask::getInstance().driver().drawQuad(q,_material);
 	
 	//s1
 	if(stretchX)
@@ -216,7 +216,7 @@ void CGuiStretchedQuad::render()
 		q.V1 += _offset;
 		q.V2 += _offset;
 		q.V3 += _offset;
-		C3DTask::instance().driver().drawQuad(q,_material);
+		C3DTask::getInstance().driver().drawQuad(q,_material);
 	}
 
 	//f2
@@ -232,7 +232,7 @@ void CGuiStretchedQuad::render()
 	q.V1 += _offset;
 	q.V2 += _offset;
 	q.V3 += _offset;
-	C3DTask::instance().driver().drawQuad(q,_material);
+	C3DTask::getInstance().driver().drawQuad(q,_material);
 	
 	//s4
 	if(stretchY)
@@ -249,7 +249,7 @@ void CGuiStretchedQuad::render()
 		q.V1 += _offset;
 		q.V2 += _offset;
 		q.V3 += _offset;
-		C3DTask::instance().driver().drawQuad(q,_material);
+		C3DTask::getInstance().driver().drawQuad(q,_material);
 	}
 	
 	//c
@@ -267,7 +267,7 @@ void CGuiStretchedQuad::render()
 		q.V1 += _offset;
 		q.V2 += _offset;
 		q.V3 += _offset;
-		C3DTask::instance().driver().drawQuad(q,_material);
+		C3DTask::getInstance().driver().drawQuad(q,_material);
 	}
 	
 	//s2
@@ -285,7 +285,7 @@ void CGuiStretchedQuad::render()
 		q.V1 += _offset;
 		q.V2 += _offset;
 		q.V3 += _offset;
-		C3DTask::instance().driver().drawQuad(q,_material);
+		C3DTask::getInstance().driver().drawQuad(q,_material);
 	}
 	
 	//f4
@@ -301,7 +301,7 @@ void CGuiStretchedQuad::render()
 	q.V1 += _offset;
 	q.V2 += _offset;
 	q.V3 += _offset;
-	C3DTask::instance().driver().drawQuad(q,_material);
+	C3DTask::getInstance().driver().drawQuad(q,_material);
 	
 	//s3
 	if(stretchX)
@@ -318,7 +318,7 @@ void CGuiStretchedQuad::render()
 		q.V1 += _offset;
 		q.V2 += _offset;
 		q.V3 += _offset;
-		C3DTask::instance().driver().drawQuad(q,_material);
+		C3DTask::getInstance().driver().drawQuad(q,_material);
 	}
 	
 	//f3
@@ -334,7 +334,7 @@ void CGuiStretchedQuad::render()
 	q.V1 += _offset;
 	q.V2 += _offset;
 	q.V3 += _offset;
-	C3DTask::instance().driver().drawQuad(q,_material);	
+	C3DTask::getInstance().driver().drawQuad(q,_material);	
 }
 
 

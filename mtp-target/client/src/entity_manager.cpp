@@ -115,8 +115,8 @@ void CEntityManager::remove(uint8 eid)
 {
 	nlinfo("CEntityManager::remove(%d)",eid);
 	nlassert(exist(eid));
-	if(CMtpTarget::instance().controler().Camera.getFollowedEntity() == eid)
-		CMtpTarget::instance().controler().Camera.setFollowedEntity(255);
+	if(CMtpTarget::getInstance().controler().Camera.getFollowedEntity() == eid)
+		CMtpTarget::getInstance().controler().Camera.setFollowedEntity(255);
 	
 	entities()[eid]->reset();
 }
@@ -172,7 +172,7 @@ uint8 CEntityManager::findPreviousEId(uint8 eid)
 
 void CEntityManager::startSession()
 {
-	if(!CMtpTarget::instance().isSpectatorOnly()) //don't close everybody if we start session being spectator
+	if(!CMtpTarget::getInstance().isSpectatorOnly()) //don't close everybody if we start session being spectator
 	{
 		for(uint i = 0; i < 256; i++)
 		{

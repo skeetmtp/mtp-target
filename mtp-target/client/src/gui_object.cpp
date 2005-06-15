@@ -88,21 +88,21 @@ NLMISC::CVector CVectorMax(const NLMISC::CVector &a, const NLMISC::CVector &b)
 
 void CGuiObjectManager::init()
 {
-	CGuiScriptManager::instance().init();
-	CGuiListViewManager::instance().init();
-	CGuiButtonManager::instance().init();
-	CGuiSpacerManager::instance().init();
-	CGuiBitmapManager::instance().init();
-	CGuiFrameManager::instance().init();
-	CGuiScaleManager::instance().init();
-	CGuiTextManager::instance().init();
-	CGuiBoxManager::instance().init();
-	CGuiProgressBarManager::instance().init();
+	CGuiScriptManager::getInstance().init();
+	CGuiListViewManager::getInstance().init();
+	CGuiButtonManager::getInstance().init();
+	CGuiSpacerManager::getInstance().init();
+	CGuiBitmapManager::getInstance().init();
+	CGuiFrameManager::getInstance().init();
+	CGuiScaleManager::getInstance().init();
+	CGuiTextManager::getInstance().init();
+	CGuiBoxManager::getInstance().init();
+	CGuiProgressBarManager::getInstance().init();
 	
-	//C3DTask::instance().driver().setCapture(true);
+	//C3DTask::getInstance().driver().setCapture(true);
 	_mouseListener = new CGuiMouseListener();
 	_mouseListener->init();
-	_mouseListener->addToServer(C3DTask::instance().driver().EventServer);
+	_mouseListener->addToServer(C3DTask::getInstance().driver().EventServer);
 
 	_focus = 0;
 
@@ -113,9 +113,9 @@ void CGuiObjectManager::render()
 {
 	_mouseListener->update();
 
-	float screenWidth = (float)C3DTask::instance().screenWidth();
-	float screenHeight = (float)C3DTask::instance().screenHeight();
-	C3DTask::instance().driver().setFrustum(CFrustum(0, screenWidth,screenHeight, 0, -1, 1, false));
+	float screenWidth = (float)C3DTask::getInstance().screenWidth();
+	float screenHeight = (float)C3DTask::getInstance().screenHeight();
+	C3DTask::getInstance().driver().setFrustum(CFrustum(0, screenWidth,screenHeight, 0, -1, 1, false));
 
 
 	//nlinfo("(%f,%f) , (%f,%f)",a.x,a.y,b.x,b.y);
@@ -132,21 +132,21 @@ void CGuiObjectManager::render()
 	
 	CVector a(0,0,0);
 	CVector b(screenWidth,screenHeight,0);
-	CGuiCustom::instance().render(a,b);
+	CGuiCustom::getInstance().render(a,b);
 	
 }
 
 void CGuiObjectManager::update()
 {
-	CGuiCustom::instance().update();
+	CGuiCustom::getInstance().update();
 }
 
 void CGuiObjectManager::release()
 {
 	objects.clear();
 
-	//C3DTask::instance().driver().setCapture(false);
-	_mouseListener->removeFromServer(C3DTask::instance().driver().EventServer);
+	//C3DTask::getInstance().driver().setCapture(false);
+	_mouseListener->removeFromServer(C3DTask::getInstance().driver().EventServer);
 	_mouseListener = 0;
 }
 
@@ -199,14 +199,14 @@ CGuiObject::CGuiObject()
 CGuiObject::~CGuiObject()
 {
 	list<CGuiObject *>::iterator it,itDel;
-	for(it=CGuiObjectManager::instance().objects.begin();it!=CGuiObjectManager::instance().objects.end();)
+	for(it=CGuiObjectManager::getInstance().objects.begin();it!=CGuiObjectManager::getInstance().objects.end();)
 	{
 		CGuiObject *obj = *it;
 		if(obj==this)
 		{
 			itDel = it;
 			it++;
-			CGuiObjectManager::instance().objects.erase(itDel);
+			CGuiObjectManager::getInstance().objects.erase(itDel);
 		}
 		else
 			it++;
@@ -258,12 +258,12 @@ void CGuiObject::position(const CVector &position)
 
 float CGuiObject::ToProportionalX(float x)
 {
-	return x/C3DTask::instance().screenWidth();
+	return x/C3DTask::getInstance().screenWidth();
 }
 
 float CGuiObject::ToProportionalY(float y)
 {
-	return y/C3DTask::instance().screenHeight();	
+	return y/C3DTask::getInstance().screenHeight();	
 }
 
 CGuiObject::TGuiAlignment CGuiObject::alignment()
@@ -340,7 +340,7 @@ CVector CGuiObject::size()
 
 bool CGuiObject::focused()
 {
-	return CGuiObjectManager::instance().focus()==this;
+	return CGuiObjectManager::getInstance().focus()==this;
 }
 
 
@@ -357,13 +357,13 @@ bool CGuiObject::isIn(const CVector &point,const CVector &startPos,const CVector
 
 void CGuiObject::_checkFocus(const CVector &pos,const CVector &maxSize)
 {
-	CVector mousePos = CGuiObjectManager::instance().mouseListener().position();
+	CVector mousePos = CGuiObjectManager::getInstance().mouseListener().position();
 	if(isIn(mousePos,pos,maxSize))
 	{
-		CVector mousePressedPos = CGuiObjectManager::instance().mouseListener().pressedPosition();
-		if(CGuiObjectManager::instance().mouseListener().Clicked && isIn(mousePressedPos,pos,maxSize))
+		CVector mousePressedPos = CGuiObjectManager::getInstance().mouseListener().pressedPosition();
+		if(CGuiObjectManager::getInstance().mouseListener().Clicked && isIn(mousePressedPos,pos,maxSize))
 		{
-			CGuiObjectManager::instance().focus(this);
+			CGuiObjectManager::getInstance().focus(this);
 		}
 	}
 }
@@ -380,7 +380,7 @@ void CGuiObject::render(const CVector &pos,CVector &maxSize)
 	_renderedPos= pos;
 #if MTPT_GUI_DEBUG_DISPLAY
 	CGuiStretchedQuad quad;
-	quad.material(CGuiBoxManager::instance().material());
+	quad.material(CGuiBoxManager::getInstance().material());
 	quad.size(maxSize);
 	quad.position(globalPosition(pos,oldMaxSize));
 	quad.render();
@@ -455,11 +455,11 @@ UMaterial CGuiObject::LoadBitmap(const string &filename)
 	UMaterial _material;
 	string res;
 	
-	res = CResourceManager::instance().get(filename);
-	_texture= C3DTask::instance().driver().createTextureFile(res);
+	res = CResourceManager::getInstance().get(filename);
+	_texture= C3DTask::getInstance().driver().createTextureFile(res);
 	nlassert(_texture);
 	
-	_material= C3DTask::instance().createMaterial();
+	_material= C3DTask::getInstance().createMaterial();
 	_material.setTexture(_texture);
 	_material.setBlend(true);
 	_material.setZFunc(UMaterial::always);
@@ -487,7 +487,7 @@ CGuiObject *CGuiObject::XmlCreateFromNode(CGuiXml *xml, xmlNodePtr node)
 	string name;
 	isok = xml->doc.getPropertyString(name,node,"name");
 	
-	CGuiObject *res = CGuiObjectManager::instance().create(className);
+	CGuiObject *res = CGuiObjectManager::getInstance().create(className);
 	res->init(xml,node);
 	return res;
 }

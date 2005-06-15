@@ -29,10 +29,10 @@
 // Includes
 //
 
-#include <nel/misc/types_nl.h>
 #include <nel/misc/mem_stream.h>
+#include <nel/misc/singleton.h>
+#include <nel/misc/types_nl.h>
 #include <nel/misc/sha1.h>
-
 
 
 //
@@ -41,7 +41,7 @@
 
 typedef std::map<std::string, double> filename2LastCRCCheckTime;
 
-class CResourceManagerLan : public CSingleton<CResourceManagerLan>, public ITask
+class CResourceManagerLan : public NLMISC::CSingleton<CResourceManagerLan>, public ITask
 {
 public:
 

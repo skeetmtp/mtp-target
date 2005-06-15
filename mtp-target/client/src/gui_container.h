@@ -29,8 +29,10 @@
 //
 // Includes
 //
-#include "gui_object.h"
 
+#include <nel/misc/singleton.h>
+
+#include "gui_object.h"
 
 
 //
@@ -47,7 +49,7 @@ public:
 	virtual void init(CGuiXml *xml,xmlNodePtr node);
 };
 
-class CGuiContainerManager : public CSingleton<CGuiContainerManager>
+class CGuiContainerManager : public NLMISC::CSingleton<CGuiContainerManager>
 {
 public:
 	virtual void init();

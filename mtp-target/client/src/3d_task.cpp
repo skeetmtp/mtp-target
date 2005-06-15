@@ -73,15 +73,15 @@ class CInterfaceListener : public IEventListener
 		if ( ! _MaxWidthReached )
 		{
 			char c = (char)((CEventChar&)event).Char;
-			if(CEditorTask::instance().enable())
+			if(CEditorTask::getInstance().enable())
 			{
-				if(c=='4' && C3DTask::instance().kbDown(KeyNUMPAD4))
+				if(c=='4' && C3DTask::getInstance().kbDown(KeyNUMPAD4))
 					return;
-				if(c=='6' && C3DTask::instance().kbDown(KeyNUMPAD6))
+				if(c=='6' && C3DTask::getInstance().kbDown(KeyNUMPAD6))
 					return;
-				if(c=='8' && C3DTask::instance().kbDown(KeyNUMPAD8))
+				if(c=='8' && C3DTask::getInstance().kbDown(KeyNUMPAD8))
 					return;
-				if(c=='5' && C3DTask::instance().kbDown(KeyNUMPAD5))
+				if(c=='5' && C3DTask::getInstance().kbDown(KeyNUMPAD5))
 					return;
 			}
 			_Line += c;
@@ -116,16 +116,16 @@ static CInterfaceListener InterfaceListener;
 
 void C3DTask::init()
 {
-	ScreenWidth = CConfigFileTask::instance().configFile().getVar("ScreenWidth").asInt();
-	ScreenHeight = CConfigFileTask::instance().configFile().getVar("ScreenHeight").asInt();
+	ScreenWidth = CConfigFileTask::getInstance().configFile().getVar("ScreenWidth").asInt();
+	ScreenHeight = CConfigFileTask::getInstance().configFile().getVar("ScreenHeight").asInt();
 
 	EnableExternalCamera = false;
 
 	CConfigFile::CVar v;
-	v = CConfigFileTask::instance().configFile().getVar("AmbientColor");
+	v = CConfigFileTask::getInstance().configFile().getVar("AmbientColor");
 	nlassert(v.size()==4);
 	AmbientColor.set(v.asInt(0),v.asInt(1),v.asInt(2),v.asInt(3));
-	v = CConfigFileTask::instance().configFile().getVar("ClearColor");
+	v = CConfigFileTask::getInstance().configFile().getVar("ClearColor");
 	nlassert(v.size()==4);
 	ClearColor.set(v.asInt(0),v.asInt(1),v.asInt(2),v.asInt(3));
 
@@ -135,7 +135,7 @@ void C3DTask::init()
 #ifdef NL_OS_WINDOWS
 	icon = (uint)LoadIcon(ghInstance,MAKEINTRESOURCE(IDI_ICON1));
 #endif
-	bool useD3D = CConfigFileTask::instance().configFile().getVar("OpenGL").asInt()==0;
+	bool useD3D = CConfigFileTask::getInstance().configFile().getVar("OpenGL").asInt()==0;
 #ifdef NL_INDEX_BUFFER_H //new 3d
 	Driver = UDriver::createDriver(icon,useD3D);
 #else
@@ -148,11 +148,11 @@ void C3DTask::init()
 	
 	try
 	{
-		displayOk = Driver->setDisplay (UDriver::CMode(ScreenWidth, ScreenHeight, CConfigFileTask::instance().configFile().getVar("ScreenDepth").asInt(), CConfigFileTask::instance().configFile().getVar("Fullscreen").asInt()==0, CConfigFileTask::instance().configFile().getVar("ScreenFrequency").asInt()));
+		displayOk = Driver->setDisplay (UDriver::CMode(ScreenWidth, ScreenHeight, CConfigFileTask::getInstance().configFile().getVar("ScreenDepth").asInt(), CConfigFileTask::getInstance().configFile().getVar("Fullscreen").asInt()==0, CConfigFileTask::getInstance().configFile().getVar("ScreenFrequency").asInt()));
 	}
 	catch (EBadDisplay e) 
 	{
-		nlwarning ("Can't set display mode %d %d %d %d %d", ScreenWidth, ScreenHeight, CConfigFileTask::instance().configFile().getVar("ScreenDepth").asInt(), CConfigFileTask::instance().configFile().getVar("Fullscreen").asInt(), CConfigFileTask::instance().configFile().getVar("ScreenFrequency").asInt());
+		nlwarning ("Can't set display mode %d %d %d %d %d", ScreenWidth, ScreenHeight, CConfigFileTask::getInstance().configFile().getVar("ScreenDepth").asInt(), CConfigFileTask::getInstance().configFile().getVar("Fullscreen").asInt(), CConfigFileTask::getInstance().configFile().getVar("ScreenFrequency").asInt());
 		nlwarning ("%s",e.what());
 #ifdef NL_OS_WINDOWS
 		MessageBox (NULL, toString("Please, update your video card drivers\n reason : %s",e.what()).c_str(), "Drivers", MB_OK);
@@ -163,7 +163,7 @@ void C3DTask::init()
 	// Create the window with config file values
 	if (!displayOk)
 	{
-		nlwarning ("Can't set display mode %d %d %d %d %d", ScreenWidth, ScreenHeight, CConfigFileTask::instance().configFile().getVar("ScreenDepth").asInt(), CConfigFileTask::instance().configFile().getVar("Fullscreen").asInt(), CConfigFileTask::instance().configFile().getVar("ScreenFrequency").asInt());
+		nlwarning ("Can't set display mode %d %d %d %d %d", ScreenWidth, ScreenHeight, CConfigFileTask::getInstance().configFile().getVar("ScreenDepth").asInt(), CConfigFileTask::getInstance().configFile().getVar("Fullscreen").asInt(), CConfigFileTask::getInstance().configFile().getVar("ScreenFrequency").asInt());
 
 		std::vector<UDriver::CMode> modes;
 		bool res = Driver->getModes(modes);
@@ -187,7 +187,7 @@ void C3DTask::init()
 	Driver->setAmbientColor(AmbientColor);
 
 	Driver->enableFog(false);
-	Driver->setupFog(CConfigFileTask::instance().configFile().getVar("FogDistMin").asFloat(),CConfigFileTask::instance().configFile().getVar("FogDistMax").asFloat(),ClearColor);
+	Driver->setupFog(CConfigFileTask::getInstance().configFile().getVar("FogDistMin").asFloat(),CConfigFileTask::getInstance().configFile().getVar("FogDistMax").asFloat(),ClearColor);
 
 	// Create a scene
 	Scene = Driver->createScene(false);
@@ -199,7 +199,7 @@ void C3DTask::init()
 	}
 
 	//Scene->getCam()->setFrustum(0.26f, 0.2f, 0.1f, 40.0f);
-	Scene->getCam().setPerspective(degToRad(CConfigFileTask::instance().configFile().getVar("Fov").asFloat()), 1.33f, 1.0f*GScale, 30000.0f*GScale);
+	Scene->getCam().setPerspective(degToRad(CConfigFileTask::getInstance().configFile().getVar("Fov").asFloat()), 1.33f, 1.0f*GScale, 30000.0f*GScale);
 	Scene->getCam().setTransformMode(UTransformable::DirectMatrix);
 
 	MouseListener = new C3dMouseListener();
@@ -213,16 +213,16 @@ void C3DTask::init()
 	Scene->setSunDirection(CVector(-1,0,-1));
 
 	Scene->setPolygonBalancingMode(UScene::PolygonBalancingOn);
-	Scene->setGroupLoadMaxPolygon("Fx", CConfigFileTask::instance().configFile().getVar("FxNbMaxPoly").asInt());
+	Scene->setGroupLoadMaxPolygon("Fx", CConfigFileTask::getInstance().configFile().getVar("FxNbMaxPoly").asInt());
 
 
 	LevelParticle = 0;
 	//too much particles , no left to trace.ps
-	if(CConfigFileTask::instance().configFile().getVar("DisplayParticle").asInt() == 1)
+	if(CConfigFileTask::getInstance().configFile().getVar("DisplayParticle").asInt() == 1)
 	{
 		string res;
-		res = CResourceManager::instance().get("snow.ps");
-		LevelParticle.cast(C3DTask::instance().scene().createInstance(res));
+		res = CResourceManager::getInstance().get("snow.ps");
+		LevelParticle.cast(C3DTask::getInstance().scene().createInstance(res));
 		if (!LevelParticle.empty())
 		{
 			LevelParticle.setTransformMode(UTransformable::RotQuat);
@@ -240,25 +240,25 @@ void C3DTask::init()
 void C3DTask::update()
 {
 	if(!Driver->isActive())
-		CTaskManager::instance().exit();
+		CTaskManager::getInstance().exit();
 		//exit(0);
-	Scene->animate(CTimeTask::instance().time());
+	Scene->animate(CTimeTask::getInstance().time());
 	Driver->EventServer.pump();
 
-	if(C3DTask::instance().kbPressed(KeyF1))
+	if(C3DTask::getInstance().kbPressed(KeyF1))
 	{
-		CTaskManager::instance().switchBench();
+		CTaskManager::getInstance().switchBench();
 	}
 }
 
 void C3DTask::takeScreenShot()
 {
 	CBitmap btm;
-	C3DTask::instance().driver().getBuffer (btm);
+	C3DTask::getInstance().driver().getBuffer (btm);
 	//		btm.flipV();
 	string filename = "";
-	if(CMtpTarget::instance().sessionFileName().size())
-		filename = CFile::findNewFile(CFile::getFilenameWithoutExtension(CMtpTarget::instance().sessionFileName())+"_.jpg");
+	if(CMtpTarget::getInstance().sessionFileName().size())
+		filename = CFile::findNewFile(CFile::getFilenameWithoutExtension(CMtpTarget::getInstance().sessionFileName())+"_.jpg");
 	else
 		filename = CFile::findNewFile ("screenshot.jpg");
 	COFile fs (filename);
@@ -274,12 +274,12 @@ void C3DTask::render()
 	Driver->enableFog(true);
 	Scene->render();
 
-	if(C3DTask::instance().kbDown(KeyMENU) && C3DTask::instance().kbPressed(KeyF2))
+	if(C3DTask::getInstance().kbDown(KeyMENU) && C3DTask::getInstance().kbPressed(KeyF2))
 		takeScreenShot();
 	
-	if(EnableExternalCamera && CLevelManager::instance().levelPresent() && CLevelManager::instance().currentLevel().ExternalCameras.size() > 0)
+	if(EnableExternalCamera && CLevelManager::getInstance().levelPresent() && CLevelManager::getInstance().currentLevel().ExternalCameras.size() > 0)
 	{
-		CMatrix oldmat = C3DTask::instance().scene().getCam().getMatrix();
+		CMatrix oldmat = C3DTask::getInstance().scene().getCam().getMatrix();
 		
 		vp.init(0.69f,0.55f,0.3f,0.3f);
 		s.init(0.69f,0.55f,0.3f,0.3f);
@@ -287,9 +287,9 @@ void C3DTask::render()
 		LevelParticle.hide();
 		CMatrix m;
 		m.identity();
-		m.setPos(CLevelManager::instance().currentLevel().ExternalCameras[0].first);
-		m.setRot(CLevelManager::instance().currentLevel().ExternalCameras[0].second);
-		C3DTask::instance().scene().getCam().setMatrix(m);
+		m.setPos(CLevelManager::getInstance().currentLevel().ExternalCameras[0].first);
+		m.setRot(CLevelManager::getInstance().currentLevel().ExternalCameras[0].second);
+		C3DTask::getInstance().scene().getCam().setMatrix(m);
 		Scene->setViewport(vp);
 		Driver->setViewport(vp);
 		Driver->setScissor(s);
@@ -302,12 +302,12 @@ void C3DTask::render()
 		Scene->setViewport(vp);
 		Driver->setViewport(vp);
 		Driver->setScissor(s);
-		C3DTask::instance().scene().getCam().setMatrix(oldmat);
+		C3DTask::getInstance().scene().getCam().setMatrix(oldmat);
 	}
 	
-	C3DTask::instance().driver().enableFog(false);
+	C3DTask::getInstance().driver().enableFog(false);
 	
-	CEntityManager::instance().renderNames();
+	CEntityManager::getInstance().renderNames();
 }
 
 void C3DTask::release()
@@ -345,7 +345,7 @@ void C3DTask::clearColor(CRGBA color)
 
 void C3DTask::captureCursor(bool b)
 {
-	CGuiObjectManager::instance().mouseListener().captureCursor(b);
+	CGuiObjectManager::getInstance().mouseListener().captureCursor(b);
 	/*
 	CaptureCursor = b;
 	if(b)

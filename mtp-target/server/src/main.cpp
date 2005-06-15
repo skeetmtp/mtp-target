@@ -124,11 +124,11 @@ public:
 
 		initPhysics();
 
-		CEntityManager::instance().init();
+		CEntityManager::getInstance().init();
 
-		CNetwork::instance().init();
+		CNetwork::getInstance().init();
 
-		CSessionManager::instance().init();
+		CSessionManager::getInstance().init();
 
 		//setUpdateTimeout(MT_NETWORK_MY_UPDATE_PERIODE_MS);
 
@@ -139,29 +139,32 @@ public:
 	
 	bool	update()
 	{
-		CNetwork::instance().update();
-		CLuaEngine::instance().levelPreUpdate();
-		CEntityManager::instance().update();
+		CNetwork::getInstance().update();
+		CLuaEngine::getInstance().levelPreUpdate();
+		CEntityManager::getInstance().update();
 		
 		// Update the current session
-		CSessionManager::instance().update();
+		CSessionManager::getInstance().update();
 
-		CLevelManager::instance().update();
-		CLuaEngine::instance().levelPostUpdate();
+		CLevelManager::getInstance().update();
+		CLuaEngine::getInstance().levelPostUpdate();
 		
 		checkServicePaused();
 		updateConnectedClients();
 
-		CNetwork::instance().sleep(MT_NETWORK_MY_UPDATE_PERIODE_MS);
+		// in mono thread
+		updatePhysics();
+
+		CNetwork::getInstance().sleep(MT_NETWORK_MY_UPDATE_PERIODE_MS);
 
 		return true;
 	}
 
 	void release()
 	{
-		CLevelManager::instance().release();
-		CEntityManager::instance().release();
-		CSessionManager::instance().release();
+		CLevelManager::getInstance().release();
+		CEntityManager::getInstance().release();
+		CSessionManager::getInstance().release();
 
 		releasePhysics();
 	}
@@ -367,7 +370,7 @@ NLMISC_COMMAND(broadcast, "send a message to everybody", "<string>")
 	for(uint i = 0; i < args.size(); i++)
 		msg += args[i]+" ";
 	
-	CNetwork::instance().sendChat(msg);
+	CNetwork::getInstance().sendChat(msg);
 	
 	return true;
 }

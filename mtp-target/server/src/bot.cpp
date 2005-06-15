@@ -63,7 +63,7 @@ CBot::~CBot()
 
 void CBot::update()
 {
-	while(!Commands.empty() && Commands.front().Time < ((CTime::getLocalTime() - CSessionManager::instance().startTime()) / 1000.0f))
+	while(!Commands.empty() && Commands.front().Time < ((CTime::getLocalTime() - CSessionManager::getInstance().startTime()) / 1000.0f))
 	{
 		//nlinfo("bot command = %d) ",Commands.front().Type);
 		if(Commands.front().Type == CCommand::Position)
@@ -74,7 +74,7 @@ void CBot::update()
 		else if(Commands.front().Type == CCommand::OpenClose)
 		{
 			//nlinfo("bot update openclose (eid = %d) ",id());
-			CEntityManager::instance().openClose(id());
+			CEntityManager::getInstance().openClose(id());
 			//openClose();
 		}
 		else
@@ -129,7 +129,7 @@ void CBot::loadBotReplay()
 		CPath::getPathContent("./replay", false, false, true, res);
 		vector<string> levels;
 		string level = "";
-		string CurrentLevel = CLevelManager::instance().currentLevel().name();
+		string CurrentLevel = CLevelManager::getInstance().currentLevel().name();
 		string wantedFilename = CurrentLevel + "." + toString(StartingPointId);
 		for(uint i = 0; i < res.size(); i++)
 		{
@@ -219,12 +219,12 @@ string CBot::findNewBotName(const string &name)
 	sint pos = rand() % accounts.size();
 	for(sint i = pos; i < accounts.size(); i++)
 	{
-		if(!CEntityManager::instance().nameExist(accounts.asString(i)))
+		if(!CEntityManager::getInstance().nameExist(accounts.asString(i)))
 			return accounts.asString(i);
 	}
 	for(sint i = 0; i < pos; i++)
 	{
-		if(!CEntityManager::instance().nameExist(accounts.asString(i)))
+		if(!CEntityManager::getInstance().nameExist(accounts.asString(i)))
 			return accounts.asString(i);
 	}
 	return "albot";

@@ -164,7 +164,7 @@ void CEditableElementCommon::position(CVector pos)
 	Position = pos;
 	Mesh->setPos(pos);
 	_changed = true;
-	CLevelManager::instance().currentLevel().changed(true);
+	CLevelManager::getInstance().currentLevel().changed(true);
 }
 */
 
