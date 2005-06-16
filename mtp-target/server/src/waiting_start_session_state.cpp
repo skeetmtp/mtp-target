@@ -64,7 +64,6 @@ void CWaitingStartSessionState::update()
 		changeState(CRunningSessionState::getInstance());
 		// set gravity if the game started
 		dWorldSetGravity(World, 0.0f, 0.0f, Gravity);
-		nlinfo("set gravity : on at %d",currentTime);
-		
+		nlinfo("set gravity to %f", Gravity);
 	}
 }

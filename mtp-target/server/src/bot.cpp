@@ -63,6 +63,8 @@ CBot::~CBot()
 
 void CBot::update()
 {
+	H_AUTO(CBotUpdate);
+
 	while(!Commands.empty() && Commands.front().Time < ((CTime::getLocalTime() - CSessionManager::getInstance().startTime()) / 1000.0f))
 	{
 		//nlinfo("bot command = %d) ",Commands.front().Type);

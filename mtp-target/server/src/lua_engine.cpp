@@ -312,6 +312,8 @@ void CLuaEngine::levelInit()
 
 void CLuaEngine::levelPreUpdate()
 {
+	H_AUTO(CLuaEngineLevelPreUpdate);
+
 	if(!session())
 		return;
 	int res ;
@@ -339,6 +341,7 @@ void CLuaEngine::levelPreUpdate()
 
 void CLuaEngine::levelPostUpdate()
 {
+	H_AUTO(CLuaEngineLevelPostUpdate);
 	if(!session())
 		return;
 	int res ;

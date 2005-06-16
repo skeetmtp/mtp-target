@@ -61,6 +61,7 @@ void CSessionManager::init()
 
 void CSessionManager::update()
 {
+	H_AUTO(CSessionManagerUpdate);
 	nlassert(CurrentState);
 	CurrentState->update();
 }

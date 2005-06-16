@@ -149,11 +149,11 @@ public:
 		CLevelManager::getInstance().update();
 		CLuaEngine::getInstance().levelPostUpdate();
 		
-		checkServicePaused();
-		updateConnectedClients();
-
 		// in mono thread
 		updatePhysics();
+
+		checkServicePaused();
+		updateConnectedClients();
 
 		//CNetwork::getInstance().sleep(MT_NETWORK_MY_UPDATE_PERIODE_MS);
 		CNetwork::getInstance().sleep(1);

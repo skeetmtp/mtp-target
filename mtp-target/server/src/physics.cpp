@@ -54,7 +54,7 @@ using namespace NLNET;
 
 class PhysicsThread;
 
-static const float worldStep = 0.001f;
+static const float worldStep = 0.001f;	// in second (1ms)
 
 static PhysicsThread *physicThread = 0;
 
@@ -188,7 +188,7 @@ static void nearCallback(void *data, dGeomID o1, dGeomID o2)
 		return;
 	}
 	
-	const uint32 numContact = 25; //3 SKEET_WARNING dans le exemple tri_colide c up to 25 contact !?!
+	const uint32 numContact = 128; //3 SKEET_WARNING dans le exemple tri_colide c up to 25 contact !?!
 	dContact contact[numContact];
 	for(i=0; i<numContact; i++)
 	{
@@ -310,7 +310,7 @@ static void nearCallback(void *data, dGeomID o1, dGeomID o2)
 					if(!entity->FreezeCommand)
 					{
 						entity->SendCollideWhenFly = true;
-						entity->CollideWhenFlyPos = CVector(contact[i].geom.pos[0],contact[i].geom.pos[1],contact[i].geom.pos[2]);
+						entity->CollideWhenFlyPos = CVector((float)contact[i].geom.pos[0],(float)contact[i].geom.pos[1],(float)contact[i].geom.pos[2]);
 						nlinfo("entity %s just frozen because touch a scene in open mode at pos(%f,%f,%f)", entity->name().c_str(),entity->CollideWhenFlyPos.x,entity->CollideWhenFlyPos.y,entity->CollideWhenFlyPos.z);
 					}
 
@@ -361,15 +361,16 @@ static void nearCallback(void *data, dGeomID o1, dGeomID o2)
 
 void updatePhysics()
 {
-	static TTime lastTime = CTime::getLocalTime();
-	static float deltaTime = worldStep;
+	H_AUTO(updatePhysics);
 
-	TTime newTime = CTime::getLocalTime();
-	deltaTime = (float)(newTime - lastTime)/1000.0f;
+	static TTime lastTime = CTime::getLocalTime();	// in ms
+
+	TTime newTime = CTime::getLocalTime(); // in ms
+	float deltaTime = (float)(newTime - lastTime)/1000.0f; // in s
 	int   nbLoop = int(deltaTime / worldStep);
-	float missedTime = deltaTime - nbLoop * worldStep;
+	float missedTime = deltaTime - nbLoop * worldStep;	// in s
 	//nlinfo("physic nbloop = %d = %f / %f (missed %f)",nbLoop,deltaTime,worldStep,missedTime);
-	lastTime = newTime-(TTime)missedTime;
+	lastTime = newTime-(TTime)(missedTime*1000.0f); // in ms
 	{
 		SyncPhyTime::CAccessor acces(&syncPhyTime);
 		acces.value() = newTime;
@@ -446,7 +447,7 @@ void updatePhysics()
 						if(e->Accel)
 							dBodyAddForce(e->Body, e->Force.x, e->Force.y, e->Force.z);
 						curentLenVel = dBodyGetLinearVel(e->Body);
-						CVector currentLinearVelocity(curentLenVel[0],curentLenVel[1],curentLenVel[2]);
+						CVector currentLinearVelocity((float)curentLenVel[0],(float)curentLenVel[1],(float)curentLenVel[2]);
 						if(e->maxLinearVelocity()>0 && currentLinearVelocity.norm()>e->maxLinearVelocity())
 						{
 							currentLinearVelocity.normalize();

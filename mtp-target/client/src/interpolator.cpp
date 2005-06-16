@@ -231,7 +231,7 @@ void CInterpolator::update()
 	OutOfKeyCount--;
 	if(OutOfKeyCount<0)
 		OutOfKeyCount=0;
-//	nlinfo("outofkeycount = %d ; keysize = %d",_outOfKeyCount,_keys.size());
+	//nlinfo("outofkeycount = %d ; keysize = %d",_outOfKeyCount,_keys.size());
 	if(Entity->id()==CMtpTarget::getInstance().controler().getControledEntity())
 		autoAdjustLct();
 

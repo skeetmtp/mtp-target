@@ -287,6 +287,8 @@ void CEntity::reset()
 
 void CEntity::update() 
 {
+	H_AUTO(CEntityUpdate);
+
 	if(spectator())
 	{
 		collideModules.clear();
@@ -312,7 +314,6 @@ void CEntity::update()
 		}
 	}
 
-	H_AUTO(CEntityUpdate);
 	set<CModule *>::iterator mit;
 	for(mit=collideModules.begin();mit!=collideModules.end();mit++)
 		CLuaEngine::getInstance().entitySceneCollideEvent(this,*mit);	

@@ -82,13 +82,12 @@ void CEntityManager::init()
 
 void CEntityManager::update()
 {
+	H_AUTO(CEntityManagerUpdate);
+
 	checkForcedClientCount();
+	for(EntityConstIt it = entities().begin(); it != entities().end(); it++)
 	{
-		EntityConstIt it;
-		for(it = entities().begin(); it != entities().end(); it++)
-		{
-			(*it)->update();
-		}
+		(*it)->update();
 	}
 }
 
@@ -668,6 +667,8 @@ void CEntityManager::removeBot()
 
 void CEntityManager::checkForcedClientCount()
 {
+	H_AUTO(CEntityManagerCheckForcedClientCount);
+
 	uint clientCount;
 	{
 		clientCount = entities().size();
@@ -897,7 +898,7 @@ CEntity *getByString(std::string ident)
 // Commands
 //
 
-NLMISC_COMMAND(addbot, "add a bot", "[<name>]")
+NLMISC_COMMAND(addBot, "add a bot", "[<name>]")
 {
 	CEntityManager::getInstance().addBot((args.size() > 0) ? args[0] : "bot", false);
 	return true;
@@ -1324,7 +1325,7 @@ void CEntityManager::saveAllValidReplay()
 				fprintf(c->ReplayFile, "%d AU %.1f %s %d\n", c->id(), 0.0f, c->name().c_str(), c->CurrentScore);
 				fclose(c->ReplayFile);
 				c->ReplayFile = 0;
-				if(c->CurrentScore <IService::getInstance()->ConfigFile.getVar("SavedReplayMinimumScore").asInt())
+				if(c->CurrentScore < IService::getInstance()->ConfigFile.getVar("SavedReplayMinimumScore").asInt())
 					CFile::deleteFile(c->ReplayFilename.c_str());
 			}
 		}

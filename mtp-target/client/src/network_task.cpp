@@ -95,6 +95,16 @@ void CNetworkTask::update()
 
 	//	nlinfo("Calling update %"NL_I64"u", CTime::getLocalTime());
 
+	static int nbmsg = 0, sz = 0;
+	static TTime tb = 0;
+	TTime ct = CTime::getLocalTime();
+	if(ct > tb + 1000)
+	{
+		nlinfo("received %d msg %d in %d ms", nbmsg, sz, (int)ct-tb);
+		sz = nbmsg = 0;
+		tb = ct;
+	}
+
 	H_BEFORE(NTLoop);
 	while(Sock.dataAvailable())
 	{
@@ -108,6 +118,9 @@ void CNetworkTask::update()
 		Sock.receive(msg);
 		H_AFTER(NTLoopReceive);
 		
+		nbmsg++;
+		sz += msg.size();
+
 		try
 		{
 			uint32 nbs;

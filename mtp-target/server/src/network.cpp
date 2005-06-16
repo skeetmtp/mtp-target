@@ -133,6 +133,8 @@ void CNetwork::reset()
 
 void CNetwork::update()
 {
+	H_AUTO(CNetworkUpdate);
+
 	// update only network every 50ms
 	static TTime tb = 0;
 	TTime ct = CTime::getLocalTime();

@@ -358,6 +358,7 @@ void clientConnected(const string &cookie, bool connected)
 
 void updateConnectedClients()
 {
+	H_AUTO(updateConnectedClients);
 	CSynchronized<vector<pair<uint32, uint8> > >::CAccessor access(&ConnectedClients);
 
 	for(uint i = 0; i < access.value().size(); i++)
