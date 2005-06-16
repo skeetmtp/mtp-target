@@ -264,7 +264,7 @@ int CEntityProxy::setCurrentScore(lua_State *luaSession)
 	static int oldscore = 0;
 	if(oldscore != _entity->CurrentScore)
 	{
-		nlinfo(">> %s set score with lua = %d",_entity->name().c_str(),_entity->CurrentScore);
+//		nlinfo(">> %s set score with lua = %d",_entity->name().c_str(),_entity->CurrentScore);
 		oldscore = _entity->CurrentScore;
 	}
 	return 0;

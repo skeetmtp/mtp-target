@@ -577,7 +577,7 @@ void CEntityManager::displayText(float x,float y, float scale, CRGBA col, double
 	msgout.serial(col);
 	msgout.serial(duration);
 	CNetwork::getInstance().send(msgout);
-	nlinfo("display message : %s to all",message.c_str());
+	//nlinfo("display message : %s to all",message.c_str());
 }
 
 
