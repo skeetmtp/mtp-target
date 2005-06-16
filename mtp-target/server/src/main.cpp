@@ -155,7 +155,8 @@ public:
 		// in mono thread
 		updatePhysics();
 
-		CNetwork::getInstance().sleep(MT_NETWORK_MY_UPDATE_PERIODE_MS);
+		//CNetwork::getInstance().sleep(MT_NETWORK_MY_UPDATE_PERIODE_MS);
+		CNetwork::getInstance().sleep(1);
 
 		return true;
 	}

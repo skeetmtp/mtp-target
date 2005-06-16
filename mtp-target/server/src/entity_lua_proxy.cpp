@@ -299,7 +299,7 @@ int CEntityProxy::displayText(lua_State *luaSession)
 		msgout.serial(col);
 		msgout.serial(duration);
 		CNetwork::getInstance().send(_entity->id(),msgout);
-		nlinfo("display message : %s to %s",message.c_str(),_entity->name().c_str());
+//too much flood		nlinfo("display message : %s to %s",message.c_str(),_entity->name().c_str());
 	}
 
 	return 0;

@@ -133,6 +133,12 @@ void CNetwork::reset()
 
 void CNetwork::update()
 {
+	// update only network every 50ms
+	static TTime tb = 0;
+	TTime ct = CTime::getLocalTime();
+	if(ct < tb + 40) return;
+	tb = ct;
+
 	uint8 ch[257];
 	uint32 len = 256;
 	if(ChatSock.connected() && ChatSock.dataAvailable())
@@ -245,7 +251,7 @@ void CNetwork::update()
 		updatedt = t0 - tsttime;
 	tsttime = t0;
 	if(updatedt>100)
-		nlinfo("time before 2 network update : %d>50ms",updatedt);
+		nlinfo("time before 2 network update : %d>100ms",updatedt);
 
 	{
 		{
