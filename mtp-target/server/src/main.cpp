@@ -140,7 +140,12 @@ public:
 	bool	update()
 	{
 		CNetwork::getInstance().update();
+
 		CLuaEngine::getInstance().levelPreUpdate();
+
+		// in mono thread
+		updatePhysics();
+
 		CEntityManager::getInstance().update();
 		
 		// Update the current session
@@ -149,9 +154,6 @@ public:
 		CLevelManager::getInstance().update();
 		CLuaEngine::getInstance().levelPostUpdate();
 		
-		// in mono thread
-		updatePhysics();
-
 		checkServicePaused();
 		updateConnectedClients();
 

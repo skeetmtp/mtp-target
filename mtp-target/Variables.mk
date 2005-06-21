@@ -16,18 +16,18 @@ DIR_DBG_on    = debug
 DIR_DBG_off   = release
 
 # CHANGE THESE PATHS IF NECESSARY
-# warning if you use ode 0.039 add -lopcode in server src/Makefile
 ODE_VERSION     = 0.5
-#ODE_VERSION     = 0.039
 ODE_INCLUDE     = $(HOME)/external/ode-$(ODE_VERSION)/include
 ODE_LIB         = $(HOME)/external/ode-$(ODE_VERSION)/lib
 OPCODE_LIB      = $(HOME)/external/ode-$(ODE_VERSION)/OPCODE
 NEL_SOURCE      = $(HOME)/cvs/code/nel/src
-NEL_INCLUDE     = $(HOME)/install/release/include
-NEL_LIB		= $(HOME)/install/release/lib
-STLPORT_INCLUDE = /usr/include/stlport
-LIBXML2_INCLUDE = /usr/include/libxml2
-LUA_INCLUDE	= /usr/include/lua50
+NEL_INCLUDE     = $(HOME)/cvs/code/nel/include
+NEL_LIB		= $(HOME)/cvs/code/nel/install/lib
+STLPORT_INCLUDE = /usr/local/include/stlport
+LIBXML2_INCLUDE = /usr/local/include/libxml2
+LIBXML2_LIB	= /usr/local/lib
+LUA_INCLUDE	= $(HOME)/external/lua-5.0.2/include
+LUA_LIB		= $(HOME)/external/lua-5.0.2/lib
 
 # uncomment and setup this 2 lines below if you want fmod sound support
 #FMOD_CXXFLAGS  = -DUSE_FMOD -I$(HOME)/external/fmodapi372linux/api/inc
