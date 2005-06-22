@@ -59,6 +59,10 @@ static void cbChat(CClient *c, CNetMessage &msgin)
 {
 	string msg;
 	msgin.serial(msg);
+
+	// remove % to avoid printf error
+	for(uint i = 0; i < msg.size(); i++) if(msg[i] == '%') msg[i] = ' ';
+
 	if(c->canSpeak())
 		CNetwork::getInstance().sendChat("<"+c->name()+"> "+msg);
 	else
